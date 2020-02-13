@@ -1,5 +1,10 @@
 cmake ../dealii -DCMAKE_INSTALL_PREFIX=d:/Luciano/Programas/dealii-install -DDEAL_II_COMPILE_EXAMPLES=ON
 
-MSBuild /m:2 /p:CL_MPCount=4 /p:Configuration=Release
 
+//RELEASE BUILD
+//DEFAULT DEAL.II BUILD IS DEBUG/RELEASE
+cmake ../dealii -DCMAKE_INSTALL_PREFIX=d:/Luciano/Programas/dealii-install -DCMAKE_BUILD_TYPE=RELEASE
+MSBuild deal.II.sln /m:2 /p:CL_MPCount=4 /p:Configuration=Release
+
+// One project at a time
 MSBuild deal.II.sln /p:CL_MPCount=4
