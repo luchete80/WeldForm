@@ -8,3 +8,7 @@ MSBuild deal.II.sln /m:2 /p:CL_MPCount=4 /p:Configuration=Release
 
 // One project at a time
 MSBuild deal.II.sln /p:CL_MPCount=4
+
+To compile examples: 
+cmake -DDEAL.II_DIR=PATH_TO_DEAL_II_BUILD_BINS
+

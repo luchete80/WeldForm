@@ -1,0 +1,18 @@
+template<typename number>
+template<typename number2 >
+template void FullMatrix< number >::Tmmult< long double >	(	FullMatrix< number2 > & 	C,
+const FullMatrix< number2 > & 	B,
+const bool 	adding = false 
+)		const
+Matrix-matrix-multiplication using transpose of this.
+
+The optional parameter adding determines, whether the result is stored in C or added to C.
+
+if (adding) C += AT*B
+
+if (!adding) C = AT*B
+
+Assumes that A and B have compatible sizes and that C already has the right size.
+
+This function uses the BLAS function Xgemm if the product of the three matrix 
+dimensions is larger than 300 and BLAS was detected during configuration. Using BLAS usually results in considerable performance gains.
