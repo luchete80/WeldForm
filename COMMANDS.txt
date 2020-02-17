@@ -12,3 +12,7 @@ MSBuild deal.II.sln /p:CL_MPCount=4
 To compile examples: 
 cmake -DDEAL.II_DIR=PATH_TO_DEAL_II_BUILD_BINS
 
+cmake -DDEAL_II_DIR=D:\Luciano\Programas\dealii-bin
+
+MSBuild FILENAME /p:Configuration=Release
+
