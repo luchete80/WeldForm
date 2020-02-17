@@ -93,7 +93,9 @@ namespace Step8
     void refine_grid();
     void output_results(const unsigned int cycle) const;
 	
-	FullMatrix<double> dHdrs(),B(2);
+	 FullMatrix <double> B;
+	 FullMatrix <double> c;
+	 double nu, ey;
 
     Triangulation<dim> triangulation;
     DoFHandler<dim>    dof_handler;
@@ -248,6 +250,20 @@ namespace Step8
 
     solution.reinit(dof_handler.n_dofs());
     system_rhs.reinit(dof_handler.n_dofs());
+	
+	//Plain strain 
+	nu=0.33;
+	ey=200.e9;
+	
+	//Cannot be initialized in declaration
+	B=FullMatrix <double> (3,8);
+	c=FullMatrix <double> (3,3);
+	c=0.0;
+		//Plain Strain
+	double ck = ey*(1. - nu) / ((1. + nu)*(1. - 2 * nu));
+	c.set(0,0,ck);					c.set(0,1,ck*nu / (1. - nu));	
+	c.set(1,0,ck*nu / (1. - nu));	c.set(1,1,ck);					
+	//																c.set(2,2,ck*(1 - 2 * nu) / (2.*(1. - nu)));	
   }
 
 
@@ -342,64 +358,59 @@ namespace Step8
         //
         // With this knowledge, we can assemble the local matrix
         // contributions:
-        for (unsigned int i = 0; i < dofs_per_cell; ++i)
+        for (unsigned int i = 0; i < 4; ++i)
           {
             const unsigned int component_i =
               fe.system_to_component_index(i).first;
 
-            for (unsigned int j = 0; j < dofs_per_cell; ++j)
-              {
-                const unsigned int component_j =
-                  fe.system_to_component_index(j).first;
+            // for (unsigned int j = 0; j < dofs_per_cell; ++j)
+              // {
+                // const unsigned int component_j =
+                  // fe.system_to_component_index(j).first;
 	
 				std::cout << "i, component_i" << i<<"," <<component_i <<std::endl;
-				std::cout << "j, component_j" << j<<"," <<component_j <<std::endl;
                 for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
                   {
-                    cell_matrix(i, j) +=
-                      // The first term is (lambda d_i u_i, d_j v_j) + (mu d_i
-                      // u_j, d_j v_i).  Note that
-                      // <code>shape_grad(i,q_point)</code> returns the
-                      // gradient of the only nonzero component of the i-th
-                      // shape function at quadrature point q_point. The
-                      // component <code>comp(i)</code> of the gradient, which
-                      // is the derivative of this only nonzero vector
-                      // component of the i-th shape function with respect to
-                      // the comp(i)th coordinate is accessed by the appended
-                      // brackets.
-                      (                                                  //
-                        (fe_values.shape_grad(i, q_point)[component_i] * //
-                         fe_values.shape_grad(j, q_point)[component_j] * //
-                         lambda_values[q_point])                         //
-                        +                                                //
-                        (fe_values.shape_grad(i, q_point)[component_j] * //
-                         fe_values.shape_grad(j, q_point)[component_i] * //
-                         mu_values[q_point])                             //
-                        +                                                //
-                        // The second term is (mu nabla u_i, nabla v_j).  We
-                        // need not access a specific component of the
-                        // gradient, since we only have to compute the scalar
-                        // product of the two gradients, of which an
-                        // overloaded version of the operator* takes care, as
-                        // in previous examples.
-                        //
-                        // Note that by using the ?: operator, we only do this
-                        // if comp(i) equals comp(j), otherwise a zero is
-                        // added (which will be optimized away by the
-                        // compiler).
-                        ((component_i == component_j) ?        //
-                           (fe_values.shape_grad(i, q_point) * //
-                            fe_values.shape_grad(j, q_point) * //
-                            mu_values[q_point]) :              //
-                           0)                                  //
-                        ) *                                    //
-                      fe_values.JxW(q_point);                  //
+                    B(0, 2*i) 		+= fe_values.shape_grad(i, q_point)[0];
+					B(1, 2*i+1) 	+= fe_values.shape_grad(i, q_point)[1];
+					B(2, 2*i) 		+= fe_values.shape_grad(i, q_point)[1];
+					B(2, 2*i+1) 	+= fe_values.shape_grad(i, q_point)[0];;
+	
+
+					  //*                                    //
+                      //fe_values.JxW(q_point);                  //
+
+					  
+					//Atention, is also: system_to_component_index() and component_to_system_index().
+					//const Tensor<1, spacedim>& FEValuesBase< dim, spacedim >::shape_grad
+				
+				//FROM EPSOL FE VALUES
+				// Matrix<double> dHdrst_T = this->shape_localgrad_matrices.Mat(g).Tr();
+				// Matrix<double> dHdX = dHdrst_T *this->jacobian.Mat(g).inv();
+				//Comp is 2
+						// ret    [g][comp][dim * h + comp] = dHdX[h][comp];
+						// retcomp[g][comp][h] = dHdX[h][comp];
+
+				//DIM == 2
+				// for (int h = 0; h < shfngr.Size(); h++)
+                    // //for (int cross=0;cross<)
+				// {
+					// ret[g][dim][dim * h    ]=dHdX[h][1];
+					// ret[g][dim][dim * h + 1]=dHdX[h][0];
+				// }
+
+			// shape_grad_matrices = ret;
+			// shape_grad_components=retcomp;
+
+		
+
+
+
 					  
 					  std::cout<<"Lambda: " <<lambda_values[q_point]<<std::endl;
 					  std::cout<<"Mu:    " <<mu_values[q_point]<<std::endl;
-                  }
+                  }//Quadrature points
 					std::cout<<"*******"<<std::endl;
-              }
           }
 
         // Assembling the right hand side is also just as discussed in the
@@ -431,7 +442,8 @@ namespace Step8
 
             system_rhs(local_dof_indices[i]) += cell_rhs(i);
           }
-      }
+		  
+      }//Cell iterator
 
     hanging_node_constraints.condense(system_matrix);
     hanging_node_constraints.condense(system_rhs);
