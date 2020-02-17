@@ -92,6 +92,8 @@ namespace Step8
     void solve();
     void refine_grid();
     void output_results(const unsigned int cycle) const;
+	
+	FullMatrix<double> dHdrs(),B(2);
 
     Triangulation<dim> triangulation;
     DoFHandler<dim>    dof_handler;

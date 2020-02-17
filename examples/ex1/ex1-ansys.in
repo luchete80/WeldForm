@@ -1,6 +1,6 @@
 /prep7
 real,1
-et,1,plane182
+et,1,plane182,,,2
 type,1
 mat,1
 n,1,1,1,0
@@ -10,5 +10,10 @@ n,4,1,0,0
 e,1,2,3,4
 type,1
 mat,1
-n,2e6,50,30,0
-e,2e6
+MP,EX,1,200e9
+MP,PRXY,1,0.33
+/SOLUTION
+F,2,FX,1000
+D,3,UX,ALL
+D,3,UY,ALL
+D,4,UY,ALL
