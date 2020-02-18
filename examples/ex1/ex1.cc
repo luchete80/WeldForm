@@ -56,6 +56,7 @@
 // This again is C++:
 #include <fstream>
 #include <iostream>
+#include <ostream>
 
 // The last step is as in previous programs. In particular, just like in
 // step-7, we pack everything that's specific to this program into a namespace
@@ -96,6 +97,7 @@ namespace Step8
 	 FullMatrix <double> B;
 	 FullMatrix <double> c;
 	 double nu, ey;
+
 
     Triangulation<dim> triangulation;
     DoFHandler<dim>    dof_handler;
@@ -156,8 +158,8 @@ namespace Step8
     // these areas. Note that upon construction of the <code>Point</code>
     // objects, all components are set to zero.
     Point<dim> point_1, point_2;
-    point_1(0) = 0.5;
-    point_2(0) = -0.5;
+    point_1(0) = 0.;
+    point_2(0) = 0.0;
 
     for (unsigned int point_n = 0; point_n < points.size(); ++point_n)
       {
@@ -322,6 +324,10 @@ namespace Step8
     // right_hand_side just once per cell to make things simpler.
     std::vector<Tensor<1, dim>> rhs_values(n_q_points);
 
+
+	std::ostream out(std::cout.rdbuf());
+	FullMatrix <double> temp(8,3);
+	
     // Now we can begin with the loop over all cells:
     for (const auto &cell : dof_handler.active_cell_iterators())
       {
@@ -329,6 +335,9 @@ namespace Step8
         cell_rhs    = 0;
 
         fe_values.reinit(cell);
+		
+		for (int i=0;i<4;i++)
+			std::cout << "x: " << cell->vertex(i)(0) << ",y: " << cell->vertex(i)(1)<<std::endl;
 
         // Next we get the values of the coefficients at the quadrature
         // points. Likewise for the right hand side:
@@ -371,61 +380,38 @@ namespace Step8
 				std::cout << "i, component_i" << i<<"," <<component_i <<std::endl;
                 for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
                   {
-                    B(0, 2*i) 		+= fe_values.shape_grad(i, q_point)[0];
-					B(1, 2*i+1) 	+= fe_values.shape_grad(i, q_point)[1];
-					B(2, 2*i) 		+= fe_values.shape_grad(i, q_point)[1];
-					B(2, 2*i+1) 	+= fe_values.shape_grad(i, q_point)[0];;
-	
+                    B(0, 2*i) 		+= fe_values.shape_grad(i, q_point)[0]*fe_values.JxW(q_point);
+					B(1, 2*i+1) 	+= fe_values.shape_grad(i, q_point)[1]*fe_values.JxW(q_point);
+					B(2, 2*i) 		+= fe_values.shape_grad(i, q_point)[1]*fe_values.JxW(q_point);
+					B(2, 2*i+1) 	+= fe_values.shape_grad(i, q_point)[0]*fe_values.JxW(q_point);
 
-					  //*                                    //
-                      //fe_values.JxW(q_point);                  //
-
-					  
-					//Atention, is also: system_to_component_index() and component_to_system_index().
-					//const Tensor<1, spacedim>& FEValuesBase< dim, spacedim >::shape_grad
-				
-				//FROM EPSOL FE VALUES
-				// Matrix<double> dHdrst_T = this->shape_localgrad_matrices.Mat(g).Tr();
-				// Matrix<double> dHdX = dHdrst_T *this->jacobian.Mat(g).inv();
-				//Comp is 2
-						// ret    [g][comp][dim * h + comp] = dHdX[h][comp];
-						// retcomp[g][comp][h] = dHdX[h][comp];
-
-				//DIM == 2
-				// for (int h = 0; h < shfngr.Size(); h++)
-                    // //for (int cross=0;cross<)
-				// {
-					// ret[g][dim][dim * h    ]=dHdX[h][1];
-					// ret[g][dim][dim * h + 1]=dHdX[h][0];
-				// }
-
-			// shape_grad_matrices = ret;
-			// shape_grad_components=retcomp;
-
-		
-
-
-
-					  
 					  std::cout<<"Lambda: " <<lambda_values[q_point]<<std::endl;
 					  std::cout<<"Mu:    " <<mu_values[q_point]<<std::endl;
                   }//Quadrature points
 					std::cout<<"*******"<<std::endl;
-          }
+          }//ith function
+		  
+		
+		B.print_formatted(out);
+		B.Tmmult(temp,c);
+		temp.mmult(cell_matrix,B);
 
         // Assembling the right hand side is also just as discussed in the
         // introduction:
-        for (unsigned int i = 0; i < dofs_per_cell; ++i)
-          {
-            const unsigned int component_i =
-              fe.system_to_component_index(i).first;
+        // for (unsigned int i = 0; i < dofs_per_cell; ++i)
+          // {
+            // const unsigned int component_i =
+              // fe.system_to_component_index(i).first;
 
-            for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
-              cell_rhs(i) += fe_values.shape_value(i, q_point) *
-                             rhs_values[q_point][component_i] *
-                             fe_values.JxW(q_point);
-          }
-
+            // for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
+              // cell_rhs(i) += fe_values.shape_value(i, q_point) *
+                             // rhs_values[q_point][component_i] *
+                             // fe_values.JxW(q_point);
+          // }
+		for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
+			cell_rhs(4) += fe_values.shape_value(4, q_point) *
+                              1000.0 *
+                              fe_values.JxW(q_point);
         // The transfer from local degrees of freedom into the global matrix
         // and right hand side vector does not depend on the equation under
         // consideration, and is thus the same as in all previous
@@ -459,10 +445,14 @@ namespace Step8
     // need to pass <code>dim</code> as number of components to the zero
     // function as well.
     std::map<types::global_dof_index, double> boundary_values;
-    VectorTools::interpolate_boundary_values(dof_handler,
-                                             0,
-                                             Functions::ZeroFunction<dim>(dim),
-                                             boundary_values);
+	
+	boundary_values.insert(std::pair<types::global_dof_index,double>(0,0.));
+	boundary_values.insert(std::pair<types::global_dof_index,double>(1,0.));
+	boundary_values.insert(std::pair<types::global_dof_index,double>(3,0.));
+    // VectorTools::interpolate_boundary_values(dof_handler,
+                                             // 0,
+                                             // Functions::ZeroFunction<dim>(dim),
+                                             // boundary_values);
     MatrixTools::apply_boundary_values(boundary_values,
                                        system_matrix,
                                        solution,
