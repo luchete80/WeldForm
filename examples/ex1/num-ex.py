@@ -1,15 +1,21 @@
 # https://docs.sympy.org/latest/tutorial/matrices.html
-from sympy import *
+from numpy import *
 
 import array as arr
 
 init_printing(use_unicode=True)
 X2=Matrix(zeros(4,2)) 
 #X is combines per row to calculate J
+gauss=[-0.557,0.557]
 
 X2=[[1,1],[0,1],[0,0],[1,0]]
 
-r, s = symbols('r s')
+for i in range(2)
+for j in range(2)
+r=gauss[i]
+s=gauss[j]
+#r, s = symbols('r s')
+
 h=[(1+r)*(1+s)/4,(1-r)*(1+s)/4,(1-r)*(1-s)/4,(1+r)*(1-s)/4]
 
 J=Matrix(zeros(2,2))
