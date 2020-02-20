@@ -265,8 +265,9 @@ namespace Step8
 	double ck = ey*(1. - nu) / ((1. + nu)*(1. - 2 * nu));
 	c.set(0,0,ck);					c.set(0,1,ck*nu / (1. - nu));	
 	c.set(1,0,ck*nu / (1. - nu));	c.set(1,1,ck);					
-	//																c.set(2,2,ck*(1 - 2 * nu) / (2.*(1. - nu)));	
+	c.set(2,2,ck*(1 - 2 * nu) / (2.*(1. - nu)));	
   }
+  
 
 
   // @sect4{ElasticProblem::assemble_system}
@@ -301,6 +302,7 @@ namespace Step8
 	std::cout << "Quadrature points: " << n_q_points <<std::endl;
 
     FullMatrix<double> cell_matrix(dofs_per_cell, dofs_per_cell);
+    FullMatrix<double> temp(dofs_per_cell, dofs_per_cell);
     Vector<double>     cell_rhs(dofs_per_cell);
 
     std::vector<types::global_dof_index> local_dof_indices(dofs_per_cell);
@@ -326,7 +328,7 @@ namespace Step8
 
 
 	std::ostream out(std::cout.rdbuf());
-	FullMatrix <double> temp(8,3);
+	FullMatrix <double> temp_c(8,3);
 	
     // Now we can begin with the loop over all cells:
     for (const auto &cell : dof_handler.active_cell_iterators())
@@ -367,34 +369,40 @@ namespace Step8
         //
         // With this knowledge, we can assemble the local matrix
         // contributions:
-        for (unsigned int i = 0; i < 4; ++i)
-          {
-            const unsigned int component_i =
-              fe.system_to_component_index(i).first;
 
             // for (unsigned int j = 0; j < dofs_per_cell; ++j)
               // {
                 // const unsigned int component_j =
                   // fe.system_to_component_index(j).first;
 	
-				std::cout << "i, component_i" << i<<"," <<component_i <<std::endl;
-                for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
-                  {
-                    B(0, 2*i) 		+= fe_values.shape_grad(i, q_point)[0]*fe_values.JxW(q_point);
-					B(1, 2*i+1) 	+= fe_values.shape_grad(i, q_point)[1]*fe_values.JxW(q_point);
-					B(2, 2*i) 		+= fe_values.shape_grad(i, q_point)[1]*fe_values.JxW(q_point);
-					B(2, 2*i+1) 	+= fe_values.shape_grad(i, q_point)[0]*fe_values.JxW(q_point);
-
-					  std::cout<<"Lambda: " <<lambda_values[q_point]<<std::endl;
-					  std::cout<<"Mu:    " <<mu_values[q_point]<<std::endl;
-                  }//Quadrature points
-					std::cout<<"*******"<<std::endl;
-          }//ith function
-		  
-		
+	for (unsigned int q_point = 0; q_point < n_q_points; ++q_point){	  
+		  for (unsigned int i = 0; i < 4; ++i){
+			 
+            const unsigned int component_i =
+              fe.system_to_component_index(i).first;
+			  
+			  			  	std::cout << "i, component_i" << i<<"," <<component_i <<std::endl;
+                    B(0, 2*i) 		= fe_values.shape_grad(i, q_point)[0];
+					B(1, 2*i+1) 	= fe_values.shape_grad(i, q_point)[1];
+					B(2, 2*i) 		= fe_values.shape_grad(i, q_point)[1];
+					B(2, 2*i+1) 	= fe_values.shape_grad(i, q_point)[0];}//ith function
+		  std::cout<<"JxW: " <<fe_values.JxW(q_point)<<std::endl;
+	  
+		std::cout << "B matrix"<<std:: endl;
 		B.print_formatted(out);
 		B.Tmmult(temp,c);
-		temp.mmult(cell_matrix,B);
+		temp.mmult(temp_c,B);
+		
+		for (unsigned int k = 0; k < 8; k++)
+			for (unsigned int l = 0; l < 8; l++)
+		cell_matrix[k][l]+=fe_values.JxW(q_point)*temp_c[k][l];//FIND A OVERLOADED OPERATOR!
+	  
+	  
+	  }//Quadrature points
+		std::cout<<"Cell matrix *******"<<std::endl;
+		cell_matrix.print_formatted(out);			
+        
+		  
 
         // Assembling the right hand side is also just as discussed in the
         // introduction:
@@ -408,10 +416,12 @@ namespace Step8
                              // rhs_values[q_point][component_i] *
                              // fe_values.JxW(q_point);
           // }
-		for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
-			cell_rhs(4) += fe_values.shape_value(4, q_point) *
-                              1000.0 *
-                              fe_values.JxW(q_point);
+		//for (unsigned int q_point = 0; q_point < n_q_points; ++q_point)
+		//	cell_rhs(4) += fe_values.shape_value(4, q_point) *
+        //                      1000.0 *
+        //                      fe_values.JxW(q_point);
+		cell_rhs(4) = 1000.0;
+		
         // The transfer from local degrees of freedom into the global matrix
         // and right hand side vector does not depend on the equation under
         // consideration, and is thus the same as in all previous
@@ -453,10 +463,23 @@ namespace Step8
                                              // 0,
                                              // Functions::ZeroFunction<dim>(dim),
                                              // boundary_values);
+											 
+	std::cout << "K matrix before BC"<<std:: endl;
+	system_matrix.print_formatted(out);
+	
     MatrixTools::apply_boundary_values(boundary_values,
                                        system_matrix,
                                        solution,
                                        system_rhs);
+
+	std::cout << "K matrix"<<std:: endl;
+	system_matrix.print_formatted(out);
+
+	std::cout << "R value"<<std::endl;
+	for (int i=0;i<system_rhs.size();i++)
+		std::cout<<system_rhs[i]<< ";";
+	
+	std::cout<<std::endl;
   }
 
 
