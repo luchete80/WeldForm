@@ -391,9 +391,13 @@ class Domain:
 
         #Because of Hexagonal close packing in x direction domain is modified
         #TODO:UNCOMMENT BELOW!
-        # if (!self.BC.Periodic[0]): self.TRPR(0) += self.hmax/2	self.BLPF(0) -= self.hmax/2 else: self.TRPR(0) += R self.BLPF(0) -= R
-        # if (!self.BC.Periodic[1]): self.TRPR(1) += self.hmax/2	self.BLPF(1) -= self.hmax/2 else: self.TRPR(1) += R self.BLPF(1) -= R
-        # if (!self.BC.Periodic[2]): self.TRPR(2) += self.hmax/2	self.BLPF(2) -= self.hmax/2 else: self.TRPR(2) += R self.BLPF(2) -= R
+        if (not(self.BC.Periodic[0])): self.TRPR[0] += self.hmax/2;	self.BLPF[0] -= self.hmax/2;
+        else: self.TRPR[0] += R; self.BLPF[0] -= R;
+        if (not(self.BC.Periodic[1])): 
+            self.TRPR[1] += self.hmax/2;	self.BLPF[1] -= self.hmax/2;
+        else: self.TRPR[1] += R; self.BLPF[1] -= R;
+        if (not(self.BC.Periodic[2])): self.TRPR[2] += self.hmax/2;	self.BLPF[2] -= self.hmax/2;
+        else: self.TRPR[2] += R; self.BLPF[2] -= R;
 
         # Calculate Cells Properties
         if (self.Dimension == 2):
