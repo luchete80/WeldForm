@@ -22,58 +22,6 @@
 
 namespace SPH {
 	
-inline void Domain::CalcTempInc ( Particle * P1, Particle * P2 ) {	//LUCIANO: Temperature increment
-	double h	= (P1->h+P2->h)/2;
-	Vec3_t xij	= P1->x - P2->x;
-
-	Periodic_X_Correction(xij, h, P1, P2);
-
-	double rij	= norm(xij);
-
-	if ((rij/h)<=Cellfac)
-	{
-		double di=0.0,dj=0.0,mi=0.0,mj=0.0;
-		double Alpha	= (P1->Alpha + P2->Alpha)/2.0;
-		double Beta	= (P1->Beta + P2->Beta)/2.0;
-
-		if (!P1->IsFree) {
-			di = DensitySolid(P2->PresEq, P2->Cs, P2->P0,P1->Pressure, P2->RefDensity);
-			mi = P1->FPMassC * P2->Mass;
-		} else {
-			di = P1->Density;
-			mi = P1->Mass;
-		}
-		if (!P2->IsFree) {
-			dj = DensitySolid(P1->PresEq, P1->Cs, P1->P0,P2->Pressure, P1->RefDensity);
-			mj = P2->FPMassC * P1->Mass;
-		} else {
-			dj = P2->Density;
-			mj = P2->Mass;
-		}
-
-
-		Vec3_t vij	= P1->v - P2->v;
-		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
-		double K	= Kernel(Dimension, KernelType, rij/h, h);
-		
-		//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
-		//TODO: LOCK OPENMP THING
-		Vec3_t temp = 0.0;
-		double temp1 = 0.0;
-
-		// if (GradientType == 0)
-			// Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
-		// else
-			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-
-		// if (Dimension == 2) temp(2) = 0.0;
-		//IMPORTANT: HERE THE GRADIENT dW/di= GK*xij
-		 temp1 = mj * dot( xij , GK*xij ) ;
-		
-
-	}//rij/h < cellfac
-}
-
 inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 {
 	double h	= (P1->h+P2->h)/2;

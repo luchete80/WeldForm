@@ -1318,6 +1318,27 @@ inline void Domain::Move (double dt)
 
 }
 
+inline void Domain::CalcTempInc () {
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	for (size_t k=0; k<Nproc;k++) {
+		size_t P1,P2;
+		Vec3_t xij;
+		double h,K;
+		//TODO: DO THE LOCK PARALLEL THING
+		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
+		for ( size_t a=0; a<FSMPairs[k].Size();a++ ) {
+			P1	= FSMPairs[k][a].first;
+			P2	= FSMPairs[k][a].second;
+			xij	= Particles[P1]->x-Particles[P2]->x;
+			h	= (Particles[P1]->h+Particles[P2]->h)/2.0;
+
+			Periodic_X_Correction(xij, h, Particles[P1], Particles[P2]);
+
+			K	= Kernel(Dimension, KernelType, norm(xij)/h, h);
+		}
+	}
+}
+
 inline void Domain::InFlowBCLeave()
 {
 	size_t a,b;

@@ -68,7 +68,7 @@ public:
     void PrimaryComputeAcceleration	();									//Compute the solid boundary properties
     void LastComputeAcceleration		();									//Compute the acceleration due to the other particles
     void CalcForce2233	(Particle * P1, Particle * P2);		//Calculates the contact force between soil-soil/solid-solid particles
-	void CalcTempInc ( Particle * P1, Particle * P2 ); 		//LUCIANO: Temperature increment
+	void CalcTempInc (); 		//LUCIANO: Temperature increment
     void Move						(double dt);										//Move particles
 
     void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
