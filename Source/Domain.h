@@ -67,10 +67,7 @@ public:
     void StartAcceleration					(Vec3_t const & a = Vec3_t(0.0,0.0,0.0));	//Add a fixed acceleration such as the Gravity
     void PrimaryComputeAcceleration	();									//Compute the solid boundary properties
     void LastComputeAcceleration		();									//Compute the acceleration due to the other particles
-    void CalcForce11		(Particle * P1, Particle * P2);	//Calculates the contact force between fluid-fluid particles
     void CalcForce2233	(Particle * P1, Particle * P2);		//Calculates the contact force between soil-soil/solid-solid particles
-    void CalcForce12		(Particle * P1, Particle * P2);	//Calculates the contact force between fluid-solid particles
-    void CalcForce13		(Particle * P1, Particle * P2);	//Calculates the contact force between fluid-soil particles
 	void CalcTempInc ( Particle * P1, Particle * P2 ); 		//LUCIANO: Temperature increment
     void Move						(double dt);										//Move particles
 

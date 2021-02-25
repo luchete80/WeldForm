@@ -1238,37 +1238,31 @@ inline void Domain::PrimaryComputeAcceleration ()
 inline void Domain::LastComputeAcceleration ()
 {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t k=0; k<Nproc;k++)
-	{
+	for (size_t k=0; k<Nproc;k++) {
 		for (size_t i=0; i<SMPairs[k].Size();i++)
-			if (Particles[SMPairs[k][i].first]->Material == 1)
-				CalcForce11(Particles[SMPairs[k][i].first],Particles[SMPairs[k][i].second]);
-			else
-				CalcForce2233(Particles[SMPairs[k][i].first],Particles[SMPairs[k][i].second]);
+			CalcForce2233(Particles[SMPairs[k][i].first],Particles[SMPairs[k][i].second]);
 
 		for (size_t i=0; i<FSMPairs[k].Size();i++)
-			if (Particles[FSMPairs[k][i].first]->Material == 1)
-				CalcForce11(Particles[FSMPairs[k][i].first],Particles[FSMPairs[k][i].second]);
-			else
-				CalcForce2233(Particles[FSMPairs[k][i].first],Particles[FSMPairs[k][i].second]);
+			CalcForce2233(Particles[FSMPairs[k][i].first],Particles[FSMPairs[k][i].second]);
 	}
 
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t k=0; k<NSMPairs.Size();k++)
-	{
-		for (size_t i=0; i<NSMPairs[k].Size();i++)
-		{
-			if (Particles[NSMPairs[k][i].first]->Material*Particles[NSMPairs[k][i].second]->Material == 3)
-				CalcForce13(Particles[NSMPairs[k][i].first],Particles[NSMPairs[k][i].second]);
-			else if (Particles[NSMPairs[k][i].first]->Material*Particles[NSMPairs[k][i].second]->Material == 2)
-				CalcForce12(Particles[NSMPairs[k][i].first],Particles[NSMPairs[k][i].second]);
-			else
-			{
-				std::cout<<"Out of Interaction types"<<std::endl;
-				abort();
-			}
-		}
-	}
+	// WHAT TO DO WITH THIS????
+	// #pragma omp parallel for schedule (static) num_threads(Nproc)
+	// for (size_t k=0; k<NSMPairs.Size();k++)
+	// {
+		// for (size_t i=0; i<NSMPairs[k].Size();i++)
+		// {
+			// if (Particles[NSMPairs[k][i].first]->Material*Particles[NSMPairs[k][i].second]->Material == 3)
+				// CalcForce13(Particles[NSMPairs[k][i].first],Particles[NSMPairs[k][i].second]);
+			// else if (Particles[NSMPairs[k][i].first]->Material*Particles[NSMPairs[k][i].second]->Material == 2)
+				// CalcForce12(Particles[NSMPairs[k][i].first],Particles[NSMPairs[k][i].second]);
+			// else
+			// {
+				// std::cout<<"Out of Interaction types"<<std::endl;
+				// abort();
+			// }
+		// }
+	// }
 
 	for (size_t i=0 ; i<Nproc ; i++)
 	{
