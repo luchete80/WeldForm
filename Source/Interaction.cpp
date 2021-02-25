@@ -36,23 +36,17 @@ inline void Domain::CalcTempInc ( Particle * P1, Particle * P2 ) {	//LUCIANO: Te
 		double Alpha	= (P1->Alpha + P2->Alpha)/2.0;
 		double Beta	= (P1->Beta + P2->Beta)/2.0;
 
-		if (!P1->IsFree)
-		{
+		if (!P1->IsFree) {
 			di = DensitySolid(P2->PresEq, P2->Cs, P2->P0,P1->Pressure, P2->RefDensity);
 			mi = P1->FPMassC * P2->Mass;
-		}
-		else
-		{
+		} else {
 			di = P1->Density;
 			mi = P1->Mass;
 		}
-		if (!P2->IsFree)
-		{
+		if (!P2->IsFree) {
 			dj = DensitySolid(P1->PresEq, P1->Cs, P1->P0,P2->Pressure, P1->RefDensity);
 			mj = P2->FPMassC * P1->Mass;
-		}
-		else
-		{
+		} else {
 			dj = P2->Density;
 			mj = P2->Mass;
 		}
@@ -74,7 +68,7 @@ inline void Domain::CalcTempInc ( Particle * P1, Particle * P2 ) {	//LUCIANO: Te
 
 		// if (Dimension == 2) temp(2) = 0.0;
 		//IMPORTANT: HERE THE GRADIENT dW/di= GK*xij
-		 temp1 = dot( xij , GK*xij );
+		 temp1 = mj * dot( xij , GK*xij ) ;
 		
 
 	}//rij/h < cellfac
