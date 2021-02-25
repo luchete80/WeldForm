@@ -1,18 +1,10 @@
-cmake ../dealii -DCMAKE_INSTALL_PREFIX=d:/Luciano/Programas/dealii-install -DDEAL_II_COMPILE_EXAMPLES=ON
+set SPH=D:/Luciano/Numerico/persiansph
+set PKG=D:/Luciano/Numerico/Libs
+
+locate GSL, HDF5-1.12.0, LAPACK-3.9.0 & BLITZ++ IN d:\LUCIANO\numerico\libs
+download and build blitz
+BLITZ SHOULD BE 0.9 VERSION
 
 
-//RELEASE BUILD
-//DEFAULT DEAL.II BUILD IS DEBUG/RELEASE
-cmake ../dealii -DCMAKE_INSTALL_PREFIX=d:/Luciano/Programas/dealii-install -DCMAKE_BUILD_TYPE=RELEASE
-MSBuild deal.II.sln /m:2 /p:CL_MPCount=4 /p:Configuration=Release
 
-// One project at a time
-MSBuild deal.II.sln /p:CL_MPCount=4
-
-To compile examples: 
-cmake -DDEAL_II_DIR=PATH_TO_DEAL_II_BUILD_BINS
-
-cmake -DDEAL_II_DIR=D:\Luciano\Programas\dealii-bin
-
-MSBuild FILENAME /p:Configuration=Release
 
