@@ -398,7 +398,9 @@ class Domain:
         else: self.TRPR[1] += R; self.BLPF[1] -= R;
         if (not(self.BC.Periodic[2])): self.TRPR[2] += self.hmax/2;	self.BLPF[2] -= self.hmax/2;
         else: self.TRPR[2] += R; self.BLPF[2] -= R;
-
+        print ("self.TRPR",self.TRPR)
+        print ("self.BLPF",self.BLPF)
+        
         # Calculate Cells Properties
         if (self.Dimension == 2):
             if (double (ceil(((self.TRPR(0)-self.BLPF(0))/(self.Cellfac*self.hmax)))-((self.TRPR(0)-self.BLPF(0))/(self.Cellfac*self.hmax)))<(self.hmax/10.0)):
@@ -411,7 +413,7 @@ class Domain:
             else:
                 self.CellNo[1] = int(floor((self.TRPR(1)-self.BLPF(1))/(self.Cellfac*self.hmax)))
 
-            self.CellNo[2] = 1
+            #self.CellNo[2] = 1
             
             print("self.CellNo[0]",self.CellNo[0])#LUCIANO
             CellSize  = Vec3_t ((self.TRPR(0)-self.BLPF(0))/self.CellNo[0],(self.TRPR(1)-self.BLPF(1))/self.CellNo[1],0.0)

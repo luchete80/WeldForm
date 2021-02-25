@@ -10,7 +10,7 @@ class Boundary:
         self.allv=Vec3_t(0.,0.,0.)		#/< Apply a certain velocity to all particle
 
         #TODO:UNCOMMENT
-        Periodic	= [False,False,False]#/< Considering periodic in all directions => 0=X, 1=Y, 2=Z
+        self.Periodic	= [False,False,False]#/< Considering periodic in all directions => 0=X, 1=Y, 2=Z
 
         self.InOutFlow=0	#/< Considering inflow in all directions  by adding and deleting particles=> [0]=X, [1]=Y, [2]=Z and 0=none, 1=-
         # InFlowLoc1

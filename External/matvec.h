@@ -26,12 +26,9 @@
 #include <cmath>     // for sqrt, pow
 #include <algorithm> // for min, max
 
-using namespace std;
-
-
 // Blitz++
-#include <blitz/tinyvec2.h>
-#include <blitz/tinymat2.h>
+#include <blitz/tinyvec-et.h>
+#include <blitz/tinymat.h>
 
 // GSL
 #include <gsl/gsl_math.h>
@@ -95,8 +92,7 @@ typedef mtl::dense_vector<double> Vec_t;
 typedef LinAlg::Vector<double> Vec_t;
 typedef LinAlg::Matrix<double> Mat_t;
 
-inline double dot         (Vec_t const & V, Vec_t const & W) { return LinAlg::Dot(V,W); }//LUCIANO
-//inline double dot         (Vec3_t const & V, Vec3_t const & W) { return V(0)*W(0)+V(1)*W(1)+V(2)*W(2); }
+inline double dot         (Vec_t const & V, Vec_t const & W) { return LinAlg::Dot(V,W); }
 inline size_t size        (Vec_t const & V) { return V.Size(); }
 inline void   set_to_zero (Vec_t       & V) { V.SetValues(0.0); }
 inline void   set_to_zero (Mat_t       & M) { M.SetValues(0.0); }
@@ -550,49 +546,6 @@ typedef blitz::TinyVector<double,3> Vec3_t;
 typedef blitz::TinyVector<size_t,3> iVec3_t;
 typedef blitz::TinyVector<bool,3>   bVec3_t;
 
-inline double norm        (Vec3_t const & V) { return sqrt(V(0)*V(0)+V(1)*V(1)+V(2)*V(2)); }
-inline double dot(const Vec3_t &a, const Vec3_t &b) {return a(0)*b(0)+a(1)*b(1)+a(2)*b(2);}
-Vec3_t operator*(double a, const Vec3_t &b) {
-	Vec3_t ret;
-	for (int i=0;i<3;i++)
-		ret[i]=a*b[i];
-	return ret;
-}
-
-Vec3_t operator*(const Vec3_t &b, double a) {
-	Vec3_t ret;
-	for (int i=0;i<3;i++)
-		ret[i]=a*b[i];
-	return ret;
-}
-
-Vec3_t operator/(const Vec3_t &b, double a) {
-	Vec3_t ret;
-	for (int i=0;i<3;i++)
-		ret[i]=b[i]/a;
-	return ret;
-}
-
-Vec3_t operator+(const Vec3_t &a, const Vec3_t &b) {
-	Vec3_t ret;
-	for (int i=0;i<3;i++)
-		ret[i]=a[i]+b[i];
-	return ret;
-}
-
-Vec3_t operator-(const Vec3_t &a, const Vec3_t &b) {
-	Vec3_t ret;
-	for (int i=0;i<3;i++)
-		ret[i]=a[i]-b[i];
-	return ret;
-}
-
-Vec3_t operator-(const Vec3_t &a) {
-	Vec3_t ret=-a;
-	return ret;
-}
-
-
 Mat3_t operator * ( double a, const Mat3_t & A)
 {
     Mat3_t M;
@@ -830,7 +783,7 @@ inline void Eig (Mat3_t & M, Vec3_t & L, Vec3_t & V0, Vec3_t & V1, Vec3_t & V2, 
 /** Norm. */
 inline double Norm (Vec3_t const & V)
 {
-    return sqrt(dot(V,V));
+    return sqrt(blitz::dot(V,V));
 }
 
 /** Dyadic product. */

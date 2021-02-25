@@ -1,4 +1,4 @@
-set SPH=D:/Luciano/Numerico/persiansph
+set SPH=D:/Luciano/Numerico/WeldForm
 set PKG=D:/Luciano/Numerico/Libs
 
 locate GSL, HDF5-1.12.0, LAPACK-3.9.0 & BLITZ++ IN d:\LUCIANO\numerico\libs
