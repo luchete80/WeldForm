@@ -26,15 +26,20 @@ INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
 include_directories("D:/Luciano/Numerico/blitz/include")
 
 SET(EXES
-	1-Poiseuille
-	2-Couette
-	3-DamBreak
-	4-DamBreak3D
+	# 1-Poiseuille
+	# 2-Couette
+	# 3-DamBreak
+	# 4-DamBreak3D
+	Plate-Yield.cpp
 )
 
 link_directories("D:/Luciano/Numerico/blitz/lib")
-FOREACH(var ${EXES})
-    ADD_EXECUTABLE        (${var} "${var}.cpp")
-    TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
-    SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
-ENDFOREACH(var)
+#FOREACH(var ${EXES})
+    # ADD_EXECUTABLE        (${var} "${var}.cpp")
+    # TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
+    # SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
+#ENDFOREACH(var)
+
+    ADD_EXECUTABLE        (${EXES} "Plate-Yield.cpp")
+    TARGET_LINK_LIBRARIES (${EXES} ${LIBS} blitz)
+    SET_TARGET_PROPERTIES (${EXES} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")

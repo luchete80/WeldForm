@@ -129,8 +129,8 @@ namespace SPH {
 		double	FSISumKernel;	///< Summation of the kernel value for neighbour particles in FSI
 		bool		FirstStep;	///< to initialize the integration scheme
 		
-		//LUCIANO
-		double T;			// Temperature
+		//LUCIANO: THERMAL PROPERTIES
+		double T,k_T;			// Temperature, avoid permeability
 
 		omp_lock_t my_lock;		///< Open MP lock
 
