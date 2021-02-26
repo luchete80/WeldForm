@@ -291,18 +291,16 @@ inline void Domain::AddBoxNo(int tag, Vec3_t const & V, size_t nx, size_t ny, si
 	R = r;
 }
 
-inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly, double Lz, double r, double Density, double h, int type, int rotation, bool random, bool Fixed)
-{
-    if (!(type==0 || type==1))
-    {
+inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly, double Lz, 
+									double r, double Density, double h, int type, int rotation, bool random, bool Fixed) {
+    if ( !(type == 0 || type == 1) ) {
 	   	std::cout << "Packing Type is out of range. Please correct it and run again" << std::endl;
 		std::cout << "0 => Hexagonal Close Packing" << std::endl;
 		std::cout << "1 => Cubic Packing" << std::endl;
 	    abort();
     }
 
-    if (!(rotation==0 || rotation==90))
-    {
+    if (!(rotation==0 || rotation==90)) {
 	   	std::cout << "Packing Rotation Angle is out of range. Please correct it and run again" << std::endl;
 		std::cout << "0 => " << std::endl;
 		std::cout << "0 0 0 0" << std::endl;
@@ -413,10 +411,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		{
 			Particles[i]->Mass = Mass;
 		}
-    }
-
-    if (Dimension==2)
-    {
+    } else if (Dimension==2) {
     	if (type==0)
     	{
     		//Hexagonal close packing
@@ -821,17 +816,14 @@ inline void Domain::MainNeighbourSearch()
     }
 }
 
-inline void Domain::YZPlaneCellsNeighbourSearch(int q1)
-{
+inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 	int q3,q2;
 	size_t T = omp_get_thread_num();
 
 	for (BC.Periodic[2] ? q3=1 : q3=0;BC.Periodic[2] ? (q3<(CellNo[2]-1)) : (q3<CellNo[2]); q3++)
-	for (BC.Periodic[1] ? q2=1 : q2=0;BC.Periodic[1] ? (q2<(CellNo[1]-1)) : (q2<CellNo[1]); q2++)
-	{
+	for (BC.Periodic[1] ? q2=1 : q2=0;BC.Periodic[1] ? (q2<(CellNo[1]-1)) : (q2<CellNo[1]); q2++) {
 		if (HOC[q1][q2][q3]==-1) continue;
-		else
-		{
+		else {
 			int temp1, temp2;
 			temp1 = HOC[q1][q2][q3];
 
@@ -910,13 +902,10 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1)
 				}
 
 				// (q1 + a, q2 + b, q3 + 1) & a,b[-1,1] => all 9 cells above the current cell
-				if (q3+1< CellNo[2])
-				{
+				if (q3+1< CellNo[2]) {
 					for (int j=q2-1; j<=q2+1; j++)
-					for (int i=q1-1; i<=q1+1; i++)
-					{
-						if (i<CellNo[0] && i>=0 && j<CellNo[1] && j>=0)
-						{
+					for (int i=q1-1; i<=q1+1; i++) {
+						if (i<CellNo[0] && i>=0 && j<CellNo[1] && j>=0) {
 							temp2 = HOC[i][j][q3+1];
 							while (temp2 != -1)
 							{
