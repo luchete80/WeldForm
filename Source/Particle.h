@@ -106,19 +106,19 @@ namespace SPH {
 		double	Sigmay;		///< Tensile yield stress
 		size_t	Fail;		///< Failure criteria
 
-		double	c;		///< Cohesion
-		double	phi;		///< Friction angel
-		double	psi;		///< Dilation angel
-		double	n;		///< Prosity
-		double	n0;		///< Initial Prosity
-		double	k;		///< Permeability
-		double	k2;		///< Second Permeability for the Forchheimer Eq
-		double	d;		///< effective particle size
+		// double	c;		///< Cohesion
+		// double	phi;		///< Friction angel
+		// double	psi;		///< Dilation angel
+		// double	n;		///< Prosity
+		// double	n0;		///< Initial Prosity
+		// double	k;		///< Permeability
+		// double	k2;		///< Second Permeability for the Forchheimer Eq
+		// double	d;		///< effective particle size
 		double	V;		///< Volume of a particle
-		double	RhoF;		///< Density of water or any other fluids
-		bool		VarPorosity;	///< If yes, it will calculate porosity and permeability based on new calculated porosity
-		size_t	SeepageType;	///< Selecting variable to choose a Seepage method
-		double	S;		///< Velocity derivative for surface erosion
+		// double	RhoF;		///< Density of water or any other fluids
+		// bool		VarPorosity;	///< If yes, it will calculate porosity and permeability based on new calculated porosity
+		// size_t	SeepageType;	///< Selecting variable to choose a Seepage method
+		// double	S;		///< Velocity derivative for surface erosion
 
 
 		double 	h;		///< Smoothing length of the particle

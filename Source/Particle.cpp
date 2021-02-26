@@ -27,10 +27,10 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	ct = 0;
 	a = 0.0;
     x = x0;
-    n = 0.0;
-    n0 = 0.0;
-    k = 0.0;
-    k2 = 0.0;
+    // n = 0.0;
+    // n0 = 0.0;
+    // k = 0.0;
+    // k2 = 0.0;
 
     Cs		= 0.0;
     P0		= 0.0;
@@ -76,25 +76,24 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     K = 0.0;
     Material = 0;
     Fail = 0;
-    c = 0.0;
-    phi = 0.0;
-    psi = 0.0;
-    d =0.0;
+    
+	// c = 0.0;
+    // phi = 0.0;
+    // psi = 0.0;
+    // d =0.0;
+	
     Sigmay = 0.0;
     NoSlip = false;
     Shepard = false;
     InOut = 0;
     FirstStep = true;
     V = Mass/RefDensity;
-    RhoF = 0.0;
+    // RhoF = 0.0;
     IsSat = false;
     SatCheck = false;
     ShepardStep = 40;
     ShepardCounter = 0;
-    S = 0.0;
-    VarPorosity = false;
-    SeepageType = 0;
-    S = 0;
+
 	LES = false;
 	SBar = 0.0;
 	CSmag = 0.17;
@@ -232,8 +231,7 @@ inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 	if (ShepardCounter == ShepardStep) ShepardCounter = 0; else ShepardCounter++;
 }
 
-inline void Particle::Mat2MVerlet(double dt)
-{
+inline void Particle::Mat2MVerlet(double dt) {
 	Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
 
 	// Jaumann rate terms
@@ -250,12 +248,11 @@ inline void Particle::Mat2MVerlet(double dt)
 		ShearStress	= 2.0*dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressb;
 	ShearStressb	= Stress;
 
-	if (Fail == 1)
-	{
+	if (Fail == 1) {
 		double J2	= 0.5*(ShearStress(0,0)*ShearStress(0,0) + 2.0*ShearStress(0,1)*ShearStress(1,0) +
 						2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
 						2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
-		//Scale back
+		//Scale back, Fraser Eqn 3-53
 		ShearStress	= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStress;
 	}
 
@@ -335,7 +332,7 @@ inline void Particle::Mat2Leapfrog(double dt)
 		double J2	= 0.5*(ShearStressa(0,0)*ShearStressa(0,0) + 2.0*ShearStressa(0,1)*ShearStressa(1,0) +
 						2.0*ShearStressa(0,2)*ShearStressa(2,0) + ShearStressa(1,1)*ShearStressa(1,1) +
 						2.0*ShearStressa(1,2)*ShearStressa(2,1) + ShearStressa(2,2)*ShearStressa(2,2));
-		//Scale back
+		//Scale back, Fraser Eqn 3-53
 		ShearStressa= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStressa;
 	}
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);

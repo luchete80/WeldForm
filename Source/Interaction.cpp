@@ -183,7 +183,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				P1->ZWab	+= mj/dj* K;
 				P1->StrainRate	 = P1->StrainRate + mj/dj*StrainRate;
 				P1->RotationRate = P1->RotationRate + mj/dj*RotationRate;
-				if (SWIType ==1) P1->S = P1->S + mj/dj*vab(0)*xij(1)*-GK;
+
 			}
 			else
 				P1->ZWab	= 1.0;
@@ -202,7 +202,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				P2->ZWab	+= mi/di* K;
 				P2->StrainRate	 = P2->StrainRate + mi/di*StrainRate;
 				P2->RotationRate = P2->RotationRate + mi/di*RotationRate;
-				if (SWIType ==1) P2->S = P2->S + mi/di*vab(0)*xij(1)*-GK;
+
 			}
 			else
 				P2->ZWab	= 1.0;

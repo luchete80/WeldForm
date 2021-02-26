@@ -827,23 +827,17 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 			int temp1, temp2;
 			temp1 = HOC[q1][q2][q3];
 
-			while (temp1 != -1)
-			{
-				// The current cell  => self cell interactions
+			while (temp1 != -1) {// The current cell  => self cell interactions
 				temp2 = Particles[temp1]->LL;
-				while (temp2 != -1)
-				{
-					if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
-					{
+				while (temp2 != -1){
+					if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
 						if (Particles[temp1]->Material == Particles[temp2]->Material)
 						{
-							if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)
+							if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)//Both free, most common
 								SMPairs[T].Push(std::make_pair(temp1, temp2));
 							else
 								FSMPairs[T].Push(std::make_pair(temp1, temp2));
-
-						}
-						else
+						} else
 							NSMPairs[T].Push(std::make_pair(temp1, temp2));
 					}
 					temp2 = Particles[temp2]->LL;
@@ -1002,7 +996,7 @@ inline void Domain::StartAcceleration (Vec3_t const & a)
 		if (Dimension == 2) Particles[i]->v(2) = 0.0;
 		set_to_zero(Particles[i]->StrainRate);
 		set_to_zero(Particles[i]->RotationRate);
-		Particles[i]->S		= 0.0;
+		
 	}
 }
 
@@ -1194,33 +1188,6 @@ inline void Domain::PrimaryComputeAcceleration ()
 			}
 		}
 
-
-	if (SWIType != 2)
-	{
-		#pragma omp parallel for schedule (static) num_threads(Nproc)
-		for (size_t i=0; i<Particles.Size(); i++)
-		{
-			if (Particles[i]->Material == 3)
-			{
-				if (Particles[i]->SatCheck && !Particles[i]->IsSat)
-				{
-					Particles[i]->Mass		= Particles[i]->V*(Particles[i]->RefDensity - Particles[i]->RhoF);
-					Particles[i]->Density		= Particles[i]->Density - Particles[i]->RhoF;
-					Particles[i]->Densityb		= Particles[i]->Densityb - Particles[i]->RhoF;
-					Particles[i]->RefDensity	= Particles[i]->RefDensity - Particles[i]->RhoF;
-					Particles[i]->IsSat		= true;
-				}
-				if (!Particles[i]->SatCheck && Particles[i]->IsSat)
-				{
-					Particles[i]->Mass		= Particles[i]->V*(Particles[i]->RefDensity + Particles[i]->RhoF);
-					Particles[i]->Density		= Particles[i]->Density + Particles[i]->RhoF;
-					Particles[i]->Densityb		= Particles[i]->Densityb + Particles[i]->RhoF;
-					Particles[i]->RefDensity	= Particles[i]->RefDensity + Particles[i]->RhoF;
-					Particles[i]->IsSat		= false;
-				}
-			}
-		}
-	}
 
 }
 
@@ -1718,40 +1685,6 @@ inline void Domain::InitialChecks()
 		if (Particles[i]->Material < 3)
 			Particles[i]->Pressure = EOS(Particles[i]->PresEq, Particles[i]->Cs, Particles[i]->P0,Particles[i]->Density, Particles[i]->RefDensity);
 
-		// Initializing the permeability for soil particles
-		if (Particles[i]->Material == 3)
-		{
-			switch(Particles[i]->SeepageType)
-			{
-				case 0:
-					break;
-
-				case 1:
-					Particles[i]->k = Particles[i]->n0*Particles[i]->n0*Particles[i]->n0*Particles[i]->d*Particles[i]->d/(180.0*(1.0-Particles[i]->n0)*(1.0-Particles[i]->n0));
-					break;
-
-				case 2:
-					Particles[i]->k = Particles[i]->n0*Particles[i]->n0*Particles[i]->n0*Particles[i]->d*Particles[i]->d/(150.0*(1.0-Particles[i]->n0)*(1.0-Particles[i]->n0));
-					Particles[i]->k2= 1.75*(1.0-Particles[i]->n0)/(Particles[i]->n0*Particles[i]->n0*Particles[i]->n0*Particles[i]->d);
-					break;
-
-				case 3:
-					Particles[i]->k = Particles[i]->n0*Particles[i]->n0*Particles[i]->n0*Particles[i]->d*Particles[i]->d/(150.0*(1.0-Particles[i]->n0)*(1.0-Particles[i]->n0));
-					Particles[i]->k2= 0.4/(Particles[i]->n0*Particles[i]->n0*Particles[i]->d);
-					break;
-
-				default:
-					std::cout << "Seepage Type No is out of range. Please correct it and run again" << std::endl;
-					std::cout << "0 => Darcy's Law" << std::endl;
-					std::cout << "1 => Darcy's Law & Kozeny–Carman Eq" << std::endl;
-					std::cout << "2 => The Forchheimer Eq & Ergun Coeffs" << std::endl;
-					std::cout << "3 => The Forchheimer Eq & Den Adel Coeffs" << std::endl;
-					abort();
-					break;
-			}
-
-			Particles[i]->n = Particles[i]->n0;
-		}
 	}
 }
 
