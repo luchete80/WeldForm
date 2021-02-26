@@ -143,47 +143,6 @@ inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_
 
 }
 
-inline void Particle::Mat1(double dt)
-{
-	Pressure 	= EOS(PresEq, Cs, P0,Density, RefDensity);
-	double temp	= (StrainRate(0,0)*StrainRate(0,0) + 2.0*StrainRate(0,1)*StrainRate(1,0) +
-			2.0*StrainRate(0,2)*StrainRate(2,0) + StrainRate(1,1)*StrainRate(1,1) +
-			2.0*StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,2)*StrainRate(2,2));
-
-	ShearRate	= sqrt(0.5*temp);
-	SBar		= sqrt(2.0*temp);
-
-	// LES model
-	if (LES)
-	{
-		Mu	= MuRef + RefDensity*pow((CSmag*h),2.0)*SBar;
-	}
-
-	// Bingham viscosity calculation
-	if (T0>0.0)
-	{
-		switch (VisM)
-		{
-			case 0:
-			// Bingham
-				if (ShearRate !=0.0)
-					Mu = MuRef + T0*(1-exp(-m*ShearRate))/ShearRate;
-				else
-					Mu = MuRef + T0*m;
-				break;
-			case 1:
-			// Cross
-				Mu = (1000.0*MuRef + MuRef*MuRef*1000.0/T0*ShearRate)/(1+1000.0*MuRef/T0*ShearRate);
-				break;
-			default:
-				std::cout << "Non-Newtonian Viscosity Type No is out of range. Please correct it and run again" << std::endl;
-				std::cout << "0 => Bingham" << std::endl;
-				std::cout << "1 => Cross" << std::endl;
-				abort();
-				break;
-		}
-	}
-}
 
 
 inline void Particle::Move_MVerlet (Mat3_t I, double dt)
@@ -251,10 +210,10 @@ inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 		vb		= temp;
 	}
 
-	switch (Material)
-    {case 1:
-    	Mat1(dt);
-		break;
+	switch (Material) {
+		//case 1:
+    	// Mat1(dt);
+		// break;
     case 2:
     	Mat2MVerlet(dt);
     	break;
@@ -332,10 +291,10 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	v = (va + vb)/2.0;
 	x += dt*va;
 
-	switch (Material)
-    {case 1:
-    	Mat1(dt);
-		break;
+	switch (Material) {
+		// case 1:
+    	// Mat1(dt);
+		// break;
     case 2:
     	Mat2Leapfrog(dt);
     	break;
