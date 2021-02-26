@@ -107,49 +107,49 @@ inline Domain::~Domain ()
 	for (size_t i=1; i<=Max; i++)  Particles.DelItem(Max-i);
 }
 
-	inline void Domain::Periodic_X_Correction(Vec3_t & x, double const & h, Particle * P1, Particle * P2)
-	{
-		if (DomSize(0)>0.0) {if (x(0)>2*Cellfac*h || x(0)<-2*Cellfac*h) {(P1->CC[0]>P2->CC[0]) ? x(0) -= DomSize(0) : x(0) += DomSize(0);}}
-		if (DomSize(1)>0.0) {if (x(1)>2*Cellfac*h || x(1)<-2*Cellfac*h) {(P1->CC[1]>P2->CC[1]) ? x(1) -= DomSize(1) : x(1) += DomSize(1);}}
-		if (DomSize(2)>0.0) {if (x(2)>2*Cellfac*h || x(2)<-2*Cellfac*h) {(P1->CC[2]>P2->CC[2]) ? x(2) -= DomSize(2) : x(2) += DomSize(2);}}
-	}
+inline void Domain::Periodic_X_Correction(Vec3_t & x, double const & h, Particle * P1, Particle * P2)
+{
+	if (DomSize(0)>0.0) {if (x(0)>2*Cellfac*h || x(0)<-2*Cellfac*h) {(P1->CC[0]>P2->CC[0]) ? x(0) -= DomSize(0) : x(0) += DomSize(0);}}
+	if (DomSize(1)>0.0) {if (x(1)>2*Cellfac*h || x(1)<-2*Cellfac*h) {(P1->CC[1]>P2->CC[1]) ? x(1) -= DomSize(1) : x(1) += DomSize(1);}}
+	if (DomSize(2)>0.0) {if (x(2)>2*Cellfac*h || x(2)<-2*Cellfac*h) {(P1->CC[2]>P2->CC[2]) ? x(2) -= DomSize(2) : x(2) += DomSize(2);}}
+}
 
-	inline void Domain::Kernel_Set(Kernels_Type const & KT)
-	{
-		KernelType = KT;
-		if (KernelType==2) Cellfac = 3.0; else Cellfac = 2.0;
-	}
+inline void Domain::Kernel_Set(Kernels_Type const & KT)
+{
+	KernelType = KT;
+	if (KernelType==2) Cellfac = 3.0; else Cellfac = 2.0;
+}
 
-	inline void Domain::Viscosity_Eq_Set(Viscosity_Eq_Type const & VQ)
-	{
-		VisEq = VQ;
-	}
+inline void Domain::Viscosity_Eq_Set(Viscosity_Eq_Type const & VQ)
+{
+	VisEq = VQ;
+}
 
-	inline void Domain::Gradient_Approach_Set(Gradient_Type const & GT)
-	{
-		GradientType = GT;
-	}
+inline void Domain::Gradient_Approach_Set(Gradient_Type const & GT)
+{
+	GradientType = GT;
+}
 
-	inline void Domain::AdaptiveTimeStep()
+inline void Domain::AdaptiveTimeStep()
+{
+	if (deltatint>deltatmin)
 	{
-		if (deltatint>deltatmin)
-		{
-			if (deltat<deltatmin)
-				deltat		= 2.0*deltat*deltatmin/(deltat+deltatmin);
-			else
-				deltat		= deltatmin;
-		}
+		if (deltat<deltatmin)
+			deltat		= 2.0*deltat*deltatmin/(deltat+deltatmin);
 		else
-		{
-			if (deltatint!=deltat)
-				deltat		= 2.0*deltat*deltatint/(deltat+deltatint);
-			else
-				deltat		= deltatint;
-		}
-
-		if (deltat<(deltatint/1.0e5))
-			throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
+			deltat		= deltatmin;
 	}
+	else
+	{
+		if (deltatint!=deltat)
+			deltat		= 2.0*deltat*deltatint/(deltat+deltatint);
+		else
+			deltat		= deltatint;
+	}
+
+	if (deltat<(deltatint/1.0e5))
+		throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
+}
 
 inline void Domain::AddSingleParticle(int tag, Vec3_t const & x, double Mass, double Density, double h, bool Fixed)
 {
@@ -1359,11 +1359,11 @@ inline void Domain::CalcTempInc () {
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			temp += mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T * P2->T) * dot( xij , GK*xij );
 			omp_set_lock(&P1->my_lock);
-				P1->a		+= temp;
+				P1->T		+= temp;
 			omp_unset_lock(&P1->my_lock);
 			// Locking the particle 2 for updating the properties
 			omp_set_lock(&P2->my_lock);
-				P2->a		-= mi * temp;
+				P2->T		-= mi * temp;
 			omp_unset_lock(&P2->my_lock);
 		}
 		// for (size_t i=0; i<FSMPairs[k].Size();i++)
