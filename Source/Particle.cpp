@@ -27,10 +27,6 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	ct = 0;
 	a = 0.0;
     x = x0;
-    // n = 0.0;
-    // n0 = 0.0;
-    // k = 0.0;
-    // k2 = 0.0;
 
     Cs		= 0.0;
     P0		= 0.0;
@@ -77,11 +73,6 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     Material = 0;
     Fail = 0;
     
-	// c = 0.0;
-    // phi = 0.0;
-    // psi = 0.0;
-    // d =0.0;
-	
     Sigmay = 0.0;
     NoSlip = false;
     Shepard = false;
@@ -254,9 +245,11 @@ inline void Particle::Mat2MVerlet(double dt) {
 						2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
 		//Scale back, Fraser Eqn 3-53
 		ShearStress	= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStress;
+		double dep=( sqrt(3.0*J2)- Sigmay)/ 3.*G;	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+		pl_strain+=dep;
 	}
 
-	Sigma			= -Pressure * OrthoSys::I + ShearStress;
+	Sigma			= -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
 
 	Stress	= Strain;
 	if (ct == 30)
@@ -310,8 +303,7 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 
 }
 
-inline void Particle::Mat2Leapfrog(double dt)
-{
+inline void Particle::Mat2Leapfrog(double dt) {
 	Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
 
 	// Jaumann rate terms
@@ -327,8 +319,7 @@ inline void Particle::Mat2Leapfrog(double dt)
 	ShearStressb	= ShearStressa;
 	ShearStressa	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressa;
 
-	if (Fail == 1)
-	{
+	if (Fail == 1) {
 		double J2	= 0.5*(ShearStressa(0,0)*ShearStressa(0,0) + 2.0*ShearStressa(0,1)*ShearStressa(1,0) +
 						2.0*ShearStressa(0,2)*ShearStressa(2,0) + ShearStressa(1,1)*ShearStressa(1,1) +
 						2.0*ShearStressa(1,2)*ShearStressa(2,1) + ShearStressa(2,2)*ShearStressa(2,2));
@@ -337,7 +328,7 @@ inline void Particle::Mat2Leapfrog(double dt)
 	}
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);
 
-	Sigma = -Pressure * OrthoSys::I + ShearStress;
+	Sigma = -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
 
 	if (FirstStep)
 		Straina	= -dt/2.0*StrainRate + Strain;
@@ -346,8 +337,7 @@ inline void Particle::Mat2Leapfrog(double dt)
 	Strain	= 1.0/2.0*(Straina+Strainb);
 
 
-	if (Fail > 1)
-	{
+	if (Fail > 1){
 		std::cout<<"Undefined failure criteria for solids"<<std::endl;
 		abort();
 	}

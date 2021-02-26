@@ -85,6 +85,7 @@ namespace SPH {
 		Mat3_t	Strain;		///< Total Strain n+1
 		Mat3_t	Straina;	///< Total Strain n+1/2 (Leapfrog)
 		Mat3_t	Strainb;	///< Total Strain n-1 (Modified Verlet)
+		double 	pl_strain;	//Effective plastic strain 
 
 		Mat3_t	TIR;		///< Tensile Instability stress tensor R
 		double	TI;		///< Tensile instability factor
@@ -106,20 +107,7 @@ namespace SPH {
 		double	Sigmay;		///< Tensile yield stress
 		size_t	Fail;		///< Failure criteria
 
-		// double	c;		///< Cohesion
-		// double	phi;		///< Friction angel
-		// double	psi;		///< Dilation angel
-		// double	n;		///< Prosity
-		// double	n0;		///< Initial Prosity
-		// double	k;		///< Permeability
-		// double	k2;		///< Second Permeability for the Forchheimer Eq
-		// double	d;		///< effective particle size
 		double	V;		///< Volume of a particle
-		// double	RhoF;		///< Density of water or any other fluids
-		// bool		VarPorosity;	///< If yes, it will calculate porosity and permeability based on new calculated porosity
-		// size_t	SeepageType;	///< Selecting variable to choose a Seepage method
-		// double	S;		///< Velocity derivative for surface erosion
-
 
 		double 	h;		///< Smoothing length of the particle
 		int    	LL;		///< Linked-List variable to show the next particle in the list of a cell
