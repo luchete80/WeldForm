@@ -1769,8 +1769,7 @@ inline void Domain::TimestepCheck ()
 	throw new Fatal("Please decrease the time step to the allowable range");
 }
 
-inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx)
-{
+inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
 	size_t idx_out = 1;
@@ -1788,16 +1787,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 
 	//Initial model output
-	if (TheFileKey!=NULL)
-	{
+	if (TheFileKey!=NULL) {
 		String fn;
 		fn.Printf    ("%s_Initial", TheFileKey);
 		WriteXDMF    (fn.CStr());
 		std::cout << "\nInitial Condition has been generated\n" << std::endl;
 	}
 
-	while (Time<tf && idx_out<=maxidx)
-	{
+	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
 		MainNeighbourSearch();
@@ -1807,10 +1804,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		GeneralAfter(*this);
 
 		// output
-		if (Time>=tout)
-		{
-			if (TheFileKey!=NULL)
-			{
+		if (Time>=tout){
+			if (TheFileKey!=NULL) {
 				String fn;
 				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
 				WriteXDMF    (fn.CStr());
