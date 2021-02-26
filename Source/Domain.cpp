@@ -1342,15 +1342,15 @@ inline void Domain::CalcTempInc () {
 			// }
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for ( size_t k = 0; k < Nproc ; k++) {
-		size_t P1,P2;
+		Particle *P1,*P2;
 		Vec3_t xij;
 		double h,GK;
 		//TODO: DO THE LOCK PARALLEL THING
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		double temp;
-		for (size_t i=0; i<SMPairs[k].Size();i++) {
-			P1	= SMPairs[k][a].first;
-			P2	= SMPairs[k][a].second;
+		for (size_t a=0; a<SMPairs[k].Size();a++) {
+			P1	= Particles[SMPairs[k][a].first];
+			P2	= Particles[SMPairs[k][a].second];
 			xij	= Particles[P1]->x-Particles[P2]->x;
 			h	= (Particles[P1]->h+Particles[P2]->h)/2.0;
 			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);
