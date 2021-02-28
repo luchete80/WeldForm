@@ -168,5 +168,7 @@ public:
 #include "Interaction.cpp"
 #include "Domain.cpp"
 #include "Output.cpp"
+#include "InOutFlow.cpp"
+#include "Thermal.cpp"
 
 #endif // SPH_DOMAIN_H
