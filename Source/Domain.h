@@ -167,5 +167,6 @@ public:
 
 #include "Interaction.cpp"
 #include "Domain.cpp"
+#include "Output.cpp"
 
 #endif // SPH_DOMAIN_H
