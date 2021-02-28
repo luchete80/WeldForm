@@ -748,13 +748,12 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 	}
 }
 
-inline void Domain::StartAcceleration (Vec3_t const & a)
-{
+inline void Domain::StartAcceleration (Vec3_t const & a) {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for (size_t i=0; i<Particles.Size(); i++) {
-	    	if (Particles[i]->IsFree){
+	    if (Particles[i]->IsFree){
 			// Tensile Instability for all soil and solid particles
-			if (Particles[i]->Material > 1 && Particles[i]->TI > 0.0)
+			if (Particles[i]->TI > 0.0)
         		{
 				// XY plane must be used, It is very slow in 3D
 				if (Dimension == 2)
@@ -868,7 +867,7 @@ inline void Domain::PrimaryComputeAcceleration ()
 			if (Particles[a]->NoSlip)	Particles[a]->NSv	= Particles[a]->NSv/Particles[a]->SumKernel;
 
 			// Tensile Instability for fixed soil and solid particles
-			if (Particles[a]->Material > 1 && Particles[a]->TI > 0.0)
+			if (Particles[a]->TI > 0.0)
 			{
 				// XY plane must be used, It is very slow in 3D
 				if (Dimension == 2)
@@ -1000,8 +999,7 @@ inline void Domain::InitialChecks()
 	//initializing identity matrix
 	if (Dimension == 2) I(2,2) = 0;
 
-	if (Dimension<=1 || Dimension>3)
-	{
+	if (Dimension<=1 || Dimension>3) {
 		std::cout << "Please correct the dimension (2=>2D or 3=>3D) and run again" << std::endl;
 		abort();
 	}
@@ -1011,13 +1009,8 @@ inline void Domain::InitialChecks()
 
 
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t i=0; i<Particles.Size(); i++)
-	{
-		//Initializing pressure of solid and fluid particles
-		if (Particles[i]->Material < 3)
+	for (size_t i=0; i<Particles.Size(); i++) //Initializing pressure of solid and fluid particles
 			Particles[i]->Pressure = EOS(Particles[i]->PresEq, Particles[i]->Cs, Particles[i]->P0,Particles[i]->Density, Particles[i]->RefDensity);
-
-	}
 }
 
 inline void Domain::TimestepCheck ()
