@@ -50,7 +50,6 @@ namespace SPH {
 		Vec3_t	va;		///< Velocity of the particle n+1/2 (Leapfrog)
 		Vec3_t	v;		///< Velocity of the particle n+1
 		Vec3_t	NSv;		///< Velocity of the fixed particle for no-slip BC
-		Vec3_t	FSINSv;		///< Velocity of the fixed particle for no-slip BC in FSI
 		Vec3_t	VXSPH;		///< Mean Velocity of neighbor particles for updating the particle position (XSPH)
 		Vec3_t	a;		///< Acceleration of the particle n
 
@@ -58,7 +57,6 @@ namespace SPH {
 		double	Cs;		///< Speed of sound
 		double	P0;		///< background pressure for equation of state
 		double 	Pressure;	///< Pressure of the particle n+1
-		double 	FSIPressure;	///< Pressure of the particle n+1 in FSI
 
 		double	Density;	///< Density of the particle n+1
 		double 	Densitya;	///< Density of the particle n+1/2 (Leapfrog)
@@ -78,7 +76,7 @@ namespace SPH {
 		Mat3_t	ShearStressb;	///< Deviatoric shear stress tensor (deviatoric part of the Cauchy stress tensor) n-1 (Modified Verlet)
 
 		Mat3_t	Sigma;		///< Cauchy stress tensor (Total Stress) n+1
-		//    Mat3_t	FSISigma;	///< Cauchy stress tensor (Total Stress) n+1 in FSI
+
 		Mat3_t	Sigmaa;		///< Cauchy stress tensor (Total Stress) n+1/2 (Leapfrog)
 		Mat3_t	Sigmab;		///< Cauchy stress tensor (Total Stress) n-1 (Modified Verlet)
 
@@ -112,10 +110,9 @@ namespace SPH {
 		double 	h;		///< Smoothing length of the particle
 		int    	LL;		///< Linked-List variable to show the next particle in the list of a cell
 		int    	CC[3];		///< Current cell No for the particle (linked-list)
-		int			ct;		///< Correction step for the Modified Verlet Algorithm
+		int		ct;		///< Correction step for the Modified Verlet Algorithm
 		double	SumKernel;	///< Summation of the kernel value for neighbour particles
-		double	FSISumKernel;	///< Summation of the kernel value for neighbour particles in FSI
-		bool		FirstStep;	///< to initialize the integration scheme
+		bool	FirstStep;	///< to initialize the integration scheme
 		
 		//LUCIANO: THERMAL PROPERTIES
 		double T,k_T;			// Temperature, avoid permeability

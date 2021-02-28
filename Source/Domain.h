@@ -111,7 +111,6 @@ public:
 
     int						*** HOC;	///< Array of "Head of Chain" for each cell
 
-    size_t					SWIType;	///< Selecting variable to choose Soil-Water Interaction type
     bool					FSI;		///< Selecting variable to choose Fluid-Structure Interaction
 
     double 					XSPH;		///< Velocity correction factor

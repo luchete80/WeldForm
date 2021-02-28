@@ -37,7 +37,6 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     va = 0.0;
     vb = 0.0;
     NSv = 0.0;
-    FSINSv = 0.0;
     v = v0;
     VXSPH = 0.0;
     TI		= 0.0;
@@ -54,7 +53,6 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     IsFree = !Fixed;
     h = h0;
     Pressure=0.0;
-    FSIPressure=0.0;
     ID = Tag;
     CC[0]= CC[1] = CC[2] = 0;
     LL=0;
@@ -67,7 +65,6 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     T0 = 0.0;
     m = 300.0;
     SumKernel = 0.0;
-    FSISumKernel = 0.0;
     G = 0.0;
     K = 0.0;
     Material = 0;

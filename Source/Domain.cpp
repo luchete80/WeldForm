@@ -66,8 +66,6 @@ inline Domain::Domain ()
     Cellfac = 2.0;
 
     KernelType	= 0;
-    SWIType	= 0;
-    FSI		= false;
     VisEq	= 0;
     Scheme	= 0;
 		GradientType = 0;
@@ -154,141 +152,6 @@ inline void Domain::AdaptiveTimeStep()
 inline void Domain::AddSingleParticle(int tag, Vec3_t const & x, double Mass, double Density, double h, bool Fixed)
 {
    	Particles.Push(new Particle(tag,x,Vec3_t(0,0,0),Mass,Density,h,Fixed));
-}
-
-inline void Domain::AddBoxNo(int tag, Vec3_t const & V, size_t nx, size_t ny, size_t nz, double r, double Density, double h, int type, int rotation, bool random, bool Fixed)
-{
-    if (!(type==0 || type==1))
-    {
-	   	std::cout << "Packing Type is out of range. Please correct it and run again" << std::endl;
-		std::cout << "0 => Hexagonal Close Packing" << std::endl;
-		std::cout << "1 => Cubic Packing" << std::endl;
-	    abort();
-    }
-
-    if (!(rotation==0 || rotation==90))
-    {
-	   	std::cout << "Packing Rotation Angle is out of range. Please correct it and run again" << std::endl;
-		std::cout << "0 => " << std::endl;
-		std::cout << "0 0 0 0" << std::endl;
-		std::cout << " 0 0 0 0" << std::endl;
-		std::cout << "0 0 0 0" << std::endl;
-		std::cout << " 0 0 0 0" << std::endl;
-		std::cout << std::endl;
-		std::cout << "90 =>" << std::endl;
-		std::cout << "  0   0" << std::endl;
-		std::cout << "0 0 0 0" << std::endl;
-		std::cout << "0 0 0 0" << std::endl;
-		std::cout << "0   0  " << std::endl;
-		abort();
-    }
-
-//	Util::Stopwatch stopwatch;
-    std::cout << "\n--------------Generating particles by AddBoxNo with defined numbers of particles--------------" << std::endl;
-
-    size_t PrePS = Particles.Size();
-
-    double x,y;
-
-    double qin = 0.03;
-    srand(100);
-
-    if (Dimension==3)
-    {
-   		double z;
-
-    	if (type==0)
-    	{
-    		//Hexagonal close packing
- 		    for (size_t k=0; k<nz; k++)
-		    for (size_t j=0; j<ny; j++)
-		    for (size_t i=0; i<nx; i++)
-		    {
-				if ((k%2!=0) && (j%2!=0)) x = V(0) + (2*i+(j%2)+(k%2)-1)*r; else x = V(0) + (2*i+(j%2)+(k%2)+1)*r;
-				y = V(1) + (sqrt(3.0)*(j+(1.0/3.0)*(k%2))+1)*r;
-				z = V(2) + ((2*sqrt(6.0)/3)*k+1)*r;
-				if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					else    Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-			}
-    	}
-    	else
-    	{
-    		//Cubic packing
-		    for (size_t k=0; k<nz; k++)
-		    for (size_t j=0; j<ny; j++)
-		    for (size_t i=0; i<nx; i++)
-		    {
-				x = V(0) + (2.0*i+1)*r;
-				y = V(1) + (2.0*j+1)*r;
-				z = V(2) + (2.0*k+1)*r;
-				if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					else    Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-			}
-    	}
-
-        //Calculate particles' mass in 3D
-        Vec3_t temp, Max=V;
-		for (size_t i=PrePS; i<Particles.Size(); i++)
-		{
-			if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
-			if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
-			if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
-		}
-		Max +=r;
-		temp = Max-V;
-		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
-
-		#pragma omp parallel for num_threads(Nproc)
-		for (size_t i=PrePS; i<Particles.Size(); i++)
-		{
-			Particles[i]->Mass = Mass;
-		}
-    }
-
-    if (Dimension==2)
-    {
-    	if (type==0)
-    	{
-    		//Hexagonal close packing
-    		if (rotation==0)
-    		{
-    		    for (size_t j=0; j<ny; j++)
-    		    for (size_t i=0; i<nx; i++)
-    		    {
-					x = V(0) + (2*i+(j%2)+1)*r;
-					y = V(1) + (sqrt(3.0)*j+1)*r;
-					if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
-						else    Particles.Push(new Particle(tag,Vec3_t(x,y,0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
-				}
-			}
-    		else
-    		{
-    		    for (size_t i=0; i<nx; i++)
-    		    for (size_t j=0; j<ny; j++)
-    		    {
-					x = V(0) + (sqrt(3.0)*i+1)*r;
-					y = V(1) + (2*j+(i%2)+1)*r;
-					if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
-						else    Particles.Push(new Particle(tag,Vec3_t(x,y,0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
-				}
-    		}
-    	}
-    	else
-    	{
-    		//Cubic packing
-		    for (size_t j=0; j<ny; j++)
-		    for (size_t i=0; i<nx; i++)
-		    {
-				x = V(0) + (2*i+1)*r;
-				y = V(1) + (2*j+1)*r;
-				if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
-					else    Particles.Push(new Particle(tag,Vec3_t(x,y,0.0),Vec3_t(0,0,0),2.0*r*2.0*r*Density,Density,h,Fixed));
-			}
-
-    	}
-    }
-
-	R = r;
 }
 
 inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly, double Lz, 
@@ -888,10 +751,8 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 inline void Domain::StartAcceleration (Vec3_t const & a)
 {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t i=0; i<Particles.Size(); i++)
-	{
-	    	if (Particles[i]->IsFree)
-    		{
+	for (size_t i=0; i<Particles.Size(); i++) {
+	    	if (Particles[i]->IsFree){
 			// Tensile Instability for all soil and solid particles
 			if (Particles[i]->Material > 1 && Particles[i]->TI > 0.0)
         		{
@@ -947,10 +808,6 @@ inline void Domain::StartAcceleration (Vec3_t const & a)
 		Particles[i]->ZWab	= 0.0;
 		Particles[i]->SumDen	= 0.0;
 		Particles[i]->SumKernel	= 0.0;
-		Particles[i]->FSISumKernel	= 0.0;
-		Particles[i]->FSINSv		= 0.0;
-		Particles[i]->FSIPressure	= 0.0;
-//	        set_to_zero(Particles[i]->FSISigma);
 		if (Dimension == 2) Particles[i]->v(2) = 0.0;
 		set_to_zero(Particles[i]->StrainRate);
 		set_to_zero(Particles[i]->RotationRate);
@@ -998,108 +855,7 @@ inline void Domain::PrimaryComputeAcceleration ()
 				omp_unset_lock(&Particles[P2]->my_lock);
 			}
 		}
-		if (SWIType != 2)
-		{
-			for (size_t a=0; a<NSMPairs[k].Size();a++)
-			{
-				P1 = NSMPairs[k][a].first;
-				P2 = NSMPairs[k][a].second;
-				if (Particles[P1]->Material == 3 && Particles[P1]->Material*Particles[P2]->Material == 3)
-				{
-					if (!Particles[P1]->SatCheck)
-						if (Particles[P2]->CC[1] >= Particles[P1]->CC[1])
-							if (Particles[P2]->x(1) >= Particles[P1]->x(1))
-							{
-								omp_set_lock(&Particles[P1]->my_lock);
-									Particles[P1]->SatCheck = true;
-								omp_unset_lock(&Particles[P1]->my_lock);
-							}
-				}
-				if (Particles[P2]->Material == 3  && Particles[P1]->Material*Particles[P2]->Material == 3)
-				{
-					if (!Particles[P2]->SatCheck)
-						if (Particles[P1]->CC[1] >= Particles[P2]->CC[1])
-							if (Particles[P1]->x(1) >= Particles[P2]->x(1))
-							{
-								omp_set_lock(&Particles[P2]->my_lock);
-									Particles[P2]->SatCheck = true;
-								omp_unset_lock(&Particles[P2]->my_lock);
-							}
-				}
-			}
-		}
-		if (FSI)
-		{
-			for (size_t a=0; a<NSMPairs[k].Size();a++)
-			{
-				P1 = NSMPairs[k][a].first;
-				P2 = NSMPairs[k][a].second;
-				if (Particles[P1]->Material*Particles[P2]->Material == 2 && (Particles[P1]->IsFree*Particles[P2]->IsFree))
-				{
-
-					xij	= Particles[P1]->x-Particles[P2]->x;
-					h	= (Particles[P1]->h+Particles[P2]->h)/2.0;
-
-					Periodic_X_Correction(xij, h, Particles[P1], Particles[P2]);
-
-					K	= Kernel(Dimension, KernelType, norm(xij)/h, h);
-
-					if (Particles[P1]->Material == 1)
-					{
-						omp_set_lock(&dom_lock);
-							FreeFSIParticles.Push(P2);
-						omp_unset_lock(&dom_lock);
-
-						omp_set_lock(&Particles[P2]->my_lock);
-							Particles[P2]->FSISumKernel	+= K;
-							Particles[P2]->NSv 		+= Particles[P1]->v * K;
-							Particles[P2]->FSIPressure	+= Particles[P1]->Pressure * K + dot(Gravity,xij)*Particles[P1]->Density*K;
-						omp_unset_lock(&Particles[P2]->my_lock);
-
-//						Particles[P1]->FSISumKernel	+= K;
-//						Particles[P1]->NSv 		+= Particles[P2]->v * K;
-//						Particles[P1]->FSIPressure	+= Particles[P2]->Pressure * K + dot(Gravity,xij)*Particles[P2]->Density*K;
-//						Particles[P1]->FSISigma	 	 = Particles[P1]->FSISigma + K * Particles[P2]->Sigma;
-					}
-					else
-					{
-						omp_set_lock(&dom_lock);
-							FreeFSIParticles.Push(P1);
-						omp_unset_lock(&dom_lock);
-
-//						Particles[P2]->FSISumKernel	+= K;
-//						Particles[P2]->FSINSv 		+= Particles[P1]->v * K;
-//						Particles[P2]->FSIPressure	+= Particles[P1]->Pressure * K + dot(Gravity,xij)*Particles[P1]->Density*K;
-//						Particles[P2]->FSISigma	 	 = Particles[P2]->FSISigma + K * Particles[P1]->Sigma;
-
-						omp_set_lock(&Particles[P1]->my_lock);
-							Particles[P1]->FSISumKernel	+= K;
-							Particles[P1]->FSINSv 		+= Particles[P2]->v * K;
-							Particles[P1]->FSIPressure	+= Particles[P2]->Pressure * K + dot(Gravity,xij)*Particles[P2]->Density*K;
-						omp_unset_lock(&Particles[P1]->my_lock);
-					}
-
-				}
-			}
-		}
-
 	}
-
-	if (FSI)
-	{
-		// Calculateing the finala value of the smoothed pressure, velocity and stress for fixed particles
-		#pragma omp parallel for schedule (static) num_threads(Nproc)
-		for (size_t i=0; i<FreeFSIParticles.Size(); i++)
-		{
-			size_t a = FreeFSIParticles[i];
-			Particles[a]->FSIPressure	= Particles[a]->FSIPressure/Particles[a]->FSISumKernel;
-//			Particles[a]->FSISigma		= 1.0/Particles[a]->FSISumKernel*Particles[a]->FSISigma;
-			Particles[a]->FSINSv		= Particles[a]->FSINSv/Particles[a]->FSISumKernel;
-
-		}
-		FreeFSIParticles.Clear();
-	}
-
 
 	// Calculateing the finala value of the smoothed pressure, velocity and stress for fixed particles
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
