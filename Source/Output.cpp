@@ -93,6 +93,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     int   * Tag		= new int  [  Particles.Size()];
     float * Sigma	= new float[6*Particles.Size()];
     float * Strain	= new float[6*Particles.Size()];
+	float * Temp	= new float[  Particles.Size()];
 
 	double P1,P2,P3;
 
@@ -125,6 +126,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Strain  [6*i+3] = float(Particles[i]->Strain(1,1));
         Strain  [6*i+4] = float(Particles[i]->Strain(1,2));
         Strain  [6*i+5] = float(Particles[i]->Strain(2,2));
+		Temp	[i    ] = float(Particles[i]->T);
 
 	UserOutput(Particles[i],P1,P2,P3);
         Prop1	[i    ] = float(P1);
@@ -168,7 +170,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Sigma);
     dsname.Printf("Strain");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain);
-
+    dsname.Printf("Temperature");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Temp);
 
 
     delete [] Posvec;
@@ -184,6 +187,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     delete [] Tag;
     delete [] Sigma;
     delete [] Strain;
+	delete [] Temp;
 
    //Closing the file
     H5Fflush(file_id,H5F_SCOPE_GLOBAL);
@@ -255,6 +259,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "     <Attribute Name=\"Strain\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Strain \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"Temperature\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/Temperature \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "   </Grid>\n";
