@@ -44,12 +44,11 @@ void UserAcc(SPH::Domain & domi)
 using std::cout;
 using std::endl;
 
-int main(int argc, char **argv) try
-{
+int main(int argc, char **argv) try {
        SPH::Domain	dom;
 
         dom.Dimension	= 3;
-        dom.Nproc	= 8;
+        dom.Nproc		= 4;
     	dom.Kernel_Set(Quintic_Spline);
     	dom.Scheme	= 0;
 
@@ -57,13 +56,12 @@ int main(int argc, char **argv) try
     	double H,L,n;
 
     	H	= 0.01;
-    	L	= 1.0;
-    	n	= 40.0;
+    	n	= 20.0;
 
     	rho	= 1000.0;
     	K	= 3.25e6;
     	G	= 7.15e5;
-	Fy	= 4000.0;
+		Fy	= 4000.0;
     	dx	= H / n;
     	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
@@ -77,10 +75,14 @@ int main(int argc, char **argv) try
         cout<<"G  = "<<G<<endl;
         cout<<"Fy = "<<Fy<<endl;
     	dom.GeneralAfter = & UserAcc;
-        dom.DomMax(0) = L;
-        dom.DomMin(0) = -L;
+        dom.DomMax(0) = H;
+        dom.DomMin(0) = -H;
 
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
+		//AddBoxLength(	//int tag, Vec3_t const & V, double Lx, double Ly, double Lz, 
+						//double r, double Density, double h, int type, int rotation, bool random, bool Fixed)
+     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
+							H , H ,  H , 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );
 
      	double x;
 
@@ -89,13 +91,14 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs		= Cs;
-    		dom.Particles[a]->Shepard	= false;
-    		dom.Particles[a]->Material	= 2;
-    		dom.Particles[a]->Fail		= 1;
-    		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 1.0;
-    		dom.Particles[a]->TI		= 0.3;
+    		dom.Particles[a]->Shepard		= false;
+    		dom.Particles[a]->Material		= 2;
+    		dom.Particles[a]->Fail			= 1;
+    		dom.Particles[a]->Sigmay		= Fy;
+    		dom.Particles[a]->Alpha			= 1.0;
+    		dom.Particles[a]->TI			= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
+			dom.Particles[a]->T				= 20.0;
     		x = dom.Particles[a]->x(0);
     		if (x<-L/2.0)
     			dom.Particles[a]->ID=2;

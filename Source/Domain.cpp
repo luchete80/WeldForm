@@ -193,21 +193,17 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
     double qin = 0.03;
     srand(100);
 
-    if (Dimension==3)
-    {
-    	if (type==0)
-    	{
+    if (Dimension==3) {
+    	if (type==0) {
     		//Hexagonal close packing
     		double z,zp;
 			size_t k=0;
 			zp = V(2);
 
-			while (zp <= (V(2)+Lz-r))
-			{
+			while ( zp <= (V(2)+Lz-r) ) {
 				j = 0;
 				yp = V(1);
-				while (yp <= (V(1)+Ly-r))
-				{
+				while (yp <= (V(1)+Ly-r)) {
 					i = 0;
 					xp = V(0);
 					while (xp <= (V(0)+Lx-r))
@@ -216,7 +212,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 						y = V(1) + (sqrt(3.0)*(j+(1.0/3.0)*(k%2))+1)*r;
 						z = V(2) + ((2*sqrt(6.0)/3)*k+1)*r;
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-							else    Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+						else    	Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 						i++;
 						if ((k%2!=0) && (j%2!=0)) xp = V(0) + (2*i+(j%2)+(k%2)-1)*r; else xp = V(0) + (2*i+(j%2)+(k%2)+1)*r;
 					}
@@ -227,15 +223,13 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 				zp = V(2) + ((2*sqrt(6.0)/3)*k+1)*r;
 			}
     	}
-    	else
-    	{
+    	else {
     		//Cubic packing
     		double z,zp;
 			size_t k=0;
 			zp = V(2);
 
-			while (zp <= (V(2)+Lz-r))
-			{
+			while (zp <= (V(2)+Lz-r)) {
 				j = 0;
 				yp = V(1);
 				while (yp <= (V(1)+Ly-r))
@@ -262,8 +256,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 
         //Calculate particles' mass in 3D
         Vec3_t temp, Max=V;
-		for (size_t i=PrePS; i<Particles.Size(); i++)
-		{
+		for (size_t i=PrePS; i<Particles.Size(); i++) {
 			if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
 			if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
 			if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
