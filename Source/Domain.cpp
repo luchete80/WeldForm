@@ -19,6 +19,7 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include <chrono>
 
 namespace SPH {
 void General(Domain & dom)
@@ -814,17 +815,14 @@ inline void Domain::StartAcceleration (Vec3_t const & a) {
 	}
 }
 
-inline void Domain::PrimaryComputeAcceleration ()
-{
+inline void Domain::PrimaryComputeAcceleration () {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t k=0; k<Nproc;k++)
-	{
+	for (size_t k=0; k<Nproc;k++) {
 		size_t P1,P2;
 		Vec3_t xij;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
-		for (size_t a=0; a<FSMPairs[k].Size();a++)
-		{
+		for (size_t a=0; a<FSMPairs[k].Size();a++) {
 			P1	= FSMPairs[k][a].first;
 			P2	= FSMPairs[k][a].second;
 			xij	= Particles[P1]->x-Particles[P2]->x;
@@ -832,20 +830,16 @@ inline void Domain::PrimaryComputeAcceleration ()
 
 			Periodic_X_Correction(xij, h, Particles[P1], Particles[P2]);
 
-
 			K	= Kernel(Dimension, KernelType, norm(xij)/h, h);
 
-			if (!Particles[P1]->IsFree)
-			{
+			if ( !Particles[P1]->IsFree ) {
 				omp_set_lock(&Particles[P1]->my_lock);
 										Particles[P1]->SumKernel+= K;
 					if (Particles[P1]->Material < 3)	Particles[P1]->Pressure	+= Particles[P2]->Pressure * K + dot(Gravity,xij)*Particles[P2]->Density*K;
 					if (Particles[P1]->Material > 1)	Particles[P1]->Sigma 	 = Particles[P1]->Sigma + K * Particles[P2]->Sigma;
 					if (Particles[P1]->NoSlip)		Particles[P1]->NSv 	+= Particles[P2]->v * K;
 				omp_unset_lock(&Particles[P1]->my_lock);
-			}
-			else
-			{
+			} else {
 				omp_set_lock(&Particles[P2]->my_lock);
 										Particles[P2]->SumKernel+= K;
 					if (Particles[P2]->Material < 3)	Particles[P2]->Pressure	+= Particles[P1]->Pressure * K + dot(Gravity,xij)*Particles[P1]->Density*K;
@@ -859,8 +853,7 @@ inline void Domain::PrimaryComputeAcceleration ()
 	// Calculateing the finala value of the smoothed pressure, velocity and stress for fixed particles
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for (size_t i=0; i<FixedParticles.Size(); i++)
-		if (Particles[FixedParticles[i]]->SumKernel!= 0.0)
-		{
+		if (Particles[FixedParticles[i]]->SumKernel!= 0.0) {
 			size_t a = FixedParticles[i];
 			if (Particles[a]->Material < 3)	Particles[a]->Pressure	= Particles[a]->Pressure/Particles[a]->SumKernel;
 			if (Particles[a]->Material > 1) Particles[a]->Sigma	= 1.0/Particles[a]->SumKernel*Particles[a]->Sigma;
@@ -969,24 +962,19 @@ inline void Domain::Move (double dt)
 
 }
 
-inline void Domain::WholeVelocity()
-{
+inline void Domain::WholeVelocity() {
     //Apply a constant velocity to all particles in the initial time step
-    if (norm(BC.allv)>0.0 || BC.allDensity>0.0)
-    {
+    if (norm(BC.allv)>0.0 || BC.allDensity>0.0) {
     	Vec3_t vel = 0.0;
     	double den = 0.0;
 
 	#pragma omp parallel for schedule (static) private(vel,den) num_threads(Nproc)
-    	for (size_t i=0 ; i<Particles.Size() ; i++)
-    	{
+    	for (size_t i=0 ; i<Particles.Size() ; i++) {
 		AllCon(Particles[i]->x,vel,den,BC);
-    		if (Particles[i]->IsFree && norm(BC.allv)>0.0)
-    		{
+    		if (Particles[i]->IsFree && norm(BC.allv)>0.0) {
 			Particles[i]->v		= vel;
  		}
-    		if (Particles[i]->IsFree && BC.allDensity>0.0)
-    		{
+    		if (Particles[i]->IsFree && BC.allDensity>0.0) {
 			Particles[i]->Density	= den;
 			Particles[i]->Pressure	= EOS(Particles[i]->PresEq, Particles[i]->Cs, Particles[i]->P0,Particles[i]->Density, Particles[i]->RefDensity);
     		}
@@ -994,8 +982,7 @@ inline void Domain::WholeVelocity()
     }
 }
 
-inline void Domain::InitialChecks()
-{
+inline void Domain::InitialChecks() {
 	//initializing identity matrix
 	if (Dimension == 2) I(2,2) = 0;
 
@@ -1035,6 +1022,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 	//Initializing adaptive time step variables
 	deltat = deltatint = deltatmin	= dt;
+	
+	auto start_whole = std::chrono::steady_clock::now();
 
 	InitialChecks();
 	CellInitiate();
@@ -1042,6 +1031,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	PrintInput(TheFileKey);
 	TimestepCheck();
 	WholeVelocity();
+	
+	std::chrono::duration<double> total_time,neighbour_time;
 
 
 	//Initial model output
@@ -1051,11 +1042,15 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		WriteXDMF    (fn.CStr());
 		std::cout << "\nInitial Condition has been generated\n" << std::endl;
 	}
+	
+
 
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
+		auto start_neigb = std::chrono::steady_clock::now();
 		MainNeighbourSearch();
+		neighbour_time += std::chrono::steady_clock::now()- start_neigb;
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
 		LastComputeAcceleration();
@@ -1072,6 +1067,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 			idx_out++;
 			tout += dtOut;
+			std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << neighbour_time.count() << std::endl;
 		}
 
 		AdaptiveTimeStep();
@@ -1080,7 +1076,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		CellReset();
 		ListGenerate();
+		
+		total_time = std::chrono::steady_clock::now() - start_whole;
 	}
+	
 
 	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
 

@@ -51,7 +51,7 @@ int main(int argc, char **argv) try
        SPH::Domain	dom;
 
         dom.Dimension	= 2;
-        dom.Nproc	= 24;
+        dom.Nproc	= 4;
     	dom.Kernel_Set(Quintic_Spline);
     	dom.Scheme	= 0;
 //     	dom.XSPH	= 0.5; //Very important
