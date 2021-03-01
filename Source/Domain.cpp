@@ -1037,7 +1037,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	std::chrono::duration<double> total_time,neighbour_time;
 	
 	clock_t clock_beg;
-	double clock_time_spent;
+	double clock_time_spent,acc_time_spent;
+	
+	clock_time_spent=acc_time_spent=0.;
 
 
 	//Initial model output
@@ -1059,10 +1061,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		clock_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
-		std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
+		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
 		GeneralBefore(*this);
+		clock_beg = clock();
 		PrimaryComputeAcceleration();
 		LastComputeAcceleration();
+		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
 
 		// output
@@ -1083,12 +1087,13 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		CellReset();
 		ListGenerate();
+		
+		total_time = std::chrono::steady_clock::now() - start_whole;
 				std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
 				std::cout << "Current Time Step = " <<deltat<<std::endl;
-				std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << std::endl;
-				
-		total_time = std::chrono::steady_clock::now() - start_whole;
-
+				std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", list_time_spent: " <<
+				acc_time_spent <<
+				std::endl;
 	}
 	
 
