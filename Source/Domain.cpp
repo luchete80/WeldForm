@@ -20,6 +20,8 @@
 
 #include "Domain.h"
 #include <chrono>
+//#include <time.h>       /* time_t, struct tm, difftime, time, mktime */
+#include <ctime> //Clock
 
 namespace SPH {
 void General(Domain & dom)
@@ -1033,6 +1035,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	WholeVelocity();
 	
 	std::chrono::duration<double> total_time,neighbour_time;
+	
+	clock_t clock_beg;
+	double clock_time_spent;
 
 
 	//Initial model output
@@ -1048,9 +1053,13 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
-		auto start_neigb = std::chrono::steady_clock::now();
+		auto start_task = std::chrono::system_clock::now();
+		clock_beg = clock();
 		MainNeighbourSearch();
-		neighbour_time += std::chrono::steady_clock::now()- start_neigb;
+		clock_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		auto end_task = std::chrono::system_clock::now();
+		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
+		std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
 		LastComputeAcceleration();
@@ -1062,12 +1071,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				String fn;
 				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
 				WriteXDMF    (fn.CStr());
-				std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
-				std::cout << "Current Time Step = " <<deltat<<std::endl;
+
 			}
 			idx_out++;
 			tout += dtOut;
-			std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << neighbour_time.count() << std::endl;
 		}
 
 		AdaptiveTimeStep();
@@ -1076,8 +1083,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		CellReset();
 		ListGenerate();
-		
+				std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+				std::cout << "Current Time Step = " <<deltat<<std::endl;
+				std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << std::endl;
+				
 		total_time = std::chrono::steady_clock::now() - start_whole;
+
 	}
 	
 
