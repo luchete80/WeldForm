@@ -197,24 +197,8 @@ inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 		vb		= temp;
 	}
 
-	switch (Material) {
-		//case 1:
-    	// Mat1(dt);
-		// break;
-    case 2:
-    	Mat2MVerlet(dt);
-    	break;
-    // case 3:
-    	// Mat3MVerlet(I,dt);
-    	// break;
-   default:
-	   	std::cout << "Material Type No is out of range. Please correct it and run again" << std::endl;
-		std::cout << "1 => Fluid" << std::endl;
-		std::cout << "2 => Solid" << std::endl;
-		std::cout << "3 => Soil" << std::endl;
-	    abort();
-	    break;
-    }
+    Mat2MVerlet(dt);
+
 	if (ct == 30) ct = 0; else ct++;
 	if (ShepardCounter == ShepardStep) ShepardCounter = 0; else ShepardCounter++;
 }
@@ -278,24 +262,7 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	v = (va + vb)/2.0;
 	x += dt*va;
 
-	switch (Material) {
-		// case 1:
-    	// Mat1(dt);
-		// break;
-    case 2:
-    	Mat2Leapfrog(dt);
-    	break;
-    // case 3:
-    	// Mat3Leapfrog(I,dt);
-    	// break;
-   default:
-	   	std::cout << "Material Type No is out of range. Please correct it and run again" << std::endl;
-		std::cout << "1 => Fluid" << std::endl;
-		std::cout << "2 => Solid" << std::endl;
-		std::cout << "3 => Soil" << std::endl;
-	    abort();
-	    break;
-    }
+    Mat2Leapfrog(dt);
 	if (FirstStep) FirstStep = false;
 
 }

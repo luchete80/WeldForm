@@ -830,15 +830,15 @@ inline void Domain::PrimaryComputeAcceleration () {
 			if ( !Particles[P1]->IsFree ) {
 				omp_set_lock(&Particles[P1]->my_lock);
 										Particles[P1]->SumKernel+= K;
-					if (Particles[P1]->Material < 3)	Particles[P1]->Pressure	+= Particles[P2]->Pressure * K + dot(Gravity,xij)*Particles[P2]->Density*K;
-					if (Particles[P1]->Material > 1)	Particles[P1]->Sigma 	 = Particles[P1]->Sigma + K * Particles[P2]->Sigma;
+					Particles[P1]->Pressure	+= Particles[P2]->Pressure * K + dot(Gravity,xij)*Particles[P2]->Density*K;
+					Particles[P1]->Sigma 	 = Particles[P1]->Sigma + K * Particles[P2]->Sigma;
 					if (Particles[P1]->NoSlip)		Particles[P1]->NSv 	+= Particles[P2]->v * K;
 				omp_unset_lock(&Particles[P1]->my_lock);
 			} else {
 				omp_set_lock(&Particles[P2]->my_lock);
 										Particles[P2]->SumKernel+= K;
-					if (Particles[P2]->Material < 3)	Particles[P2]->Pressure	+= Particles[P1]->Pressure * K + dot(Gravity,xij)*Particles[P1]->Density*K;
-					if (Particles[P2]->Material > 1)	Particles[P2]->Sigma	 = Particles[P2]->Sigma + K * Particles[P1]->Sigma;
+					Particles[P2]->Pressure	+= Particles[P1]->Pressure * K + dot(Gravity,xij)*Particles[P1]->Density*K;
+					Particles[P2]->Sigma	 = Particles[P2]->Sigma + K * Particles[P1]->Sigma;
 					if (Particles[P2]->NoSlip)		Particles[P2]->NSv 	+= Particles[P1]->v * K;
 				omp_unset_lock(&Particles[P2]->my_lock);
 			}
@@ -850,8 +850,8 @@ inline void Domain::PrimaryComputeAcceleration () {
 	for (size_t i=0; i<FixedParticles.Size(); i++)
 		if (Particles[FixedParticles[i]]->SumKernel!= 0.0) {
 			size_t a = FixedParticles[i];
-			if (Particles[a]->Material < 3)	Particles[a]->Pressure	= Particles[a]->Pressure/Particles[a]->SumKernel;
-			if (Particles[a]->Material > 1) Particles[a]->Sigma	= 1.0/Particles[a]->SumKernel*Particles[a]->Sigma;
+			Particles[a]->Pressure	= Particles[a]->Pressure/Particles[a]->SumKernel;
+			Particles[a]->Sigma	= 1.0/Particles[a]->SumKernel*Particles[a]->Sigma;
 			if (Particles[a]->NoSlip)	Particles[a]->NSv	= Particles[a]->NSv/Particles[a]->SumKernel;
 
 			// Tensile Instability for fixed soil and solid particles
