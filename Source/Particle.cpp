@@ -134,45 +134,36 @@ inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_
 
 inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 {
-	if (FirstStep)
-	{
+	if (FirstStep) {
 		ct = 30;
 		FirstStep = false;
 	}
 
 	x += dt*(v+VXSPH) + 0.5*dt*dt*a;
 
-	if (ct == 30)
-	{
-		if (Shepard && ShepardCounter == ShepardStep)
-		{
-			if (ZWab>0.6)
-			{
+	if (ct == 30) {
+		if (Shepard && ShepardCounter == ShepardStep) {
+			if (ZWab>0.6) {
 				Densityb	= SumDen/ZWab;
 //				Densityb	= Density;
 				Density		= SumDen/ZWab;
 			}
-			else
-			{
+			else {
 				Densityb	= Density;
 				Density		+=dt*dDensity;
 			}
 		}
-		else
-		{
+		else {
 			Densityb		= Density;
 			Density			+=dt*dDensity;
 		}
 
 		vb	= v;
 		v	+=dt*a;
-	}
-	else
-	{
-		if (Shepard && ShepardCounter == ShepardStep)
-		{
-			if (ZWab>0.6)
-			{
+	} else { // (ct!=30)
+		
+		if (Shepard && ShepardCounter == ShepardStep) {
+			if (ZWab>0.6) {
 				Densityb	= SumDen/ZWab;
 //				Densityb	= Density;
 				Density		= SumDen/ZWab;
