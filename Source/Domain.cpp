@@ -914,10 +914,8 @@ inline void Domain::LastComputeAcceleration ()
 		double test	= 0.0;
 		deltatmin	= deltatint;
 		#pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
-		for (size_t i=0; i<Particles.Size(); i++)
-		{
-			if (Particles[i]->IsFree)
-			{
+		for (size_t i=0; i<Particles.Size(); i++) {
+			if (Particles[i]->IsFree) {
 				test = sqrt(Particles[i]->h/norm(Particles[i]->a));
 				if (deltatmin > (sqrt_h_a*test))
 				{

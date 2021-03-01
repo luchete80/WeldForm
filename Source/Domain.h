@@ -68,7 +68,6 @@ public:
     void PrimaryComputeAcceleration	();									//Compute the solid boundary properties
     void LastComputeAcceleration		();									//Compute the acceleration due to the other particles
     void CalcForce2233	(Particle * P1, Particle * P2);		//Calculates the contact force between soil-soil/solid-solid particles
-	void CalcTempInc (); 		//LUCIANO: Temperature increment
     void Move						(double dt);										//Move particles
 
     void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
@@ -84,9 +83,15 @@ public:
     void InFlowBCFresh	();
     void WholeVelocity	();
 
-		void Kernel_Set									(Kernels_Type const & KT);
-		void Viscosity_Eq_Set						(Viscosity_Eq_Type const & VQ);
-		void Gradient_Approach_Set			(Gradient_Type const & GT);
+	void Kernel_Set									(Kernels_Type const & KT);
+	void Viscosity_Eq_Set						(Viscosity_Eq_Type const & VQ);
+	void Gradient_Approach_Set			(Gradient_Type const & GT);
+	
+	//Thermal Solver
+	void CalcTempInc 	(); 		//LUCIANO: Temperature increment
+	void CalcConvHeat 	(); 		//LUCIANO: Convection Heat
+	
+	
     // Data
     Array <Particle*>				Particles; 	///< Array of particles
     double					R;		///< Particle Radius in addrandombox
