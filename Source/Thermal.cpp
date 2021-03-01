@@ -4,26 +4,6 @@ namespace SPH {
 
 inline void Domain::CalcTempInc () {
 	double di=0.0,dj=0.0,mi=0.0,mj=0.0;
-			// if (!P1->IsFree)
-			// {
-				// di = DensitySolid(P2->PresEq, P2->Cs, P2->P0,P1->Pressure, P2->RefDensity);
-				// mi = P1->FPMassC * P2->Mass;
-			// }
-			// else
-			// {
-				// di = P1->Density;
-				// mi = P1->Mass;
-			// }
-			// if (!P2->IsFree)
-			// {
-				// dj = DensitySolid(P1->PresEq, P1->Cs, P1->P0,P2->Pressure, P1->RefDensity);
-				// mj = P2->FPMassC * P1->Mass;
-			// }
-			// else
-			// {
-				// dj = P2->Density;
-				// mj = P2->Mass;
-			// }
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
