@@ -37,34 +37,22 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		double Alpha	= (P1->Alpha + P2->Alpha)/2.0;
 		double Beta	= (P1->Beta + P2->Beta)/2.0;
 
-		if (P1->Material*P2->Material == 9)
-		{
-			if (!P1->IsFree) {di = P2->Density;	mi = P1->FPMassC * P2->Mass;} else {di = P1->Density;	mi = P1->Mass;}
-			if (!P2->IsFree) {dj = P1->Density;	mj = P2->FPMassC * P1->Mass;} else {dj = P2->Density;	mj = P2->Mass;}
+
+		if (!P1->IsFree) {
+			di = DensitySolid(P2->PresEq, P2->Cs, P2->P0,P1->Pressure, P2->RefDensity);
+			mi = P1->FPMassC * P2->Mass;
+		} else {
+			di = P1->Density;
+			mi = P1->Mass;
 		}
-		else
-		{
-			if (!P1->IsFree)
-			{
-				di = DensitySolid(P2->PresEq, P2->Cs, P2->P0,P1->Pressure, P2->RefDensity);
-				mi = P1->FPMassC * P2->Mass;
-			}
-			else
-			{
-				di = P1->Density;
-				mi = P1->Mass;
-			}
-			if (!P2->IsFree)
-			{
-				dj = DensitySolid(P1->PresEq, P1->Cs, P1->P0,P2->Pressure, P1->RefDensity);
-				mj = P2->FPMassC * P1->Mass;
-			}
-			else
-			{
-				dj = P2->Density;
-				mj = P2->Mass;
-			}
+		if (!P2->IsFree) {
+			dj = DensitySolid(P1->PresEq, P1->Cs, P1->P0,P2->Pressure, P1->RefDensity);
+			mj = P2->FPMassC * P1->Mass;
+		} else {
+			dj = P2->Density;
+			mj = P2->Mass;
 		}
+		
 
 		Vec3_t vij	= P1->v - P2->v;
 		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
@@ -77,15 +65,11 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		{
 			double MUij = h*dot(vij,xij)/(rij*rij+0.01*h*h);					///<(2.75) Li, Liu Book
 			double Cij;
-			if (P1->Material*P2->Material == 9)
-				Cij = 0.5*(P1->Cs+P2->Cs);
-			else
-			{
-				double Ci,Cj;
-				if (!P1->IsFree) Ci = SoundSpeed(P2->PresEq, P2->Cs, di, P2->RefDensity); else Ci = SoundSpeed(P1->PresEq, P1->Cs, di, P1->RefDensity);
-				if (!P2->IsFree) Cj = SoundSpeed(P1->PresEq, P1->Cs, dj, P1->RefDensity); else Cj = SoundSpeed(P2->PresEq, P2->Cs, dj, P2->RefDensity);
-				Cij = 0.5*(Ci+Cj);
-			}
+			double Ci,Cj;
+			if (!P1->IsFree) Ci = SoundSpeed(P2->PresEq, P2->Cs, di, P2->RefDensity); else Ci = SoundSpeed(P1->PresEq, P1->Cs, di, P1->RefDensity);
+			if (!P2->IsFree) Cj = SoundSpeed(P1->PresEq, P1->Cs, dj, P1->RefDensity); else Cj = SoundSpeed(P2->PresEq, P2->Cs, dj, P2->RefDensity);
+			Cij = 0.5*(Ci+Cj);
+			
 			if (dot(vij,xij)<0) PIij = (Alpha*Cij*MUij+Beta*MUij*MUij)/(0.5*(di+dj)) * I;		///<(2.74) Li, Liu Book
 		}
 
@@ -105,20 +89,15 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 
 		// NoSlip BC velocity correction
 		Vec3_t vab = 0.0;
-		if (P1->IsFree*P2->IsFree)
-		{
+		if (P1->IsFree*P2->IsFree) {
 			vab = vij;
-		}
-		else
-		{
-			if (P1->NoSlip || P2->NoSlip)
-			{
+		} else {
+			if (P1->NoSlip || P2->NoSlip) {
 				// No-Slip velocity correction
 				if (P1->IsFree)	vab = P1->v - (2.0*P2->v-P2->NSv); else vab = (2.0*P1->v-P1->NSv) - P2->v;
 			}
 			// Please check
-			if (!(P1->NoSlip || P2->NoSlip))
-			{
+			if (!(P1->NoSlip || P2->NoSlip)) {
 				if (P1->IsFree) vab = P1->v - P2->vb; else vab = P1->vb - P2->v;
 //				if (P1->IsFree) vab(0) = P1->v(0) + P2->vb(0); else vab(0) = -P1->vb(0) - P2->v(0);
 			}
@@ -150,8 +129,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		RotationRate	  = -0.5 * GK * RotationRate;
 
 		// XSPH Monaghan
-		if (XSPH != 0.0  && (P1->IsFree*P2->IsFree))
-		{
+		if (XSPH != 0.0  && (P1->IsFree*P2->IsFree)) {
 			omp_set_lock(&P1->my_lock);
 			P1->VXSPH += XSPH*mj/(0.5*(di+dj))*K*-vij;
 			omp_unset_lock(&P1->my_lock);

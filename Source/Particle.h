@@ -115,7 +115,9 @@ namespace SPH {
 		bool	FirstStep;	///< to initialize the integration scheme
 		
 		//LUCIANO: THERMAL PROPERTIES
-		double T,k_T;			// Temperature, avoid permeability
+		double T,k_T,cp_T;			// Temperature, avoid permeability
+		
+		double q_conv;				//Different heat source terms
 
 		omp_lock_t my_lock;		///< Open MP lock
 
@@ -128,12 +130,9 @@ namespace SPH {
 		void Move_MVerlet		(Mat3_t I, double dt);										///< Update the important quantities of a particle
 		void Move_Leapfrog	(Mat3_t I, double dt);										///< Update the important quantities of a particle
 		void translate			(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin);
-		//void Mat1						(double dt);
 		void Mat2MVerlet		(double dt);
-		//void Mat3MVerlet		(Mat3_t I, double dt);
 		void Mat2Leapfrog		(double dt);
-		//void Mat3Leapfrog		(Mat3_t I, double dt);
-		void ScalebackMat3	(size_t Dimension, size_t Scheme);
+
 	};
 }; // namespace SPH
 
