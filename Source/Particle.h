@@ -115,9 +115,9 @@ namespace SPH {
 		bool	FirstStep;	///< to initialize the integration scheme
 		
 		//LUCIANO: THERMAL PROPERTIES
-		double T,k_T,cp_T;			// Temperature, avoid permeability
-		
-		double q_conv;				//Different heat source terms
+		double T,k_T,cp_T;			// Temperature, avoid permeability		
+		double q_conv,T_inf,h_conv;				//Different heat source terms
+
 
 		omp_lock_t my_lock;		///< Open MP lock
 

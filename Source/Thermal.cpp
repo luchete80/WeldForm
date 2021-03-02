@@ -35,11 +35,15 @@ inline void Domain::CalcTempInc () {
 	}//Nproc
 
 }
-inline void Domain::CalcConvHeat(){
-	
-	//Fraser Eq 3-121
-	for ( size_t k = 0; k < Nproc ; k++) {
-	
-	}		
+inline void Domain::CalcConvHeat ( const int &id ){ //TODO: Detect Free Surface Elements
+	double dS2;
+	//Fraser Eq 3-121 
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+		for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
+			if ( Particles[i]->ID == id ) {
+				dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
+				Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T);
+			}
+		}	
 }
 };

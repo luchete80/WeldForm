@@ -145,6 +145,7 @@ public:
     Array<std::pair<size_t,size_t> >		Initial;
     Mat3_t I;
     String					OutputName[3];
+	double T_inf;			//LUCIANO: IN CASE OF ONLY ONE CONVECTION TEMPERAURE
 
 
 	private:

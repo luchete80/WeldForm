@@ -927,24 +927,17 @@ inline void Domain::LastComputeAcceleration ()
 		}
 }
 
-inline void Domain::Move (double dt)
-{
+inline void Domain::Move (double dt) {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for (size_t i=0; i<Particles.Size(); i++)
-		if (Particles[i]->IsFree)
-		{
-			if (Particles[i]->InOut>0)
-			{
+		if (Particles[i]->IsFree) {
+			if (Particles[i]->InOut>0) {
 				Particles[i]->a = 0.0;
-				if (Particles[i]->InOut == 1)
-				{
+				if (Particles[i]->InOut == 1) {
 					Particles[i]->dDensity = 0.0;
 					Particles[i]->ZWab = 0.0;
-				}
-				else
-				{
-					if (BC.outDensity>0.0)
-					{
+				} else {
+					if (BC.outDensity>0.0) {
 						Particles[i]->dDensity = 0.0;
 						Particles[i]->ZWab = 0.0;
 					}
@@ -952,7 +945,6 @@ inline void Domain::Move (double dt)
 			}
 		Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
 		}
-
 }
 
 inline void Domain::WholeVelocity() {
