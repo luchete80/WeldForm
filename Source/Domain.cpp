@@ -1062,6 +1062,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 			idx_out++;
 			tout += dtOut;
+		total_time = std::chrono::steady_clock::now() - start_whole;
+				std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+				std::cout << "Current Time Step = " <<deltat<<std::endl;
+				std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
+				acc_time_spent <<
+				std::endl;
 		}
 
 		AdaptiveTimeStep();
@@ -1071,12 +1077,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		CellReset();
 		ListGenerate();
 		
-		total_time = std::chrono::steady_clock::now() - start_whole;
-				std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
-				std::cout << "Current Time Step = " <<deltat<<std::endl;
-				std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", list_time_spent: " <<
-				acc_time_spent <<
-				std::endl;
 	}
 	
 
