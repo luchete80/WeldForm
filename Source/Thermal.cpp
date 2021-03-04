@@ -23,11 +23,11 @@ inline void Domain::CalcTempInc () {
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			temp += mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T * P2->T) * dot( xij , GK*xij );
 			omp_set_lock(&P1->my_lock);
-				P1->T		+= 1./(di*cp_T) * temp;
+				P1->T		+= 1./(di*P1->cp_T) * temp;
 			omp_unset_lock(&P1->my_lock);
 			// Locking the particle 2 for updating the properties
 			omp_set_lock(&P2->my_lock);
-				P2->T		-= 1./(di*cp_T) * temp;
+				P2->T		-= 1./(di*P2->cp_T) * temp;
 			omp_unset_lock(&P2->my_lock);
 		}
 		// for (size_t i=0; i<FSMPairs[k].Size();i++)
