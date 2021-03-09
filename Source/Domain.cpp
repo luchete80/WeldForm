@@ -1073,7 +1073,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		AdaptiveTimeStep();
 		Move(deltat);
 		Time += deltat;
-		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		CellReset();
 		ListGenerate();
 		

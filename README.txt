@@ -13,17 +13,7 @@ For more information, please check http://korzani.wix.com/persiansph
 
 
 //LUCIANO 
-La libreria blitz que se usa para windows es:
+La libreria blitz que se usa para windows es LA VERSION 0.9! No la actual:
 
-https://github.com/blitzpp/blitz
+https://github.com/luchete80/blitz-0.9-cmake.git
 
-
-1: En tinyvec.h SE COMENTA LA LINEA 50:
-
-#ifdef BZ_HAVE_CSTRING
-//	#include <cstring> // For memcpy
-#endif
-
-2. Se comenta la funcion de tinymat2.h (linea 196)
-  // static TinyVector<int, 2>           ubound() 
-  // { return length()-1; }

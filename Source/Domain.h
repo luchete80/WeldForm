@@ -71,7 +71,8 @@ public:
     void Move						(double dt);										//Move particles
 
     void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
-
+    void ThermalSolve			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
+	
     void CellInitiate		();															//Find the size of the domain as a cube, make cells and HOCs
     void ListGenerate		();															//Generate linked-list
     void CellReset			();															//Reset HOCs and particles' LL to initial value of -1
