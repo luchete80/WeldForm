@@ -24,6 +24,9 @@
 #include "matvec.h"
 #include "Functions.h"
 
+#define TH_BC_CONVECTION	0
+#define TH_BC_CONDUCTION	0
+
 namespace SPH {
 
 	class Particle
@@ -43,6 +46,7 @@ namespace SPH {
 		bool   	NoSlip;		///< No-Slip BC
 
 		int    	ID;		///< an Integer value to identify the particle set
+		int 	Thermal_BC;
 		int    	Material;	///< an Integer value to identify the particle material type: 1 = Fluid, 2 = Solid, 3 = Soil
 
 		Vec3_t	x;		///< Position of the particle n

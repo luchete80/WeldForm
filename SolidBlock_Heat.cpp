@@ -74,7 +74,7 @@ int main(int argc, char **argv) try {
         cout<<"K  = "<<K<<endl;
         cout<<"G  = "<<G<<endl;
         cout<<"Fy = "<<Fy<<endl;
-    	dom.GeneralAfter = & UserAcc;
+    	//dom.GeneralAfter = & UserAcc;
         dom.DomMax(0) = H;
         dom.DomMin(0) = -H;
 
@@ -106,7 +106,7 @@ int main(int argc, char **argv) try {
 			dom.Particles[a]->T				= 20.0;
     		x = dom.Particles[a]->x(0);
     		if (x=-H/2.0)
-    			dom.Particles[a]->ID=2;
+    			dom.Particles[a]->Thermal_BC=TH_BC_CONVECTION;
 
     	}
 

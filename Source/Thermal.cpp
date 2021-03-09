@@ -40,7 +40,7 @@ inline void Domain::CalcConvHeat ( const int &id ){ //TODO: Detect Free Surface 
 	//Fraser Eq 3-121 
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 		for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
-			if ( Particles[i]->ID == id ) {
+			if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
 				dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
 				Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T);
 			}
@@ -95,8 +95,6 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
 		GeneralBefore(*this);
 		clock_beg = clock();
-		PrimaryComputeAcceleration();
-		LastComputeAcceleration();
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
 
@@ -121,7 +119,6 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		AdaptiveTimeStep();
 		Move(deltat);
 		Time += deltat;
-		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		CellReset();
 		ListGenerate();
 		
