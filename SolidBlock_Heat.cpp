@@ -20,25 +20,25 @@
 
 #include "Domain.h"
 
-void UserAcc(SPH::Domain & domi)
-{
-	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-	for (size_t i=0; i<domi.Particles.Size(); i++)
-	{
-		if (domi.Particles[i]->ID == 3)
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(1.0e-2,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(1.0e-2,0.0,0.0);
-		}
-		if (domi.Particles[i]->ID == 2)
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(-1.0e-2,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(-1.0e-2,0.0,0.0);
-		}
-	}
-}
+// void UserAcc(SPH::Domain & domi)
+// {
+	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
+	// for (size_t i=0; i<domi.Particles.Size(); i++)
+	// {
+		// if (domi.Particles[i]->ID == 3)
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(1.0e-2,0.0,0.0);
+			// domi.Particles[i]->vb		= Vec3_t(1.0e-2,0.0,0.0);
+		// }
+		// if (domi.Particles[i]->ID == 2)
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(-1.0e-2,0.0,0.0);
+			// domi.Particles[i]->vb		= Vec3_t(-1.0e-2,0.0,0.0);
+		// }
+	// }
+// }
 
 
 using std::cout;
@@ -53,9 +53,9 @@ int main(int argc, char **argv) try {
     	dom.Scheme	= 0;
 
         double dx,h,rho,K,G,Cs,Fy;
-    	double H,L,n;
+    	double H,n;
 
-    	H	= 0.01;
+    	H	= 1.;
     	n	= 20.0;
 
     	rho	= 1000.0;
@@ -98,15 +98,19 @@ int main(int argc, char **argv) try {
     		dom.Particles[a]->Alpha			= 1.0;
     		dom.Particles[a]->TI			= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
+			
+			dom.Particles[a]->k_T			=3000.;
+			dom.Particles[a]->cp_T			=1.;
+			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
+			dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				= 20.0;
     		x = dom.Particles[a]->x(0);
-    		if (x<-L/2.0)
+    		if (x=-H/2.0)
     			dom.Particles[a]->ID=2;
-    		if (x>L/2.0)
-    			dom.Particles[a]->ID=3;
+
     	}
 
-    	dom.Solve(/*tf*/1000.0,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.ThermalSolve(/*tf*/1000.0,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH
