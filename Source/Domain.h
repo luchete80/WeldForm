@@ -90,7 +90,7 @@ public:
 	
 	//Thermal Solver
 	void CalcTempInc 	(); 		//LUCIANO: Temperature increment
-	inline void Domain::CalcConvHeat ( const int &id );
+	inline void Domain::CalcConvHeat ();
 	
 	
     // Data

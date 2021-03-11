@@ -1,5 +1,7 @@
 #include "Domain.h"
 
+using namespace std;
+
 namespace SPH {
 
 inline void Domain::CalcTempInc () {
@@ -12,7 +14,9 @@ inline void Domain::CalcTempInc () {
 		//TODO: DO THE LOCK PARALLEL THING
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		double temp=0;
-		for (size_t a=0; a<SMPairs[k].Size();a++) {
+		cout << "fixed pair size: "<<FSMPairs[k].Size()<<endl;
+		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			cout << "a: " << a << "p1" << SMPairs[k][a].first << ", p2:"<< SMPairs[k][a].second<<endl;
 			P1	= Particles[SMPairs[k][a].first];
 			P2	= Particles[SMPairs[k][a].second];
 			xij	= Particles[P1]->x-Particles[P2]->x;
@@ -35,7 +39,7 @@ inline void Domain::CalcTempInc () {
 	}//Nproc
 
 }
-inline void Domain::CalcConvHeat ( const int &id ){ //TODO: Detect Free Surface Elements
+inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 	double dS2;
 	//Fraser Eq 3-121 
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
@@ -58,6 +62,11 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	deltat = deltatint = deltatmin	= dt;
 	
 	auto start_whole = std::chrono::steady_clock::now();
+	
+	int freecount =0;
+	for (size_t i=0; i<Particles.Size(); i++) 
+			if (Particles[i]->IsFree) { freecount++;}
+	cout <<"Particles: " << Particles.Size() << ", FreeParticles: "<< freecount << endl;
 
 	InitialChecks();
 	CellInitiate();
@@ -95,8 +104,24 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
 		GeneralBefore(*this);
 		clock_beg = clock();
+		//PrimaryComputeAcceleration();
+		//LastComputeAcceleration();
+		cout << "Pairs size: " << SMPairs.Size()<<endl;
+		CalcConvHeat();
+		CalcTempInc();
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
+		
+
+		
+		// for ( size_t k = 0; k < dom.Nproc ; k++) {
+			
+			// cout << "Pares: " <<dom.SMPairs[k].Size()<<endl;
+			// for (size_t i=0; i<dom.SMPairs[k].Size();i++){
+				// //CalcForce2233(Particles[dom.SMPairs[k][i].first],Particles[dom.SMPairs[k][i].second]);
+					// cout << "a: " << i << "p1" << dom.SMPairs[k][i].first << ", p2: "<< dom.SMPairs[k][i].second<<endl;
+			// }
+		// }
 
 		// output
 		if (Time>=tout){
