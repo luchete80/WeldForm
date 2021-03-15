@@ -1,3 +1,5 @@
+
+
 set SPH=D:/Luciano/Numerico/WeldForm
 set PKG=D:/Luciano/Numerico/Libs
 
@@ -6,5 +8,7 @@ download and build blitz
 BLITZ SHOULD BE 0.9 VERSION
 
 
+For MS buiding
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
 
-
+cmake ..\cuNSearch -G "Visual Studio 16 2019" -DCMAKE_CUDA_COMPILER="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/bin/nvcc.exe"

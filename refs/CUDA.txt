@@ -25,5 +25,8 @@ set CUDAFE_FLAGS=--sdk_dir "C:\Program Files (x86)\Windows Kits\8.0\"
 
 "C:\_work\API\CUDA\bin\nvcc.exe" --use-local-env --cl-version 2010 -ccbin "C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\cl.exe" --machine 32
 
+Archivos prop:
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\BuildCustomizations
+
 set CUDAHOSTCXX=nvcc (Si se tiene el dir en path)
 

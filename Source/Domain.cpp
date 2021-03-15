@@ -23,6 +23,8 @@
 //#include <time.h>       /* time_t, struct tm, difftime, time, mktime */
 #include <ctime> //Clock
 
+using namespace std;
+
 namespace SPH {
 void General(Domain & dom)
 {
@@ -1041,6 +1043,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		auto start_task = std::chrono::system_clock::now();
 		clock_beg = clock();
 		MainNeighbourSearch();
+		for ( size_t k = 0; k < Nproc ; k++)		
+			cout << "Pares: " <<SMPairs[k].Size()<<endl;
+
 		clock_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
