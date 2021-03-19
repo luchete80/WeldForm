@@ -61,8 +61,8 @@ int main(int argc, char **argv) try
 
     	H	= 0.01;
     	L	= 0.03;
-    	n	= 40.0;
-
+    	n	= 40.0;	//ORIGINAL IS 40
+		
     	rho	= 1000.0;
     	K	= 3.25e6;
     	G	= 7.15e5;
@@ -84,7 +84,8 @@ int main(int argc, char **argv) try
         dom.DomMin(0) = -L;
 
      	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
-
+		
+		cout << "Particle count: "<<dom.Particles.Size()<<endl;
      	double x;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)

@@ -1,19 +1,66 @@
 #include "Domain.h"
-
+#include <vector>
 using namespace std;
 
 namespace SPH {
 
+// inline void Domain::CalcTempInc () {
+	// double di=0.0,dj=0.0,mi=0.0,mj=0.0;
+	
+	// std::vector < double> temp(Particles.Size());
+	
+	// #pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
+	// for ( size_t k = 0; k < Nproc ; k++) {
+		// Particle *P1,*P2;
+		// Vec3_t xij;
+		// double h,GK;
+		// //TODO: DO THE LOCK PARALLEL THING
+		// // Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
+		// //std::vector <double> temp()=0;
+		// //cout << "fixed pair size: "<<FSMPairs[k].Size()<<endl;
+		// //cout << "Particles size: " << Particles.Size()<<endl;
+		// for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			// //cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+			// P1	= Particles[SMPairs[k][a].first];
+			// P2	= Particles[SMPairs[k][a].second];
+			// xij	= P1->x - P2->x;
+			// h	= (P1->h+P2->h)/2.0;
+			// GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);
+			// di = P1->Density; mi = P1->Mass;
+			// dj = P2->Density; mj = P2->Mass;
+
+			// //Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
+			// //LUCIANO: TODO EXCLUDE THIS PRODUCT
+			// temp [SMPairs[k][a].first] += mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij );
+			// omp_set_lock(&P1->my_lock);
+				// P1->dTdt		+= 1./(di*P1->cp_T) * ( temp + P1->q_conv );
+			// omp_unset_lock(&P1->my_lock);
+			// // Locking the particle 2 for updating the properties
+			// omp_set_lock(&P2->my_lock);
+				// P2->dTdt		-= 1./(di*P2->cp_T) * ( temp + P2->q_conv );
+			// omp_unset_lock(&P2->my_lock);
+				// //cout << "temp: "<<dot( xij , GK*xij )<<endl;
+		// }
+
+	// }//Nproc
+
+// }
+
+
+//NON PARALLEL TEST VERSION
 inline void Domain::CalcTempInc () {
 	double di=0.0,dj=0.0,mi=0.0,mj=0.0;
-	#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
+	
+	std::vector < double> temp(Particles.Size());
+	
+	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
 		Vec3_t xij;
 		double h,GK;
 		//TODO: DO THE LOCK PARALLEL THING
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
-		double temp=0;
+		//std::vector <double> temp()=0;
 		//cout << "fixed pair size: "<<FSMPairs[k].Size()<<endl;
 		//cout << "Particles size: " << Particles.Size()<<endl;
 		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
@@ -28,20 +75,20 @@ inline void Domain::CalcTempInc () {
 
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			//LUCIANO: TODO EXCLUDE THIS PRODUCT
-			temp += mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij );
-			omp_set_lock(&P1->my_lock);
-				P1->dTdt		+= 1./(di*P1->cp_T) * ( temp + P1->q_conv );
-			omp_unset_lock(&P1->my_lock);
-			// Locking the particle 2 for updating the properties
-			omp_set_lock(&P2->my_lock);
-				P2->dTdt		-= 1./(di*P2->cp_T) * ( temp + P2->q_conv );
-			omp_unset_lock(&P2->my_lock);
-				//cout << "temp: "<<dot( xij , GK*xij )<<endl;
+			double m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij );
+			//omp_set_lock(&P1->my_lock);
+			temp [SMPairs[k][a].first]  += m;
+			temp [SMPairs[k][a].second] -= m;
 		}
-
 	}//Nproc
-
+	
+	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+	for (int i=0; i<Particles.Size(); i++){
+		Particles[i]->dTdt = 1./(Particles[i]->Density * Particles[i]->cp_T ) * ( temp[i] + Particles[i]->q_conv);	
+	}
+	
 }
+
 inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 	double dS2;
 	//Fraser Eq 3-121 
@@ -50,7 +97,7 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 			if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
 				dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
 				Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T);
-				//cout << "Particle " << i <<": Convection: " << Particles[i]->q_conv<<endl;
+				cout << "Particle " << i <<": Convection: " << Particles[i]->q_conv<<endl;
 			}
 		}		
 	
@@ -108,8 +155,14 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		CalcConvHeat();
 		CalcTempInc();
 		//TODO Add 
-		for (size_t i=0; i<Particles.Size(); i++)
+		double max=0;
+		for (size_t i=0; i<Particles.Size(); i++){
 			Particles[i]->T+= dt*Particles[i]->dTdt;
+			if (Particles[i]->T > max)
+				max=Particles[i]->T;
+		}
+			
+
 			
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
@@ -129,6 +182,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 				std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
 				acc_time_spent <<
 				std::endl;
+				std::cout << "Max temp: "<< max << std::endl;
 		}
 
 		AdaptiveTimeStep();

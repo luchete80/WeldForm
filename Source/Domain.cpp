@@ -1023,6 +1023,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	
 	clock_t clock_beg;
 	double clock_time_spent,acc_time_spent;
+	double neigbour_time_spent_per_interval;
 	
 	clock_time_spent=acc_time_spent=0.;
 
@@ -1036,17 +1037,18 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	}
 	
 
-
+	unsigned long steps=0;
+	unsigned int first_step;
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
 		auto start_task = std::chrono::system_clock::now();
 		clock_beg = clock();
 		MainNeighbourSearch();
-		for ( size_t k = 0; k < Nproc ; k++)		
-			cout << "Pares: " <<SMPairs[k].Size()<<endl;
+		// for ( size_t k = 0; k < Nproc ; k++)		
+			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
-		clock_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
@@ -1056,6 +1058,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		LastComputeAcceleration();
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
+		steps++;
 
 		// output
 		if (Time>=tout){
@@ -1070,9 +1073,19 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		total_time = std::chrono::steady_clock::now() - start_whole;
 				std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
 				std::cout << "Current Time Step = " <<deltat<<std::endl;
-				std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
+				
+				clock_time_spent += neigbour_time_spent_per_interval;
+				std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
 				acc_time_spent <<
 				std::endl;
+				
+				
+				
+				std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
+				cout << "Total Neighbour search time in this interval: " << neigbour_time_spent_per_interval;
+				cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step);
+				first_step=steps;
+				neigbour_time_spent_per_interval=0.;
 		}
 
 		AdaptiveTimeStep();
@@ -1081,6 +1094,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		CellReset();
 		ListGenerate();
+		
 		
 	}
 	

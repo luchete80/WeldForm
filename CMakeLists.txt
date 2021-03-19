@@ -32,6 +32,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Plate-Yield
 	SolidBlock_Heat
+	#Neighbour_Test
 )
 
 link_directories("D:/Luciano/Numerico/blitz/lib")
