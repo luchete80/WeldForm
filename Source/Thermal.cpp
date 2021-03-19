@@ -96,8 +96,10 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 		for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
 			if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
 				dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
+				//cout << "dS2" <<dS2<<endl;
+				//cout << Particles[i]->Density<<endl;
 				Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T);
-				cout << "Particle " << i <<": Convection: " << Particles[i]->q_conv<<endl;
+				//cout << "Particle " << i <<": Convection: " << Particles[i]->q_conv<<endl;
 			}
 		}		
 	
@@ -183,6 +185,14 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 				acc_time_spent <<
 				std::endl;
 				std::cout << "Max temp: "<< max << std::endl;
+			
+			double max_flux = 0.;
+			for (size_t i=0; i<Particles.Size(); i++){
+				if (Particles[i]->dTdt > max_flux)
+					max_flux=Particles[i]->dTdt;
+			}
+			std::cout << "Max flux: "<< max_flux << std::endl;
+
 		}
 
 		AdaptiveTimeStep();
