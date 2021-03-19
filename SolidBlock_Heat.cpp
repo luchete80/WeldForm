@@ -68,7 +68,7 @@ int main(int argc, char **argv) try
         Cs	= sqrt(K/rho);
 
         double timestep;
-        timestep = (0.2*h/(Cs));
+        timestep = (0.3*h/(Cs));
 
         cout<<"t  = "<<timestep<<endl;
         cout<<"Cs = "<<Cs<<endl;
@@ -79,7 +79,7 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = H;
         dom.DomMin(0) = -H;
 
-     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , 0.0 ), H , H ,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20., 0.0 ), H + H/20., H +H/20.,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
      	
 // dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
 							// H , H ,  H , 
@@ -105,8 +105,10 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				= 20.0;			
-    		if ( x == -H/2.0 )
+    		if ( x < -H/2.0 ) {
     			dom.Particles[a]->Thermal_BC = TH_BC_CONVECTION;
+				cout << "Particle " << a << "is convection BC" <<endl;
+			}
     	}
 
 //    	dom.WriteXDMF("maz");

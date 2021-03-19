@@ -24,8 +24,9 @@
 #include "matvec.h"
 #include "Functions.h"
 
-#define TH_BC_CONVECTION	0
-#define TH_BC_CONDUCTION	0
+#define TH_BC_NONE			0
+#define TH_BC_CONVECTION	1
+#define TH_BC_CONDUCTION	2
 
 namespace SPH {
 

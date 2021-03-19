@@ -86,7 +86,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	SBar = 0.0;
 	CSmag = 0.17;
 
-
+	Thermal_BC = TH_BC_NONE;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);
