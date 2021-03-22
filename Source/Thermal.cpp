@@ -84,6 +84,7 @@ inline void Domain::CalcTempInc () {
 	
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
+		//cout << "temp "<<temp[i]<<endl;
 		Particles[i]->dTdt = 1./(Particles[i]->Density * Particles[i]->cp_T ) * ( temp[i] + Particles[i]->q_conv);	
 	}
 	
@@ -92,17 +93,20 @@ inline void Domain::CalcTempInc () {
 inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 	double dS2;
 	//Fraser Eq 3-121 
+	double max=0.;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 		for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
 			if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
 				dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
 				//cout << "dS2" <<dS2<<endl;
 				//cout << Particles[i]->Density<<endl;
-				Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T);
-				//cout << "Particle " << i <<": Convection: " << Particles[i]->q_conv<<endl;
+				Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+				if (Particles[i]->q_conv>max)
+					max= Particles[i]->q_conv;
+				//cout << "Particle  "<<Particles[i]->Mass<<endl;
 			}
 		}		
-	
+	cout << "Max Convection: " << max <<endl;
 	//cout << "Applied convection to "<< i << " Particles"<<endl;
 }
 
@@ -163,7 +167,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 			if (Particles[i]->T > max)
 				max=Particles[i]->T;
 		}
-			
+		std::cout << "Max temp: "<< max << std::endl;
 
 			
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
