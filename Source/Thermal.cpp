@@ -82,15 +82,18 @@ inline void Domain::CalcTempInc () {
 		}
 	}//Nproc
 	
-	int max = 0.;
+	double max = 0;
+	int imax;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
 		Particles[i]->dTdt = 1./(Particles[i]->Density * Particles[i]->cp_T ) * ( temp[i] + Particles[i]->q_conv);	
-		if (Particles[i]->dTdt>max)
+		if (Particles[i]->dTdt>max){
 			max= Particles[i]->dTdt;
+			imax=i;
+		}
 	}
-	cout << "Max dTdt: " << max <<endl;
+	//cout << "Max dTdt: " << max <<"in particle: " << imax<<endl;
 	
 }
 
@@ -98,6 +101,7 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 	double dS2;
 	//Fraser Eq 3-121 
 	double max=0.;
+	int imax;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 		for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
 			if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
@@ -105,12 +109,14 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 				//cout << "dS2" <<dS2<<endl;
 				//cout << Particles[i]->Density<<endl;
 				Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
-				if (Particles[i]->q_conv>max)
+				if (Particles[i]->q_conv>max){
 					max= Particles[i]->q_conv;
+					imax=i;
+				}
 				//cout << "Particle  "<<Particles[i]->Mass<<endl;
 			}
 		}		
-	//cout << "Max Convection: " << max <<endl;
+	//cout << "Max Convection: " << max <<"in particle " << imax <<endl;
 	//cout << "Applied convection to "<< i << " Particles"<<endl;
 }
 
@@ -179,11 +185,11 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		CalcTempInc();
 		//TODO Add 
 		double max=0;
-		// for (size_t i=0; i<Particles.Size(); i++){
-			// Particles[i]->T+= dt*Particles[i]->dTdt;
-			// if (Particles[i]->T > max)
-				// max=Particles[i]->T;
-		// }
+		for (size_t i=0; i<Particles.Size(); i++){
+			Particles[i]->T+= dt*Particles[i]->dTdt;
+			if (Particles[i]->T > max)
+				max=Particles[i]->T;
+		}
 		// std::cout << "Max temp: "<< max << std::endl;
 
 			

@@ -64,7 +64,7 @@ int main(int argc, char **argv) try
 
     	rho	= 1000.0;
     	dx	= H / n;
-    	h	= dx*1.3; //Very important
+    	h	= dx*1.0; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -113,7 +113,7 @@ int main(int argc, char **argv) try
 
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
 		cout << "Time Step: "<<timestep<<endl;
-		timestep=1.e-6;
+		//timestep=1.e-6;
 		//0.3 rho cp h^2/k
 	
 	// std::vector <int> nb(dom.Particles.Size());
@@ -131,7 +131,7 @@ int main(int argc, char **argv) try
 		
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.ThermalSolve(/*tf*/2.,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		dom.ThermalSolve(/*tf*/2.,/*dt*/timestep,/*dtOut*/0.01,"test06",999);
         return 0;
 }
 
