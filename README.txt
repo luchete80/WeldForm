@@ -17,3 +17,8 @@ La libreria blitz que se usa para windows es LA VERSION 0.9! No la actual:
 
 https://github.com/luchete80/blitz-0.9-cmake.git
 
+
+
+
+TO DOWNLOAD GSL 2.5 CON CMAKE
+https://github.com/ampl/gsl/tags

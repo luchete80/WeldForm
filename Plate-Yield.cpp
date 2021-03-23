@@ -107,6 +107,7 @@ int main(int argc, char **argv) try
     			dom.Particles[a]->ID=3;
     	}
 
+	
 //    	dom.WriteXDMF("maz");
     	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;

@@ -75,18 +75,22 @@ inline void Domain::CalcTempInc () {
 
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			//LUCIANO: TODO EXCLUDE THIS PRODUCT
-			double m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij );
+			double m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
 			//omp_set_lock(&P1->my_lock);
 			temp [SMPairs[k][a].first]  += m;
 			temp [SMPairs[k][a].second] -= m;
 		}
 	}//Nproc
 	
+	int max = 0.;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
 		Particles[i]->dTdt = 1./(Particles[i]->Density * Particles[i]->cp_T ) * ( temp[i] + Particles[i]->q_conv);	
+		if (Particles[i]->dTdt>max)
+			max= Particles[i]->dTdt;
 	}
+	cout << "Max dTdt: " << max <<endl;
 	
 }
 
@@ -106,7 +110,7 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 				//cout << "Particle  "<<Particles[i]->Mass<<endl;
 			}
 		}		
-	cout << "Max Convection: " << max <<endl;
+	//cout << "Max Convection: " << max <<endl;
 	//cout << "Applied convection to "<< i << " Particles"<<endl;
 }
 
@@ -147,7 +151,20 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	MainNeighbourSearch();
 	for ( size_t k = 0; k < Nproc ; k++) 
 		cout << "Pares: " <<SMPairs[k].Size()<<endl;
-			
+
+	// std::vector <int> nb(Particles.Size());
+	// std::vector <int> nbcount(Particles.Size());
+	// for ( size_t k = 0; k < Nproc ; k++) {
+		// for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+		// //cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
+			// nb[SMPairs[k][a].first ]+=1;
+			// nb[SMPairs[k][a].second]+=1;			
+		// }
+	// }	
+	
+	// for (int i=0;i<nb.size();i++)
+		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+		
 	while (Time<tf && idx_out<=maxidx) {
 
 		auto start_task = std::chrono::system_clock::now();
@@ -162,12 +179,12 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		CalcTempInc();
 		//TODO Add 
 		double max=0;
-		for (size_t i=0; i<Particles.Size(); i++){
-			Particles[i]->T+= dt*Particles[i]->dTdt;
-			if (Particles[i]->T > max)
-				max=Particles[i]->T;
-		}
-		std::cout << "Max temp: "<< max << std::endl;
+		// for (size_t i=0; i<Particles.Size(); i++){
+			// Particles[i]->T+= dt*Particles[i]->dTdt;
+			// if (Particles[i]->T > max)
+				// max=Particles[i]->T;
+		// }
+		// std::cout << "Max temp: "<< max << std::endl;
 
 			
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;

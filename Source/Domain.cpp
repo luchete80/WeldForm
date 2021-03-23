@@ -23,6 +23,8 @@
 //#include <time.h>       /* time_t, struct tm, difftime, time, mktime */
 #include <ctime> //Clock
 
+#include <vector>
+
 using namespace std;
 
 namespace SPH {
@@ -1048,6 +1050,19 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
+	std::vector <int> nb(Particles.Size());
+	std::vector <int> nbcount(Particles.Size());
+	for ( size_t k = 0; k < Nproc ; k++) {
+		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+		//cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
+			nb[SMPairs[k][a].first ]+=1;
+			nb[SMPairs[k][a].second]+=1;
+			
+		}
+	}	
+	for (int i=0;i<nb.size();i++)
+		cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+		
 		neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);

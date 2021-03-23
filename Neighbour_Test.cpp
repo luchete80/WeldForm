@@ -25,6 +25,7 @@ void UserAcc(SPH::Domain & domi) {
 
 }
 
+#include <vector>;
 
 using std::cout;
 using std::endl;
@@ -33,7 +34,7 @@ int main(int argc, char **argv) try
 {
    SPH::Domain	dom;
 
-	dom.Dimension	= 3;
+	dom.Dimension	= 2;
 	dom.Nproc	= 4;
 	dom.Kernel_Set(Quintic_Spline);
 	dom.Scheme	= 0;
@@ -45,14 +46,15 @@ int main(int argc, char **argv) try
 	n	= 30.0;	//ORIGINAL IS 40
 	
 	dx	= H / n;
-	double h	= dx*1.3; //Very important
+	double h	= dx*1.2; //Very important
 
 	dom.GeneralAfter = & UserAcc;
 	dom.DomMax(0) = H;
 	dom.DomMin(0) = -H;
 	double rho	= 1000.0;
 
-	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , 0.0 ), H , H ,  H  , dx/2.0 ,rho, h, 1 , 0 , false, false );
+	//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , -H/2.0 ), H , H ,  H  , dx/2.0 ,rho, h, 1 , 0 , false, false );
+	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , 0.0 ), H , H ,  0.  , dx/2.0 ,rho, h, 1 , 0 , false, false );
 	
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
 	double x;
@@ -69,7 +71,7 @@ int main(int argc, char **argv) try
 	clock_t clock_beg;
 	unsigned long steps=0;
 	unsigned int first_step;
-	for (size_t a=0; a< 20 ; a++) {
+	for (size_t a=0; a< 5 ; a++) {
 		clock_beg=clock();
 		dom.MainNeighbourSearch();
 		double t=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -84,7 +86,19 @@ int main(int argc, char **argv) try
 		steps++;
 	}
 		cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps)<<endl;
-
+	
+	std::vector <int> nb(dom.Particles.Size());
+	std::vector <int> nbcount(dom.Particles.Size());
+	for ( size_t k = 0; k < dom.Nproc ; k++) {
+		for (size_t a=0; a<dom.SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+		//cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
+			nb[dom.SMPairs[k][a].first ]+=1;
+			nb[dom.SMPairs[k][a].second]+=1;
+			
+		}
+	}	
+	for (int i=0;i<nb.size();i++)
+		cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
     	dom.WriteXDMF("maz");
 
 	return 0;
