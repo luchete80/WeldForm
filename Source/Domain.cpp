@@ -1003,6 +1003,75 @@ inline void Domain::TimestepCheck ()
 	throw new Fatal("Please decrease the time step to the allowable range");
 }
 
+inline void Domain::Solve_orig (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
+	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
+
+	size_t idx_out = 1;
+	double tout = Time;
+
+	//Initializing adaptive time step variables
+	deltat = deltatint = deltatmin	= dt;
+	
+	auto start_whole = std::chrono::steady_clock::now();
+
+	InitialChecks();
+	CellInitiate();
+	ListGenerate();
+	PrintInput(TheFileKey);
+	TimestepCheck();
+	WholeVelocity();
+	
+
+
+	//Initial model output
+	if (TheFileKey!=NULL) {
+		String fn;
+		fn.Printf    ("%s_Initial", TheFileKey);
+		WriteXDMF    (fn.CStr());
+		std::cout << "\nInitial Condition has been generated\n" << std::endl;
+	}
+	
+
+	unsigned long steps=0;
+	unsigned int first_step;
+	while (Time<tf && idx_out<=maxidx) {
+		StartAcceleration(Gravity);
+		if (BC.InOutFlow>0) InFlowBCFresh();
+		//MainNeighbourSearch();
+		GeneralBefore(*this);
+		PrimaryComputeAcceleration();
+		LastComputeAcceleration();
+		GeneralAfter(*this);
+		steps++;
+
+		// output
+		if (Time>=tout){
+			if (TheFileKey!=NULL) {
+				String fn;
+				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+				WriteXDMF    (fn.CStr());
+
+			}
+			idx_out++;
+			tout += dtOut;
+		}
+
+		AdaptiveTimeStep();
+		Move(deltat);
+		Time += deltat;
+		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
+		CellReset();
+		ListGenerate();
+		
+		
+	}
+	
+
+	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
+
+}
+
+
 inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
@@ -1046,22 +1115,34 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (BC.InOutFlow>0) InFlowBCFresh();
 		auto start_task = std::chrono::system_clock::now();
 		clock_beg = clock();
-		MainNeighbourSearch();
+
+		double max = 0;
+		int imax;
+		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		for (int i=0; i<Particles.Size(); i++){
+			if (Particles[i]->pl_strain>max){
+				max= Particles[i]->pl_strain;
+				imax=i;
+			}
+		}	
+		if (max>0.01){
+			MainNeighbourSearch();
+		}
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
-	std::vector <int> nb(Particles.Size());
-	std::vector <int> nbcount(Particles.Size());
-	for ( size_t k = 0; k < Nproc ; k++) {
-		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-		//cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
-			nb[SMPairs[k][a].first ]+=1;
-			nb[SMPairs[k][a].second]+=1;
+	// std::vector <int> nb(Particles.Size());
+	// std::vector <int> nbcount(Particles.Size());
+	// for ( size_t k = 0; k < Nproc ; k++) {
+		// for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+		// //cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
+			// nb[SMPairs[k][a].first ]+=1;
+			// nb[SMPairs[k][a].second]+=1;
 			
-		}
-	}	
-	for (int i=0;i<nb.size();i++)
-		cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+		// }
+	// }	
+	// for (int i=0;i<nb.size();i++)
+		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
 		
 		neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		auto end_task = std::chrono::system_clock::now();
@@ -1093,8 +1174,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
 				acc_time_spent <<
 				std::endl;
-				
-				
+							
+				cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
 				
 				std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
 				cout << "Total Neighbour search time in this interval: " << neigbour_time_spent_per_interval;
