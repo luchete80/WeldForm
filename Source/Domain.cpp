@@ -1037,7 +1037,7 @@ inline void Domain::Solve_orig (double tf, double dt, double dtOut, char const *
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
-		//MainNeighbourSearch();
+		MainNeighbourSearch();
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
 		LastComputeAcceleration();
@@ -1110,6 +1110,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 	unsigned long steps=0;
 	unsigned int first_step;
+	MainNeighbourSearch();
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
@@ -1188,9 +1189,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Move(deltat);
 		Time += deltat;
 		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
-		CellReset();
-		ListGenerate();
 		
+		if (max>0.01){
+			CellReset();
+			ListGenerate();
+		}
 		
 	}
 	
