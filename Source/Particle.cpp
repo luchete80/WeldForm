@@ -328,4 +328,15 @@ inline void Particle::translate(double dt, Vec3_t Domainsize, Vec3_t domainmax, 
 	}
 }
 
+inline void Particle::CalcPlasticWorkHeat(){
+	
+	q_plheat 	= 	0.5*(
+					Sigma(0,0)*StrainRate(0,0) + 
+					2.0*Sigma(0,1)*StrainRate(1,0) + 2.0*Sigma(0,2)*StrainRate(2,0) + 
+					Sigma(1,1)*StrainRate(1,1) +
+					2.0*Sigma(1,2)*StrainRate(2,1) + 
+					Sigma(2,2)*StrainRate(2,2)
+					);
+}
+
 }; // namespace SPH

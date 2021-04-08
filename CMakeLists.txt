@@ -31,7 +31,7 @@ SET(EXES
 	# 3-DamBreak
 	# 4-DamBreak3D
 	Plate-Yield
-	SolidBlock_Heat
+	#SolidBlock_Heat
 	#Neighbour_Test
 )
 

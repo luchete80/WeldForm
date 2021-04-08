@@ -120,6 +120,34 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 	//cout << "Applied convection to "<< i << " Particles"<<endl;
 }
 
+inline void Domain::CalcPlasticWorkHeat (){ //TODO: Detect Free Surface Elements
+
+	// //Fraser Eq 3-106
+	// double max=0.;
+	// int imax;
+	// #pragma omp parallel for schedule (static) num_threads(Nproc)
+		// for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
+
+			// //cout << "dS2" <<dS2<<endl;
+			// //cout << Particles[i]->Density<<endl;
+			// Particles[i]->q_plheat=
+			
+					// double J2	= 0.5*(ShearStress(0,0)*ShearStress(0,0) + 2.0*ShearStress(0,1)*ShearStress(1,0) +
+						// 2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
+						// 2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
+						
+						// ;
+			// if (Particles[i]->q_conv>max){
+				// max= Particles[i]->q_conv;
+				// imax=i;
+			// }
+			// //cout << "Particle  "<<Particles[i]->Mass<<endl;
+		
+		// }		
+	// //cout << "Max Convection: " << max <<"in particle " << imax <<endl;
+	// //cout << "Applied convection to "<< i << " Particles"<<endl;
+}
+
 inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
@@ -184,11 +212,13 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		CalcConvHeat();
 		CalcTempInc();
 		//TODO Add 
-		double max=0;
+		double max=0,min=1000.;
 		for (size_t i=0; i<Particles.Size(); i++){
 			Particles[i]->T+= dt*Particles[i]->dTdt;
 			if (Particles[i]->T > max)
 				max=Particles[i]->T;
+			if (Particles[i]->T < min)
+				min=Particles[i]->T;
 		}
 		// std::cout << "Max temp: "<< max << std::endl;
 
@@ -205,13 +235,13 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 			}
 			idx_out++;
 			tout += dtOut;
-		total_time = std::chrono::steady_clock::now() - start_whole;
-				std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
-				std::cout << "Current Time Step = " <<deltat<<std::endl;
-				std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
-				acc_time_spent <<
-				std::endl;
-				std::cout << "Max temp: "<< max << std::endl;
+			total_time = std::chrono::steady_clock::now() - start_whole;
+			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+			std::cout << "Current Time Step = " <<deltat<<std::endl;
+			std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
+			acc_time_spent <<
+			std::endl;
+			std::cout << "Max, Min, Avg temps: "<< max << ", " << min << ", " << (max+min)/2. <<std::endl;
 			
 			double max_flux = 0.;
 			for (size_t i=0; i<Particles.Size(); i++){

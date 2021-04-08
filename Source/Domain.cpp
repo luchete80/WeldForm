@@ -1054,6 +1054,7 @@ inline void Domain::Solve_orig (double tf, double dt, double dtOut, char const *
 			}
 			idx_out++;
 			tout += dtOut;
+			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
 		}
 
 		AdaptiveTimeStep();
@@ -1167,22 +1168,22 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 			idx_out++;
 			tout += dtOut;
-		total_time = std::chrono::steady_clock::now() - start_whole;
-				std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
-				std::cout << "Current Time Step = " <<deltat<<std::endl;
-				
-				clock_time_spent += neigbour_time_spent_per_interval;
-				std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
-				acc_time_spent <<
-				std::endl;
-							
-				cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
-				
-				std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
-				cout << "Total Neighbour search time in this interval: " << neigbour_time_spent_per_interval;
-				cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step);
-				first_step=steps;
-				neigbour_time_spent_per_interval=0.;
+			total_time = std::chrono::steady_clock::now() - start_whole;
+			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+			std::cout << "Current Time Step = " <<deltat<<std::endl;
+			
+			clock_time_spent += neigbour_time_spent_per_interval;
+			std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
+			acc_time_spent <<
+			std::endl;
+						
+			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
+			
+			std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
+			cout << "Total Neighbour search time in this interval: " << neigbour_time_spent_per_interval;
+			cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step);
+			first_step=steps;
+			neigbour_time_spent_per_interval=0.;
 		}
 
 		AdaptiveTimeStep();
