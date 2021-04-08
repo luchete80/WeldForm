@@ -87,6 +87,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	CSmag = 0.17;
 
 	Thermal_BC = TH_BC_NONE;
+	pl_strain=0;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);
@@ -216,9 +217,12 @@ inline void Particle::Mat2MVerlet(double dt) {
 						2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
 						2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
 		//Scale back, Fraser Eqn 3-53
-		ShearStress	= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStress;
-		double dep=( sqrt(3.0*J2)- Sigmay)/ 3.*G;	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
-		pl_strain+=dep;
+		double sig_trial = sqrt(3.0*J2);
+		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
+		if ( sig_trial > Sigmay) {
+			double dep=( sig_trial - Sigmay)/ (3.*G);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			pl_strain+=dep;
+		}
 	}
 
 	Sigma			= -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
