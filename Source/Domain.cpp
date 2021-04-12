@@ -778,11 +778,16 @@ inline void Domain::StartAcceleration (Vec3_t const & a) {
 				else
 				{
 					Mat3_t Vec,Val,VecT,temp;
-
+					double pc_ti_inv_d2=Particles[i]->TI/(Particles[i]->Density*Particles[i]->Density);//Precompute some values
 					Rotation(Particles[i]->Sigma,Vec,VecT,Val);
-					if (Val(0,0)>0) Val(0,0) = -Particles[i]->TI * Val(0,0)/(Particles[i]->Density*Particles[i]->Density); else Val(0,0) = 0.0;
-					if (Val(1,1)>0) Val(1,1) = -Particles[i]->TI * Val(1,1)/(Particles[i]->Density*Particles[i]->Density); else Val(1,1) = 0.0;
-					if (Val(2,2)>0) Val(2,2) = -Particles[i]->TI * Val(2,2)/(Particles[i]->Density*Particles[i]->Density); else Val(2,2) = 0.0;
+					//Before
+					// if (Val(0,0)>0) Val(0,0) = -Particles[i]->TI * Val(0,0)/(Particles[i]->Density*Particles[i]->Density); else Val(0,0) = 0.0;
+					// if (Val(1,1)>0) Val(1,1) = -Particles[i]->TI * Val(1,1)/(Particles[i]->Density*Particles[i]->Density); else Val(1,1) = 0.0;
+					// if (Val(2,2)>0) Val(2,2) = -Particles[i]->TI * Val(2,2)/(Particles[i]->Density*Particles[i]->Density); else Val(2,2) = 0.0;
+					if (Val(0,0)>0) Val(0,0) = -pc_ti_inv_d2 * Val(0,0); else Val(0,0) = 0.0;
+					if (Val(1,1)>0) Val(1,1) = -pc_ti_inv_d2 * Val(1,1); else Val(1,1) = 0.0;
+					if (Val(2,2)>0) Val(2,2) = -pc_ti_inv_d2 * Val(2,2); else Val(2,2) = 0.0;
+
 					Mult(Vec,Val,temp);
 					Mult(temp,VecT,Particles[i]->TIR);
 				}
@@ -862,8 +867,7 @@ inline void Domain::PrimaryComputeAcceleration () {
 			if (Particles[a]->TI > 0.0)
 			{
 				// XY plane must be used, It is very slow in 3D
-				if (Dimension == 2)
-				{
+				if (Dimension == 2) {
 					double teta, Sigmaxx, Sigmayy, C, S;
 					if ((Particles[a]->Sigma(0,0)-Particles[a]->Sigma(1,1))!=0.0)
 						teta = 0.5*atan(2.0*Particles[a]->Sigma(0,1)/(Particles[a]->Sigma(0,0)-Particles[a]->Sigma(1,1)));
@@ -880,13 +884,17 @@ inline void Domain::PrimaryComputeAcceleration () {
 					Particles[a]->TIR(1,1) = S*S*Sigmaxx + C*C*Sigmayy;
 					Particles[a]->TIR(0,1) = Particles[a]->TIR(1,0) = S*C*(Sigmaxx-Sigmayy);
 				}
-				else
-				{
+				else {
 					Mat3_t Vec,Val,VecT,temp;
 					Rotation(Particles[a]->Sigma,Vec,VecT,Val);
-					if (Val(0,0)>0) Val(0,0) = -Particles[a]->TI * Val(0,0)/(Particles[a]->Density*Particles[a]->Density); else Val(0,0) = 0.0;
-					if (Val(1,1)>0) Val(1,1) = -Particles[a]->TI * Val(1,1)/(Particles[a]->Density*Particles[a]->Density); else Val(1,1) = 0.0;
-					if (Val(2,2)>0) Val(2,2) = -Particles[a]->TI * Val(2,2)/(Particles[a]->Density*Particles[a]->Density); else Val(2,2) = 0.0;
+					double pc_ti_inv_d2=Particles[a]->TI/(Particles[a]->Density*Particles[a]->Density);//Precompute some values
+					// if (Val(0,0)>0) Val(0,0) = -Particles[a]->TI * Val(0,0)/(Particles[a]->Density*Particles[a]->Density); else Val(0,0) = 0.0;
+					// if (Val(1,1)>0) Val(1,1) = -Particles[a]->TI * Val(1,1)/(Particles[a]->Density*Particles[a]->Density); else Val(1,1) = 0.0;
+					// if (Val(2,2)>0) Val(2,2) = -Particles[a]->TI * Val(2,2)/(Particles[a]->Density*Particles[a]->Density); else Val(2,2) = 0.0;
+					if (Val(0,0)>0) Val(0,0) = -pc_ti_inv_d2 * Val(0,0); else Val(0,0) = 0.0;
+					if (Val(1,1)>0) Val(1,1) = -pc_ti_inv_d2 * Val(1,1); else Val(1,1) = 0.0;
+					if (Val(2,2)>0) Val(2,2) = -pc_ti_inv_d2 * Val(2,2); else Val(2,2) = 0.0;
+
 					Mult(Vec,Val,temp);
 					Mult(temp,VecT,Particles[a]->TIR);
 				}
@@ -1111,7 +1119,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 	unsigned long steps=0;
 	unsigned int first_step;
-	MainNeighbourSearch();
+	//MainNeighbourSearch();
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
@@ -1127,9 +1135,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				imax=i;
 			}
 		}	
-		if (max>0.01){
+		//if (max>0.01){
 			MainNeighbourSearch();
-		}
+		//}
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
@@ -1191,10 +1199,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Time += deltat;
 		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
-		if (max>0.01){
+		//if (max>0.01){
 			CellReset();
 			ListGenerate();
-		}
+		//}
 		
 	}
 	

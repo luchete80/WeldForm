@@ -19,6 +19,13 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include <sstream>
+#include <string>
+
+#pragma once
+#include <sstream>
+#include <string>
+#include <cmath>
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -42,9 +49,9 @@ void UserAcc(SPH::Domain & domi)
 	}
 }
 
-
-using std::cout;
-using std::endl;
+using namespace std;
+//using std::cout;
+//using std::endl;
 
 int main(int argc, char **argv) try
 {
@@ -68,12 +75,10 @@ int main(int argc, char **argv) try
 		double E=72.e9;
 		double nu=0.3;
 		
-    	rho	= 2800.0;
-    	//K	= 3.25e6;
-    	//G	= 7.15e5;
-		K= E * nu / ( (1.+nu) * (1.-2*nu) );
-		G= E / (2.* (1.+nu));
-		Fy	= 570.0e6;
+    	rho	= 1000.0;
+    	K	= 3.25e6;
+    	G	= 7.15e5;
+		Fy	= 4000.0;
     	dx	= H / n;
     	h	= dx*1.3; //Very important	//COMPARE WITH ANOTHER VALUES
         Cs	= sqrt(K/rho);
@@ -94,7 +99,7 @@ int main(int argc, char **argv) try
 							L + L/10.0 + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
 		
-		cout << "Particle count: "<<dom.Particles.Size()<<endl;
+		cout << "Particle count: " << dom.Particles.Size() << endl;
      	double x;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -118,7 +123,7 @@ int main(int argc, char **argv) try
 
 	
 //    	dom.WriteXDMF("maz");
-    	dom.Solve_orig(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

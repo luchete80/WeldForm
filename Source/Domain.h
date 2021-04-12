@@ -33,6 +33,13 @@
 #include "Functions.h"
 #include "Boundary_Condition.h"
 
+//#ifdef _WIN32 /* __unix__ is usually defined by compilers targeting Unix systems */
+#include <sstream>
+//#endif
+#include <sstream>
+#include <string>
+#include <cmath>
+
 
 //C++ Enum used for easiness of coding in the input files
 enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 };

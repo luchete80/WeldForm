@@ -156,12 +156,11 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			P1->a		+= mj * temp;
 			P1->dDensity	+= mj * (di/dj) * temp1;
 
-			if (P1->IsFree)
-			{
-				P1->ZWab	+= mj/dj* K;
-				P1->StrainRate	 = P1->StrainRate + mj/dj*StrainRate;
-				P1->RotationRate = P1->RotationRate + mj/dj*RotationRate;
-
+			if (P1->IsFree) {
+				float mj_dj= mj/dj;
+				P1->ZWab	+= mj_dj* K;
+				P1->StrainRate	 = P1->StrainRate + mj_dj*StrainRate;
+				P1->RotationRate = P1->RotationRate + mj_dj*RotationRate;
 			}
 			else
 				P1->ZWab	= 1.0;
@@ -175,11 +174,11 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		omp_set_lock(&P2->my_lock);
 			P2->a		-= mi * temp;
 			P2->dDensity	+= mi * (dj/di) * temp1;
-			if (P2->IsFree)
-			{
-				P2->ZWab	+= mi/di* K;
-				P2->StrainRate	 = P2->StrainRate + mi/di*StrainRate;
-				P2->RotationRate = P2->RotationRate + mi/di*RotationRate;
+			if (P2->IsFree) {
+				float mi_di = mi/di;
+				P2->ZWab	+= mi_di* K;
+				P2->StrainRate	 = P2->StrainRate + mi_di*StrainRate;
+				P2->RotationRate = P2->RotationRate + mi_di*RotationRate;
 
 			}
 			else

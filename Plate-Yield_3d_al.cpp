@@ -50,7 +50,7 @@ int main(int argc, char **argv) try
 {
        SPH::Domain	dom;
 
-        dom.Dimension	= 2;
+        dom.Dimension	= 3;
         dom.Nproc	= 4;
     	dom.Kernel_Set(Quintic_Spline);
     	dom.Scheme	= 0;
@@ -61,14 +61,21 @@ int main(int argc, char **argv) try
 
     	H	= 0.01;
     	L	= 0.03;
-    	n	= 40.0;	//ORIGINAL IS 40
+    	n	= 20.0;	//ORIGINAL IS 40
 		
-    	rho	= 1000.0;
-    	K	= 3.25e6;
-    	G	= 7.15e5;
-	Fy	= 4000.0;
+		//lambda = E nu / ((1+nu)*(1-2 nu)) 
+		//G = E/(2*(1+nu) )
+		double E=72.e9;
+		double nu=0.3;
+		
+    	rho	= 2800.0;
+    	//K	= 3.25e6;
+    	//G	= 7.15e5;
+		K= E * nu / ( (1.+nu) * (1.-2*nu) );
+		G= E / (2.* (1.+nu));
+		Fy	= 570.0e6;
     	dx	= H / n;
-    	h	= dx*1.3; //Very important
+    	h	= dx*1.3; //Very important	//COMPARE WITH ANOTHER VALUES
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -83,14 +90,16 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
 
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , -H/2.0 ), 
+							L + L/10.0 + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
      	double x;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		dom.Particles[a]->G		= G;
+    		dom.Particles[a]->G			= G;
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
@@ -109,7 +118,7 @@ int main(int argc, char **argv) try
 
 	
 //    	dom.WriteXDMF("maz");
-    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve_orig(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH
