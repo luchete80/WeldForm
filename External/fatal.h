@@ -26,7 +26,7 @@
 #include <exception>
 
 // MechSys
-#include "string.h"
+#include "string_.h"
 
 // Global variable to tell 'catch' that parallel code is activated
 bool MECHSYS_CATCH_PARALLEL = false;

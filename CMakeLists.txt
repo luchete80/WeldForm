@@ -22,15 +22,20 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
 PROJECT                (New_Test)
 
-INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
-include_directories("D:/Luciano/Numerico/blitz/include")
+add_definitions(-D_CRT_NO_VA_START_VALIDATION)
+#INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
+include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
+include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
+include_directories("D:/Luciano/Numerico/Libs/hdf5-1.12.0_install_mswin/include")
+include_directories("Source")
+include_directories("External")
 
 SET(EXES
 	# 1-Poiseuille
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	Plate-Yield_3d
+	Plate-Yield
 	#SolidBlock_Heat
 	#Neighbour_Test
 )

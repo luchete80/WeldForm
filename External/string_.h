@@ -20,8 +20,11 @@
 #ifndef MECHSYS_STRING_H
 #define MECHSYS_STRING_H
 
+//#ifdef _MSC_VER
+#define _CRT_NO_VA_START_VALIDATION
+//#endif
 // STL
-#include <string>
+//#include <string>
 //#include <boost/algorithm/string.hpp> // for to_upper
 #include <cstdarg> // for va_list, va_start, va_end
 #include <cstdio>  // for vsnprintf
