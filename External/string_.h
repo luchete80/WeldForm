@@ -118,15 +118,15 @@ private:
 /////////////////////////////////////////////////////////////////////////////////////////// Implementation /////
 
 
-inline int String::Printf (String const & Fmt, ...)
-{
-    int len;
-    va_list       arg_list;
-    va_start     (arg_list, Fmt);
-    len=_set_msg (Fmt.c_str(), arg_list);
-    va_end       (arg_list);
-    return len;
-}
+// inline int String::Printf (String const & Fmt, ...)
+// {
+    // int len;
+    // va_list       arg_list;
+    // va_start     (arg_list, Fmt);
+    // len=_set_msg (Fmt.c_str(), arg_list);
+    // va_end       (arg_list);
+    // return len;
+// }
 
 inline void String::TextFmt (char const * NF)
 {
