@@ -71,9 +71,9 @@ int main(int argc, char **argv) try
     	rho	= 2800.0;
     	//K	= 3.25e6;
     	//G	= 7.15e5;
-		K= E * nu / ( (1.+nu) * (1.-2*nu) );
+		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
-		Fy	= 570.0e6;
+		Fy	= 500.0e6;
     	dx	= H / n;
     	h	= dx*1.3; //Very important	//COMPARE WITH ANOTHER VALUES
         Cs	= sqrt(K/rho);
@@ -118,7 +118,7 @@ int main(int argc, char **argv) try
 
 	
 //    	dom.WriteXDMF("maz");
-    	dom.Solve_orig(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

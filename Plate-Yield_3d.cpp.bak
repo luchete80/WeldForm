@@ -19,6 +19,13 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include <sstream>
+#include <string>
+
+#pragma once
+#include <sstream>
+#include <string>
+#include <cmath>
 
 void UserAcc(SPH::Domain & domi)
 {

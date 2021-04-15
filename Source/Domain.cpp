@@ -1165,7 +1165,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
 		steps++;
-
+		cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
 		// output
 		if (Time>=tout){
 			if (TheFileKey!=NULL) {

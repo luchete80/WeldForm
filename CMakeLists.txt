@@ -47,7 +47,7 @@ SET(EXES
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	Plate-Yield
+	Plate-Yield_3d_al
 	#SolidBlock_Heat
 	#Neighbour_Test
 )
