@@ -361,7 +361,13 @@ void scalet(type                 a,
     B.Resize(n, m);
     type * ptrB = B.GetPtr();
     
+	#ifdef __GNUC__
     type rowA[n];
+	#endif
+	#ifdef _MSC_VER
+    type *rowA;
+	rowA=new type[n];
+	#endif
     for (size_t i=0; i<m; ++i)     //in rows of A
     {
         for (size_t k = 0; k<n; k++) //in cols of A

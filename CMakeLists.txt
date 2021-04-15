@@ -21,18 +21,20 @@
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
 PROJECT                (New_Test)
-
+cmake_policy(SET CMP0054 NEW) #elseif
 add_definitions(-D_CRT_NO_VA_START_VALIDATION)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+MESSAGE("Using GNU compiler")
 INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
 include_directories("D:/Luciano/Numerico/blitz/include")
   # using GCC
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   # using Intel C++
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+MESSAGE("Using MSVC compilers")
 # using Visual Studio C++
 include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
