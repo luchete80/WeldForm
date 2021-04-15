@@ -117,16 +117,17 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////////////////// Implementation /////
 
-
-// inline int String::Printf (String const & Fmt, ...)
-// {
-    // int len;
-    // va_list       arg_list;
-    // va_start     (arg_list, Fmt);
-    // len=_set_msg (Fmt.c_str(), arg_list);
-    // va_end       (arg_list);
-    // return len;
-// }
+#if __GNUC__
+inline int String::Printf (String const & Fmt, ...)
+{
+    int len;
+    va_list       arg_list;
+    va_start     (arg_list, Fmt);
+    len=_set_msg (Fmt.c_str(), arg_list);
+    va_end       (arg_list);
+    return len;
+}
+#endif
 
 inline void String::TextFmt (char const * NF)
 {

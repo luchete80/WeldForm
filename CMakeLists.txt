@@ -23,12 +23,24 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 PROJECT                (New_Test)
 
 add_definitions(-D_CRT_NO_VA_START_VALIDATION)
-#INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  # using Clang
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
+include_directories("D:/Luciano/Numerico/blitz/include")
+  # using GCC
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+  # using Intel C++
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+# using Visual Studio C++
 include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/hdf5-1.12.0_install_mswin/include")
 include_directories("Source")
 include_directories("External")
+endif()
+
 
 SET(EXES
 	# 1-Poiseuille
