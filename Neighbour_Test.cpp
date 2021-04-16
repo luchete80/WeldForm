@@ -69,7 +69,7 @@ int main(int argc, char **argv) try
 	// WholeVelocity();
 	
 	double clock_time_spent,acc_time_spent;
-	double neigbour_time_spent_per_interval;
+	double neigbour_time_spent_per_interval=0.;
 	clock_t clock_beg;
 	unsigned long steps=0;
 	unsigned int first_step;

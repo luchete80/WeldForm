@@ -270,7 +270,11 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
 
 		#pragma omp parallel for num_threads(Nproc)
-		for (size_t i=PrePS; i<Particles.Size(); i++)
+		#ifdef __GNUC__
+		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+		#else
+		for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+		#endif
 		{
 			Particles[i]->Mass = Mass;
 		}
@@ -357,7 +361,11 @@ inline void Domain::DelParticles (int const & Tags)
     Array<int> idxs; // indices to be deleted
 
 	#pragma omp parallel for schedule(static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); ++i)
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif
     {
         if (Particles[i]->ID==Tags)
 		{
@@ -607,6 +615,7 @@ inline void Domain::CellReset ()
 {
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
+
     for(int i =0; i<CellNo[0]; i++)
     {
 		for(int j =0; j<CellNo[1]; j++)
@@ -615,10 +624,14 @@ inline void Domain::CellReset ()
 			HOC[i][j][k] = -1;
 		}
     }
+	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t a=0; a<Particles.Size(); a++)	//Like in Domain::Move
+	#else
+	for (int a=0; a<Particles.Size(); a++)//Like in Domain::Move
+	#endif
+	{
 
-    #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t a=0; a<Particles.Size(); a++)
-    {
     	Particles[a]->LL = -1;
     }
 
@@ -749,8 +762,14 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 }
 
 inline void Domain::StartAcceleration (Vec3_t const & a) {
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t i=0; i<Particles.Size(); i++) {
+
+	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif
+	{
 	    if (Particles[i]->IsFree){
 			// Tensile Instability for all soil and solid particles
 			if (Particles[i]->TI > 0.0)
@@ -821,7 +840,13 @@ inline void Domain::StartAcceleration (Vec3_t const & a) {
 
 inline void Domain::PrimaryComputeAcceleration () {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t k=0; k<Nproc;k++) {
+	#ifdef __GNUC__
+	for (size_t k=0; k<Nproc;k++) 
+	#else
+	for (int k=0; k<Nproc;k++) 
+	#endif
+	
+	{
 		size_t P1,P2;
 		Vec3_t xij;
 		double h,K;
@@ -856,7 +881,12 @@ inline void Domain::PrimaryComputeAcceleration () {
 
 	// Calculateing the finala value of the smoothed pressure, velocity and stress for fixed particles
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#ifdef __GNUC__
 	for (size_t i=0; i<FixedParticles.Size(); i++)
+	#else
+	for (int i=0; i<FixedParticles.Size(); i++)
+	#endif
+
 		if (Particles[FixedParticles[i]]->SumKernel!= 0.0) {
 			size_t a = FixedParticles[i];
 			Particles[a]->Pressure	= Particles[a]->Pressure/Particles[a]->SumKernel;
@@ -907,15 +937,15 @@ inline void Domain::PrimaryComputeAcceleration () {
 inline void Domain::LastComputeAcceleration ()
 {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t k=0; k<Nproc;k++) {
+	for (int k=0; k<Nproc;k++) {
 		for (size_t i=0; i<SMPairs[k].Size();i++)
 			CalcForce2233(Particles[SMPairs[k][i].first],Particles[SMPairs[k][i].second]);
 
-		for (size_t i=0; i<FSMPairs[k].Size();i++)
+		for (int i=0; i<FSMPairs[k].Size();i++)
 			CalcForce2233(Particles[FSMPairs[k][i].first],Particles[FSMPairs[k][i].second]);
 	}
 
-	for (size_t i=0 ; i<Nproc ; i++)
+	for (int i=0 ; i<Nproc ; i++)
 	{
 		SMPairs[i].Clear();
 		FSMPairs[i].Clear();
@@ -926,7 +956,7 @@ inline void Domain::LastComputeAcceleration ()
 		double test	= 0.0;
 		deltatmin	= deltatint;
 		#pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
-		for (size_t i=0; i<Particles.Size(); i++) {
+		for (int i=0; i<Particles.Size(); i++) {
 			if (Particles[i]->IsFree) {
 				test = sqrt(Particles[i]->h/norm(Particles[i]->a));
 				if (deltatmin > (sqrt_h_a*test))
@@ -941,7 +971,7 @@ inline void Domain::LastComputeAcceleration ()
 
 inline void Domain::Move (double dt) {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t i=0; i<Particles.Size(); i++)
+	for (int i=0; i<Particles.Size(); i++)
 		if (Particles[i]->IsFree) {
 			if (Particles[i]->InOut>0) {
 				Particles[i]->a = 0.0;
@@ -966,7 +996,7 @@ inline void Domain::WholeVelocity() {
     	double den = 0.0;
 
 	#pragma omp parallel for schedule (static) private(vel,den) num_threads(Nproc)
-    	for (size_t i=0 ; i<Particles.Size() ; i++) {
+    	for (int i=0 ; i<Particles.Size() ; i++) {
 		AllCon(Particles[i]->x,vel,den,BC);
     		if (Particles[i]->IsFree && norm(BC.allv)>0.0) {
 			Particles[i]->v		= vel;
@@ -993,7 +1023,7 @@ inline void Domain::InitialChecks() {
 
 
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for (size_t i=0; i<Particles.Size(); i++) //Initializing pressure of solid and fluid particles
+	for (int i=0; i<Particles.Size(); i++) //Initializing pressure of solid and fluid particles
 			Particles[i]->Pressure = EOS(Particles[i]->PresEq, Particles[i]->Cs, Particles[i]->P0,Particles[i]->Density, Particles[i]->RefDensity);
 }
 

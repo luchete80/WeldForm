@@ -41,7 +41,7 @@ inline void Domain::InFlowBCFresh()
 			BC.InFlowLoc2  = Particles[BC.InPart[0]]->x(0);
 			BC.InFlowLoc3  = Particles[BC.InPart[0]]->x(0);
 			#pragma omp parallel for schedule(static) num_threads(Nproc)
-			for (size_t i=0 ; i<BC.InPart.Size() ; i++)
+			for (int i=0 ; i<BC.InPart.Size() ; i++)
 			{
 				if (Particles[BC.InPart[i]]->x(0) < BC.InFlowLoc2) BC.InFlowLoc2  = Particles[BC.InPart[i]]->x(0);
 				if (Particles[BC.InPart[i]]->x(0) > BC.InFlowLoc3) BC.InFlowLoc3  = Particles[BC.InPart[i]]->x(0);
@@ -107,7 +107,7 @@ inline void Domain::InFlowBCFresh()
 	double den;
 	if (BC.InPart.Size()>0)
 		#pragma omp parallel for schedule(static) private(vel,den) num_threads(Nproc)
-		for (size_t i=0 ; i<BC.InPart.Size() ; i++)
+		for (int i=0 ; i<BC.InPart.Size() ; i++)
 		{
 			size_t a = BC.InPart[i];
 			InCon(Particles[a]->x,vel,den,BC);
@@ -128,7 +128,7 @@ inline void Domain::InFlowBCFresh()
 
 	if (BC.OutPart.Size()>0)
 		#pragma omp parallel for schedule(static) private(vel,den) num_threads(Nproc)
-		for (size_t i=0 ; i<BC.OutPart.Size() ; i++)
+		for (int i=0 ; i<BC.OutPart.Size() ; i++)
 		{
 			size_t a = BC.OutPart[i];
 			OutCon(Particles[a]->x,vel,den,BC);
@@ -155,7 +155,7 @@ inline void Domain::InFlowBCLeave()
 	Array<std::pair<Vec3_t,size_t> > AddPart;
 
 	#pragma omp parallel for schedule(static) num_threads(Nproc)
-	for (size_t i=0; i<Particles.Size(); i++)
+	for (int i=0; i<Particles.Size(); i++)
 		if ((Particles[i]->x(0) > TRPR(0)) || (Particles[i]->x(1) > TRPR(1)) || (Particles[i]->x(2) > TRPR(2)) ||
 				(Particles[i]->x(0) < BLPF(0)) || (Particles[i]->x(1) < BLPF(1)) || (Particles[i]->x(2) < BLPF(2)))
 		{

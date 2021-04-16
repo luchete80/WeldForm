@@ -99,7 +99,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	double P1,P2,P3;
 
     #pragma omp parallel for schedule (static) private(P1,P2,P3) num_threads(Nproc)
-    for (size_t i=0;i<Particles.Size();i++)
+    for (int i=0;i<Particles.Size();i++)
     {
         Posvec  [3*i  ] = float(Particles[i]->x(0));
         Posvec  [3*i+1] = float(Particles[i]->x(1));
