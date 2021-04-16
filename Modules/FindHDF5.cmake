@@ -18,15 +18,17 @@
 # PersianSPH; if not, see <http://www.gnu.org/licenses/>                            #
 #####################################################################################
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 SET(HDF5_INCLUDE_SEARCH_PATH
     $ENV{PKG}/hdf5-1.12.0/include
     )
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 SET(HDF5_LIBRARY_SEARCH_PATH
     $ENV{PKG}/hdf5-1.12.0/lib
     )
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+SET(HDF5_INCLUDE_SEARCH_PATH
+    $ENV{PKG}/hdf5-1.12.0_install_mswin/include
+    )
 SET(HDF5_LIBRARY_SEARCH_PATH
 	$ENV{PKG}/hdf5-1.12.0_install_mswin/lib
 	)
