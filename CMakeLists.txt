@@ -24,12 +24,14 @@ PROJECT                (New_Test)
 cmake_policy(SET CMP0054 NEW) #elseif
 add_definitions(-D_CRT_NO_VA_START_VALIDATION)
 
+INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 MESSAGE("Using GNU compiler")
-INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
 include_directories("D:/Luciano/Numerico/blitz/include")
+link_directories("D:/Luciano/Numerico/blitz/lib")
   # using GCC
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   # using Intel C++
@@ -39,6 +41,8 @@ MESSAGE("Using MSVC compilers")
 include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/hdf5-1.12.0_install_mswin/include")
+link_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/lib")
+
 include_directories("Source")
 include_directories("External")
 endif()
@@ -49,12 +53,12 @@ SET(EXES
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	Plate-Yield_3d_al
+	#Plate-Yield
 	#SolidBlock_Heat
-	#Neighbour_Test
+	Neighbour_Test
 )
 
-link_directories("D:/Luciano/Numerico/blitz/lib")
+
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp")
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)

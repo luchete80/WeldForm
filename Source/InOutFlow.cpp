@@ -317,8 +317,12 @@ inline void Domain::CheckParticleLeave ()
 	Array <int> DelParticles;
 
 	#pragma omp parallel for schedule(static) num_threads(Nproc)
-	for (size_t i=0; i<Particles.Size(); i++)
-    {
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++){//Like in Domain::Move
+	#endif
+    
 		if ((Particles[i]->x(0) > TRPR(0)) || (Particles[i]->x(1) > TRPR(1)) || (Particles[i]->x(2) > TRPR(2)) ||
 				(Particles[i]->x(0) < BLPF(0)) || (Particles[i]->x(1) < BLPF(1)) || (Particles[i]->x(2) < BLPF(2)))
 		{

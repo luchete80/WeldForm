@@ -133,8 +133,12 @@ public:
 
     double					AvgVelocity;	///< Average velocity of the last two column for x periodic constant velocity
 
+	#ifdef __GNUC__
     size_t					Nproc;		///< No of threads which are going to use in parallel calculation
-    omp_lock_t 					dom_lock;	///< Open MP lock to lock Interactions array
+	#else
+	int						Nproc;
+	#endif
+	omp_lock_t 					dom_lock;	///< Open MP lock to lock Interactions array
     Boundary					BC;
     PtOut					UserOutput;
     PtVel 					InCon;

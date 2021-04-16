@@ -34,7 +34,7 @@ int main(int argc, char **argv) try
 {
    SPH::Domain	dom;
 
-	dom.Dimension	= 2;
+	dom.Dimension	= 3;
 	dom.Nproc	= 4;
 	dom.Kernel_Set(Quintic_Spline);
 	dom.Scheme	= 0;
@@ -43,10 +43,10 @@ int main(int argc, char **argv) try
 
 	H	= 0.01;
 	L	= 0.03;
-	n	= 30.0;	//ORIGINAL IS 40
+	n	= 15.0;	//ORIGINAL IS 40
 	
 	dx	= H / n;
-	double h	= dx*1.2; //Very important
+	double h	= dx*1.1; //Very important
 
 	dom.GeneralAfter = & UserAcc;
 	dom.DomMax(0) = H;
@@ -54,8 +54,10 @@ int main(int argc, char **argv) try
 	double rho	= 1000.0;
 
 	//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , -H/2.0 ), H , H ,  H  , dx/2.0 ,rho, h, 1 , 0 , false, false );
-	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , 0.0 ), H , H ,  0.  , dx/2.0 ,rho, h, 1 , 0 , false, false );
-	
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , -H/2.0 ), 
+							L + L/10.0 + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );
+							
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
 	double x;
 
@@ -97,9 +99,15 @@ int main(int argc, char **argv) try
 			
 		}
 	}	
-	for (int i=0;i<nb.size();i++)
-		cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
-    	dom.WriteXDMF("maz");
+	unsigned long avg_nb=0;
+	for (int i=0;i<nb.size();i++){
+		//cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+		avg_nb+=nb[i];
+	}
+	avg_nb/=dom.Particles.Size();
+	cout << "Neihbour Average Count: "<<avg_nb<<endl;
+	
+    dom.WriteXDMF("maz");
 
 	return 0;
 }

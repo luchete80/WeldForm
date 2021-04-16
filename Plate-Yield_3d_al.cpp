@@ -61,7 +61,7 @@ int main(int argc, char **argv) try
 
     	H	= 0.01;
     	L	= 0.03;
-    	n	= 20.0;	//ORIGINAL IS 40
+    	n	= 15.0;	//ORIGINAL IS 40
 		
 		//lambda = E nu / ((1+nu)*(1-2 nu)) 
 		//G = E/(2*(1+nu) )

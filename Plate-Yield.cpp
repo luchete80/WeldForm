@@ -23,7 +23,13 @@
 void UserAcc(SPH::Domain & domi)
 {
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
+
+	#ifdef __GNUC__
 	for (size_t i=0; i<domi.Particles.Size(); i++)
+	#else
+	for (int i=0; i<domi.Particles.Size(); i++)
+	#endif
+	
 	{
 		if (domi.Particles[i]->ID == 3)
 		{
