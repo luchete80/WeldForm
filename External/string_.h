@@ -117,7 +117,7 @@ private:
 
 /////////////////////////////////////////////////////////////////////////////////////////// Implementation /////
 
-#if __GNUC__
+
 inline int String::Printf (String const & Fmt, ...)
 {
     int len;
@@ -127,14 +127,6 @@ inline int String::Printf (String const & Fmt, ...)
     va_end       (arg_list);
     return len;
 }
-#else
-inline int String::Printf (String const & Fmt, ...) // TO MODIFY
-{
-	int len;
-	
-	return len;
-}	
-#endif
 
 inline void String::TextFmt (char const * NF)
 {

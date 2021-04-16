@@ -18,12 +18,23 @@
 # PersianSPH; if not, see <http://www.gnu.org/licenses/>                            #
 #####################################################################################
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 SET(LocGSL_INCLUDE_SEARCH_PATH
   $ENV{PKG}/gsl-2.5/include
 	)
 
 SET(LocGSL_LIBRARY_SEARCH_PATH
   $ENV{PKG}/gsl-2.5/lib)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+SET(LocGSL_INCLUDE_SEARCH_PATH
+  $ENV{PKG}/gsl-2.5_install_mswin/include
+	)
+
+SET(LocGSL_LIBRARY_SEARCH_PATH
+  $ENV{PKG}/gsl-2.5_install_mswin/lib)
+
+endif()
+
 
 FIND_PATH(GSL_MATH_H  gsl/gsl_math.h  ${LocGSL_INCLUDE_SEARCH_PATH})
 FIND_PATH(GSL_EIGEN_H gsl/gsl_eigen.h ${LocGSL_INCLUDE_SEARCH_PATH})
