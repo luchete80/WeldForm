@@ -46,7 +46,7 @@ int main(int argc, char **argv) try
 	n	= 15.0;	//ORIGINAL IS 40
 	
 	dx	= H / n;
-	double h	= dx*1.1; //Very important
+	double h	= dx*0.2; //Very important
 
 	dom.GeneralAfter = & UserAcc;
 	dom.DomMax(0) = H;
@@ -57,6 +57,11 @@ int main(int argc, char **argv) try
      	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , -H/2.0 ), 
 							L + L/10.0 + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	
+	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0, -H/2.0 , -H/2.0 ), 
+							L + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );
+							
 							
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
 	double x;
@@ -96,18 +101,22 @@ int main(int argc, char **argv) try
 		//cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
 			nb[dom.SMPairs[k][a].first ]+=1;
 			nb[dom.SMPairs[k][a].second]+=1;
+			//cout << "neighbour count"<<nb[dom.SMPairs[k][a].first ]<<endl;
 			
 		}
 	}	
 	unsigned long avg_nb=0;
+	int max_nb=-1;
 	for (int i=0;i<nb.size();i++){
 		//cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
 		avg_nb+=nb[i];
+		if (nb[i] > max_nb)
+			max_nb=nb[i];
 	}
 	avg_nb/=dom.Particles.Size();
-	cout << "Neihbour Average Count: "<<avg_nb<<endl;
+	cout << "Neihbour Average Count: "<<avg_nb<<",max: " <<max_nb<<endl;
 	
-    dom.WriteXDMF("maz");
+    //dom.WriteXDMF("maz");
 
 	return 0;
 }
