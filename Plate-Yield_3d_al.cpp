@@ -23,7 +23,7 @@
 void UserAcc(SPH::Domain & domi)
 {
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-	for (size_t i=0; i<domi.Particles.Size(); i++)
+	for (int i=0; i<domi.Particles.Size(); i++)
 	{
 		if (domi.Particles[i]->ID == 3)
 		{
@@ -75,7 +75,7 @@ int main(int argc, char **argv) try
 		G= E / (2.* (1.+nu));
 		Fy	= 500.0e6;
     	dx	= H / n;
-    	h	= dx*1.3; //Very important	//COMPARE WITH ANOTHER VALUES
+    	h	= dx*0.5; //Very important	//COMPARE WITH ANOTHER VALUES
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -89,9 +89,9 @@ int main(int argc, char **argv) try
     	dom.GeneralAfter = & UserAcc;
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
-
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , -H/2.0 ), 
-							L + L/10.0 + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+		
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 -L/20.0, -H/2.0 , -H/2.0 ), 
+							L + L/10.0 +dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
@@ -118,7 +118,7 @@ int main(int argc, char **argv) try
 
 	
 //    	dom.WriteXDMF("maz");
-    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/1.e-5,"test06",999);
+    	dom.Solve(/*tf*/0.05,/*dt*/timestep,/*dtOut*/1.e-5,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

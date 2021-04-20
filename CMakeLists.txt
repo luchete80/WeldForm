@@ -24,6 +24,8 @@ PROJECT                (New_Test)
 cmake_policy(SET CMP0054 NEW) #elseif
 add_definitions(-D_CRT_NO_VA_START_VALIDATION)
 
+add_definitions(-D_USE_MATH_DEFINES) #COMPACTNSEARCH??
+
 INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -33,6 +35,7 @@ MESSAGE("Using GNU compiler")
 include_directories("D:/Luciano/Numerico/blitz/include")
 link_directories("D:/Luciano/Numerico/blitz/lib")
   # using GCC
+link_directories("D:/Luciano/Numerico/CompactNSearch_bin_mingw")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   # using Intel C++
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -42,10 +45,13 @@ include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/hdf5-1.12.0_install_mswin/include")
 link_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/lib")
+link_directories("D:/Luciano/Numerico/CompactNSearch_bin_nmake_release")
 
 include_directories("Source")
 include_directories("External")
 endif()
+
+include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 
 
 SET(EXES
@@ -53,14 +59,17 @@ SET(EXES
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	Plate-Yield
+	Plate-Yield_3d_al
 	#SolidBlock_Heat
-	Neighbour_Test
+	#Neighbour_Test
+	#Test-CompactSearch
 )
 
 
 FOREACH(var ${EXES})
-    ADD_EXECUTABLE        (${var} "${var}.cpp")
+    ADD_EXECUTABLE        (${var} "${var}.cpp" 
+	#"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
+	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 ENDFOREACH(var)

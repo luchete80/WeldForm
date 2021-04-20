@@ -20,6 +20,13 @@
 
 #include "Domain.h"
 
+#include <iostream>
+using std::cerr;
+using std::endl;
+#include <fstream>
+using std::ofstream;
+
+
 #define PRINT(x)	cout << x[0]<<", "<<x[1]<<", "<<x[2]<<endl;
 void UserAcc(SPH::Domain & domi) {
 
@@ -35,9 +42,9 @@ int main(int argc, char **argv) try
    SPH::Domain	dom;
 
 	dom.Dimension	= 3;
-	dom.Nproc	= 4;
+	dom.Nproc	= 1;
 	dom.Kernel_Set(Quintic_Spline);
-	dom.Scheme	= 0;
+	dom.Scheme	= 1;
 //     	dom.XSPH	= 0.5; //Very important
 	double H,L,n,dx;
 
@@ -46,21 +53,28 @@ int main(int argc, char **argv) try
 	n	= 15.0;	//ORIGINAL IS 40
 	
 	dx	= H / n;
-	double h	= dx*0.2; //Very important
+	double h	= dx*0.5; //Very important
 
 	dom.GeneralAfter = & UserAcc;
 	dom.DomMax(0) = H;
 	dom.DomMin(0) = -H;
 	double rho	= 1000.0;
 
+	ofstream outmesh; // outdata is like cin
+	outmesh.open("outmesh.txt"); // opens the file
+	
 	//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , -H/2.0 ), H , H ,  H  , dx/2.0 ,rho, h, 1 , 0 , false, false );
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , -H/2.0 ), 
-							L + L/10.0 + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
-							dx/2.0 ,rho, h, 1 , 0 , false, false );
-     	
-	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0, -H/2.0 , -H/2.0 ), 
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 , -H/2.0 , -H/2.0 ), 
 							L + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
+     for (int p=0;p < dom.Particles.Size();p++){
+		 
+		 outmesh << p << ", "<<dom.Particles[p]->x[0]<<", "<<dom.Particles[p]->x[1]<< ", " << dom.Particles[p]->x[2] <<endl;
+	 }
+	 outmesh.close();
+	// dom.AddBoxLength(1 ,Vec3_t ( -L/2.0, -H/2.0 , -H/2.0 ), 
+							// L + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 							
 							
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
@@ -94,17 +108,39 @@ int main(int argc, char **argv) try
 	}
 		cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps)<<endl;
 	
+	
+	ofstream outdata; // outdata is like cin
+	outdata.open("neighbours.txt"); // opens the file
+
+	std::vector<int> test;
+	
 	std::vector <int> nb(dom.Particles.Size());
 	std::vector <int> nbcount(dom.Particles.Size());
-	for ( size_t k = 0; k < dom.Nproc ; k++) {
-		for (size_t a=0; a<dom.SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+	#pragma omp parallel for schedule (static) num_threads(dom.Nproc)
+	for ( int k = 0; k < dom.Nproc ; k++) {
+		for (int a=0; a<dom.SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 		//cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
 			nb[dom.SMPairs[k][a].first ]+=1;
 			nb[dom.SMPairs[k][a].second]+=1;
 			//cout << "neighbour count"<<nb[dom.SMPairs[k][a].first ]<<endl;
-			
+			outdata << dom.SMPairs[k][a].first<<", " << dom.SMPairs[k][a].second << "( " << k << ", "<< a<<")"<<endl;
+			if (dom.SMPairs[k][a].first==0){
+				test.push_back(dom.SMPairs[k][a].second);
+			} else if (dom.SMPairs[k][a].second==0){
+				test.push_back(dom.SMPairs[k][a].first);
+			}
 		}
 	}	
+   outdata.close();
+
+   ofstream outfind;
+	outfind.open("find.txt"); // opens the file
+	
+	for ( int k = 0; test.size() ; k++) {
+		outfind<<test[k]<<endl;
+	}	
+	outfind.close();	
+
 	unsigned long avg_nb=0;
 	int max_nb=-1;
 	for (int i=0;i<nb.size();i++){

@@ -945,12 +945,13 @@ inline void Domain::LastComputeAcceleration ()
 			CalcForce2233(Particles[FSMPairs[k][i].first],Particles[FSMPairs[k][i].second]);
 	}
 
-	for (int i=0 ; i<Nproc ; i++)
-	{
-		SMPairs[i].Clear();
-		FSMPairs[i].Clear();
-		NSMPairs[i].Clear();
-	}
+	//LUCIANO: THIS SHOULD BE PERFORMED OUTSIDE
+	// for (int i=0 ; i<Nproc ; i++)
+	// {
+		// SMPairs[i].Clear();
+		// FSMPairs[i].Clear();
+		// NSMPairs[i].Clear();
+	// }
 
 		//Min time step check based on the acceleration
 		double test	= 0.0;
@@ -1149,7 +1150,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 	unsigned long steps=0;
 	unsigned int first_step;
-	//MainNeighbourSearch();
+	MainNeighbourSearch();
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
@@ -1165,9 +1166,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				imax=i;
 			}
 		}	
-		//if (max>0.01){
-			MainNeighbourSearch();
-		//}
+		// if (max>0.01){
+			// MainNeighbourSearch();
+		// }
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
@@ -1195,7 +1196,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
 		steps++;
-		cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
+		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
 		// output
 		if (Time>=tout){
 			if (TheFileKey!=NULL) {
@@ -1229,10 +1230,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Time += deltat;
 		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
-		//if (max>0.01){
-			CellReset();
-			ListGenerate();
-		//}
+		// if (max>0.01){
+			// CellReset();
+			// ListGenerate();
+		// }
 		
 	}
 	
