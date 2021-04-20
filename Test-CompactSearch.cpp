@@ -43,7 +43,7 @@ void UserAcc(SPH::Domain & domi) {
 
 using namespace CompactNSearch;
 
-std::vector<std::array<Real, 3>> positions;
+
 
 std::size_t const N_enright_steps = 50;
 
@@ -62,34 +62,84 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
+  SPH::Domain	dom;
 
+	dom.Dimension	= 3;
+	dom.Nproc	= 1;
+	dom.Kernel_Set(Quintic_Spline);
+	dom.Scheme	= 1;
+//     	dom.XSPH	= 0.5; //Very important
+	double H,L,n,dx;
 
-	double H	= 0.01;
-	double n	= 15.0;	//ORIGINAL IS 40
+	H	= 0.01;
+	L	= 0.03;
+	n	= 15.0;	//ORIGINAL IS 40
 	
+	dx	= H / n;
+	double h	= dx*0.5; //Very important
 
+	dom.GeneralAfter = & UserAcc;
+	dom.DomMax(0) = H;
+	dom.DomMin(0) = -H;
+	double rho	= 1000.0;
 
+	ofstream outmesh; // outdata is like cin
+	outmesh.open("outmesh.txt"); // opens the file
+	
+	cout << "Generating domain"<<endl;
+	
+	//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , -H/2.0 ), H , H ,  H  , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 , -H/2.0 , -H/2.0 ), 
+							L + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );
+     for (int p=0;p < dom.Particles.Size();p++){
+		 
+		 outmesh << p << ", "<<dom.Particles[p]->x[0]<<", "<<dom.Particles[p]->x[1]<< ", " << dom.Particles[p]->x[2] <<endl;
+	 }
+	 outmesh.close();
 	Real const r_omega = static_cast<Real>(H/2.)/ static_cast<Real>(n - 1);
 	Real const radius =  static_cast<Real>(2.2) * static_cast<Real>(2.) * r_omega;	
     
+	
 	//dom.WriteXDMF("maz");
 	///////////////////////////// COMPACT SEARCH THING
-	for (unsigned int i = 0; i < (3*n); ++i){
-		for (unsigned int j = 0; j < n; ++j){
-			for (unsigned int k = 0; k < n; ++k) {
-				std::array<Real, 3> x = {{
-						
-						r_omega * (static_cast<Real>(2.0) * static_cast<Real>(i) ),
-						r_omega * (static_cast<Real>(2.0) * static_cast<Real>(j) ),
-						r_omega * (static_cast<Real>(2.0) * static_cast<Real>(k) )						
-						
-						}};
+	std::vector<std::array<Real, 3>> positions;
 
-				positions.push_back(x);
+	// for (unsigned int i = 0; i < (3*n); ++i){
+		// for (unsigned int j = 0; j < n; ++j){
+			// for (unsigned int k = 0; k < n; ++k) {
+				// // std::array<Real, 3> x = {{
+						
+						// // r_omega * (static_cast<Real>(2.0) * static_cast<Real>(i) ),
+						// // r_omega * (static_cast<Real>(2.0) * static_cast<Real>(j) ),
+						// // r_omega * (static_cast<Real>(2.0) * static_cast<Real>(k) )						
+						
+						// // }};
+				
+				// std::array<Real, 3> x = {{
+					// static_cast<Real>(dom.Particles[p]->x[0]),
+					// static_cast<Real>(dom.Particles[p]->x[1]),
+					// static_cast<Real>(dom.Particles[p]->x[2])
+				// }};
+				// positions.push_back(x);
 
-			}
-		}
+			// }
+		// }
+	// }
+
+	for (unsigned int p = 0; p < dom.Particles.Size(); p++){
+		
+		std::array<Real, 3> x = {{
+			static_cast<Real>(dom.Particles[p]->x[0]),
+			static_cast<Real>(dom.Particles[p]->x[1]),
+			static_cast<Real>(dom.Particles[p]->x[2])
+		}};
+		positions.push_back(x);
+
 	}
+	
+
+	
 	//std::random_shuffle(positions.begin(), positions.end());
 	cout << "Finding NEighbours"<<endl;
 	NeighborhoodSearch nsearch(radius, true);
@@ -103,6 +153,20 @@ int main(int argc, char **argv) try
 	std::vector<std::vector<unsigned int>> neighbors3;
 	nsearch.find_neighbors(1, 2, neighbors3);
 
+
+	//Pass to domain
+	//std::set< std:: pair<int,int> > neigbours_set;
+	auto const& d = nsearch.point_set(0);
+	for (int i = 0; i < d.n_points(); ++i){
+		const std::vector<unsigned int>& nbs = d.neighbor_list(0, i);
+		//res += static_cast<unsigned long>(d.n_neighbors(0, i));
+		for (int k=0;k< d.n_neighbors(0, i);k++) {
+			//int n = d.neighbor(,i,k);
+			
+		}
+	}
+
+
 	std::cout << "#Points                                = " << positions.size() << std::endl;
 	std::cout << "Search radius                          = " << radius << std::endl;
 	// std::cout << "Min x                                  = " << min_x << std::endl;
@@ -110,31 +174,31 @@ int main(int argc, char **argv) try
 	std::cout << "Average number of neighbors            = " << compute_average_number_of_neighbors(nsearch) << std::endl;
 	std::cout << "Average index distance prior to z-sort = " << compute_average_distance(nsearch) << std::endl;
 
-	// nsearch.z_sort();
-	// for (auto i = 0u; i < nsearch.n_point_sets(); ++i)
-	// {
-		// auto const& d = nsearch.point_set(i);
-		// d.sort_field(positions.data());
+	nsearch.z_sort();
+	for (auto i = 0u; i < nsearch.n_point_sets(); ++i)
+	{
+		auto const& d = nsearch.point_set(i);
+		d.sort_field(positions.data());
 
-	// }
-	// nsearch.find_neighbors();
+	}
+	nsearch.find_neighbors();
 
-	// //compare_single_query_with_bruteforce_search(nsearch);
-	// //compare_with_bruteforce_search(nsearch);
+	//compare_single_query_with_bruteforce_search(nsearch);
+	//compare_with_bruteforce_search(nsearch);
 
-	// std::cout << "Average index distance after z-sort    = " << compute_average_distance(nsearch) << std::endl;
+	std::cout << "Average index distance after z-sort    = " << compute_average_distance(nsearch) << std::endl;
 
-	// std::cout << "Moving points:" << std::endl;
-	// for (int i = 0; i < N_enright_steps; ++i)
-	// {
-		// std::cout << "Enright step " << i << ". ";
-		// advect();
-		// auto t0 = std::chrono::high_resolution_clock::now();
-		// nsearch.find_neighbors();
-		// std::cout << "Neighborhood search took " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - t0).count() << "ms" << std::endl;
-		// //compare_with_bruteforce_search(nsearch);
-		// //compare_single_query_with_bruteforce_search(nsearch);
-	// }
+	std::cout << "Moving points:" << std::endl;
+	for (int i = 0; i < N_enright_steps; ++i)
+	{
+		std::cout << "Enright step " << i << ". ";
+		//advect();
+		auto t0 = std::chrono::high_resolution_clock::now();
+		nsearch.find_neighbors();
+		std::cout << "Neighborhood search took " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - t0).count() << "ms" << std::endl;
+		//compare_with_bruteforce_search(nsearch);
+		//compare_single_query_with_bruteforce_search(nsearch);
+	}
 	
 
 	return 0;

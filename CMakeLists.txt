@@ -59,16 +59,16 @@ SET(EXES
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	Plate-Yield_3d_al
+	#Plate-Yield_3d_al
 	#SolidBlock_Heat
 	#Neighbour_Test
-	#Test-CompactSearch
+	Test-CompactSearch
 )
 
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
-	#"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
+	"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
