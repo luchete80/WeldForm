@@ -26,6 +26,7 @@ using std::endl;
 #include <fstream>
 using std::ofstream;
 
+#include <set>
 
 #define PRINT(x)	cout << x[0]<<", "<<x[1]<<", "<<x[2]<<endl;
 void UserAcc(SPH::Domain & domi) {
@@ -154,18 +155,32 @@ int main(int argc, char **argv) try
 	nsearch.find_neighbors(1, 2, neighbors3);
 
 
+	ofstream outfind2; // outdata is like cin
+	outfind2.open("find2_part.txt"); // opens the file
 	//Pass to domain
-	//std::set< std:: pair<int,int> > neigbours_set;
+	std::set< std:: pair<int,int> > neigbours_set;
 	auto const& d = nsearch.point_set(0);
 	for (int i = 0; i < d.n_points(); ++i){
 		const std::vector<unsigned int>& nbs = d.neighbor_list(0, i);
 		//res += static_cast<unsigned long>(d.n_neighbors(0, i));
-		for (int k=0;k< d.n_neighbors(0, i);k++) {
-			//int n = d.neighbor(,i,k);
+		
+
+		for (int k=0;k< nbs.size();k++) {
+					//outfind2<< i << ", "<<nbs[k]<<endl;
+			neigbours_set.insert(std::make_pair( std::min(k,int(nbs[k])), std::max(k,int(nbs[k]))) );
 			
 		}
 	}
-
+	outfind2.close();
+	outfind2.open("find2_set.txt"); // opens the file
+	std::set<std:: pair<int,int>>::iterator it = neigbours_set.begin();
+	for (int i=0;i<neigbours_set.size();i++){
+		
+	outfind2<<it->first<<", "<<it->second<<endl;
+	it++;
+	}
+	
+	outfind2.close();
 
 	std::cout << "#Points                                = " << positions.size() << std::endl;
 	std::cout << "Search radius                          = " << radius << std::endl;
