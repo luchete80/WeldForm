@@ -166,8 +166,8 @@ int main(int argc, char **argv) try
 		
 
 		for (int k=0;k< nbs.size();k++) {
-					//outfind2<< i << ", "<<nbs[k]<<endl;
-			neigbours_set.insert(std::make_pair( std::min(k,int(nbs[k])), std::max(k,int(nbs[k]))) );
+			outfind2<< i << ", "<<nbs[k]<<endl;
+			neigbours_set.insert(std::make_pair( std::min(i,int(nbs[k])), std::max(i,int(nbs[k]))) );
 			
 		}
 	}
