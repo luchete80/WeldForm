@@ -1242,4 +1242,138 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 }
 
+inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx){
+	
+	size_t idx_out = 1;
+	double tout = Time;
+
+	//Initializing adaptive time step variables
+	deltat = deltatint = deltatmin	= dt;
+	auto start_whole = std::chrono::steady_clock::now();	
+	
+	PrintInput(TheFileKey);
+	InitialChecks();
+	TimestepCheck();
+	WholeVelocity();
+	
+	std::chrono::duration<double> total_time,neighbour_time;
+	
+	clock_t clock_beg;
+	double clock_time_spent,acc_time_spent;
+	double neigbour_time_spent_per_interval;
+	
+	clock_time_spent=acc_time_spent=0.;
+
+
+	//Initial model output
+	if (TheFileKey!=NULL) {
+		String fn;
+		fn.Printf    ("%s_Initial", TheFileKey);
+		WriteXDMF    (fn.CStr());
+		std::cout << "\nInitial Condition has been generated\n" << std::endl;
+	}
+	
+
+	unsigned long steps=0;
+	unsigned int first_step;
+	//MainNeighbourSearch();
+	while (Time<tf && idx_out<=maxidx) {
+		StartAcceleration(Gravity);
+		if (BC.InOutFlow>0) InFlowBCFresh();
+		auto start_task = std::chrono::system_clock::now();
+		clock_beg = clock();
+
+		double max = 0;
+		int imax;
+		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		for (int i=0; i<Particles.Size(); i++){
+			if (Particles[i]->pl_strain>max){
+				max= Particles[i]->pl_strain;
+				imax=i;
+			}
+		}	
+		
+		neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		auto end_task = std::chrono::system_clock::now();
+		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
+		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
+		GeneralBefore(*this);
+		clock_beg = clock();
+		PrimaryComputeAcceleration();
+		LastComputeAcceleration();
+		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		GeneralAfter(*this);
+		steps++;
+		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
+		// output
+		if (Time>=tout){
+			if (TheFileKey!=NULL) {
+				String fn;
+				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+				WriteXDMF    (fn.CStr());
+
+			}
+			idx_out++;
+			tout += dtOut;
+			total_time = std::chrono::steady_clock::now() - start_whole;
+			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+			std::cout << "Current Time Step = " <<deltat<<std::endl;
+			
+			clock_time_spent += neigbour_time_spent_per_interval;
+			std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
+			acc_time_spent <<
+			std::endl;
+						
+			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
+			
+			std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
+			cout << "Total Neighbour search time in this interval: " << neigbour_time_spent_per_interval;
+			cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step);
+			first_step=steps;
+			neigbour_time_spent_per_interval=0.;
+		}
+
+		AdaptiveTimeStep();
+		Move(deltat);
+		Time += deltat;
+		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
+		
+		
+	}
+	
+}
+	
+// inline void Domain::Step(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
+	
+	// deltat = deltatint = deltatmin	= dt;
+	
+	// //while (Time<tf && idx_out<=maxidx) {
+		// StartAcceleration(Gravity);
+		// if (BC.InOutFlow>0) InFlowBCFresh();
+		// MainNeighbourSearch();
+		// GeneralBefore(*this);
+		// PrimaryComputeAcceleration();
+		// LastComputeAcceleration();
+		// GeneralAfter(*this);
+		// steps++;
+
+		// // output
+		// if (Time>=tout){
+			// if (TheFileKey!=NULL) {
+				// String fn;
+				// fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+				// WriteXDMF    (fn.CStr());
+
+			// }
+			// idx_out++;
+			// tout += dtOut;
+			// std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+		// }
+
+		// AdaptiveTimeStep();
+		// Move(deltat);
+		// Time += deltat;
+		// if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();	
+	// //}
+// }
 }; // namespace SPH

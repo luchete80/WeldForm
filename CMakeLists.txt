@@ -59,10 +59,11 @@ SET(EXES
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	#Plate-Yield_3d_al
+	Plate-Yield_3d_al
+	#Plate-Yield_3d_al_CNS
 	#SolidBlock_Heat
 	#Neighbour_Test
-	Test-CompactSearch
+	#Test-CompactSearch
 )
 
 

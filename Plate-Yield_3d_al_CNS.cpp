@@ -90,8 +90,8 @@ int main(int argc, char **argv) try
 	cout << "Generating domain"<<endl;
 	
 	//THIS IS FOR A SIMPLE TEST
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 , -H/2.0 , -H/2.0 ), 
-							L + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 -L/20.0, -H/2.0 , -H/2.0 ), 
+							L + L/10.0 +dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
      for (int p=0;p < dom.Particles.Size();p++){
 		 

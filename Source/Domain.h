@@ -80,6 +80,9 @@ public:
     void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
     void Solve_orig 			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
 	void ThermalSolve			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
+
+    void Solve_wo_init (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function	
+	//void Step(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
 	
     void CellInitiate		();															//Find the size of the domain as a cube, make cells and HOCs
     void ListGenerate		();															//Generate linked-list
