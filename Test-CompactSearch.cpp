@@ -44,9 +44,9 @@ void UserAcc(SPH::Domain & domi) {
 
 using namespace CompactNSearch;
 
-void Plate_Al_Example(SPH::Domain &dom);
+void Test_Neigh(SPH::Domain &dom);
 
-std::size_t const N_enright_steps = 50;
+std::size_t const N_enright_steps = 10;
 
 Real
 compute_average_number_of_neighbors(NeighborhoodSearch const& nsearch);
@@ -106,27 +106,6 @@ int main(int argc, char **argv) try
 	///////////////////////////// COMPACT SEARCH THING
 	std::vector<std::array<Real, 3>> positions;
 
-	// for (unsigned int i = 0; i < (3*n); ++i){
-		// for (unsigned int j = 0; j < n; ++j){
-			// for (unsigned int k = 0; k < n; ++k) {
-				// // std::array<Real, 3> x = {{
-						
-						// // r_omega * (static_cast<Real>(2.0) * static_cast<Real>(i) ),
-						// // r_omega * (static_cast<Real>(2.0) * static_cast<Real>(j) ),
-						// // r_omega * (static_cast<Real>(2.0) * static_cast<Real>(k) )						
-						
-						// // }};
-				
-				// std::array<Real, 3> x = {{
-					// static_cast<Real>(dom.Particles[p]->x[0]),
-					// static_cast<Real>(dom.Particles[p]->x[1]),
-					// static_cast<Real>(dom.Particles[p]->x[2])
-				// }};
-				// positions.push_back(x);
-
-			// }
-		// }
-	// }
 
 	for (unsigned int p = 0; p < dom.Particles.Size(); p++){
 		
@@ -162,8 +141,7 @@ int main(int argc, char **argv) try
 	auto const& d = nsearch.point_set(0);
 	for (int i = 0; i < d.n_points(); ++i){
 		const std::vector<unsigned int>& nbs = d.neighbor_list(0, i);
-		//res += static_cast<unsigned long>(d.n_neighbors(0, i));
-		
+		//res += static_cast<unsigned long>(d.n_neighbors(0, i));		
 
 		for (int k=0;k< nbs.size();k++) {
 			outfind2<< i << ", "<<nbs[k]<<endl;
@@ -199,23 +177,6 @@ int main(int argc, char **argv) try
 	}
 
 	
-	// it = neigbours_set.begin();
-	// int pairsperproc = neigbours_set.size()/dom.Nproc;
-	// cout << "Pairs per proc: " <<pairsperproc<<endl;
-	// int pair=0;
-	// int nproc=0;
-	// while (it != neigbours_set.end()) {
-		// if (pair > (nproc + 1 ) * pairsperproc){
-			// nproc++;
-			// cout<<"changing proc"<< nproc<<", pair "<<pair<<endl;
-		// }
-					
-		// dom.SMPairs[nproc].Push(std::make_pair(it->first, it->second));
-		// it++;
-		// pair++;
-		
-	// }
-
 	for (int p=0;p<dom.Nproc;p++){
 		cout << "Processor "<< p << ", " << dom.SMPairs[p].size()<< " pairs" << endl;
 		
@@ -253,8 +214,11 @@ int main(int argc, char **argv) try
 		//compare_with_bruteforce_search(nsearch);
 		//compare_single_query_with_bruteforce_search(nsearch);
 	}
+
+	for (int i=0 ; i<dom.Nproc ; i++) 
+		dom.SMPairs[i].Clear();
 	
-	Plate_Al_Example(dom);
+	Test_Neigh(dom);
 
 	return 0;
 }
@@ -291,7 +255,7 @@ compute_average_distance(NeighborhoodSearch const& nsearch)
 	return static_cast<Real>(res) / static_cast<Real>(count);
 }
 
-void Plate_Al_Example(SPH::Domain &dom){
+void Test_Neigh(SPH::Domain &dom){
 	
         double dx,h,rho,K,G,Cs,Fy;
     	double H,L,n;	
@@ -311,7 +275,7 @@ void Plate_Al_Example(SPH::Domain &dom){
 		G= E / (2.* (1.+nu));
 		Fy	= 500.0e6;
     	dx	= H / n;
-    	h	= dx*0.5; //Very important	//COMPARE WITH ANOTHER VALUES
+    	h	= dx*1.1; //Very important	//COMPARE WITH ANOTHER VALUES
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -330,30 +294,55 @@ void Plate_Al_Example(SPH::Domain &dom){
 							// L + L/10.0 +dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		
-		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-     	double x;
+	dom.CellInitiate();
+	dom.ListGenerate();
 
-    	for (size_t a=0; a<dom.Particles.Size(); a++)
-    	{
-    		dom.Particles[a]->G			= G;
-    		dom.Particles[a]->PresEq	= 0;
-    		dom.Particles[a]->Cs		= Cs;
-    		dom.Particles[a]->Shepard	= false;
-    		dom.Particles[a]->Material	= 2;
-    		dom.Particles[a]->Fail		= 1;
-    		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 1.0;
-    		dom.Particles[a]->TI		= 0.3;
-    		dom.Particles[a]->TIInitDist	= dx;
-    		x = dom.Particles[a]->x(0);
-    		if (x<-L/2.0)
-    			dom.Particles[a]->ID=2;
-    		if (x>L/2.0)
-    			dom.Particles[a]->ID=3;
-    	}
 
+		
+	for (int i = 0; i < N_enright_steps; ++i)
+	{
+		std::cout << "Enright step " << i << ". ";
+		//advect();
+		auto t0 = std::chrono::high_resolution_clock::now();
+		dom.MainNeighbourSearch();
+		if (i == 0 )
+			for (int p=0;p<dom.Nproc;p++)
+				cout << "Processor "<< p << ", " << dom.SMPairs[p].size()<< " pairs" << endl;	
+			
+	for (int i=0 ; i<dom.Nproc ; i++) 
+		dom.SMPairs[i].Clear();
+		dom.CellReset();
+		dom.ListGenerate();	
 	
-//    	dom.WriteXDMF("maz");
-    	dom.Solve_wo_init(/*tf*/0.05,/*dt*/timestep,/*dtOut*/1.e-5,"test06",999);
+		std::cout << "Neighborhood search took " << 
+			std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - t0).count() << 
+			"ms" << std::endl;
+
+	}
+
+
+	dom.MainNeighbourSearch();
+	ofstream outfind2; // outdata is like cin
+	outfind2.open("findorig_set.txt"); // opens the file	
+	for (int p=0;p<dom.Nproc;p++){
+		outfind2 << "Processor "<< p << ", " << dom.SMPairs[p].size()<< " pairs" << endl;
+		for (int i=0;i<dom.SMPairs[p].size();i++){
+			outfind2 << dom.SMPairs[p][i].first << ", " << dom.SMPairs[p][i].second << endl;
+			
+		}
+	}
 	
+	std::vector <int> nb(dom.Particles.Size());
+	std::vector <int> nbcount(dom.Particles.Size());
+	for ( size_t k = 0; k < dom.Nproc ; k++) {
+		for (size_t a=0; a<dom.SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+		//cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
+			nb[dom.SMPairs[k][a].first ]+=1;
+			nb[dom.SMPairs[k][a].second]+=1;			
+		}
+	}	
+	for (int i=0;i<nb.size();i++)
+		cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+	
+	outfind2.close();
 }
