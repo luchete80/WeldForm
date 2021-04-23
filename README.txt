@@ -11,14 +11,16 @@ and fluid dynamics using Smoothed Particle Hydrodynamics method
 
 For more information, please check http://korzani.wix.com/persiansph
 
+We're going to need 4 libraries:
+BLITZ++   --- VERSION 0.9!!! NOT Current 	https://github.com/luchete80/blitz-0.9-cmake.git
+HDF5		
+GSL											https://github.com/ampl/gsl/tags
+LAPACK
 
-//LUCIANO 
-La libreria blitz que se usa para windows es LA VERSION 0.9! No la actual:
+VISUAL STUDIO CONFIG
 
-https://github.com/luchete80/blitz-0.9-cmake.git
-
-
-
-
-TO DOWNLOAD GSL 2.5 CON CMAKE
-https://github.com/ampl/gsl/tags
+1)  For blitz se debe copiar el archivo que hay en Blitz-VS.NET.zip
+    al binario path%binario\blitz\ms
+2) 
+3) GSL: Obtained from here: 
+4) The files for visual studio are located in :
