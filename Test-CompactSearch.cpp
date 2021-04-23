@@ -44,7 +44,7 @@ void UserAcc(SPH::Domain & domi) {
 
 using namespace CompactNSearch;
 
-void Test_Neigh(SPH::Domain &dom);
+void Test_Neigh();
 
 std::size_t const N_enright_steps = 10;
 
@@ -218,7 +218,7 @@ int main(int argc, char **argv) try
 	for (int i=0 ; i<dom.Nproc ; i++) 
 		dom.SMPairs[i].Clear();
 	
-	Test_Neigh(dom);
+	Test_Neigh();
 
 	return 0;
 }
@@ -255,48 +255,42 @@ compute_average_distance(NeighborhoodSearch const& nsearch)
 	return static_cast<Real>(res) / static_cast<Real>(count);
 }
 
-void Test_Neigh(SPH::Domain &dom){
+void Test_Neigh(){
+  SPH::Domain	dom;
+
+	dom.Dimension	= 3;
+	dom.Nproc	= 4;
+	dom.Kernel_Set(Quintic_Spline);
+	dom.Scheme	= 1;
+//     	dom.XSPH	= 0.5; //Very important
+	double H,L,n,dx;
+
+	H	= 0.01;
+	L	= 0.03;
+	n	= 15.0;	//ORIGINAL IS 40
 	
-        double dx,h,rho,K,G,Cs,Fy;
-    	double H,L,n;	
-		//lambda = E nu / ((1+nu)*(1-2 nu)) 
-		//G = E/(2*(1+nu) )
-		double E=72.e9;
-		double nu=0.3;
+	dx	= H / n;
+	double h	= dx*0.4; //Very important
 
-		H	= 0.01;
-		L	= 0.03;
-		n	= 15.0;	//ORIGINAL IS 40
+	dom.GeneralAfter = & UserAcc;
+	dom.DomMax(0) = H;
+	dom.DomMin(0) = -H;
+	double rho	= 2800.0;
+
+	ofstream outmesh; // outdata is like cin
+	outmesh.open("outmesh.txt"); // opens the file
 	
-		rho = 2800.;
-    	//K	= 3.25e6;
-    	//G	= 7.15e5;
-		K= E / ( 3.*(1.-2*nu) );
-		G= E / (2.* (1.+nu));
-		Fy	= 500.0e6;
-    	dx	= H / n;
-    	h	= dx*1.1; //Very important	//COMPARE WITH ANOTHER VALUES
-        Cs	= sqrt(K/rho);
-
-        double timestep;
-        timestep = (0.2*h/(Cs));
-
-        cout<<"t  = "<<timestep<<endl;
-        cout<<"Cs = "<<Cs<<endl;
-        cout<<"K  = "<<K<<endl;
-        cout<<"G  = "<<G<<endl;
-        cout<<"Fy = "<<Fy<<endl;
-    	dom.GeneralAfter = & UserAcc;
-        dom.DomMax(0) = L;
-        dom.DomMin(0) = -L;
-		
-     	// dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 -L/20.0, -H/2.0 , -H/2.0 ), 
-							// L + L/10.0 +dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
-							// dx/2.0 ,rho, h, 1 , 0 , false, false );
-		
+	cout << "Generating domain"<<endl;
+	
+	//THIS IS FOR A SIMPLE TEST
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 , -H/2.0 , -H/2.0 ), 
+							L + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );
+							
 	dom.CellInitiate();
 	dom.ListGenerate();
-
+	
+	cout << "Particles: "<<dom.Particles.Size()<<endl;
 
 		
 	for (int i = 0; i < N_enright_steps; ++i)
@@ -341,8 +335,13 @@ void Test_Neigh(SPH::Domain &dom){
 			nb[dom.SMPairs[k][a].second]+=1;			
 		}
 	}	
-	for (int i=0;i<nb.size();i++)
-		cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+	unsigned int avg=0;
+	for (int i=0;i<nb.size();i++){
+		//cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+		avg+=nb[i];
+	}
+	avg/=dom.Particles.Size();
 	
+	cout << "For h: "<< h << "Avg Neighbour count is: "<<avg<<endl;
 	outfind2.close();
 }

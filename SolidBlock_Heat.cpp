@@ -131,7 +131,7 @@ int main(int argc, char **argv) try
 		
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.ThermalSolve(/*tf*/2.,/*dt*/timestep,/*dtOut*/0.01,"test06",999);
+		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
         return 0;
 }
 

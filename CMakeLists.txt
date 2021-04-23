@@ -62,7 +62,7 @@ SET(EXES
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
 	#SolidBlock_Heat
-	#Neighbour_Test
+	Neighbour_Test
 	Test-CompactSearch
 )
 
