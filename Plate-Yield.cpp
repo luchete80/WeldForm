@@ -72,7 +72,7 @@ int main(int argc, char **argv) try
     	rho	= 1000.0;
     	K	= 3.25e6;
     	G	= 7.15e5;
-	Fy	= 4000.0;
+		Fy	= 4000.0;
     	dx	= H / n;
     	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
