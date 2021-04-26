@@ -99,7 +99,7 @@ int main(int argc, char **argv) try
 	 }
 	 outmesh.close();
 	Real const r_omega = static_cast<Real>(H/2.)/ static_cast<Real>(n - 1);
-	Real const radius =  static_cast<Real>(2.0) * static_cast<Real>(2.) * r_omega;	
+	Real const radius =  static_cast<Real>(3.0) * static_cast<Real>(2.) * r_omega;	
     
 	
 	//dom.WriteXDMF("maz");
