@@ -49,20 +49,22 @@ link_directories("D:/Luciano/Numerico/CompactNSearch_bin_nmake_release")
 
 include_directories("Source")
 include_directories("External")
+
+add_subdirectory("examples")
 endif()
 
 include_directories("D:/Luciano/Numerico/CompactNSearch/include")
-add_subdirectory("examples")
+
 
 SET(EXES
 	# 1-Poiseuille
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	#Plate-Yield
+	Plate-Yield
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
-	SolidBlock_Heat
+	#SolidBlock_Heat
 	#Neighbour_Test
 	#Test-CompactSearch
 

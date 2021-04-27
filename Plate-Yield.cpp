@@ -74,7 +74,7 @@ int main(int argc, char **argv) try
     	G	= 7.15e5;
 		Fy	= 4000.0;
     	dx	= H / n;
-    	h	= dx*0.35; //Very important
+    	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -112,6 +112,8 @@ int main(int argc, char **argv) try
     		if (x>L/2.0)
     			dom.Particles[a]->ID=3;
     	}
+		
+		dom.m_kernel = SPH::iKernel(dom.Dimension,h);
 
 	
 //    	dom.WriteXDMF("maz");

@@ -55,9 +55,13 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		
 
 		Vec3_t vij	= P1->v - P2->v;
-		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
-		double K	= Kernel(Dimension, KernelType, rij/h, h);
-
+		
+		// double GK	= GradKernel(Dimension, KernelType, rij/h, h);
+		// double K	= Kernel(Dimension, KernelType, rij/h, h);
+		
+		double GK	= m_kernel.gradW(rij/h);
+		double K	= m_kernel.W(rij/h);
+		
 		// Artificial Viscosity
 		Mat3_t PIij;
 		set_to_zero(PIij);

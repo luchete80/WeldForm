@@ -354,9 +354,6 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
     }
 
 	R = r;
-	
-	
-	m_kernel = iKernel(Dim,h);
 }
 
 inline void Domain::DelParticles (int const & Tags)
@@ -1170,7 +1167,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 		}	
 		// if (max>0.01){
-			// MainNeighbourSearch();
+		//MainNeighbourSearch();
 		// }
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;

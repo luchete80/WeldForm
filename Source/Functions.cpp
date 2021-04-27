@@ -342,7 +342,7 @@ namespace SPH {
 		
 	}
 	
-	double iKernel::W( double const & q ) {
+	inline double iKernel::W( double const & q ) {
 		if		(q<1.0)	return m_w*(pow((3.0-q),5.0)-6.0*pow((2.0-q),5.0)+15.0*pow((1.0-q),5.0));
 		else if (q<2.0)	return m_w*(pow((3.0-q),5.0)-6.0*pow((2.0-q),5.0));
 		else if (q<3.0)	return m_w*(pow((3.0-q),5.0));
@@ -350,7 +350,7 @@ namespace SPH {
 		
 	}
 	
-	double iKernel::gradW( double const & q ) {
+	inline double iKernel::gradW( double const & q ) {
 		if		(q==0.0)	return m_gradw*m_inv_h*    (20.0*pow((3.0-q),3.0)-120.0*pow((2.0-q),3.0)+300.0*pow((1.0-q),3.0));
 		else if (q<1.0)		return m_gradw*m_inv_h/q *(-5.0*pow((3.0-q),4.0)+30.0*pow((2.0-q),4.0)-75.0*pow((1.0-q),4.0));
 		else if (q<2.0)		return m_gradw*m_inv_h/q *(-5.0*pow((3.0-q),4.0)+30.0*pow((2.0-q),4.0));
