@@ -354,6 +354,9 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
     }
 
 	R = r;
+	
+	
+	m_kernel = iKernel(Dim,h);
 }
 
 inline void Domain::DelParticles (int const & Tags)

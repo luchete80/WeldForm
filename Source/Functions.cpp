@@ -330,6 +330,35 @@ namespace SPH {
 				break;
 		}
 	}
+	
+	//NEW
+	iKernel::iKernel(size_t const & Dim,double const & h){
+	
+	m_inv_h=1./h;
+	
+	Dim ==2 ? m_w = 7.0/(478.0*h*h*M_PI) 		: m_w = 1.0/(120.0*h*h*h*M_PI);			//m_w
+	Dim ==2 ? m_gradw = 7.0/(478.0*h*h*h*M_PI) 	: m_gradw = 1.0/(120.0*h*h*h*h*M_PI);		//m_gradw
+	Dim ==2 ? m_lapw = 7.0/(478.0*h*h*h*h*M_PI) : m_lapw = 1.0/(120.0*h*h*h*h*h*M_PI);		//m_lapw
+		
+	}
+	
+	double iKernel::W( double const & q ) {
+		if		(q<1.0)	return m_w*(pow((3.0-q),5.0)-6.0*pow((2.0-q),5.0)+15.0*pow((1.0-q),5.0));
+		else if (q<2.0)	return m_w*(pow((3.0-q),5.0)-6.0*pow((2.0-q),5.0));
+		else if (q<3.0)	return m_w*(pow((3.0-q),5.0));
+		else			return 0.0;
+		
+	}
+	
+	double iKernel::gradW( double const & q ) {
+		if		(q==0.0)	return m_gradw*m_inv_h*    (20.0*pow((3.0-q),3.0)-120.0*pow((2.0-q),3.0)+300.0*pow((1.0-q),3.0));
+		else if (q<1.0)		return m_gradw*m_inv_h/q *(-5.0*pow((3.0-q),4.0)+30.0*pow((2.0-q),4.0)-75.0*pow((1.0-q),4.0));
+		else if (q<2.0)		return m_gradw*m_inv_h/q *(-5.0*pow((3.0-q),4.0)+30.0*pow((2.0-q),4.0));
+		else if (q<3.0)		return m_gradw*m_inv_h/q *(-5.0*pow((3.0-q),4.0));
+		else							return 0.0;		
+		
+		
+	}
 
 	inline void Rotation (Mat3_t Input, Mat3_t & Vectors, Mat3_t & VectorsT, Mat3_t & Values)
 	{

@@ -163,8 +163,10 @@ public:
     Mat3_t I;
     String					OutputName[3];
 	double T_inf;			//LUCIANO: IN CASE OF ONLY ONE CONVECTION TEMPERAURE
-
-
+	
+	iKernel m_kernel;
+	
+	
 	private:
 		void Periodic_X_Correction	(Vec3_t & x, double const & h, Particle * P1, Particle * P2);		//Corrects xij for the periodic boundary condition
 		void AdaptiveTimeStep				();		//Uses the minimum time step to smoothly vary the time step

@@ -47,6 +47,21 @@ namespace SPH {
 	void   Rotation							(Mat3_t Input, Mat3_t & Vectors, Mat3_t & VectorsT, Mat3_t & Values);
 
 	Mat3_t abab									(Mat3_t const & A, Mat3_t const & B);
+	
+	
+	//NEW
+	class iKernel{
+		public: //Ok TODO: Move members to private
+		iKernel(size_t const & Dim,double const & h);
+		iKernel(){}
+		virtual ~iKernel(){}
+		double gradW(double const & q);
+		double W(double const & q);
+		
+		double m_w,m_gradw,m_lapw,m_inv_h;	//Precomputed Kernel constants
+
+		
+	};
 
 }; // namespace SPH
 
