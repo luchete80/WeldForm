@@ -64,7 +64,7 @@ int main(int argc, char **argv) try
 
     	rho	= 1000.0;
     	dx	= H / n;
-    	h	= dx*0.4; //Very important
+    	h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -131,11 +131,11 @@ int main(int argc, char **argv) try
 		
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-<<<<<<< HEAD
+
 		dom.ThermalSolve(/*tf*/1.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
-=======
-		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
->>>>>>> 5a9b22cfbf5867a7468216e7d5eec6bc777b5512
+
+//		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+
         return 0;
 }
 
