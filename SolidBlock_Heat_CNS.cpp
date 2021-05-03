@@ -42,6 +42,23 @@ void UserAcc(SPH::Domain & domi)
 	// }
 }
 
+/////////////// COMPACT NSEARCH ////////////////////
+#include <iostream>
+#include <vector>
+#include <array>
+#include <cmath>
+#include <limits>
+#include <chrono>
+#include <random>
+using std::cerr;
+using std::endl;
+#include <fstream>
+using std::ofstream;
+
+#include <set>
+
+using namespace CompactNSearch;
+
 
 using std::cout;
 using std::endl;
@@ -99,7 +116,45 @@ int main(int argc, char **argv) try
 
 		}
 		
+	NeighborhoodSearch nsearch(radius, true);
+	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
+	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
+	nsearch.find_neighbors();
+
+	nsearch.update_point_sets();
+	std::vector<std::vector<unsigned int>> neighbors2;
+	nsearch.find_neighbors(0, 1, neighbors2);
+	std::vector<std::vector<unsigned int>> neighbors3;
+	nsearch.find_neighbors(1, 2, neighbors3);
+
+
+	ofstream outfind2; // outdata is like cin
+	outfind2.open("find2_part.txt"); // opens the file
+	//Pass to domain
+	std::set< std:: pair<int,int> > neigbours_set;
+	auto const& d = nsearch.point_set(0);
+	for (int i = 0; i < d.n_points(); ++i){
+		const std::vector<unsigned int>& nbs = d.neighbor_list(0, i);
+		//res += static_cast<unsigned long>(d.n_neighbors(0, i));
 		
+
+		for (int k=0;k< nbs.size();k++) {
+			outfind2<< i << ", "<<nbs[k]<<endl;
+			neigbours_set.insert(std::make_pair( std::min(i,int(nbs[k])), std::max(i,int(nbs[k]))) );
+			
+		}
+	}	
+	
+	outfind2.close();
+	outfind2.open("find2_set.txt"); // opens the file
+	std::set<std:: pair<int,int>>::iterator it = neigbours_set.begin();
+	for (int i=0;i<neigbours_set.size();i++){
+		
+	outfind2<<it->first<<", "<<it->second<<endl;
+	it++;
+	}	
+	outfind2.close();
+	
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x;
 
@@ -138,7 +193,7 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalSolve(/*tf*/1.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+		dom.ThermalSolve_wo_init(/*tf*/1.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
 //		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
