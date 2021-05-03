@@ -860,7 +860,6 @@ inline void Domain::PrimaryComputeAcceleration () {
 			Periodic_X_Correction(xij, h, Particles[P1], Particles[P2]);
 
 			K	= Kernel(Dimension, KernelType, norm(xij)/h, h);
-
 			if ( !Particles[P1]->IsFree ) {
 				omp_set_lock(&Particles[P1]->my_lock);
 										Particles[P1]->SumKernel+= K;
@@ -1059,7 +1058,6 @@ inline void Domain::Solve_orig (double tf, double dt, double dtOut, char const *
 	PrintInput(TheFileKey);
 	TimestepCheck();
 	WholeVelocity();
-	
 
 
 	//Initial model output
@@ -1080,6 +1078,11 @@ inline void Domain::Solve_orig (double tf, double dt, double dtOut, char const *
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
 		LastComputeAcceleration();
+		for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
+			SMPairs[i].Clear();
+			FSMPairs[i].Clear();
+			NSMPairs[i].Clear();
+		}
 		GeneralAfter(*this);
 		steps++;
 
@@ -1133,10 +1136,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	std::chrono::duration<double> total_time,neighbour_time;
 	
 	clock_t clock_beg;
-	double clock_time_spent,acc_time_spent;
+	double clock_time_spent,pr_acc_time_spent,acc_time_spent;
 	double neigbour_time_spent_per_interval;
 	
-	clock_time_spent=acc_time_spent=0.;
+	clock_time_spent=pr_acc_time_spent=acc_time_spent=0.;
 
 
 	//Initial model output
@@ -1151,6 +1154,29 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	unsigned long steps=0;
 	unsigned int first_step;
 	MainNeighbourSearch();
+
+	std::vector <int> nb(Particles.Size());
+	std::vector <int> nbcount(Particles.Size());
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	for ( int k = 0; k < Nproc ; k++) {
+		for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+		//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+			nb[SMPairs[k][a].first ]+=1;
+			nb[SMPairs[k][a].second]+=1;
+			//cout << "neighbour count"<<nb[SMPairs[k][a].first ]<<endl;
+			//outdata << SMPairs[k][a].first<<", " << SMPairs[k][a].second << "( " << k << ", "<< a<<")"<<endl;
+			// if (SMPairs[k][a].first==0){
+				// test.push_back(SMPairs[k][a].second);
+			// } else if (SMPairs[k][a].second==0){
+				// test.push_back(SMPairs[k][a].first);
+			// }
+		}
+	}	
+
+	for (int p=0;p<Particles.Size();p++){
+		Particles[p]->Nb=nb[p];
+	}
+	
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		if (BC.InOutFlow>0) InFlowBCFresh();
@@ -1176,7 +1202,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	// std::vector <int> nbcount(Particles.Size());
 	// for ( size_t k = 0; k < Nproc ; k++) {
 		// for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-		// //cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
+		// //cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
 			// nb[SMPairs[k][a].first ]+=1;
 			// nb[SMPairs[k][a].second]+=1;
 			
@@ -1192,6 +1218,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		GeneralBefore(*this);
 		clock_beg = clock();
 		PrimaryComputeAcceleration();
+		pr_acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		clock_beg = clock();
 		LastComputeAcceleration();
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
@@ -1212,8 +1240,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			
 			clock_time_spent += neigbour_time_spent_per_interval;
-			std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
-			acc_time_spent <<
+			std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Pr Accel Calc time: " <<
+			pr_acc_time_spent << "Las Acel Calc Time" << acc_time_spent<<
 			std::endl;
 						
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
@@ -1244,6 +1272,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx){
 	
+	
+
 	size_t idx_out = 1;
 	double tout = Time;
 
@@ -1253,6 +1283,16 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 	
 	PrintInput(TheFileKey);
 	InitialChecks();
+
+	//CellInitiate();
+	//ListGenerate();
+	// BLPF = Particles[0]->x;
+	// TRPR = Particles[0]->x;
+	// hmax = Particles[0]->h;
+	// rhomax = Particles[0]->Density;
+
+
+
 	TimestepCheck();
 	WholeVelocity();
 	
@@ -1272,8 +1312,23 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 		WriteXDMF    (fn.CStr());
 		std::cout << "\nInitial Condition has been generated\n" << std::endl;
 	}
-	
 
+	std::vector <int> nb(Particles.Size());
+	std::vector <int> nbcount(Particles.Size());
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	for ( int k = 0; k < Nproc ; k++) {
+		for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+		//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+			nb[SMPairs[k][a].first ]+=1;
+			nb[SMPairs[k][a].second]+=1;
+
+		}
+	}		
+	for (int p=0;p<Particles.Size();p++){
+		Particles[p]->Nb=nb[p];
+	}
+	
+	
 	unsigned long steps=0;
 	unsigned int first_step;
 	//MainNeighbourSearch();
@@ -1301,6 +1356,14 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 		clock_beg = clock();
 		PrimaryComputeAcceleration();
 		LastComputeAcceleration();
+		
+		// for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
+			// SMPairs[i].Clear();
+			// FSMPairs[i].Clear();
+			// NSMPairs[i].Clear();
+		// }
+		
+		
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
 		steps++;

@@ -88,6 +88,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 
 	Thermal_BC = TH_BC_NONE;
 	pl_strain=0;
+	
+	Nb=0;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);

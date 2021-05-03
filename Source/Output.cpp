@@ -95,6 +95,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     float * Strain		= new float[6*Particles.Size()];
 	float * Temp		= new float[  Particles.Size()];
 	float * Pl_Strain	= new float[  Particles.Size()];
+	int   * Nb			= new int  [  Particles.Size()];
 
 	double P1,P2,P3;
 
@@ -113,7 +114,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
        	Pressure[i    ] = float(Particles[i]->Pressure);
         Density [i    ] = float(Particles[i]->Density);
         Mass	[i    ] = float(Particles[i]->Mass);
-        sh	[i    ] = float(Particles[i]->h);
+        sh		[i    ] = float(Particles[i]->h);
         Tag     [i    ] = int  (Particles[i]->ID);
         Sigma   [6*i  ] = float(Particles[i]->Sigma(0,0));
         Sigma   [6*i+1] = float(Particles[i]->Sigma(0,1));
@@ -128,7 +129,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Strain  [6*i+4] = float(Particles[i]->Strain(1,2));
         Strain  [6*i+5] = float(Particles[i]->Strain(2,2));
 		Temp	[i    ] = float(Particles[i]->T);
-		Pl_Strain	[i    ] = float(Particles[i]->pl_strain);
+		Pl_Strain	[i] = float(Particles[i]->pl_strain);
+		Nb		[i    ] = int(Particles[i]->Nb);
 
 	UserOutput(Particles[i],P1,P2,P3);
         Prop1	[i    ] = float(P1);
@@ -176,7 +178,9 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Temp);
     dsname.Printf("Pl_Strain");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Pl_Strain);
-
+    dsname.Printf("Neighbors");
+    H5LTmake_dataset_int(file_id,dsname.CStr(),1,dims,Nb);
+	
     delete [] Posvec;
     delete [] Velvec;
     delete [] ACCvec;
@@ -192,7 +196,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     delete [] Strain;
 	delete [] Temp;
 	delete [] Pl_Strain;
-
+	delete [] Nb;
+	
    //Closing the file
     H5Fflush(file_id,H5F_SCOPE_GLOBAL);
     H5Fclose(file_id);
@@ -273,6 +278,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "     <Attribute Name=\"Pl_Strain\" AttributeType=\"Scalar\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Pl_Strain \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"Neighbors\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Int\" Precision=\"10\"  Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/Neighbors \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "   </Grid>\n";

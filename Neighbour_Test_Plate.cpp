@@ -53,7 +53,7 @@ int main(int argc, char **argv) try
 	n	= 15.0;	//ORIGINAL IS 40
 	
 	dx	= H / n;
-	double h	= dx*0.22; //Very important
+	double h	= dx*0.3; //Very important
 
 	dom.GeneralAfter = & UserAcc;
 	dom.DomMax(0) = H;

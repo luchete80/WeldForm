@@ -61,13 +61,15 @@ SET(EXES
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	Plate-Yield
+	#Plate-Yield
+	#Plate-Yield_hcorr
+	#Plate-Yield_CNS
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
 	#SolidBlock_Heat
+	SolidBlock_Heat_CNS
 	#Neighbour_Test
-	#Test-CompactSearch
-
+	#Neighbour_Test_CNS
 )
 
 

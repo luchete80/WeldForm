@@ -123,6 +123,7 @@ namespace SPH {
 		double T,k_T,cp_T,dTdt;			// Temperature, avoid permeability		
 		double q_conv,T_inf,h_conv;				//Different heat source terms
 		double q_plheat;				//Plastic Work Heat generation
+		int 	Nb;
 		
 		omp_lock_t my_lock;		///< Open MP lock
 

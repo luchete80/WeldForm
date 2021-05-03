@@ -29,8 +29,32 @@ using std::ofstream;
 #include <set>
 
 #define PRINT(x)	cout << x[0]<<", "<<x[1]<<", "<<x[2]<<endl;
-void UserAcc(SPH::Domain & domi) {
+void UserAcc(SPH::Domain & domi)
+{
+	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
+	#ifdef __GNUC__
+	for (size_t i=0; i<domi.Particles.Size(); i++)
+	#else
+	for (int i=0; i<domi.Particles.Size(); i++)
+	#endif
+	
+	{
+		if (domi.Particles[i]->ID == 3)
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(1.0e-2,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(1.0e-2,0.0,0.0);
+//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+		if (domi.Particles[i]->ID == 2)
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(-1.0e-2,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(-1.0e-2,0.0,0.0);
+//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+	}
 }
 
 /////////////// COMPACT NSEARCH ////////////////////
@@ -65,24 +89,38 @@ int main(int argc, char **argv) try
 {
   SPH::Domain	dom;
 
-	dom.Dimension	= 3;
+   dom.Dimension	= 2;
 	dom.Nproc	= 4;
 	dom.Kernel_Set(Quintic_Spline);
-	dom.Scheme	= 1;
+	dom.Scheme	= 0;
 //     	dom.XSPH	= 0.5; //Very important
-	double H,L,n,dx;
+
+	double dx,h,rho,K,G,Cs,Fy;
+	double H,L,n;
 
 	H	= 0.01;
 	L	= 0.03;
-	n	= 15.0;	//ORIGINAL IS 40
+	n	= 40.0;	//ORIGINAL IS 40
 	
+	rho	= 1000.0;
+	K	= 3.25e6;
+	G	= 7.15e5;
+	Fy	= 4000.0;
 	dx	= H / n;
-	double h	= dx*1.1; //Very important
+	h	= dx*1.3; //Very important
+	Cs	= sqrt(K/rho);
 
+	double timestep;
+	timestep = (0.2*h/(Cs));
+
+	cout<<"t  = "<<timestep<<endl;
+	cout<<"Cs = "<<Cs<<endl;
+	cout<<"K  = "<<K<<endl;
+	cout<<"G  = "<<G<<endl;
+	cout<<"Fy = "<<Fy<<endl;
 	dom.GeneralAfter = & UserAcc;
-	dom.DomMax(0) = H;
-	dom.DomMin(0) = -H;
-	double rho	= 2800.0;
+	dom.DomMax(0) = L;
+	dom.DomMin(0) = -L;
 
 	ofstream outmesh; // outdata is like cin
 	outmesh.open("outmesh.txt"); // opens the file
@@ -90,10 +128,9 @@ int main(int argc, char **argv) try
 	cout << "Generating domain"<<endl;
 	
 	//THIS IS FOR A SIMPLE TEST
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 -L/20.0, -H/2.0 , -H/2.0 ), 
-							L + L/10.0 +dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
-							dx/2.0 ,rho, h, 1 , 0 , false, false );
-     for (int p=0;p < dom.Particles.Size();p++){
+    dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
+    
+	for (int p=0;p < dom.Particles.Size();p++){
 		 
 		 outmesh << p << ", "<<dom.Particles[p]->x[0]<<", "<<dom.Particles[p]->x[1]<< ", " << dom.Particles[p]->x[2] <<endl;
 	 }
@@ -164,16 +201,36 @@ int main(int argc, char **argv) try
 	cout << "SM Pairs Size" << dom.SMPairs.Size()<<endl;
 	//Array<std::pair<size_t,size_t> >		Initial;
 	
+	//
+	// THIS IS NOT WORKING
 	// //Pass it to SMPairs
 	// //MAKING IT MULTITHREAD
 	// // DYNAMICALLY ASSINGED!
-	it = neigbours_set.begin();
-	#pragma omp parallel for schedule (dynamic) num_threads(dom.Nproc)
-	for (int i=0;i<neigbours_set.size();i++){
-		size_t T = omp_get_thread_num();
+	// it = neigbours_set.begin();
+	// #pragma omp parallel for schedule (dynamic) num_threads(dom.Nproc)
+	// for (int i=0;i<neigbours_set.size();i++){
+		// size_t T = omp_get_thread_num();
 				
-			dom.SMPairs[T].Push(std::make_pair(it->first, it->second));
+			// dom.SMPairs[T].Push(std::make_pair(it->first, it->second));
+		// it++;
+	// }
+
+	
+	it = neigbours_set.begin();
+	int pairsperproc = neigbours_set.size()/dom.Nproc;
+	cout << "Pairs per proc: " <<pairsperproc<<endl;
+	int pair=0;
+	int nproc=0;
+	while (it != neigbours_set.end()) {
+		if (pair > (nproc + 1 ) * pairsperproc){
+			nproc++;
+			cout<<"changing proc"<< nproc<<", pair "<<pair<<endl;
+		}
+					
+		dom.SMPairs[nproc].Push(std::make_pair(it->first, it->second));
 		it++;
+		pair++;
+		
 	}
 
 	for (int p=0;p<dom.Nproc;p++){
@@ -255,25 +312,27 @@ void Plate_Al_Example(SPH::Domain &dom){
 	
         double dx,h,rho,K,G,Cs,Fy;
     	double H,L,n;	
-		//lambda = E nu / ((1+nu)*(1-2 nu)) 
-		//G = E/(2*(1+nu) )
-		double E=72.e9;
-		double nu=0.3;
 
-		H	= 0.01;
-		L	= 0.03;
-		n	= 15.0;	//ORIGINAL IS 40
+        dom.Dimension	= 2;
+        dom.Nproc	= 4;
+    	dom.Kernel_Set(Quintic_Spline);
+    	dom.Scheme	= 0;
+		
+    	H	= 0.01;
+    	L	= 0.03;
+    	n	= 40.0;	//ORIGINAL IS 40
 	
-		rho = 2800.;
-    	//K	= 3.25e6;
-    	//G	= 7.15e5;
-		K= E / ( 3.*(1.-2*nu) );
-		G= E / (2.* (1.+nu));
-		Fy	= 500.0e6;
+    	rho	= 1000.0;
+    	K	= 3.25e6;
+    	G	= 7.15e5;
+		Fy	= 4000.0;
     	dx	= H / n;
-    	h	= dx*0.5; //Very important	//COMPARE WITH ANOTHER VALUES
+    	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
+    	for (size_t a=0; a<dom.Particles.Size(); a++)
+    		dom.Particles[a]->h = h;	
+			
         double timestep;
         timestep = (0.2*h/(Cs));
 
@@ -286,13 +345,8 @@ void Plate_Al_Example(SPH::Domain &dom){
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
 		
-     	// dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 -L/20.0, -H/2.0 , -H/2.0 ), 
-							// L + L/10.0 +dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
-							// dx/2.0 ,rho, h, 1 , 0 , false, false );
-		
-		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-     	double x;
 
+		double x;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G			= G;
@@ -312,7 +366,8 @@ void Plate_Al_Example(SPH::Domain &dom){
     			dom.Particles[a]->ID=3;
     	}
 
-
-    	dom.Solve_wo_init(/*tf*/0.05,/*dt*/timestep,/*dtOut*/1.e-5,"test06",999);
+	
+//    	dom.WriteXDMF("maz");
+    	dom.Solve_wo_init(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 	
 }
