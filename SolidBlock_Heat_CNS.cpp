@@ -63,6 +63,18 @@ using namespace CompactNSearch;
 using std::cout;
 using std::endl;
 
+Real
+compute_average_number_of_neighbors(NeighborhoodSearch const& nsearch)
+{
+	unsigned long res = 0;
+	auto const& d = nsearch.point_set(0);
+	for (int i = 0; i < d.n_points(); ++i)
+	{
+		res += static_cast<unsigned long>(d.n_neighbors(0, i));
+	}
+	return static_cast<Real>(res) / static_cast<Real>(d.n_points());
+}
+
 int main(int argc, char **argv) try
 {
        SPH::Domain	dom;
@@ -98,7 +110,7 @@ int main(int argc, char **argv) try
      	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20., -H/2.0 -H/20. ), H + H/20., H +H/20.,  H + H/20. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
 		Real const r_omega = static_cast<Real>(H/2.)/ static_cast<Real>(n - 1);
-		Real const radius =  static_cast<Real>(3.0) * static_cast<Real>(2.) * r_omega;	
+		Real const radius =  static_cast<Real>(2.0) * static_cast<Real>(2.) * r_omega;	
 		
 		
 		//dom.WriteXDMF("maz");
@@ -127,6 +139,12 @@ int main(int argc, char **argv) try
 	std::vector<std::vector<unsigned int>> neighbors3;
 	nsearch.find_neighbors(1, 2, neighbors3);
 
+	std::cout << "#Points                                = " << positions.size() << std::endl;
+	std::cout << "Search radius                          = " << radius << std::endl;
+	// std::cout << "Min x                                  = " << min_x << std::endl;
+	// std::cout << "Max x                                  = " << max_x << std::endl;
+	std::cout << "Average number of neighbors            = " << compute_average_number_of_neighbors(nsearch) << std::endl;
+	
 
 	ofstream outfind2; // outdata is like cin
 	outfind2.open("find2_part.txt"); // opens the file
@@ -144,16 +162,42 @@ int main(int argc, char **argv) try
 			
 		}
 	}	
-	
+	cout << "Pares: "<<neigbours_set.size()<<endl;
 	outfind2.close();
-	outfind2.open("find2_set.txt"); // opens the file
+
 	std::set<std:: pair<int,int>>::iterator it = neigbours_set.begin();
-	for (int i=0;i<neigbours_set.size();i++){
+	
+	// outfind2.open("find2_set.txt"); // opens the file
+	// for (int i=0;i<neigbours_set.size();i++){
 		
-	outfind2<<it->first<<", "<<it->second<<endl;
-	it++;
-	}	
-	outfind2.close();
+	// outfind2<<it->first<<", "<<it->second<<endl;
+	// it++;
+	// }	
+	// outfind2.close();
+	
+	it = neigbours_set.begin();
+	int pairsperproc = neigbours_set.size()/dom.Nproc;
+	cout << "Pairs per proc: " <<pairsperproc<<endl;
+	int pair=0;
+	int nproc=0;
+	while (it != neigbours_set.end()) {
+		if (pair > (nproc + 1 ) * pairsperproc){
+			nproc++;
+			cout<<"changing proc"<< nproc<<", pair "<<pair<<endl;
+		}
+					
+		dom.SMPairs[nproc].Push(std::make_pair(it->first, it->second));
+		it++;
+		pair++;
+		
+	}
+
+	std::cout << "#Points                                = " << positions.size() << std::endl;
+	std::cout << "Search radius                          = " << radius << std::endl;
+	// std::cout << "Min x                                  = " << min_x << std::endl;
+	// std::cout << "Max x                                  = " << max_x << std::endl;
+	std::cout << "Average number of neighbors            = " << compute_average_number_of_neighbors(nsearch) << std::endl;
+	
 	
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x;
