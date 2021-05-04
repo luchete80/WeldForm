@@ -193,18 +193,18 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	for ( size_t k = 0; k < Nproc ; k++) 
 		cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
-	// std::vector <int> nb(Particles.Size());
-	// std::vector <int> nbcount(Particles.Size());
-	// for ( size_t k = 0; k < Nproc ; k++) {
-		// for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-		// //cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
-			// nb[SMPairs[k][a].first ]+=1;
-			// nb[SMPairs[k][a].second]+=1;			
-		// }
-	// }	
-	
-	// for (int i=0;i<nb.size();i++)
-		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+	std::vector <int> nb(Particles.Size());
+	std::vector <int> nbcount(Particles.Size());
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	for ( int k = 0; k < Nproc ; k++) {
+		for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			nb[SMPairs[k][a].first ]+=1;
+			nb[SMPairs[k][a].second]+=1;
+		}
+	}	
+	for (int p=0;p<Particles.Size();p++){
+		Particles[p]->Nb=nb[p];
+	}
 		
 	while (Time<tf && idx_out<=maxidx) {
 
@@ -305,21 +305,18 @@ inline void Domain::ThermalSolve_wo_init (double tf, double dt, double dtOut, ch
 	}
 	
 	//MainNeighbourSearch();
-	for ( size_t k = 0; k < Nproc ; k++) 
-		cout << "Pares: " <<SMPairs[k].Size()<<endl;
-
-	// std::vector <int> nb(Particles.Size());
-	// std::vector <int> nbcount(Particles.Size());
-	// for ( size_t k = 0; k < Nproc ; k++) {
-		// for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-		// //cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
-			// nb[SMPairs[k][a].first ]+=1;
-			// nb[SMPairs[k][a].second]+=1;			
-		// }
-	// }	
-	
-	// for (int i=0;i<nb.size();i++)
-		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
+	std::vector <int> nb(Particles.Size());
+	std::vector <int> nbcount(Particles.Size());
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	for ( int k = 0; k < Nproc ; k++) {
+		for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			nb[SMPairs[k][a].first ]+=1;
+			nb[SMPairs[k][a].second]+=1;
+		}
+	}	
+	for (int p=0;p<Particles.Size();p++){
+		Particles[p]->Nb=nb[p];
+	}
 		
 	while (Time<tf && idx_out<=maxidx) {
 
