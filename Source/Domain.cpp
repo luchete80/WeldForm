@@ -1284,8 +1284,8 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 	PrintInput(TheFileKey);
 	InitialChecks();
 
-	//CellInitiate();
-	//ListGenerate();
+	CellInitiate();
+	ListGenerate();
 	// BLPF = Particles[0]->x;
 	// TRPR = Particles[0]->x;
 	// hmax = Particles[0]->h;

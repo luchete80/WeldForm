@@ -175,6 +175,10 @@ int main(int argc, char **argv) try
 	// }	
 	// outfind2.close();
 	
+	//////////////////////////////
+	////////CELL INITIATE IS CRUCIAL FOR INITIALIZE ARAYS!!!
+	dom.CellInitiate();
+	//////////////////////////////
 	it = neigbours_set.begin();
 	int pairsperproc = neigbours_set.size()/dom.Nproc;
 	cout << "Pairs per proc: " <<pairsperproc<<endl;
