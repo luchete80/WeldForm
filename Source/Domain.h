@@ -65,9 +65,8 @@ public:
     void AddBoxLength				(int tag, Vec3_t const &V, double Lx, double Ly, double Lz,double r, double Density,
 																	double h,int type, int rotation, bool random, bool Fixed);									//Add a cube of particles with a defined dimensions
 
-    void AddCylinderLength			(int tag, Vec3_t const &V, double Rxy, double Lz,double r, double Density,
-																	double h,int type, int rotation, bool random, bool Fixed);									//Add a cube of particles with a defined dimensions
-
+	void AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
+									double r, double Density, double h, bool Fixed);
 
     void AddBoxNo						(int tag, Vec3_t const &V, size_t nx, size_t ny, size_t nz,double r, double Density,
 																	double h,int type, int rotation, bool random, bool Fixed);									//Add a cube of particles with a defined numbers
