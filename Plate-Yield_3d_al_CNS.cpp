@@ -99,7 +99,7 @@ int main(int argc, char **argv) try
 	 }
 	 outmesh.close();
 	Real const r_omega = static_cast<Real>(H/2.)/ static_cast<Real>(n - 1);
-	Real const radius =  static_cast<Real>(3.0) * static_cast<Real>(2.) * r_omega;	
+	Real const radius =  static_cast<Real>(2.2) * static_cast<Real>(2.) * r_omega;	
     
 	
 	//dom.WriteXDMF("maz");
@@ -167,14 +167,32 @@ int main(int argc, char **argv) try
 	// //Pass it to SMPairs
 	// //MAKING IT MULTITHREAD
 	// // DYNAMICALLY ASSINGED!
-	it = neigbours_set.begin();
-	#pragma omp parallel for schedule (dynamic) num_threads(dom.Nproc)
-	for (int i=0;i<neigbours_set.size();i++){
-		size_t T = omp_get_thread_num();
+	// it = neigbours_set.begin();
+	// #pragma omp parallel for schedule (dynamic) num_threads(dom.Nproc)
+	// for (int i=0;i<neigbours_set.size();i++){
+		// size_t T = omp_get_thread_num();
 				
-			dom.SMPairs[T].Push(std::make_pair(it->first, it->second));
+			// dom.SMPairs[T].Push(std::make_pair(it->first, it->second));
+		// it++;
+	// }
+
+	it = neigbours_set.begin();
+	int pairsperproc = neigbours_set.size()/dom.Nproc;
+	cout << "Pairs per proc: " <<pairsperproc<<endl;
+	int pair=0;
+	int nproc=0;
+	while (it != neigbours_set.end()) {
+		if (pair > (nproc + 1 ) * pairsperproc){
+			nproc++;
+			cout<<"changing proc"<< nproc<<", pair "<<pair<<endl;
+		}
+					
+		dom.SMPairs[nproc].Push(std::make_pair(it->first, it->second));
 		it++;
+		pair++;
+		
 	}
+
 
 	for (int p=0;p<dom.Nproc;p++){
 		cout << "Processor "<< p << ", " << dom.SMPairs[p].size()<< " pairs" << endl;
@@ -285,10 +303,6 @@ void Plate_Al_Example(SPH::Domain &dom){
     	dom.GeneralAfter = & UserAcc;
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
-		
-     	// dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 -L/20.0, -H/2.0 , -H/2.0 ), 
-							// L + L/10.0 +dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
-							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
      	double x;

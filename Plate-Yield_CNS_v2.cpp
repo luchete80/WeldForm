@@ -43,15 +43,15 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(1.0e-2,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(1.0e-2,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(1.0e-3,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(1.0e-3,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(-1.0e-2,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(-1.0e-2,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(-1.0e-3,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(-1.0e-3,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -106,8 +106,8 @@ int main(int argc, char **argv) try
 	K	= 3.25e6;
 	G	= 7.15e5;
 	Fy	= 4000.0;
-	dx	= H / n;
-	h	= dx*1.3; //Very important
+	dx	= H / (n-1);
+	h	= dx*2.; //Very important
 	Cs	= sqrt(K/rho);
 
 	double timestep;
@@ -135,8 +135,8 @@ int main(int argc, char **argv) try
 		 outmesh << p << ", "<<dom.Particles[p]->x[0]<<", "<<dom.Particles[p]->x[1]<< ", " << dom.Particles[p]->x[2] <<endl;
 	 }
 	 outmesh.close();
-	Real const r_omega = static_cast<Real>(H/2.)/ static_cast<Real>(n - 1);
-	Real const radius =  static_cast<Real>(2.5) * static_cast<Real>(2.) * r_omega;	
+
+	Real const radius =  static_cast<Real>(h);	
     
 	
 	//dom.WriteXDMF("maz");
@@ -368,6 +368,6 @@ void Plate_Al_Example(SPH::Domain &dom){
 
 	
 //    	dom.WriteXDMF("maz");
-    	dom.Solve_wo_init(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve_wo_init(/*tf*/0.1,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 	
 }
