@@ -356,6 +356,24 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 	R = r;
 }
 
+//////Return half (on the quadrant) particle count from a single position in an axis
+int calcHalfPartCount(const double &r, const double &R, const int xinc){
+	int ypartcount = -1;
+	if ( xinc > 0 ){
+		ypartcount = 1;
+		double yp = r;
+		double xp = r + (double)(xinc - 1 ) *2.*r; 
+		double rad = sqrt(yp*yp + xp*xp);
+		while( rad < R ){
+			yp += 2.*r;
+			rad = sqrt(yp*yp + xp*xp);
+			ypartcount++;
+		}
+		ypartcount-=1;
+	}
+	return ypartcount;
+}
+
 inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									double r, double Density, double h, bool Fixed) {
 
@@ -364,7 +382,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 
     size_t PrePS = Particles.Size();
 
-    double x,y,xp,yp;
+    double xp,yp;
     size_t i,j;
 
     double qin = 0.03;
@@ -373,79 +391,75 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	double Lx, Ly;
 	
 	//Particles are tried to be aligned 
-	int numpartxy=1;
+	int numpartxy=1;	//MAX ON EACH EDGE
+	//PARTCILES ARE NOT ALIGNED WITH AXIS; BUT SYMMETRIC ON EACH QUADRANT
+	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
+	numpartxy = calcHalfPartCount(r, Rxy, 1);
 	
-	double pos = r;
-	while( pos < Rxy ){
-		numpartxy+=1;
-		pos += 2.*r*(numpartxy+1);
-	}
-	numpartxy=2*(numpartxy-1);
 	cout << "X/Y Particles: " << numpartxy<<endl;
 	//yp=pos;
+	int numypart,numxpart;
+	int xinc,yinc,yinc_sign;
 	
     if (Dimension==3) {
     	//Cubic packing
-		double z,zp;
+		double zp;
 		size_t k=0;
 		zp = V(2);
 
 		while (zp <= (V(2)+Lz-r)) {
 			j = 0;
-			yp = V(1) - r - (2.*r*(numpartxy/2-1) );
-			cout << "y Extreme: "<<ypos<<endl;
+			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
+			cout << "y Extreme: "<<yp<<endl;
 			
-			//Search for the max radius
-			while (yp <= (V(1)+Ly-r)) {
-				i = 0;
-				xp = V(0);
-			}
-
-			while( pos < Rxy ){
-				numpartxy+=1;
-				pos += 2.*r*(numpartxy+1);
-			}
-	
-				while (xp <= (V(0)+Lx-r))
-				{
-					x = V(0) + (2.0*i+1)*r;
-					y = V(1) + (2.0*j+1)*r;
-					z = V(2) + (2.0*k+1)*r;
-					if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-						else    Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					i++;
-					xp = V(0) + (2*i+1)*r;
+			numypart = 2*numpartxy;	//And then diminish by 2 on each y increment
+			yinc = numpartxy;	//particle row from the axis
+			yinc_sign=-1;
+			cout << "y max particles: "<<numypart<<endl;
+			for (j=0;j<numypart;j++){
+				cout << "y inc: "<<yinc<<endl;
+				numxpart = calcHalfPartCount(r, Rxy, yinc);
+				cout << "xpart: "<< numxpart<<endl;
+				xp = V(0) - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
+				for (i=0; i<2*numxpart;i++) {
+					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					//	else    
+					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					xp += 2.*r;
 				}
-				j++;
-				yp = V(1) + (2.0*j+1)*r;
+				yp += 2.*r;
+				yinc+=yinc_sign;
+				if (yinc<1) {//Reach the axis, now positive increments
+					yinc = 1;
+					yinc_sign=1;
+				}
 			}
 			k++;
 			zp = V(2) + (2.0*k+1)*r;
 		}
-	}
+		//Calculate particles' mass in 3D
+		Vec3_t temp, Max=V;
+		for (size_t i=PrePS; i<Particles.Size(); i++) {
+			if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
+			if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
+			if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
+		}
+		Max +=r;
+		temp = Max-V;
+		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
 
-	//Calculate particles' mass in 3D
-	Vec3_t temp, Max=V;
-	for (size_t i=PrePS; i<Particles.Size(); i++) {
-		if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
-		if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
-		if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
-	}
-	Max +=r;
-	temp = Max-V;
-	double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
+		#pragma omp parallel for num_threads(Nproc)
+		#ifdef __GNUC__
+		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+		#else
+		for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+		#endif
+		{
+			Particles[i]->Mass = Mass;
+		}
 
-	#pragma omp parallel for num_threads(Nproc)
-	#ifdef __GNUC__
-	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
-	#else
-	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
-	#endif
-	{
-		Particles[i]->Mass = Mass;
-	}
+	}//Dim 3
 
-	}
 	R = r;
 }
 

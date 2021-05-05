@@ -33,7 +33,7 @@ int main(int argc, char **argv) try
 {
        SPH::Domain	dom;
 
-        dom.Dimension	= 2;
+        dom.Dimension	= 3;
         dom.Nproc	= 4;
     	dom.Kernel_Set(Quintic_Spline);
     	dom.Scheme	= 0;
@@ -70,8 +70,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,0.), 0.01, 0.2, 
-									5.e-4, 2800, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,0.), 0.01, 0.02, 5.e-4, 2800, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 

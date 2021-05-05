@@ -61,7 +61,8 @@ SET(EXES
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
-	Plate-Yield
+	Cylinder_Test
+	#Plate-Yield
 	#Plate-Yield_hcorr
 	#Plate-Yield_CNS
 	#Plate-Yield_CNS_v2
