@@ -374,7 +374,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//Particles are tried to be aligned 
 	int numpartxy=1;
-
+	
 	double pos = r;
 	while( pos < Rxy ){
 		numpartxy+=1;
@@ -382,6 +382,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	}
 	numpartxy=2*(numpartxy-1);
 	cout << "X/Y Particles: " << numpartxy<<endl;
+	//yp=pos;
 	
     if (Dimension==3) {
     	//Cubic packing
@@ -392,9 +393,19 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		while (zp <= (V(2)+Lz-r)) {
 			j = 0;
 			yp = V(1) - r - (2.*r*(numpartxy/2-1) );
+			cout << "y Extreme: "<<ypos<<endl;
+			
+			//Search for the max radius
 			while (yp <= (V(1)+Ly-r)) {
 				i = 0;
 				xp = V(0);
+			}
+
+			while( pos < Rxy ){
+				numpartxy+=1;
+				pos += 2.*r*(numpartxy+1);
+			}
+	
 				while (xp <= (V(0)+Lx-r))
 				{
 					x = V(0) + (2.0*i+1)*r;
