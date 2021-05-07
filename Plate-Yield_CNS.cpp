@@ -135,8 +135,7 @@ int main(int argc, char **argv) try
 		 outmesh << p << ", "<<dom.Particles[p]->x[0]<<", "<<dom.Particles[p]->x[1]<< ", " << dom.Particles[p]->x[2] <<endl;
 	 }
 	 outmesh.close();
-	Real const r_omega = static_cast<Real>(H/2.)/ static_cast<Real>(n - 1);
-	Real const radius =  static_cast<Real>(2.5) * static_cast<Real>(2.) * r_omega;	
+	Real const radius =  static_cast<Real>(2.*h) ;	
     
 	
 	//dom.WriteXDMF("maz");

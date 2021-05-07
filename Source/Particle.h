@@ -105,10 +105,12 @@ namespace SPH {
 		bool		LES;		///< Large eddy simulation using sub-particle scale
 		double	CSmag;		///< Coefficient of Smagorinsky-Lilly model
 
-		double 	G;		///< Shear modulus
-		double 	K;		///< Bulk modulus
+		double 	G;		///< Shear modulus //TODO: Move To Material
+		double 	K;		///< Bulk modulus  //TODO: Move To Material
 		double	Sigmay;		///< Tensile yield stress
 		size_t	Fail;		///< Failure criteria
+		
+		double 	Ep;		//TODO: Move To Material
 
 		double	V;		///< Volume of a particle
 

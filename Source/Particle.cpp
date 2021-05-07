@@ -67,6 +67,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     SumKernel = 0.0;
     G = 0.0;
     K = 0.0;
+	Ep = 0.0;
+	
     Material = 0;
     Fail = 0;
     
@@ -222,8 +224,9 @@ inline void Particle::Mat2MVerlet(double dt) {
 		double sig_trial = sqrt(3.0*J2);
 		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
 		if ( sig_trial > Sigmay) {
-			double dep=( sig_trial - Sigmay)/ (3.*G);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
-			pl_strain+=dep;
+			double dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			pl_strain += dep;
+			Sigmay += dep*Ep;
 		}
 	}
 

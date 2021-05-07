@@ -109,8 +109,7 @@ int main(int argc, char **argv) try
 
      	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20., -H/2.0 -H/20. ), H + H/20., H +H/20.,  H + H/20. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-		Real const r_omega = static_cast<Real>(H/2.)/ static_cast<Real>(n - 1);
-		Real const radius =  static_cast<Real>(2.0) * static_cast<Real>(2.) * r_omega;	
+		Real const radius =  static_cast<Real>(2.*h);	
 		
 		
 		//dom.WriteXDMF("maz");

@@ -43,15 +43,15 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(1.0e-3,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(1.0e-3,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(1.0e-2,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(1.0e-2,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(-1.0e-3,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(-1.0e-3,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(-1.0e-2,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(-1.0e-2,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -106,10 +106,10 @@ int main(int argc, char **argv) try
 	K	= 3.25e6;
 	G	= 7.15e5;
 	Fy	= 4000.0;
-	dx	= H / (n-1);
-	h	= dx*2.5; //Very important
+	dx	= H / n;
+	h	= dx*1.3; //Very important
 	Cs	= sqrt(K/rho);
-
+	
 	double timestep;
 	timestep = (0.2*h/(Cs));
 
@@ -135,8 +135,7 @@ int main(int argc, char **argv) try
 		 outmesh << p << ", "<<dom.Particles[p]->x[0]<<", "<<dom.Particles[p]->x[1]<< ", " << dom.Particles[p]->x[2] <<endl;
 	 }
 	 outmesh.close();
-
-	Real const radius =  static_cast<Real>(h);	
+	Real const radius =  static_cast<Real>(2.*h) ;	
     
 	
 	//dom.WriteXDMF("maz");
@@ -330,6 +329,11 @@ void Plate_Al_Example(SPH::Domain &dom){
     	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
+		double E = 9.*K*G/(3.*K+G);
+		double Et = 1.e4;
+		double Ep =  E*Et/(E-Et);
+		
+		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     		dom.Particles[a]->h = h;	
 			
@@ -350,6 +354,7 @@ void Plate_Al_Example(SPH::Domain &dom){
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G			= G;
+			dom.Particles[a]->Ep		= Ep;
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
@@ -368,6 +373,6 @@ void Plate_Al_Example(SPH::Domain &dom){
 
 	
 //    	dom.WriteXDMF("maz");
-    	dom.Solve_wo_init(/*tf*/0.1,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve_wo_init(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 	
 }

@@ -77,6 +77,10 @@ int main(int argc, char **argv) try
     	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
+		double E = 9.*K*G/(3.*K+G);
+		double Et = 1.e4;
+		double Ep =  E*Et/(E-Et);
+		
         double timestep;
         timestep = (0.2*h/(Cs));
 
@@ -96,7 +100,8 @@ int main(int argc, char **argv) try
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		dom.Particles[a]->G		= G;
+    		dom.Particles[a]->G			= G;
+			dom.Particles[a]->Ep		= Ep;
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
@@ -117,7 +122,7 @@ int main(int argc, char **argv) try
 
 	
 //    	dom.WriteXDMF("maz");
-    	dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

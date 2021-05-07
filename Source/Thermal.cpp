@@ -205,7 +205,14 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	for (int p=0;p<Particles.Size();p++){
 		Particles[p]->Nb=nb[p];
 	}
-		
+
+	unsigned long avg=0;
+	for (int i=0;i<nb.size();i++) {
+		avg+=nb[i];
+	}
+	avg/=nb.size();
+	cout << "Avg Neigbour : "<<avg<<endl;
+	
 	while (Time<tf && idx_out<=maxidx) {
 
 		auto start_task = std::chrono::system_clock::now();

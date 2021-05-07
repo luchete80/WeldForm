@@ -89,16 +89,6 @@ int main(int argc, char **argv) try
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		// dom.Particles[a]->G		= G;
-    		// dom.Particles[a]->PresEq	= 0;
-    		// dom.Particles[a]->Cs		= Cs;
-    		// dom.Particles[a]->Shepard	= false;
-    		// dom.Particles[a]->Material	= 2;
-    		// dom.Particles[a]->Fail		= 1;
-    		// dom.Particles[a]->Sigmay	= Fy;
-    		// dom.Particles[a]->Alpha		= 1.0;
-    		// dom.Particles[a]->TI		= 0.3;
-    		// dom.Particles[a]->TIInitDist	= dx;
     		x = dom.Particles[a]->x(0);
 			dom.Particles[a]->k_T			=	3000.;
 			dom.Particles[a]->cp_T			=	1.;
@@ -116,18 +106,6 @@ int main(int argc, char **argv) try
 		//timestep=1.e-6;
 		//0.3 rho cp h^2/k
 	
-	// std::vector <int> nb(dom.Particles.Size());
-	// std::vector <int> nbcount(dom.Particles.Size());
-	// for ( size_t k = 0; k < dom.Nproc ; k++) {
-		// for (size_t a=0; a<dom.SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-		// //cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
-			// nb[dom.SMPairs[k][a].first ]+=1;
-			// nb[dom.SMPairs[k][a].second]+=1;
-			
-		// }
-	// }	
-	// for (int i=0;i<nb.size();i++)
-		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
 		
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
