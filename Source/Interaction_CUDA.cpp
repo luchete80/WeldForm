@@ -21,8 +21,33 @@
 #include "Domain.h"
 
 namespace SPH {
-	
-inline void Domain::CalcForce2233_CUDA(Particle * P1, Particle * P2)
+
+class Particle_cu
+{
+    public :
+        int value;
+        float rate;
+		Vec3_t	x;		///< Position of the particle n
+		Vec3_t	vb;		///< Velocity of the particle n-1 (Modified Verlet)
+		Vec3_t	va;		///< Velocity of the particle n+1/2 (Leapfrog)
+		Vec3_t	v;		///< Velocity of the particle n+1
+		Vec3_t	NSv;		///< Velocity of the fixed particle for no-slip BC
+		Vec3_t	VXSPH;		///< Mean Velocity of neighbor particles for updating the particle position (XSPH)
+		Vec3_t	a;		///< Acceleration of the particle n
+		
+        __device__ __host__ Particle_cu()
+        {
+            value = 0; rate = 0;
+        }
+        __device__ __host__ Particle_cu(int v,float r)
+        {
+            value = v; rate = r;
+        }
+        __device__ __host__ ~Particle_cu() {};
+}
+
+__global__
+inline void Domain::CalcForce2233_CUDA(Particle_cu * P1, Particle_cu * P2)
 {
 	double h	= (P1->h+P2->h)/2;
 	Vec3_t xij	= P1->x - P2->x;

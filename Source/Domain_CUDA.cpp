@@ -14,7 +14,8 @@
 using namespace std;
 
 namespace SPH {
-	
+
+__global__	
 inline void Domain::PrimaryComputeAcceleration_CUDA () {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
