@@ -34,15 +34,15 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,1.0e-2);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,1.0e-2);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,2.0e-2);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,2.0e-2);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-1.0e-2);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-1.0e-2);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-2.0e-2);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-2.0e-2);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -67,7 +67,7 @@ int main(int argc, char **argv) try
 
     	R	= 0.15;
     	L	= 0.56;
-    	n	= 40.0;		//in length, radius is same distance
+    	n	= 30.0;		//in length, radius is same distance
 		
     	rho	= 2700.0;
     	K	= 6.7549e10;
@@ -119,7 +119,7 @@ int main(int argc, char **argv) try
     	}
 		
 
-    	dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve(/*tf*/0.11,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH
