@@ -21,9 +21,9 @@
 #include "Domain.h"
 
 namespace SPH {
-	
-inline void Domain::CalcForce2233_CUDA(Particle * P1, Particle * P2)
-{
+
+//Domain Parameters
+inline void Domain::CalcForce2233_CUDA(Particle_cu * P1, Particle_cu * P2) {
 	double h	= (P1->h+P2->h)/2;
 	Vec3_t xij	= P1->x - P2->x;
 
@@ -83,8 +83,6 @@ inline void Domain::CalcForce2233_CUDA(Particle * P1, Particle * P2)
 		Sigmai = P1->Sigma;
 		Sigmaj = P2->Sigma;
 
-//		if (P1->IsFree) Sigmai = P1->Sigma; else  Sigmai = P2->Sigma;
-//		if (P2->IsFree) Sigmaj = P2->Sigma; else  Sigmaj = P1->Sigma;
 
 		// Tensile Instability
 		Mat3_t TIij;
@@ -158,7 +156,7 @@ inline void Domain::CalcForce2233_CUDA(Particle * P1, Particle * P2)
 		temp1 = dot( vij , GK*xij );
 
 		// Locking the particle 1 for updating the properties
-		omp_set_lock(&P1->my_lock);
+		//omp_set_lock(&P1->my_lock);
 			P1->a		+= mj * temp;
 			P1->dDensity	+= mj * (di/dj) * temp1;
 
@@ -174,10 +172,10 @@ inline void Domain::CalcForce2233_CUDA(Particle * P1, Particle * P2)
 			if (P1->Shepard)
 				if (P1->ShepardCounter == P1->ShepardStep)
 					P1->SumDen += mj*    K;
-		omp_unset_lock(&P1->my_lock);
+		//omp_unset_lock(&P1->my_lock);
 
 		// Locking the particle 2 for updating the properties
-		omp_set_lock(&P2->my_lock);
+		//omp_set_lock(&P2->my_lock);
 			P2->a		-= mi * temp;
 			P2->dDensity	+= mi * (dj/di) * temp1;
 			if (P2->IsFree) {
@@ -194,7 +192,7 @@ inline void Domain::CalcForce2233_CUDA(Particle * P1, Particle * P2)
 				if (P2->ShepardCounter == P2->ShepardStep)
 					P2->SumDen += mi*    K;
 
-		omp_unset_lock(&P2->my_lock);
+		//omp_unset_lock(&P2->my_lock);
 	}
 }
 
