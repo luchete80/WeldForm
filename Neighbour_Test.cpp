@@ -53,7 +53,7 @@ int main(int argc, char **argv) try
 	n	= 15.0;	//ORIGINAL IS 40
 	
 	dx	= H / n;
-	double h	= dx*0.22; //Very important
+	double h	= dx*1.3; //Very important
 
 	dom.GeneralAfter = & UserAcc;
 	dom.DomMax(0) = H;
@@ -108,6 +108,12 @@ int main(int argc, char **argv) try
 	}
 		cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps)<<endl;
 	
+	dom.CellReset();
+	dom.ListGenerate();
+	dom.MainNeighbourSearch();
+	cout << "hmax" << dom.hmax <<", CellFac: "<<dom.getCellfac()<<", Cell Size: "
+	<<dom.CellSize(0)<<", " <<dom.CellSize(1)<<", "<<dom.CellSize(2)<<endl;
+
 	
 	ofstream outdata; // outdata is like cin
 	//outdata.open("neighbours.txt"); // opens the file

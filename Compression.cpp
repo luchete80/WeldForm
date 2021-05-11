@@ -22,7 +22,30 @@
 
 void UserAcc(SPH::Domain & domi)
 {
+	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
+	#ifdef __GNUC__
+	for (size_t i=0; i<domi.Particles.Size(); i++)
+	#else
+	for (int i=0; i<domi.Particles.Size(); i++)
+	#endif
+	
+	{
+		if (domi.Particles[i]->ID == 3)
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,1.0e-2);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,1.0e-2);
+//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+		if (domi.Particles[i]->ID == 2)
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-1.0e-2);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-1.0e-2);
+//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+	}
 }
 
 
@@ -35,22 +58,22 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic_Spline);
-    	dom.Scheme	= 0;
+    	dom.Kernel_Set(Quintic);
+    	dom.Scheme	= 0;	//Mod Verlet
 //     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
-    	double H,L,n;
+    	double R,L,n;
 
-    	H	= 0.01;
-    	L	= 0.03;
-    	n	= 40.0;	//ORIGINAL IS 40
+    	R	= 0.15;
+    	L	= 0.56;
+    	n	= 40.0;		//in length, radius is same distance
 		
-    	rho	= 1000.0;
-    	K	= 3.25e6;
-    	G	= 7.15e5;
-		Fy	= 4000.0;
-    	dx	= H / n;
+    	rho	= 2700.0;
+    	K	= 6.7549e10;
+    	G	= 2.5902e10;
+		Fy	= 300.e6;
+    	dx	= L / (n-1);
     	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
@@ -70,14 +93,33 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,0.), 0.01, 0.02, 5.e-4, 2800, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10., dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
 		dom.WriteXDMF("maz");
-		
-		dom.Solve(/*tf*/1000.0,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
+    	for (size_t a=0; a<dom.Particles.Size(); a++)
+    	{
+    		dom.Particles[a]->G		= G;
+    		dom.Particles[a]->PresEq	= 0;
+    		dom.Particles[a]->Cs		= Cs;
+    		dom.Particles[a]->Shepard	= false;
+    		dom.Particles[a]->Material	= 2;
+    		dom.Particles[a]->Fail		= 1;
+    		dom.Particles[a]->Sigmay	= Fy;
+    		dom.Particles[a]->Alpha		= 1.0;
+    		dom.Particles[a]->TI		= 0.3;
+    		dom.Particles[a]->TIInitDist	= dx;
+    		double z = dom.Particles[a]->x(2);
+    		if ( z < 0 )
+    			dom.Particles[a]->ID=2;
+    		if ( z > L )
+    			dom.Particles[a]->ID=3;
+    	}
+		
+
+    	dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

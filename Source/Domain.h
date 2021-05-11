@@ -141,6 +141,7 @@ public:
     double 					InitialDist;	///< Initial distance of particles for Inflow BC
 
     double					AvgVelocity;	///< Average velocity of the last two column for x periodic constant velocity
+	double 					getCellfac(){return Cellfac;}
 
 	#ifdef __GNUC__
     size_t					Nproc;		///< No of threads which are going to use in parallel calculation
