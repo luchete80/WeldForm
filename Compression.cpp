@@ -34,15 +34,15 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,2.0e-2);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,2.0e-2);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-2.0e-2);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-2.0e-2);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-2.0e-2);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-2.0e-2);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,2.0e-2);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,2.0e-2);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -58,7 +58,7 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic);
+    	dom.Kernel_Set(Hyperbolic_Spline);
     	dom.Scheme	= 0;	//Mod Verlet
 //     	dom.XSPH	= 0.5; //Very important
 
@@ -117,7 +117,8 @@ int main(int argc, char **argv) try
     		if ( z > L )
     			dom.Particles[a]->ID=3;
     	}
-		
+
+		dom.m_kernel = SPH::iKernel(dom.Dimension,h);		
 
     	dom.Solve(/*tf*/0.11,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;

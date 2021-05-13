@@ -60,7 +60,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		double K	= Kernel(Dimension, KernelType, rij/h, h);
 		
 		// double GK	= m_kernel.gradW(rij/h);
-		// double K	= m_kernel.W(rij/h);
+		// double K		= m_kernel.W(rij/h);
 		
 		// Artificial Viscosity
 		Mat3_t PIij;

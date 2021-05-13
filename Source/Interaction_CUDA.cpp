@@ -22,6 +22,8 @@
 
 namespace SPH {
 
+#ifdef CUDA
+
 class Particle_cu
 {
     public :
@@ -220,6 +222,8 @@ inline void Domain::CalcForce2233_CUDA(Particle_cu * P1, Particle_cu * P2)
 		//omp_unset_lock(&P2->my_lock);
 	}
 }
+
+#endif
 
 
 }; // namespace SPH

@@ -42,7 +42,7 @@
 
 
 //C++ Enum used for easiness of coding in the input files
-enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 };
+enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spline=3};
 enum Viscosity_Eq_Type { Morris=0, Shao=1, Incompressible_Full=2, Takeda=3 };
 enum Gradient_Type { Squared_density=0, Multiplied_density=1 };
 
