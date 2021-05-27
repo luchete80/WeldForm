@@ -70,6 +70,7 @@ namespace SPH {
 		double 	RefDensity;	///< Reference Density of Particle
 		double 	FPMassC;	///< Mass coefficient for fixed particles to avoid leaving particles
 		double 	Mass;		///< Mass of the particle
+		double	Displacement;	///< Density of the particle n+1
 
 		Mat3_t	StrainRate;	///< Global shear Strain rate tensor n
 		Mat3_t	RotationRate;	///< Global rotation tensor n
@@ -88,7 +89,7 @@ namespace SPH {
 		Mat3_t	Strain;		///< Total Strain n+1
 		Mat3_t	Straina;	///< Total Strain n+1/2 (Leapfrog)
 		Mat3_t	Strainb;	///< Total Strain n-1 (Modified Verlet)
-		double 	pl_strain;	//Effective plastic strain 
+		double 	pl_strain,delta_pl_strain;	//Accum and incremental Effective plastic strain 
 
 		Mat3_t	TIR;		///< Tensile Instability stress tensor R
 		double	TI;		///< Tensile instability factor

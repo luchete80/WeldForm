@@ -129,12 +129,17 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 
 inline void Domain::CalcPlasticWorkHeat (){ //TODO: Detect Free Surface Elements
 
-	// //Fraser Eq 3-106
-	// double max=0.;
-	// int imax;
-	// #pragma omp parallel for schedule (static) num_threads(Nproc)
-		// for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
+	//Fraser Eq 3-106
+	double max=0.;
+	int imax;
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
 
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++){//Like in Domain::Move
+	#endif
+	
 			// //cout << "dS2" <<dS2<<endl;
 			// //cout << Particles[i]->Density<<endl;
 			// Particles[i]->q_plheat=
@@ -150,9 +155,9 @@ inline void Domain::CalcPlasticWorkHeat (){ //TODO: Detect Free Surface Elements
 			// }
 			// //cout << "Particle  "<<Particles[i]->Mass<<endl;
 		
-		// }		
-	// //cout << "Max Convection: " << max <<"in particle " << imax <<endl;
-	// //cout << "Applied convection to "<< i << " Particles"<<endl;
+	}		
+	//cout << "Max Convection: " << max <<"in particle " << imax <<endl;
+	//cout << "Applied convection to "<< i << " Particles"<<endl;
 }
 
 inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {

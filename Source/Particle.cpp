@@ -92,6 +92,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	pl_strain=0;
 	
 	Nb=0;
+	
+	Displacement = 0;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);
@@ -227,6 +229,7 @@ inline void Particle::Mat2MVerlet(double dt) {
 			double dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			pl_strain += dep;
 			Sigmay += dep*Ep;
+
 		}
 	}
 

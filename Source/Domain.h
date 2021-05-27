@@ -68,6 +68,11 @@ public:
 	void AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									double r, double Density, double h, bool Fixed);
 
+	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
+											double Lz_neckmin,double Lz_necktot,double Rxy_center,
+											double r, double Density, double h, bool Fixed);
+
+
     void AddBoxNo						(int tag, Vec3_t const &V, size_t nx, size_t ny, size_t nz,double r, double Density,
 																	double h,int type, int rotation, bool random, bool Fixed);									//Add a cube of particles with a defined numbers
     void DelParticles				(int const & Tags);					//Delete particles by tag
@@ -165,6 +170,7 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	FSMPairs;
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;
+	double 	& getTime (){return Time;}		//LUCIANO
 
     Array<std::pair<size_t,size_t> >		Initial;
     Mat3_t I;

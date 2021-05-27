@@ -396,7 +396,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
 	numpartxy = calcHalfPartCount(r, Rxy, 1);
 	
-	cout << "X/Y Particles: " << numpartxy<<endl;
+	//cout << "X/Y Particles: " << numpartxy<<endl;
 	//yp=pos;
 	int numypart,numxpart;
 	int xinc,yinc,yinc_sign;
@@ -410,16 +410,16 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		while (zp <= (V(2)+Lz-r)) {
 			j = 0;
 			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
-			cout << "y Extreme: "<<yp<<endl;
+			//cout << "y Extreme: "<<yp<<endl;
 			
 			numypart = 2*numpartxy;	//And then diminish by 2 on each y increment
 			yinc = numpartxy;	//particle row from the axis
 			yinc_sign=-1;
-			cout << "y max particles: "<<numypart<<endl;
+			//cout << "y max particles: "<<numypart<<endl;
 			for (j=0;j<numypart;j++){
-				cout << "y inc: "<<yinc<<endl;
+				//cout << "y inc: "<<yinc<<endl;
 				numxpart = calcHalfPartCount(r, Rxy, yinc);
-				cout << "xpart: "<< numxpart<<endl;
+				//cout << "xpart: "<< numxpart<<endl;
 				xp = V(0) - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
 				for (i=0; i<2*numxpart;i++) {
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
@@ -437,6 +437,111 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 			k++;
 			zp = V(2) + (2.0*k+1)*r;
 		}
+		//Calculate particles' mass in 3D
+		Vec3_t temp, Max=V;
+		for (size_t i=PrePS; i<Particles.Size(); i++) {
+			if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
+			if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
+			if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
+		}
+		Max +=r;
+		temp = Max-V;
+		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
+
+		#pragma omp parallel for num_threads(Nproc)
+		#ifdef __GNUC__
+		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+		#else
+		for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+		#endif
+		{
+			Particles[i]->Mass = Mass;
+		}
+
+	}//Dim 3
+
+	R = r;
+}
+
+inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
+											double Lz_neckmin,double Lz_necktot,double Rxy_center,
+											double r, double Density, double h, bool Fixed) {
+
+//	Util::Stopwatch stopwatch;
+    std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
+
+    size_t PrePS = Particles.Size();
+
+    double xp,yp;
+    size_t i,j;
+
+    double qin = 0.03;
+    srand(100);
+	
+	double Lx, Ly, Lz;
+	
+	Lz = 2. * Lz_side + Lz_necktot;
+	
+	//Particles are tried to be aligned 
+	int numpartxy;	//MAX ON EACH EDGE
+	//PARTCILES ARE NOT ALIGNED WITH AXIS; BUT SYMMETRIC ON EACH QUADRANT
+	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
+	
+	
+	//cout << "X/Y Particles: " << numpartxy<<endl;
+	//yp=pos;
+	int numypart,numxpart;
+	int xinc,yinc,yinc_sign;
+	double z_radiusreduction = (Lz_necktot-Lz_neckmin)/2.;
+	double tan = (Rxy - Rxy_center)/(z_radiusreduction);
+	double R;
+	double z1 = V(2) + Lz_side - r;
+	double z2 = V(2) + Lz_side + z_radiusreduction - r;
+	double z3 = V(2) + Lz_side + z_radiusreduction + Lz_neckmin - r;
+	double z4 = V(2) + Lz_side + Lz_necktot - r;
+	
+    if (Dimension==3) {
+    	//Cubic packing
+		double zp;
+		size_t k=0;
+		zp = V(2);
+
+		while (zp <= ( V(2) + Lz - r )) {
+			if 		( zp <= z1 || zp >  z4)		R = Rxy;
+			else if ( zp > 	z1 && zp <= z2 )	R = Rxy - (zp - z1) * tan;
+			else if ( zp >= z2 && zp < z3 )		R = Rxy_center;
+			else if ( zp >= z3 && zp < z4 )		R = Rxy_center + (zp - z3) * tan;
+							
+			
+			numpartxy = calcHalfPartCount(r, R, 1);
+			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
+			//cout << "y Extreme: "<<yp<<endl;			
+			numypart = 2*numpartxy;	//And then diminish by 2 on each y increment
+			yinc = numpartxy;	//particle row from the axis
+			yinc_sign=-1;
+			//cout << "y max particles: "<<numypart<<endl;
+			for (j=0;j<numypart;j++){
+				//cout << "y inc: "<<yinc<<endl;
+				numxpart = calcHalfPartCount(r, R, yinc);
+				//cout << "xpart: "<< numxpart<<endl;
+				xp = V(0) - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
+				for (i=0; i<2*numxpart;i++) {
+					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					//	else    
+					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					xp += 2.*r;
+				}
+				yp += 2.*r;
+				yinc+=yinc_sign;
+				if (yinc<1) {//Reach the axis, now positive increments
+					yinc = 1;
+					yinc_sign=1;
+				}
+			}
+			k++;
+			zp = V(2) + (2.0*k+1)*r;
+		}
+			
 		//Calculate particles' mass in 3D
 		Vec3_t temp, Max=V;
 		for (size_t i=PrePS; i<Particles.Size(); i++) {
@@ -1144,8 +1249,8 @@ inline void Domain::TimestepCheck ()
 	std::cout << "Max allowable time step using CFL = "<< std::min(t1,t2) << " S" << std::endl;
 	std::cout << "User Time Step = "<< deltatint  << " S" << std::endl;
 
-	if (deltatint > std::min(t1,t2))
-	throw new Fatal("Please decrease the time step to the allowable range");
+	// if (deltatint > std::min(t1,t2))
+	// throw new Fatal("Please decrease the time step to the allowable range");
 }
 
 inline void Domain::Solve_orig (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
@@ -1244,7 +1349,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	
 	clock_t clock_beg;
 	double clock_time_spent,pr_acc_time_spent,acc_time_spent;
-	double neigbour_time_spent_per_interval;
+	double neigbour_time_spent_per_interval=0.;
 	
 	clock_time_spent=pr_acc_time_spent=acc_time_spent=0.;
 
@@ -1262,33 +1367,29 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	unsigned int first_step;
 	MainNeighbourSearch();
 
-	std::vector <int> nb(Particles.Size());
-	std::vector <int> nbcount(Particles.Size());
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for ( int k = 0; k < Nproc ; k++) {
-		for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-		//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
-			nb[SMPairs[k][a].first ]+=1;
-			nb[SMPairs[k][a].second]+=1;
-			//cout << "neighbour count"<<nb[SMPairs[k][a].first ]<<endl;
-			//outdata << SMPairs[k][a].first<<", " << SMPairs[k][a].second << "( " << k << ", "<< a<<")"<<endl;
-			// if (SMPairs[k][a].first==0){
-				// test.push_back(SMPairs[k][a].second);
-			// } else if (SMPairs[k][a].second==0){
-				// test.push_back(SMPairs[k][a].first);
-			// }
-		}
-	}	
+	// std::vector <int> nb(Particles.Size());
+	// std::vector <int> nbcount(Particles.Size());
+	// #pragma omp parallel for schedule (static) num_threads(Nproc)
+	// for ( int k = 0; k < Nproc ; k++) {
+		// for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+		// //cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+			// nb[SMPairs[k][a].first ]+=1;
+			// nb[SMPairs[k][a].second]+=1;
+		// }
+	// }	
 
-	for (int p=0;p<Particles.Size();p++){
-		Particles[p]->Nb=nb[p];
-	}
+	// for (int p=0;p<Particles.Size();p++){
+		// Particles[p]->Nb=nb[p];
+	// }
+	
+	int ts_nb_inc=200000;	// Always > 0
+	int ts_i=0;
 	
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
-		if (BC.InOutFlow>0) InFlowBCFresh();
+		//if (BC.InOutFlow>0) InFlowBCFresh();
 		auto start_task = std::chrono::system_clock::now();
-		clock_beg = clock();
+		
 
 		double max = 0;
 		int imax;
@@ -1300,7 +1401,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 		}	
 		// if (max>0.01){
-		//MainNeighbourSearch();
+		if ( ts_i == 0 ){
+			clock_beg = clock();
+			MainNeighbourSearch();
+			neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		}
 		// }
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
@@ -1318,7 +1423,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	// for (int i=0;i<nb.size();i++)
 		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
 		
-		neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
@@ -1360,15 +1465,28 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			neigbour_time_spent_per_interval=0.;
 		}
 
-		AdaptiveTimeStep();
+		//AdaptiveTimeStep();
 		Move(deltat);
 		Time += deltat;
-		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
+		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
+		if ( ts_i == (ts_nb_inc - 1) ){
 		// if (max>0.01){
-			// CellReset();
-			// ListGenerate();
+			for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
+				SMPairs[i].Clear();
+				FSMPairs[i].Clear();
+				NSMPairs[i].Clear();
+			}
+			CellReset();
+			ListGenerate();
 		// }
+			
+		}
+		
+		ts_i ++;
+		if ( ts_i > (ts_nb_inc - 1) ) 
+			ts_i = 0;
+		
 		
 	}
 	
@@ -1441,7 +1559,7 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 	//MainNeighbourSearch();
 	while (Time<tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
-		if (BC.InOutFlow>0) InFlowBCFresh();
+		//if (BC.InOutFlow>0) InFlowBCFresh();
 		auto start_task = std::chrono::system_clock::now();
 		clock_beg = clock();
 
@@ -1506,7 +1624,7 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 		AdaptiveTimeStep();
 		Move(deltat);
 		Time += deltat;
-		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
+		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
 		
 	}
