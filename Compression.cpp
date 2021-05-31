@@ -70,7 +70,7 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic_Spline);
+    	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 0;	//Mod Verlet
 //     	dom.XSPH	= 0.5; //Very important
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv) try
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
 		dx = 0.015;
-    	h	= dx*1.3; //Very important
+    	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -109,7 +109,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20., dx/2., rho, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 

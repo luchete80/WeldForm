@@ -63,8 +63,8 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	#Compression
-	Cantilever
+	Compression
+	#Cantilever
 	#Elastic
 	#Traction
 	#Plate-Yield_hcorr
