@@ -51,7 +51,11 @@
 
 namespace SPH {
 
+<<<<<<< HEAD
 	class Particle
+=======
+	class Particle_CU
+>>>>>>> master
 	{
 	public:
 		// Shepard density correction
@@ -156,10 +160,12 @@ namespace SPH {
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);
 
 		// Methods
-		void Move						(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin,size_t Scheme, Mat3_t I);	///< Update the important quantities of a particle
-		void Move_MVerlet		(Mat3_t I, double dt);										///< Update the important quantities of a particle
-		void Move_Leapfrog	(Mat3_t I, double dt);										///< Update the important quantities of a particle
-		void translate			(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin);
+
+		__device__ void Move						(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin,size_t Scheme, Mat3_t I);	///< Update the important quantities of a particle
+		__device__ void Move_MVerlet		(Mat3_t I, double dt);										///< Update the important quantities of a particle
+		__device__ void Move_Leapfrog	(Mat3_t I, double dt);										///< Update the important quantities of a particle
+		__device__ void translate			(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin);
+
 		void Mat2MVerlet		(double dt);
 		void Mat2Leapfrog		(double dt);
 		void PlasticHeatTest	();

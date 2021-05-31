@@ -11,7 +11,7 @@ inline void Domain::PrintInput(char const * FileKey)
 	String fn(FileKey);
 
 	oss << "Dimension = "<< Dimension << "D\n";
-
+ 
 	oss << "\nKernel Type = ";
 	switch (KernelType)
 	{
