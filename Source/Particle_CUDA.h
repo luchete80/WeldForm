@@ -51,11 +51,7 @@
 
 namespace SPH {
 
-<<<<<<< HEAD
-	class Particle
-=======
 	class Particle_CU
->>>>>>> master
 	{
 	public:
 		// Shepard density correction

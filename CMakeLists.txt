@@ -20,67 +20,69 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-PROJECT                (New_Test)
-cmake_policy(SET CMP0054 NEW) #elseif
+set (GPU OFF)
+
+# PROJECT                (New_Test)
+# cmake_policy(SET CMP0054 NEW) #elseif
 add_definitions(-D_CRT_NO_VA_START_VALIDATION)
 
 add_definitions(-D_USE_MATH_DEFINES) #COMPACTNSEARCH??
 
-INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
+# INCLUDE ($ENV{SPH}/Modules/FindPKG.cmake)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  # using Clang
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-MESSAGE("Using GNU compiler")
-include_directories("D:/Luciano/Numerico/blitz/include")
-link_directories("D:/Luciano/Numerico/blitz/lib")
-  # using GCC
-link_directories("D:/Luciano/Numerico/CompactNSearch_bin_mingw")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-  # using Intel C++
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-MESSAGE("Using MSVC compilers")
-# using Visual Studio C++
-include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
-include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
-include_directories("D:/Luciano/Numerico/Libs/hdf5-1.12.0_install_mswin/include")
-link_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/lib")
-link_directories("D:/Luciano/Numerico/CompactNSearch_bin_nmake_release")
+# if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  # # using Clang
+# elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+# MESSAGE("Using GNU compiler")
+# include_directories("D:/Luciano/Numerico/blitz/include")
+# link_directories("D:/Luciano/Numerico/blitz/lib")
+  # # using GCC
+# link_directories("D:/Luciano/Numerico/CompactNSearch_bin_mingw")
+# elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+  # # using Intel C++
+# elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+# MESSAGE("Using MSVC compilers")
+# # using Visual Studio C++
+# include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
+# include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
+# include_directories("D:/Luciano/Numerico/Libs/hdf5-1.12.0_install_mswin/include")
+# link_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/lib")
+# link_directories("D:/Luciano/Numerico/CompactNSearch_bin_nmake_release")
 
-include_directories("Source")
-include_directories("External")
+# include_directories("Source")
+# include_directories("External")
 
-#add_subdirectory("examples")
-endif()
+# #add_subdirectory("examples")
+# endif()
 
-include_directories("D:/Luciano/Numerico/CompactNSearch/include")
+# include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 
 
-SET(EXES
+# SET(EXES
 
-	# 1-Poiseuille
-	# 2-Couette
-	# 3-DamBreak
-	# 4-DamBreak3D
-	#Cylinder_Test
-	#Plate-Yield
-	Compression
-	#Cantilever
-	#Elastic
-	#Traction
-	#Plate-Yield_hcorr
-	#Plate-Yield_CNS
-	#Plate-Yield_Hard
-	#Plate-Yield_CNS_Hard
-	#Plate-Yield_CNS_v2
-	#Plate-Yield_3d_al
-	#Plate-Yield_3d_al_CNS
-	#SolidBlock_Heat
-	#SolidBlock_Heat_CNS
-	#Neighbour_Test
-	#Neighbour_Test_CNS
+	# # 1-Poiseuille
+	# # 2-Couette
+	# # 3-DamBreak
+	# # 4-DamBreak3D
+	# #Cylinder_Test
+	# #Plate-Yield
+	# Compression
+	# #Cantilever
+	# #Elastic
+	# #Traction
+	# #Plate-Yield_hcorr
+	# #Plate-Yield_CNS
+	# #Plate-Yield_Hard
+	# #Plate-Yield_CNS_Hard
+	# #Plate-Yield_CNS_v2
+	# #Plate-Yield_3d_al
+	# #Plate-Yield_3d_al_CNS
+	# #SolidBlock_Heat
+	# #SolidBlock_Heat_CNS
+	# #Neighbour_Test
+	# #Neighbour_Test_CNS
 
-)
+# )
 
 
 # FOREACH(var ${EXES})
