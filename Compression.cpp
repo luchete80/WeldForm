@@ -70,7 +70,7 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Qubic_Spline);
+    	dom.Kernel_Set(Quintic);
     	dom.Scheme	= 0;	//Mod Verlet
 //     	dom.XSPH	= 0.5; //Very important
 
