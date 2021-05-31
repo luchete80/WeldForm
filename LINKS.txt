@@ -1,4 +1,0 @@
-Getting a working CUDA and PyCUDA environment under bash on Windows (May 2018)
-
-
-https://axfelix.github.io/cuda.html

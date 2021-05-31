@@ -50,45 +50,26 @@ link_directories("D:/Luciano/Numerico/CompactNSearch_bin_nmake_release")
 include_directories("Source")
 include_directories("External")
 
-add_subdirectory("examples")
+#add_subdirectory("examples")
 endif()
 
 include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 
 
 SET(EXES
-	# 1-Poiseuille
-	# 2-Couette
-	# 3-DamBreak
-	# 4-DamBreak3D
-	#Cylinder_Test
-	#Plate-Yield
-	#Compression
-	Cantilever
-	#Elastic
-	#Traction
-	#Plate-Yield_hcorr
-	#Plate-Yield_CNS
-	#Plate-Yield_Hard
-	#Plate-Yield_CNS_Hard
-	#Plate-Yield_CNS_v2
-	#Plate-Yield_3d_al
-	#Plate-Yield_3d_al_CNS
-	#SolidBlock_Heat
-	#SolidBlock_Heat_CNS
-	#Neighbour_Test
-	#Neighbour_Test_CNS
+
+	Traction
+
 )
 
 
-FOREACH(var ${EXES})
-    ADD_EXECUTABLE        (${var} "${var}.cpp" 
-	"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
-	)
-    TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
-    SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
-ENDFOREACH(var)
+# FOREACH(var ${EXES})
+    # ADD_EXECUTABLE        (${var} "${var}.cpp" 
+	# "${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
+	# )
+    # TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
+    # SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
+# ENDFOREACH(var)
 
-    # ADD_EXECUTABLE        (${EXES} "Plate-Yield.cpp")
-    # TARGET_LINK_LIBRARIES (${EXES} ${LIBS} blitz)
-    # SET_TARGET_PROPERTIES (${EXES} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
+	project(WeldformCuda LANGUAGES CXX CUDA)
+    ADD_EXECUTABLE  (WeldformCuda "${CMAKE_SOURCE_DIR}/Source/Particle.cu") 
