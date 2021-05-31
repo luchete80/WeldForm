@@ -28,6 +28,27 @@
 #define TH_BC_CONVECTION	1
 #define TH_BC_CONDUCTION	2
 
+// Any method that must be called from device code should be defined with both __device__ and __host__ declspecs, 
+//including the constructor and destructor if you plan to use new/delete on the device (note new/delete require 
+//CUDA 4.0 and a compute capability 2.0 or higher GPU).
+// You probably want to define a macro like
+
+#ifdef __CUDACC__
+#define CUDA_CALLABLE_MEMBER __host__ __device__
+#else
+#define CUDA_CALLABLE_MEMBER
+#endif 
+
+// You can’t call a host function (such as cudaMalloc, cudaMemcpy) from a device function.
+// A possible fix is to remove the device attribute from member functions set() and get_result(), possibly declaring it a host function instead.
+
+// class Foo {
+// public:
+    // CUDA_CALLABLE_MEMBER Foo() {}
+    // CUDA_CALLABLE_MEMBER ~Foo() {}
+    // CUDA_CALLABLE_MEMBER void aMethod() {}
+// };
+
 namespace SPH {
 
 	class Particle
