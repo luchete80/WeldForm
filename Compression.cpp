@@ -21,7 +21,7 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	10.0
+#define VMAX	5.0
 
 
 
@@ -47,14 +47,16 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vcompress);
+			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vcompress); //VERLET
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -70,8 +72,8 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic);
-    	dom.Scheme	= 0;	//Mod Verlet
+    	dom.Kernel_Set(Qubic_Spline);
+    	dom.Scheme	= 1;	//0:Mod Verlet 1:LeapFrog
 //     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
@@ -109,7 +111,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20., dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -135,7 +137,7 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

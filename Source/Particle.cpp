@@ -145,8 +145,10 @@ inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 		ct = 30;
 		FirstStep = false;
 	}
-
-	x += dt*(v+VXSPH) + 0.5*dt*dt*a;
+	
+	Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;
+	Displacement += du;
+	x += du;
 
 	if (ct == 30) {
 		if (Shepard && ShepardCounter == ShepardStep) {
@@ -264,6 +266,8 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	va += dt*a;
 	v = (va + vb)/2.0;
 	x += dt*va;
+	
+	Displacement += dt*va;
 
     Mat2Leapfrog(dt);
 	if (FirstStep) FirstStep = false;
@@ -292,9 +296,17 @@ inline void Particle::Mat2Leapfrog(double dt) {
 						2.0*ShearStressa(1,2)*ShearStressa(2,1) + ShearStressa(2,2)*ShearStressa(2,2));
 		//Scale back, Fraser Eqn 3-53
 		ShearStressa= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStressa;
+		
+		double sig_trial = sqrt(3.0*J2);
+		if ( sig_trial > Sigmay) {
+			double dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			pl_strain += dep;
+			Sigmay += dep*Ep;
+
+		}
 	}
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);
-
+	
 	Sigma = -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
 
 	if (FirstStep)
