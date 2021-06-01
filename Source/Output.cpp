@@ -92,11 +92,12 @@ inline void Domain::WriteXDMF (char const * FileKey)
     float * sh		= new float[  Particles.Size()];
     int   * Tag			= new int  [  Particles.Size()];
     float * Sigma		= new float[6*Particles.Size()];
+    float * ShearS   	= new float[6*Particles.Size()]; 	//LUCIANO
     float * Strain		= new float[6*Particles.Size()];
-	float * Temp		= new float[  Particles.Size()];
-	float * Pl_Strain	= new float[  Particles.Size()];
-	int   * Nb			= new int  [  Particles.Size()];
-    float * Disvec	= new float[3*Particles.Size()];
+	float * Temp		= new float[  Particles.Size()];	//LUCIANO
+	float * Pl_Strain	= new float[  Particles.Size()];	//LUCIANO
+	int   * Nb			= new int  [  Particles.Size()];	//LUCIANO
+    float * Disvec	= new float[3*Particles.Size()];		//LUCIANO
 	
 	double P1,P2,P3;
 
@@ -123,6 +124,12 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Sigma   [6*i+3] = float(Particles[i]->Sigma(1,1));
         Sigma   [6*i+4] = float(Particles[i]->Sigma(1,2));
         Sigma   [6*i+5] = float(Particles[i]->Sigma(2,2));
+        ShearS   [6*i  ] = float(Particles[i]->ShearStress(0,0));
+        ShearS   [6*i+1] = float(Particles[i]->ShearStress(0,1));
+        ShearS   [6*i+2] = float(Particles[i]->ShearStress(0,2));
+        ShearS   [6*i+3] = float(Particles[i]->ShearStress(1,1));
+        ShearS   [6*i+4] = float(Particles[i]->ShearStress(1,2));
+        ShearS   [6*i+5] = float(Particles[i]->ShearStress(2,2));
         Strain  [6*i  ] = float(Particles[i]->Strain(0,0));
         Strain  [6*i+1] = float(Particles[i]->Strain(0,1));
         Strain  [6*i+2] = float(Particles[i]->Strain(0,2));
@@ -176,6 +183,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     dims[0] = 6*Particles.Size();
     dsname.Printf("Sigma");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Sigma);
+    dsname.Printf("ShearS");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Sigma);
     dsname.Printf("Strain");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain);
     dims[0] = Particles.Size();
@@ -201,6 +210,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     delete [] sh;
     delete [] Tag;
     delete [] Sigma;
+    delete [] ShearS;
     delete [] Strain;
 	delete [] Temp;
 	delete [] Pl_Strain;
@@ -272,6 +282,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "     <Attribute Name=\"Sigma\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Sigma \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
+	oss << "     <Attribute Name=\"ShearS\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/ShearS \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Strain\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
