@@ -47,16 +47,16 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vcompress); //VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);//LEAPFROG
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vcompress); //VERLET
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -91,7 +91,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.015;
+		dx = 0.010;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -114,7 +114,7 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed) {
 										
 
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20. + dx, dx/2., rho, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
