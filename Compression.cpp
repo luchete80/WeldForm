@@ -21,7 +21,7 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	5.0
+#define VMAX	10.0
 
 
 
@@ -54,8 +54,8 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vcompress); //VERLET
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
 			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
@@ -72,7 +72,7 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic_Spline);
+    	dom.Kernel_Set(Hyperbolic_Spline);
 
     	dom.Scheme	= 0;	//Mod Verlet
 
@@ -91,8 +91,8 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.015;
-    	h	= dx*1.3; //Very important
+		dx = 0.010;
+    	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;

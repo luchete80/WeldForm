@@ -274,6 +274,18 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 
 }
 
+inline void Particle::CalculateEquivalentStress () {
+	// Sigma_eq	= sqrt ( Sigma(0,0)*Sigma(0,0) + Sigma(1,1)*Sigma(1,1) + Sigma(2,2)*Sigma(2,2) -
+						// ( Sigma(0,0)*Sigma(1,1) + Sigma(1,1)*Sigma(2,2) + Sigma(0,0)*Sigma(2,2) ) + 
+					// 3.0*(Sigma(0,1)*Sigma(0,1) + Sigma(1,2)*Sigma(1,2) + Sigma(0,2)*Sigma(0,2)));
+
+	double J2	= 0.5*(ShearStress(0,0)*ShearStress(0,0) + 2.0*ShearStress(0,1)*ShearStress(1,0) +
+						2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
+						2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
+	
+	Sigma_eq = sqrt(3.0*J2);	
+}
+
 inline void Particle::Mat2Leapfrog(double dt) {
 	Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
 

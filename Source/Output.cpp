@@ -94,6 +94,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     float * Sigma		= new float[6*Particles.Size()];
     float * ShearS   	= new float[6*Particles.Size()]; 	//LUCIANO
     float * Strain		= new float[6*Particles.Size()];
+	float * StrainRate	= new float[6*Particles.Size()];
+	float * Sigma_eq	= new float[  Particles.Size()];	//LUCIANO
 	float * Temp		= new float[  Particles.Size()];	//LUCIANO
 	float * Pl_Strain	= new float[  Particles.Size()];	//LUCIANO
 	int   * Nb			= new int  [  Particles.Size()];	//LUCIANO
@@ -104,6 +106,9 @@ inline void Domain::WriteXDMF (char const * FileKey)
     #pragma omp parallel for schedule (static) private(P1,P2,P3) num_threads(Nproc)
     for (int i=0;i<Particles.Size();i++)
     {
+		//LUCIANO 
+		Particles[i]->CalculateEquivalentStress();
+		
         Posvec  [3*i  ] = float(Particles[i]->x(0));
         Posvec  [3*i+1] = float(Particles[i]->x(1));
         Posvec  [3*i+2] = float(Particles[i]->x(2));
@@ -136,9 +141,18 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Strain  [6*i+3] = float(Particles[i]->Strain(1,1));
         Strain  [6*i+4] = float(Particles[i]->Strain(1,2));
         Strain  [6*i+5] = float(Particles[i]->Strain(2,2));
+        StrainRate  [6*i  ] = float(Particles[i]->StrainRate(0,0));
+        StrainRate  [6*i+1] = float(Particles[i]->StrainRate(0,1));
+        StrainRate  [6*i+2] = float(Particles[i]->StrainRate(0,2));
+        StrainRate  [6*i+3] = float(Particles[i]->StrainRate(1,1));
+        StrainRate  [6*i+4] = float(Particles[i]->StrainRate(1,2));
+        StrainRate  [6*i+5] = float(Particles[i]->StrainRate(2,2));
+		Sigma_eq[i    ] = float(Particles[i]->Sigma_eq);
 		Temp	[i    ] = float(Particles[i]->T);
 		Pl_Strain	[i] = float(Particles[i]->pl_strain);
 		Nb		[i    ] = int(Particles[i]->Nb);
+		
+		
         Disvec  [3*i  ] = float(Particles[i]->Displacement(0));
         Disvec  [3*i+1] = float(Particles[i]->Displacement(1));
         Disvec  [3*i+2] = float(Particles[i]->Displacement(2));		
@@ -187,7 +201,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Sigma);
     dsname.Printf("Strain");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain);
+    dsname.Printf("StrainRate");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,StrainRate);
     dims[0] = Particles.Size();
+	dsname.Printf("Sigma_eq");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Sigma_eq);
 	dsname.Printf("Temperature");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Temp);
     dsname.Printf("Pl_Strain");
@@ -212,7 +230,9 @@ inline void Domain::WriteXDMF (char const * FileKey)
     delete [] Sigma;
     delete [] ShearS;
     delete [] Strain;
+    delete [] StrainRate;
 	delete [] Temp;
+	delete [] Sigma_eq;
 	delete [] Pl_Strain;
 	delete [] Nb;
 	delete [] Disvec;
@@ -294,9 +314,19 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/Strain \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"StrainRate\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/StrainRate \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Temperature\" AttributeType=\"Scalar\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Temperature \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"Sigma_eq\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/Sigma_eq \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Pl_Strain\" AttributeType=\"Scalar\" Center=\"Node\">\n";

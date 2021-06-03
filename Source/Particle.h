@@ -85,7 +85,9 @@ namespace SPH {
 
 		Mat3_t	Sigmaa;		///< Cauchy stress tensor (Total Stress) n+1/2 (Leapfrog)
 		Mat3_t	Sigmab;		///< Cauchy stress tensor (Total Stress) n-1 (Modified Verlet)
-
+		
+		double Sigma_eq;	//Von Mises
+		
 		Mat3_t	Strain;		///< Total Strain n+1
 		Mat3_t	Straina;	///< Total Strain n+1/2 (Leapfrog)
 		Mat3_t	Strainb;	///< Total Strain n-1 (Modified Verlet)
@@ -143,6 +145,8 @@ namespace SPH {
 		void Mat2Leapfrog		(double dt);
 		void PlasticHeatTest	();
 		void CalcPlasticWorkHeat();
+		void CalculateEquivalentStress();
+		
 
 	};
 }; // namespace SPH
