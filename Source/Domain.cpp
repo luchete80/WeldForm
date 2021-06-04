@@ -1382,7 +1382,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Particles[p]->Nb=nb[p];
 	}
 	
-	int ts_nb_inc=200000;	// Always > 0
+	int ts_nb_inc=5;	// Always > 0
 	int ts_i=0;
 
 	bool isfirst = true;
@@ -1402,14 +1402,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				imax=i;
 			}
 		}	
-		//if (max>0.05 || isfirst){	//TO MODIFY: CHANGE
+		if (max>0.05 || isfirst){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				MainNeighbourSearch();
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
-		//	isfirst = false;
-		//}
+			isfirst = false;
+		}
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
@@ -1473,24 +1473,26 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
-		if ( ts_i == (ts_nb_inc - 1) ){
-		// if (max>0.01){
-			for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
-				SMPairs[i].Clear();
-				FSMPairs[i].Clear();
-				NSMPairs[i].Clear();
-			}
-			CellReset();
-			ListGenerate();
-		// }
+		if (max>0.01){	//TODO: CHANGE TO FIND NEIGHBOURS
+			if ( ts_i == (ts_nb_inc - 1) ){
 			
+				for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
+					SMPairs[i].Clear();
+					FSMPairs[i].Clear();
+					NSMPairs[i].Clear();
+				}
+				CellReset();
+				ListGenerate();
+
+			}
+
+			ts_i ++;
+			if ( ts_i > (ts_nb_inc - 1) ) 
+				ts_i = 0;
+		
 		}
 		
-		ts_i ++;
-		if ( ts_i > (ts_nb_inc - 1) ) 
-			ts_i = 0;
-		
-		
+	
 	}
 	
 
