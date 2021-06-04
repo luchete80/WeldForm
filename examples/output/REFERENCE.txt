@@ -1,0 +1,13 @@
+with this exemple you can find the correct order.
+
+for tensor6 the order is 0 1 2 1 3 4 2 4 5 so like in a matrix
+0 1 2
+1 3 4
+2 4 6
+
+I am pretty sure that for tensor the order is  0 1 2 3 4 5 6 7 8
+0 1 2
+3 4 5
+6 7 8
+
+but you have to check

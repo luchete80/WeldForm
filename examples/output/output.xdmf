@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<!DOCTYPE Xdmf SYSTEM "Xdmf.dtd" []>
+<Xdmf Version="2.0" xmlns:xi="http://www.w3.org/2001/XInclude" >
+<Domain Name="ASCII.xdmf">
+<Grid Name="Domain 1x1x1" >
+<Topology TopologyType="Quadrilateral" NumberOfElements="1" >
+<DataItem  Format="XML" NumberType="int" Dimensions="1 6">
+  0 1 2 3
+</DataItem>
+</Topology>
+<Geometry GeometryType="XYZ">
+<DataItem  Format="XML" NumberType="Float" Dimensions="6 3">
+  0. 0. 0.
+  1. 0. 0.
+  1. 1. 0.
+  0. 1. 0.
+</DataItem>
+</Geometry>
+<Attribute Name="tensor6" Center="Cell"  AttributeType="Tensor6" >
+<DataItem  Format="XML" NumberType="Float" Dimensions="1 6">
+  0.0000000000000000  1.0000000000000000 2.0000000000000000 
+3.0000000000000000 4.0000000000000000 5.0000000000000000
+</DataItem>
+</Attribute>
+<Attribute Name="tensor" Center="Cell"  AttributeType="Tensor" >
+<DataItem  Format="XML" NumberType="Float" Dimensions="1 9">
+  0.0000000000000000 1 2 3 4 5 6 7 8
+</DataItem>
+</Attribute>
+</Grid>
+</Domain>
+</Xdmf>
