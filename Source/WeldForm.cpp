@@ -20,6 +20,11 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
+#include <iomanip>	//ONY FOR GCC!!
+
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -63,6 +68,15 @@ void UserAcc(SPH::Domain & domi)
 	}
 }
 
+template <typename T>
+bool readValue(const nlohmann::json &j, T &v)
+{
+	if (j.is_null())
+		return false;
+
+	v = j.get<T>();
+	return true;
+}
 
 using std::cout;
 using std::endl;
@@ -72,16 +86,30 @@ int main(int argc, char **argv) try
 
 	if (argc > 1) {
 		string inputFileName=argv[1];	
-		std::ifstream i(argv);
+		std::ifstream i(argv[1]);
 		json j;
 		i >> j;
 		
-		nlohmann::json config = j["Configuration"];
-	
-       SPH::Domain	dom;
-
-        dom.Dimension	= 3;
-        dom.Nproc	= 4;
+		nlohmann::json config 		= j["Configuration"];
+		nlohmann::json materials 	= j["Materials"];
+		nlohmann::json blocks 		= j["Materials"];
+		
+		SPH::Domain	dom;
+		
+		bool sim2D;
+		double ts;
+		//config["timeStepSize"].get<ts>;
+		readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
+		readValue(config["sim2D"], sim2D);
+		
+		if (sim2D)
+			dom.Dimension	= 2;
+        else
+			dom.Dimension	= 3;
+		
+		dom.Nproc	= 4;
+		string kernel;
+		readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
     	dom.Kernel_Set(Qubic_Spline);
 
     	dom.Scheme	= 2;	//Mod Verlet
@@ -101,7 +129,8 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.010;
+		readValue(config["particleRadius"], dx);
+		//dx = 0.010;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -115,6 +144,7 @@ int main(int argc, char **argv) try
         cout<<"K  = "<<K<<endl;
         cout<<"G  = "<<G<<endl;
         cout<<"Fy = "<<Fy<<endl;
+		cout<<"dx = "<<dx<<endl;
     	dom.GeneralAfter = & UserAcc;
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;

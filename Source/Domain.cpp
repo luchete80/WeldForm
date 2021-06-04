@@ -1382,7 +1382,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Particles[p]->Nb=nb[p];
 	}
 	
-	int ts_nb_inc=5;	// Always > 0
+	int ts_nb_inc=200000;	// Always > 0
 	int ts_i=0;
 
 	bool isfirst = true;
