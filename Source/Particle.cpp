@@ -112,8 +112,10 @@ inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_
 {
 	if (Scheme == 0)
 		Move_MVerlet(I, dt);
-	else
+	else if (Scheme == 1)
 		Move_Leapfrog(I, dt);
+	else 
+		Move_Verlet(I, dt);
 
 
 	//Periodic BC particle position update
@@ -134,8 +136,6 @@ inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_
 	}
 
 }
-
-
 
 inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 {
@@ -250,10 +250,34 @@ inline void Particle::Mat2MVerlet(double dt) {
 	}
 }
 
+//LUCIANO
+inline void Particle::Move_Verlet (Mat3_t I, double dt) {
+
+	if (FirstStep) {
+		Densityb		= Density;
+		Density			+=dt*dDensity;
+		FirstStep = false;
+	}
+
+	Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;
+	Displacement += du;
+	x += du;
+
+	double dens	= Density;
+	Density		= Densityb + 2.0*dt*dDensity;
+	Densityb	= dens;		
+
+	Vec3_t temp;
+	temp	= v;
+	v		= vb + 2*dt*a;
+	vb		= temp;	
+
+    Mat2MVerlet(dt);	//This uses the same as modified verlet as ct always is != 30
+}
+
 inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 {
-	if (FirstStep)
-	{
+	if (FirstStep) {
 		Densitya = Density - dt/2.0*dDensity;
 		va = v - dt/2.0*a;
 	}

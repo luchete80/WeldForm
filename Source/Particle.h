@@ -139,6 +139,7 @@ namespace SPH {
 		// Methods
 		void Move						(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin,size_t Scheme, Mat3_t I);	///< Update the important quantities of a particle
 		void Move_MVerlet		(Mat3_t I, double dt);										///< Update the important quantities of a particle
+		void Move_Verlet		(Mat3_t I, double dt);		//LUCIANO
 		void Move_Leapfrog	(Mat3_t I, double dt);										///< Update the important quantities of a particle
 		void translate			(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin);
 		void Mat2MVerlet		(double dt);

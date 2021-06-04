@@ -1382,10 +1382,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Particles[p]->Nb=nb[p];
 	}
 	
-	int ts_nb_inc=200000;	// Always > 0
+	int ts_nb_inc=5;	// Always > 0
 	int ts_i=0;
+
+	bool isfirst = true;
 	
-	while (Time<tf && idx_out<=maxidx) {
+	while (Time<=tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
 		//if (BC.InOutFlow>0) InFlowBCFresh();
 		auto start_task = std::chrono::system_clock::now();
@@ -1400,13 +1402,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				imax=i;
 			}
 		}	
-		// if (max>0.01){
-		if ( ts_i == 0 ){
-			clock_beg = clock();
-			MainNeighbourSearch();
-			neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		}
-		// }
+		//if (max>0.05 || isfirst){	//TO MODIFY: CHANGE
+			if ( ts_i == 0 ){
+				clock_beg = clock();
+				MainNeighbourSearch();
+				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+			}
+		//	isfirst = false;
+		//}
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 

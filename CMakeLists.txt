@@ -65,6 +65,8 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
 	Compression
+	#Compression_10ts
+	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
 	#Cantilever
 	#Elastic

@@ -1,3 +1,4 @@
+#include "Input.h"
 /***********************************************************************************
 * PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
 *             and soils) using Smoothed Particle Hydrodynamics method              *   
@@ -68,6 +69,15 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
+
+	if (argc > 1) {
+		string inputFileName=argv[1];	
+		std::ifstream i(argv);
+		json j;
+		i >> j;
+		
+		nlohmann::json config = j["Configuration"];
+	
        SPH::Domain	dom;
 
         dom.Dimension	= 3;
@@ -148,6 +158,9 @@ int main(int argc, char **argv) try
 		dom.BC.InOutFlow = 0;
 
     	dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.00005,"test06",999);
-        return 0;
+	}	//Argc > 0
+	
+    return 0;
 }
+
 MECHSYS_CATCH

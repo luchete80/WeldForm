@@ -56,7 +56,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
 			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.);//LEAPFROG
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -74,7 +74,7 @@ int main(int argc, char **argv) try
         dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
 
-    	dom.Scheme	= 2;	//Mod Verlet
+    	dom.Scheme	= 1;	//Mod Verlet
 
      	//dom.XSPH	= 0.5; //Very important
 
@@ -92,13 +92,13 @@ int main(int argc, char **argv) try
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
 		dx = 0.010;
-    	h	= dx*1.1; //Very important
+    	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
-        timestep = (0.2*h/(Cs));
+        //timestep = (0.2*h/(Cs));
 		
-		//timestep = 2.5e-6;
+		timestep = 5.e-7;
 
         cout<<"t  = "<<timestep<<endl;
         cout<<"Cs = "<<Cs<<endl;
@@ -114,7 +114,7 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed) {
 										
 
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/20.-dx), R, L + 2.*L/20. + 2*dx, dx/2., rho, h, false); 
 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
@@ -147,7 +147,7 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.00005,"test06",999);
+    	dom.Solve(/*tf*/5.5e-5,/*dt*/timestep,/*dtOut*/5.e-6,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

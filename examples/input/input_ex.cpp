@@ -44,14 +44,31 @@ using json = nlohmann::json;
     // };
 // }
 
+template <typename T>
+bool readValue(const nlohmann::json &j, T &v)
+{
+	if (j.is_null())
+		return false;
+
+	v = j.get<T>();
+	return true;
+}
+
+
 int main(){
 
 	std::ifstream i("input.json");
 	json j;
 	i >> j;
 	
-	std::cout << j["Configuration"]["pause"] << std::endl;    // returns boolean
+	//std::cout << j{"Configuration"}["pause"] << std::endl;    // returns boolean
 	
+	nlohmann::json config = j["Configuration"];
+	
+	double ts;
+	//config["timeStepSize"].get<ts>;
+	readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
+	std::cout << "Time Step size is: "<<ts<<std::endl;
 	// for(auto &array : j["objList"]) {
     // std::cout << array["key1"] << std::endl;    // returns string
     // std::cout << array["key2"] << std::endl;    // returns array
