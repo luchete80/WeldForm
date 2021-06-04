@@ -50,8 +50,9 @@ link_directories("D:/Luciano/Numerico/CompactNSearch_bin_nmake_release")
 include_directories("Source")
 include_directories("External")
 
-add_subdirectory("examples")
 endif()
+
+add_subdirectory("examples")
 
 include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 

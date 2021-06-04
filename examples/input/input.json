@@ -1,0 +1,28 @@
+"Configuration": 
+{
+    "sim2D": false, 
+    "timeStepSize": 0.001,
+    "particleRadius": 0.025, 
+    "simulationMethod": 4,
+	"Kernel":,
+	"GradKernel":,
+    "gravitation": [0.0,-9.81,0], 
+    "cflMethod": 1, 
+    "cflFactor": 1,
+    "cflMaxTimeStepSize": 0.005,
+    "maxIterations": 100,
+    "maxError": 0.01,
+    "maxIterationsV": 100,
+    "maxErrorV": 0.1
+}
+
+"FluidBlocks": [
+    {
+        "denseMode": 0,
+        "start": [-2.0, 0.0, -1],
+        "end": [-0.5, 1.5, 1],
+        "translation": [1.0, 0.0, 0.0],
+        "scale": [1, 1, 1]
+    }
+]	
+

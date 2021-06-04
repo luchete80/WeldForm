@@ -21,7 +21,7 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	10.0
+#define VMAX	5.0
 
 
 
@@ -54,8 +54,8 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vcompress); //VERLET
 			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
@@ -134,8 +134,8 @@ int main(int argc, char **argv) try
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-				dom.Particles[a]->IsFree=false;
-				dom.Particles[a]->NoSlip=true;
+				// dom.Particles[a]->IsFree=false;
+				// dom.Particles[a]->NoSlip=true;
 			} else if ( z > L ){
     			dom.Particles[a]->ID=3;
 				// dom.Particles[a]->IsFree=false;
