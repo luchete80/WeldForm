@@ -20,16 +20,12 @@
 ************************************************************************************/
 
 #include "Domain.h"
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
-
-#include <iomanip>	//ONY FOR GCC!!
-
+#include "Input.h"
 
 #define TAU		0.005
 #define VMAX	10.0
 
-
+#define PRINTVEC(v)	cout << v[0]<<", "<<v[1]<<", "<<v[2]<<endl;
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -53,36 +49,30 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
+
+			if (domi.Scheme == 1 )
+				domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//VERLET
+			else
+				domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.);//LEAPFROG
+			if (domi.Scheme == 1 )
+				domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//VERLET
+			else
+				domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
 }
 
-template <typename T>
-bool readValue(const nlohmann::json &j, T &v)
-{
-	if (j.is_null())
-		return false;
-
-	v = j.get<T>();
-	return true;
-}
-
 using std::cout;
 using std::endl;
 
-int main(int argc, char **argv) try
-{
+int main(int argc, char **argv) try {
 
 	if (argc > 1) {
 		string inputFileName=argv[1];	
@@ -91,15 +81,14 @@ int main(int argc, char **argv) try
 		i >> j;
 		
 		nlohmann::json config 		= j["Configuration"];
-		nlohmann::json materials 	= j["Materials"];
-		nlohmann::json blocks 		= j["Materials"];
+		nlohmann::json material 	= j["Material"];
+		nlohmann::json domblock 	= j["DomainBlock"];
 		
 		SPH::Domain	dom;
 		
 		bool sim2D;
 		double ts;
-		//config["timeStepSize"].get<ts>;
-		readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
+		
 		readValue(config["sim2D"], sim2D);
 		
 		if (sim2D)
@@ -111,83 +100,109 @@ int main(int argc, char **argv) try
 		string kernel;
 		readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
     	dom.Kernel_Set(Qubic_Spline);
-
-    	dom.Scheme	= 2;	//Mod Verlet
+		
+		readValue(config["integrationMethod"], dom.Scheme); //0:Verlet, 1:LeapFrog, 2: Modified Verlet
 
      	//dom.XSPH	= 0.5; //Very important
 
-        double dx,h,rho,K,G,Cs,Fy;
-    	double R,L,n;
+        double dx,r,h;
 
-    	R	= 0.15;
-    	L	= 0.56;
-    	n	= 30.0;		//in length, radius is same distance
+
+		readValue(config["particleRadius"], r);
+		double hfactor;
+		readValue(config["hFactor"], hfactor);
+
+    	dom.GeneralAfter = & UserAcc;
 		
-    	rho	= 2700.0;
-    	K	= 6.7549e10;
-    	G	= 2.5902e10;
-		Fy	= 300.e6;
-    	//dx	= L / (n-1);
-		//dx = L/(n-1);
-		readValue(config["particleRadius"], dx);
-		//dx = 0.010;
-    	h	= dx*1.1; //Very important
+	
+		//////////////
+		// MATERIAL //
+		//////////////
+		double rho,E,nu,K,G,Cs,Fy;
+    	readValue(material["density0"], 		rho);
+    	readValue(material["youngsModulus"], 	E);
+    	readValue(material["poissonsRatio"], 	nu);
+    	readValue(material["yieldStress0"], 	Fy);
+		
+		K= E / ( 3.*(1.-2*nu) );
+		G= E / (2.* (1.+nu));
+
+		dx 	= 2.*r;
+    	h	= dx*hfactor; //Very important
         Cs	= sqrt(K/rho);
 
-        double timestep;
-        timestep = (0.2*h/(Cs));
+        double timestep,cflFactor;
+		int cflMethod;
+		readValue(config["cflMethod"], cflMethod);
+		if (cflMethod == 0)
+			readValue(config["timeStepSize"], timestep);
+		else {
+			readValue(config["cflFactor"], cflFactor);
+			timestep = (cflFactor*h/(Cs));
+		}
+
+		////////////
+		// DOMAIN //
+		////////////
+		Vec3_t start,L;
+		readVector(domblock["start"], 	start);
+		readVector(domblock["dim"], 	L);
+        for (int i=0;i<3;i++) {//TODO: Increment by Start Vector
+			dom.DomMax(0) = L[i];
+			dom.DomMin(0) = -L[i];
+		}		
+
 		
-		//timestep = 2.5e-6;
-
-        cout<<"t  = "<<timestep<<endl;
-        cout<<"Cs = "<<Cs<<endl;
-        cout<<"K  = "<<K<<endl;
-        cout<<"G  = "<<G<<endl;
-        cout<<"Fy = "<<Fy<<endl;
-		cout<<"dx = "<<dx<<endl;
-    	dom.GeneralAfter = & UserAcc;
-        dom.DomMax(0) = L;
-        dom.DomMin(0) = -L;
-
-
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
-										
-
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
+												
+		//dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, r, rho, h, false); 
+		
+		//dom.AddCylinderLength(1, start, L[0], L[2], r, rho, h, false); 
 
 		
+
+        cout <<"t  			= "<<timestep<<endl;
+        cout <<"Cs 			= "<<Cs<<endl;
+        cout <<"K  			= "<<E<<endl;
+        cout <<"G  			= "<<nu<<endl;
+        cout <<"Fy 			= "<<Fy<<endl;
+		cout <<"dx 			= "<<dx<<endl;
+		cout <<"h  			= "<<h<<endl;
+		cout <<"-------------------------"<<endl;
+		cout <<	"Dim: "<<dom.Dimension<<endl;				
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		dom.Particles[a]->G		= G;
-    		dom.Particles[a]->PresEq	= 0;
-    		dom.Particles[a]->Cs		= Cs;
-    		dom.Particles[a]->Shepard	= false;
-    		dom.Particles[a]->Material	= 2;
-    		dom.Particles[a]->Fail		= 1;
-    		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 0.0;
-			dom.Particles[a]->Beta		= 0.0;
-    		dom.Particles[a]->TI		= 0.3;
+    		dom.Particles[a]->G				= G;
+    		dom.Particles[a]->PresEq		= 0;
+    		dom.Particles[a]->Cs			= Cs;
+    		dom.Particles[a]->Shepard		= false;
+    		dom.Particles[a]->Material		= 2;
+    		dom.Particles[a]->Fail			= 1;
+    		dom.Particles[a]->Sigmay		= Fy;
+    		dom.Particles[a]->Alpha			= 0.0;
+			dom.Particles[a]->Beta			= 0.0;
+    		dom.Particles[a]->TI			= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
+			
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
 				dom.Particles[a]->IsFree=false;
 				dom.Particles[a]->NoSlip=true;
-			} else if ( z > L ){
+			} else if ( z > L[2] ){
     			dom.Particles[a]->ID=3;
 				// dom.Particles[a]->IsFree=false;
 				// dom.Particles[a]->NoSlip=true;
 			}
     	}
-		dom.WriteXDMF("maz");
-		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
-		dom.BC.InOutFlow = 0;
+		// dom.WriteXDMF("maz");
+		// dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
+		// dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.00005,"test06",999);
+    	//dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.00005,"test06",999);
 	}	//Argc > 0
 	
     return 0;

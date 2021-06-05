@@ -47,16 +47,16 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.);//LEAPFROG
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}

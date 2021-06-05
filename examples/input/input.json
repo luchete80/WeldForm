@@ -3,47 +3,64 @@
 {
 	"pause": true,
 	"sim2D": false, 
-	"timeStepSize": 0.001,
-	"particleRadius": 0.025, 
+	"timeStepSize": 5.0e-5,
+	"particleRadius": 0.005, 
+	"hFactor": 1.1,
 	"simulationMethod": 4,
 	"gravitation": [0.0,-9.81,0], 
-	"cflMethod": 1, 
-	"cflFactor": 1,
+	"cflMethod": 0, 
+	"cflFactor": 0.2,
 	"cflMaxTimeStepSize": 0.005,
-	"integrationMethod":"Verlet",
+	"integrationMethod": 0,
+	"nbsearchFrec": 0,
+	"tiFactor": 0.3,
+	"tiInitDistance": 0.01,
 	"maxIterations": 100,
 	"maxError": 0.01,
 	"maxIterationsV": 100,
 	"maxErrorV": 0.1
 }
+,
+"Material": 
+{
+	"id": "Solid",
+	"density0": 2700.0, 
+	"youngsModulus": 68.9E9, 
+	"poissonsRatio": 0.33,
+	"yieldStress0": 3.0E6,
+	"surfaceTension": 0.2,
+	"surfaceTensionMethod": 0,		
+	"viscosity": 0.01,
+	"viscosityMethod": 1, 
+	"vorticityMethod": 1, 
+	"vorticity": 0.15, 
+	"viscosityOmega": 0.05,
+	"inertiaInverse": 0.5
+},
 
-"Materials": [
-	{
-        "id": "Solid",
-        "density0": 2700, 
-		"youngsModulus ": 68.9e9, 
-		"poissonsRatio ": 0.33,
-		"yieldStress ": 3.e6,
-        "surfaceTension": 0.2,
-        "surfaceTensionMethod": 0,		
-        "viscosity": 0.01,
-        "viscosityMethod": 1, 
-        "vorticityMethod": 1, 
-        "vorticity": 0.15, 
-        "viscosityOmega": 0.05,
-        "inertiaInverse": 0.5
-	}
+"DomainBlock": 
+{
+	"type": 1,
+	"zoneId": 1,
+	"denseMode": 0,
+	"start": [ 0.0, 0.0, -0.056],
+	"dim": [0.3, 0.0, 0.56],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1]
+},
+
+"DomainZones": [
+{
+	"id": 1,
+	"start":[-1.0,-1.0,-0.056],
+	"end": 	[ 1.0, 1.0, 0.0]
+},
+{
+	"id": 2,
+	"denseMode": 0,
+	"start":[-1.0,-1.0,-0.056],
+	"end": 	[ 1.0, 1.0, 0.0]
+}
 ]
-
-"DomainBlocks": [
-    {
-		"type": 1,
-        "denseMode": 0,
-        "start": [-2.0, 0.0, -1],
-        "dim": [-0.5, 1.5, 1],
-        "translation": [1.0, 0.0, 0.0],
-        "scale": [1, 1, 1]
-    }
-]	
 
 }

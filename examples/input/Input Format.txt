@@ -1,0 +1,11 @@
+CFL:
+cflMethod (int): CFL method used for adaptive time stepping.
+
+0: No adaptive time stepping
+1: Use CFL condition
+2: Use CFL condition and consider number of pressure solver iterations
+
+cflFactor (float): Factor to scale the CFL time step size.
+cflMinTimeStepSize (float): Min. allowed time step size.
+cflMaxTimeStepSize (float): Max. allowed time step size.
+
