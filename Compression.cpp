@@ -47,16 +47,14 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
-			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.);//LEAPFROG
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -73,10 +71,8 @@ int main(int argc, char **argv) try
         dom.Dimension	= 3;
         dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
-
-    	dom.Scheme	= 2;	//Mod Verlet
-
-     	//dom.XSPH	= 0.5; //Very important
+    	dom.Scheme	= 0;	//Mod Verlet
+//     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
@@ -91,7 +87,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.010;
+		dx = 0.015;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -99,7 +95,7 @@ int main(int argc, char **argv) try
         timestep = (0.2*h/(Cs));
 		
 		//timestep = 2.5e-6;
-
+  
         cout<<"t  = "<<timestep<<endl;
         cout<<"Cs = "<<Cs<<endl;
         cout<<"K  = "<<K<<endl;
@@ -113,9 +109,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-
 		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
-
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -128,26 +122,20 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 0.0;
-			dom.Particles[a]->Beta		= 0.0;
+    		dom.Particles[a]->Alpha		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 ){
+    		if ( z < 0 )
     			dom.Particles[a]->ID=2;
-				dom.Particles[a]->IsFree=false;
-				dom.Particles[a]->NoSlip=true;
-			} else if ( z > L ){
+    		if ( z > L )
     			dom.Particles[a]->ID=3;
-				// dom.Particles[a]->IsFree=false;
-				// dom.Particles[a]->NoSlip=true;
-			}
     	}
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/0.01015,/*dt*/timestep,/*dtOut*/0.00005,"test06",999);
+    	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

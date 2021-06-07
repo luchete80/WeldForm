@@ -860,6 +860,7 @@ inline void Domain::MainNeighbourSearch() {
 	#pragma omp parallel for schedule (dynamic) num_threads(Nproc)
     	for (q1=0;q1<CellNo[0]; q1++)	YZPlaneCellsNeighbourSearch(q1);
     }
+	m_isNbDataCleared = false;
 }
 
 inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
@@ -1327,6 +1328,18 @@ inline void Domain::Solve_orig (double tf, double dt, double dtOut, char const *
 }
 
 
+inline void Domain::ClearNbData(){
+	
+	for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
+		SMPairs[i].Clear();
+		FSMPairs[i].Clear();
+		NSMPairs[i].Clear();
+	}
+	CellReset();
+	ListGenerate();
+	m_isNbDataCleared = true;
+}
+
 inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
@@ -1386,6 +1399,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	int ts_i=0;
 
 	bool isfirst = true;
+	bool isyielding = false;
 	
 	while (Time<=tf && idx_out<=maxidx) {
 		StartAcceleration(Gravity);
@@ -1402,14 +1416,21 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				imax=i;
 			}
 		}	
-		if (max>0.05 || isfirst){	//TO MODIFY: CHANGE
+		
+		// if (max > 0.001 && isyielding){ //First time yielding, data has not been cleared from first search
+			// ClearNbData();
+			// isyielding  = true ;
+			// MainNeighbourSearch();
+		// }
+		// if ( max > 0.001 || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
-				MainNeighbourSearch();
+				//if (m_isNbDataCleared)
+					MainNeighbourSearch();
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
-			isfirst = false;
-		}
+			// isfirst = false;
+		// }
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
@@ -1473,24 +1494,16 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
-		if (max>0.01){	//TODO: CHANGE TO FIND NEIGHBOURS
+		//if (max>0.01){	//TODO: CHANGE TO FIND NEIGHBOURS
 			if ( ts_i == (ts_nb_inc - 1) ){
-			
-				for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
-					SMPairs[i].Clear();
-					FSMPairs[i].Clear();
-					NSMPairs[i].Clear();
-				}
-				CellReset();
-				ListGenerate();
-
+				ClearNbData();
 			}
 
 			ts_i ++;
 			if ( ts_i > (ts_nb_inc - 1) ) 
 				ts_i = 0;
 		
-		}
+		//}
 		
 	
 	}

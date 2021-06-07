@@ -98,7 +98,9 @@ public:
     void CellInitiate		();															//Find the size of the domain as a cube, make cells and HOCs
     void ListGenerate		();															//Generate linked-list
     void CellReset			();															//Reset HOCs and particles' LL to initial value of -1
-
+	
+	void ClearNbData();	
+	
     void WriteXDMF			(char const * FileKey);					//Save a XDMF file for the visualization
 
 
@@ -178,6 +180,7 @@ public:
 	double T_inf;			//LUCIANO: IN CASE OF ONLY ONE CONVECTION TEMPERAURE
 	
 	iKernel m_kernel;
+	bool					m_isNbDataCleared;
 	
 	
 	private:

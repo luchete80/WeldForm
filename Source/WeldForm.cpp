@@ -145,8 +145,10 @@ int main(int argc, char **argv) try {
 		// DOMAIN //
 		////////////
 		Vec3_t start,L;
+		int domtype=0;
 		readVector(domblock["start"], 	start);
 		readVector(domblock["dim"], 	L);
+		readValue(domblock["type"], 	domtype);
         for (int i=0;i<3;i++) {//TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
 			dom.DomMin(0) = -L[i];
@@ -158,9 +160,15 @@ int main(int argc, char **argv) try {
 												
 		//dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, r, rho, h, false); 
 		
-		//dom.AddCylinderLength(1, start, L[0], L[2], r, rho, h, false); 
-
-		
+		cout << "Dimensions: "<<endl;
+		PRINTVEC(L)
+		if (domtype == 0){
+			if (sim2D)
+				L[2]=0.;		
+			dom.AddBoxLength(1 ,start, L[0] , L[1] + 2. * dx/10.0 ,  L[2] , r ,rho, h, 1 , 0 , false, false );		
+		}
+		else
+			dom.AddCylinderLength(1, start, L[0]/2., L[2], r, rho, h, false); 
 
         cout <<"t  			= "<<timestep<<endl;
         cout <<"Cs 			= "<<Cs<<endl;
