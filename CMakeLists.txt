@@ -82,7 +82,7 @@ SET(EXES
 	#SolidBlock_Heat_CNS
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
+	#"Source/WeldForm"
 )
 
 

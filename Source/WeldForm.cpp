@@ -83,6 +83,7 @@ int main(int argc, char **argv) try {
 		nlohmann::json config 		= j["Configuration"];
 		nlohmann::json material 	= j["Material"];
 		nlohmann::json domblock 	= j["DomainBlock"];
+		nlohmann::json domzones 	= j["DomainZones"];
 		
 		SPH::Domain	dom;
 		
@@ -165,7 +166,7 @@ int main(int argc, char **argv) try {
 		if (domtype == 0){
 			if (sim2D)
 				L[2]=0.;		
-			dom.AddBoxLength(1 ,start, L[0] , L[1] + 2. * dx/10.0 ,  L[2] , r ,rho, h, 1 , 0 , false, false );		
+			dom.AddBoxLength(1 ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 		}
 		else
 			dom.AddCylinderLength(1, start, L[0]/2., L[2], r, rho, h, false); 
@@ -195,6 +196,8 @@ int main(int argc, char **argv) try {
     		dom.Particles[a]->TI			= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
 			
+		
+			
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
@@ -206,6 +209,32 @@ int main(int argc, char **argv) try {
 				// dom.Particles[a]->NoSlip=true;
 			}
     	}
+		
+		for (auto& zone : domzones) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
+			// MaterialData* data = new MaterialData();
+			int zoneid;
+			Vec3_t start,end;
+			readValue(zone["id"], 		zoneid);
+			readVector(zone["start"], 	start);
+			readVector(zone["end"], 	end);
+			// cout << "Dimensions: "<<endl;
+			// PRINTVEC(start)
+			// PRINTVEC(end)
+			int partcount=0;
+			for (size_t a=0; a<dom.Particles.Size(); a++){
+				bool included=true;
+				for (int i=0;i<3;i++){
+					if (dom.Particles[a]->x(i) < start[i] || dom.Particles[a]->x(i) > end[i])
+						included = false;
+				}
+				if (included){
+					dom.Particles[a]->ID=zoneid; 
+					partcount++;
+				}
+			}
+			std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
+		}
+
 		// dom.WriteXDMF("maz");
 		// dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		// dom.BC.InOutFlow = 0;

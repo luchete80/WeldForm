@@ -47,16 +47,16 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//VERLET
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);//LEAPFROG
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.); //VERLET
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);//LEAPFROG
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -74,7 +74,7 @@ int main(int argc, char **argv) try
         dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
 
-    	dom.Scheme	= 1;	//Mod Verlet
+    	dom.Scheme	= 2;	//Mod Verlet
 
      	//dom.XSPH	= 0.5; //Very important
 
@@ -147,7 +147,7 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/5.5e-5,/*dt*/timestep,/*dtOut*/5.e-6,"test06",999);
+    	dom.Solve(/*tf*/1.01e-3,/*dt*/timestep,/*dtOut*/5.e-4,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

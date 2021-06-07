@@ -1417,20 +1417,20 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 		}
 		
-		if (max > 0.001 && !isyielding){ //First time yielding, data has not been cleared from first search
-			ClearNbData();
-			MainNeighbourSearch();
-			isyielding  = true ;
-		}
-		if ( max > 0.001 || isfirst ){	//TO MODIFY: CHANGE
-			if ( ts_i == 0 ){
-				clock_beg = clock();
-				if (m_isNbDataCleared)
-					MainNeighbourSearch();
-				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-			}
-			isfirst = false;
-		}
+		// if (max > 0.001 && !isyielding){ //First time yielding, data has not been cleared from first search
+			// ClearNbData();
+			// MainNeighbourSearch();
+			// isyielding  = true ;
+		// }
+		// if ( max > 0.001 || isfirst ){	//TO MODIFY: CHANGE
+			// if ( ts_i == 0 ){
+				// clock_beg = clock();
+				// if (m_isNbDataCleared)
+					// MainNeighbourSearch();
+				// neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+			// }
+			// isfirst = false;
+		// }
 		
 		
 		// for ( size_t k = 0; k < Nproc ; k++)		
@@ -1496,16 +1496,16 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
-		if (max>0.01){	//TODO: CHANGE TO FIND NEIGHBOURS
-			if ( ts_i == (ts_nb_inc - 1) ){
-				ClearNbData();
-			}
+		// if (max>0.01){	//TODO: CHANGE TO FIND NEIGHBOURS
+			// if ( ts_i == (ts_nb_inc - 1) ){
+				// ClearNbData();
+			// }
 
-			ts_i ++;
-			if ( ts_i > (ts_nb_inc - 1) ) 
-				ts_i = 0;
+			// ts_i ++;
+			// if ( ts_i > (ts_nb_inc - 1) ) 
+				// ts_i = 0;
 		
-		}
+		// }
 		
 	
 	}
