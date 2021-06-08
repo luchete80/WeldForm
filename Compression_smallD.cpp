@@ -21,7 +21,7 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	10.0
+#define VMAX	5.0
 
 
 
@@ -46,17 +46,17 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-//			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -72,16 +72,15 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Qubic_Spline);
-    	dom.Scheme	= 2;	//Mod Verlet
-//     	dom.XSPH	= 0.5; //Very important
+    	dom.Kernel_Set(Quintic);
+    	dom.Scheme	= 1;	//Mod Verlet
+     	//dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
 
     	R	= 0.028;
     	L	= 0.56;
-    	n	= 30.0;		//in length, radius is same distance
 		
     	rho	= 2700.0;
     	K	= 6.7549e10;
@@ -106,8 +105,8 @@ int main(int argc, char **argv) try
         cout<<"G  = "<<G<<endl;
         cout<<"Fy = "<<Fy<<endl;
     	dom.GeneralAfter = & UserAcc;
-        dom.DomMax(0) = L;
-        dom.DomMin(0) = -L;
+        dom.DomMax(2) = L;
+        dom.DomMin(2) = -L;
 
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
@@ -120,24 +119,26 @@ int main(int argc, char **argv) try
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G		= G;
-    		dom.Particles[a]->PresEq	= 0;
+    		dom.Particles[a]->PresEq	= 1;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 0.;
-    		dom.Particles[a]->Beta		= 0.;
+    		dom.Particles[a]->Alpha		= 1.;
+    		dom.Particles[a]->Beta		= 1.;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-    			dom.Particles[a]->IsFree=false;
-    			//dom.Particles[a]->NoSlip=true;
+    			// dom.Particles[a]->IsFree=false;
+    			// dom.Particles[a]->NoSlip=true;
 			}
     		if ( z >=L )
     			dom.Particles[a]->ID=3;
+    			// dom.Particles[a]->IsFree=false;
+    			// dom.Particles[a]->NoSlip=true;
     	}
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	

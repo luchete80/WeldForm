@@ -64,7 +64,9 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	Compression
+	#Compression
+	#Compression_smallD
+	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
@@ -82,7 +84,7 @@ SET(EXES
 	#SolidBlock_Heat_CNS
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	#"Source/WeldForm"
+	"Source/WeldForm"
 )
 
 

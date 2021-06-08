@@ -42,4 +42,16 @@ bool readVector(const nlohmann::json &j, Vec3_t &vec)
 	return true;
 }
 
+bool readArray(const nlohmann::json &j, std::vector<double> &vec)
+{
+	if (j.is_null())
+		return false;
+
+	std::vector<double> values = j.get< std::vector<double> >();
+	vec.resize( values.size() );
+	for (unsigned int i = 0; i < values.size(); i++)
+		vec[i] = values[i];
+	return true;
+}
+
 #endif

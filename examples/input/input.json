@@ -61,6 +61,31 @@
 	"start":[-1.0,-1.0, 0.616],
 	"end": 	[ 1.0, 1.0, 1.0]
 }
+],
+
+"Amplitudes": [
+{
+	"id": 		1,
+	"valueType": 1,
+	"time": 	[ 0.0, 0.0, 0.0],
+	"value": 	[ 0.0, 0.0, 0.0]
+}
+],
+"BoundaryConditions": [
+{
+	"zoneId": 	1,
+	"variable": 0,
+	"valueType": "Amplitude",
+	"amplitudeFactor": -1.0,
+	"amplitudeId": 1,
+	"free": false
+},
+{
+	"ZoneId": 		2,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, 0.0],
+	"free": 		true
+}
 ]
 
 }

@@ -84,6 +84,8 @@ int main(int argc, char **argv) try {
 		nlohmann::json material 	= j["Material"];
 		nlohmann::json domblock 	= j["DomainBlock"];
 		nlohmann::json domzones 	= j["DomainZones"];
+		nlohmann::json amplitudes 	= j["Amplitudes"];
+		nlohmann::json bcs 			= j["BoundaryConditions"];
 		
 		SPH::Domain	dom;
 		
@@ -235,6 +237,36 @@ int main(int argc, char **argv) try {
 			std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
 
+		for (auto& ampl : amplitudes) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
+			// MaterialData* data = new MaterialData();
+			int zoneid,valuetype;
+			std::vector<double> time, value;
+			readValue(ampl["id"], 		zoneid);
+			//readValue(zone["valueType"],zoneid);
+			readArray(ampl["time"], 	time);
+			readValue(ampl["value"], 	value);
+
+			//std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
+		}
+
+		for (auto& bc : bcs) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
+			// MaterialData* data = new MaterialData();
+			int zoneid,valuetype,var,ampid;
+			double ampfactor;
+			bool free=true;
+			readValue(bc["zoneId"], 	zoneid);
+			readValue(bc["variable"], var);
+			readValue(bc["zoneId"], 	zoneid);
+			if ( valuetype == 1){
+				readValue(bc["amplitudeId"], 		ampid);
+				readValue(bc["amplitudeFactor"], 	ampfactor);
+			}
+				
+			readValue(bc["free"], 	free);
+
+//			std::cout<< "BCs "<<bc<< ", particle count: "<<partcount<<std::	endl;
+		}
+		
 		// dom.WriteXDMF("maz");
 		// dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		// dom.BC.InOutFlow = 0;
