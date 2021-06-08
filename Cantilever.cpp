@@ -48,7 +48,7 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic);
+    	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 0;	//Mod Verlet
 //     	dom.XSPH	= 0.5; //Very important
 		
@@ -92,7 +92,7 @@ int main(int argc, char **argv) try
 									
 
      	dom.AddBoxLength(1 ,Vec3_t ( -Lx/2.0 -Lx/20.0, -Ly/2.0 , -Lz/2.0 ), 
-							Lx + Lx/10.0 /*+ dx*/, Ly /*+dx*/,  Lz /*+dx*/, 
+							Lx + Lx/20.0 + dx, Ly /*+dx*/,  Lz /*+dx*/, 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
 
 
@@ -114,9 +114,12 @@ int main(int argc, char **argv) try
 			double y = dom.Particles[a]->x(1);
 			double z = dom.Particles[a]->x(2);
 			
-    		if ( x <= -Lx/2. )
+    		if ( x <= -Lx/2. ){
     			dom.Particles[a]->ID=2;
-    		if ( y >= (Ly/2. -3*dx ) && x >= (Lx/2. -Lx/40.) )
+    			dom.Particles[a]->IsFree=false;
+    			dom.Particles[a]->NoSlip=true;
+			}
+    		if ( y >= (Ly/2. - dx/2. ) && x >= (Lx/2. -dx/2.) )
     			dom.Particles[a]->ID=3;
     	}
 		dom.WriteXDMF("maz");

@@ -134,7 +134,7 @@ int main(int argc, char **argv) try
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
     			dom.Particles[a]->IsFree=false;
-    			//dom.Particles[a]->NoSlip=true;
+    			dom.Particles[a]->NoSlip=true;
 			}
     		if ( z >=L )
     			dom.Particles[a]->ID=3;
@@ -143,7 +143,7 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/0.00105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve_orig(/*tf*/0.00105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

@@ -72,6 +72,13 @@ void UserAcc(SPH::Domain & domi)
 using std::cout;
 using std::endl;
 
+struct amplitude {
+	int id;
+	std::vector <double> time;
+	std::vector <double> value;
+	//std::map;
+};
+
 int main(int argc, char **argv) try {
 
 	if (argc > 1) {
@@ -236,7 +243,9 @@ int main(int argc, char **argv) try {
 			}
 			std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
-
+		
+		std::vector <amplitude> amps;
+		
 		for (auto& ampl : amplitudes) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
 			int zoneid,valuetype;
@@ -245,7 +254,12 @@ int main(int argc, char **argv) try {
 			//readValue(zone["valueType"],zoneid);
 			readArray(ampl["time"], 	time);
 			readValue(ampl["value"], 	value);
-
+			amplitude amp;
+			for (int i=0;i<time.size();i++){
+				amp.time.push_back(time[i]);
+				amp.value.push_back(value[i]);
+			}
+			amps.push_back(amp);
 			//std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
 
