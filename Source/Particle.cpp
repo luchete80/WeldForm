@@ -114,9 +114,10 @@ inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_
 		Move_MVerlet(I, dt);
 	else if (Scheme == 1)
 		Move_Leapfrog(I, dt);
-	else 
+	else if (Scheme == 2)
 		Move_Verlet(I, dt);
-
+	else if (Scheme == 3)
+		Move_Euler(I, dt);
 
 	//Periodic BC particle position update
 	if (Domainsize(0)>0.0)
@@ -201,6 +202,47 @@ inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 	if (ShepardCounter == ShepardStep) ShepardCounter = 0; else ShepardCounter++;
 }
 
+inline void Particle::Mat2Euler(double dt) {
+	Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
+
+	// Jaumann rate terms
+	Mat3_t RotationRateT, Stress,SRT,RS;
+	Trans(RotationRate,RotationRateT);
+	Mult(ShearStress,RotationRateT,SRT);
+	Mult(RotationRate,ShearStress,RS);
+
+	// Elastic prediction step (ShearStress_e n+1)
+	Stress			= ShearStress;
+	ShearStress	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressb;
+	ShearStressb	= Stress;
+
+	if (Fail == 1) {
+		double J2	= 0.5*(ShearStress(0,0)*ShearStress(0,0) + 2.0*ShearStress(0,1)*ShearStress(1,0) +
+						2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
+						2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
+		//Scale back, Fraser Eqn 3-53
+		double sig_trial = sqrt(3.0*J2);
+		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
+		if ( sig_trial > Sigmay) {
+			double dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			pl_strain += dep;
+			Sigmay += dep*Ep;
+
+		}
+	}
+
+	Sigma			= -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
+
+	Stress	= Strain;
+	Strain	= dt*StrainRate + Strainb;
+	Strainb	= Stress;
+
+	if (Fail > 1) {
+		std::cout<<"Undefined failure criteria for solids"<<std::endl;
+		abort();
+	}
+}
+
 inline void Particle::Mat2MVerlet(double dt) {
 	Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
 
@@ -271,9 +313,34 @@ inline void Particle::Move_Verlet (Mat3_t I, double dt) {
 	temp	= v;
 	v		= vb + 2*dt*a;
 	vb		= temp;	
-
+	
     Mat2MVerlet(dt);	//This uses the same as modified verlet as ct always is != 30
 }
+
+inline void Particle::Move_Euler (Mat3_t I, double dt) {
+
+	if (FirstStep) {
+		Densityb		= Density;
+		Density			+=dt*dDensity;
+		FirstStep = false;
+	}
+
+	Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;
+	Displacement += du;
+	x += du;
+
+	double dens	= Density;
+	Density		= Densityb + dt*dDensity;
+	Densityb	= dens;		
+
+	Vec3_t temp;
+	temp	= v;
+	v		= vb + dt*a;
+	vb		= temp;	
+	
+    Mat2Euler(dt);	//This uses the same as modified verlet as ct always is != 30
+}
+
 
 inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 {

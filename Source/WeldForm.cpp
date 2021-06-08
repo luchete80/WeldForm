@@ -45,27 +45,39 @@ void UserAcc(SPH::Domain & domi)
 	#endif
 	
 	{
-		if (domi.Particles[i]->ID == 3)
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+		for (int bc=0;bc<bConds.size();bc++){
+			if (domi.Particles[i]->ID == bConds[bc].zoneId ) {
+				if (bConds.type == 0 ){
+					domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+					domi.Particles[i]->v		= Vec3_t(0.0,0.0,);
+					domi.Particles[i]->va		= Vec3_t(0.0,0.0,);
+					domi.Particles[i]->vb		= Vec3_t(0.0,0.0,);
+				}
+			}
+			
+		}
 
-			if (domi.Scheme == 1 )
-				domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			else
-				domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
-		if (domi.Particles[i]->ID == 2)
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
-			if (domi.Scheme == 1 )
-				domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			else
-				domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
+		// if (domi.Particles[i]->ID == 3)
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+
+			// if (domi.Scheme == 1 )
+				// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//VERLET
+			// else
+				// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
+// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }
+		// if (domi.Particles[i]->ID == 2)
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
+			// if (domi.Scheme == 1 )
+				// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//VERLET
+			// else
+				// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
+// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }
 	}
 }
 
@@ -77,6 +89,17 @@ struct amplitude {
 	std::vector <double> time;
 	std::vector <double> value;
 	//std::map;
+};
+
+
+struct boundaryCondition {
+	int 	zoneId;
+	int 	type;	// ENUM TYPE Fixity, Velocity, Force, Temperature
+	bool 	free;	//is necessary??
+	int 	valueType;		//0: Constant, 1 amplitude table
+	
+	int 	ampId;			//if valuetype == 1
+	double 	ampFactor;		//if valuetype == 1
 };
 
 int main(int argc, char **argv) try {
@@ -263,23 +286,26 @@ int main(int argc, char **argv) try {
 			//std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
 
+		std::vector <boundaryCondition> bConds;
 		for (auto& bc : bcs) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
 			int zoneid,valuetype,var,ampid;
 			double ampfactor;
 			bool free=true;
-			readValue(bc["zoneId"], 	zoneid);
-			readValue(bc["variable"], var);
-			readValue(bc["zoneId"], 	zoneid);
-			if ( valuetype == 1){
-				readValue(bc["amplitudeId"], 		ampid);
-				readValue(bc["amplitudeFactor"], 	ampfactor);
+			boundaryCondition bcon;
+			readValue(bc["zoneId"], 	bcon.zoneId);
+			readValue(bc["valueType"], 	bcon.valueType);
+			if ( valuetype == 1){ //Amplitude
+				readValue(bc["amplitudeId"], 		bcon.ampId);
+				readValue(bc["amplitudeFactor"], 	bcon.ampFactor);
 			}
 				
-			readValue(bc["free"], 	free);
-
+			readValue(bc["free"], 	bcon.free);
+			bConds.push_back(bcon);
+			
 //			std::cout<< "BCs "<<bc<< ", particle count: "<<partcount<<std::	endl;
 		}
+		
 		
 		// dom.WriteXDMF("maz");
 		// dom.m_kernel = SPH::iKernel(dom.Dimension,h);	

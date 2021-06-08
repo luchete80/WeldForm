@@ -74,17 +74,18 @@
 "BoundaryConditions": [
 {
 	"zoneId": 	1,
-	"variable": 0,
-	"valueType": "Amplitude",
+	"type": 	0,
+	"valueType": 1,
 	"amplitudeFactor": -1.0,
 	"amplitudeId": 1,
+	"components":[],
 	"free": false
 },
 {
 	"ZoneId": 		2,
 	"valuetype": 	"Constant",
 	"value": 		[ 0.0, 0.0, 0.0],
-	"free": 		true
+	"free": 		[true,true,true]
 }
 ]
 

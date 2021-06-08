@@ -57,6 +57,7 @@ namespace SPH {
 		Vec3_t	NSv;		///< Velocity of the fixed particle for no-slip BC
 		Vec3_t	VXSPH;		///< Mean Velocity of neighbor particles for updating the particle position (XSPH)
 		Vec3_t	a;		///< Acceleration of the particle n
+		
 
 		size_t	PresEq;		///< Selecting variable to choose an equation of state
 		double	Cs;		///< Speed of sound
@@ -147,6 +148,8 @@ namespace SPH {
 		void PlasticHeatTest	();
 		void CalcPlasticWorkHeat();
 		void CalculateEquivalentStress();
+		void Move_Euler (Mat3_t I, double dt);
+		void Mat2Euler(double dt);
 		
 
 	};
