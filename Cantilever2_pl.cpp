@@ -1,7 +1,7 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	16.
+#define VMAX	28.
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -65,7 +65,7 @@ int main(int argc, char **argv) try
     	rho	= 2700.0;
 		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
-		Fy	= 1000.e10;
+		Fy	= 300.e6;
 
 		dx = 0.1;
     	h	= dx*1.1; //Very important
