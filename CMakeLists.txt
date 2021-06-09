@@ -65,12 +65,12 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
 	#Compression
-	Compression_smallD
+	#Compression_smallD
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-	#Cantilever
+	Cantilever
 	#Elastic
 	#Traction
 	#Plate-Yield_hcorr

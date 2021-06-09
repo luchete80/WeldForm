@@ -1378,24 +1378,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 	unsigned long steps=0;
 	unsigned int first_step;
-	MainNeighbourSearch();
-
-	std::vector <int> nb(Particles.Size());
-	std::vector <int> nbcount(Particles.Size());
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for ( int k = 0; k < Nproc ; k++) {
-		for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-		//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
-			nb[SMPairs[k][a].first ]+=1;
-			nb[SMPairs[k][a].second]+=1;
-		}
-	}	
-
-	for (int p=0;p<Particles.Size();p++){
-		Particles[p]->Nb=nb[p];
-	}
 	
-	int ts_nb_inc=5;	// Always > 0
+	int ts_nb_inc=0;	// Always > 0
 	int ts_i=0;
 
 	bool isfirst = true;
@@ -1417,35 +1401,38 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 		}
 		
-		// if (max > 0.001 && !isyielding){ //First time yielding, data has not been cleared from first search
-			// ClearNbData();
-			// MainNeighbourSearch();
-			// isyielding  = true ;
-		// }
-		// if ( max > 0.001 || isfirst ){	//TO MODIFY: CHANGE
-			// if ( ts_i == 0 ){
-				// clock_beg = clock();
-				// if (m_isNbDataCleared)
-					// MainNeighbourSearch();
-				// neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-			// }
-			// isfirst = false;
-		// }
+		if (max > 0.001 && !isyielding){ //First time yielding, data has not been cleared from first search
+			ClearNbData();
+			MainNeighbourSearch();
+			isyielding  = true ;
+		}
+		if ( max > 0.001 || isfirst ){	//TO MODIFY: CHANGE
+			if ( ts_i == 0 ){
+				clock_beg = clock();
+				if (m_isNbDataCleared)
+					MainNeighbourSearch();
+				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+			}
+			isfirst = false;
+		}
 		
 		
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
-	// std::vector <int> nb(Particles.Size());
-	// std::vector <int> nbcount(Particles.Size());
-	// for ( size_t k = 0; k < Nproc ; k++) {
-		// for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-		// //cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
-			// nb[SMPairs[k][a].first ]+=1;
-			// nb[SMPairs[k][a].second]+=1;
-			
-		// }
-	// }	
+		std::vector <int> nb(Particles.Size());
+		std::vector <int> nbcount(Particles.Size());
+		for ( size_t k = 0; k < Nproc ; k++) {
+			for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+				nb[SMPairs[k][a].first ]+=1;
+				nb[SMPairs[k][a].second]+=1;
+				
+			}
+		}	
+			for (int p=0;p<Particles.Size();p++){
+			Particles[p]->Nb=nb[p];
+		}
 	// for (int i=0;i<nb.size();i++)
 		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
 		
@@ -1496,16 +1483,16 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
-		// if (max>0.01){	//TODO: CHANGE TO FIND NEIGHBOURS
-			// if ( ts_i == (ts_nb_inc - 1) ){
-				// ClearNbData();
-			// }
+		if (max>0.01){	//TODO: CHANGE TO FIND NEIGHBOURS
+			if ( ts_i == (ts_nb_inc - 1) ){
+				ClearNbData();
+			}
 
-			// ts_i ++;
-			// if ( ts_i > (ts_nb_inc - 1) ) 
-				// ts_i = 0;
+			ts_i ++;
+			if ( ts_i > (ts_nb_inc - 1) ) 
+				ts_i = 0;
 		
-		// }
+		}
 		
 	
 	}
@@ -1641,7 +1628,7 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 			neigbour_time_spent_per_interval=0.;
 		}
 
-		//AdaptiveTimeStep();
+		AdaptiveTimeStep();
 		Move(deltat);
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
