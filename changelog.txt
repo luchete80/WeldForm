@@ -1,1 +1,3 @@
-20210609 - CRITAL BUG IS FOUND. Neighbours SHOULD BE SEARCHED AFTER 
+20210608 -	Added Euler Time Integrations. 
+20210609 - 	CRITAL BUG IS FOUND IN PREVIOUS VERSIONS (see 4cc446c). Neighour search is performed TWICE without deleting.
+			This causes results to be wrong.
