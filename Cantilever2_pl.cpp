@@ -1,14 +1,14 @@
 #include "Domain.h"
 
-#define TAU		0.005
-#define UMAX	0.0024
+#define TAU		0.5	
+#define UMAX	0.5	//A central displacement of 0.1m
 
 void UserAcc(SPH::Domain & domi)
 {
 	double vtraction;
 
 	if (domi.getTime() < TAU ) 
-		vtraction = UMAX/TAU ;
+		vtraction = UMAX/TAU /** domi.getTime()*/;
 	else
 		vtraction = 0.0;
 	
@@ -55,9 +55,9 @@ int main(int argc, char **argv) try
         double dx,h,rho,K,G,Cs,Fy;
     	double H,Lx,Ly,Lz;
 		
-		Lx = 0.1;
-		Ly = 0.024;
-		Lz = 0.012;	
+		Lx = 10.;
+		Ly = 1.;
+		Lz = 1.;	
 		
 		double E  = 70.e9;
 		double nu = 0.33;
@@ -65,9 +65,9 @@ int main(int argc, char **argv) try
     	rho	= 2700.0;
 		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
-		Fy	= 1000.e10;
+		Fy	= 300.e6;
 
-		dx = 0.002;
+		dx = 0.1;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -92,7 +92,7 @@ int main(int argc, char **argv) try
 									
 
      	dom.AddBoxLength(1 ,Vec3_t ( -Lx/2.0 -Lx/20.0, -Ly/2.0 , -Lz/2.0 ), 
-							Lx + Lx/20.0 + dx, Ly /*+dx*/,  Lz /*+dx*/, 
+							Lx + Lx/10.0 , Ly /*+dx*/,  Lz /*+dx*/, 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
 
 
@@ -114,19 +114,21 @@ int main(int argc, char **argv) try
 			double y = dom.Particles[a]->x(1);
 			double z = dom.Particles[a]->x(2);
 			
-    		if ( x <= -Lx/2. ){
+    		if ( x < -Lx/2. ||  x > Lx/2.){
     			dom.Particles[a]->ID=2;
     			dom.Particles[a]->IsFree=false;
     			dom.Particles[a]->NoSlip=true;
 			}
-    		if ( y >= (Ly/2. - dx/2. ) && x >= (Lx/2. -dx/2.) )
+    		if ( x > -dx/2. && x < dx/2. && y> Ly/2.-1.5*dx){
     			dom.Particles[a]->ID=3;
+			}
+
     	}
 		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve(/*tf*/1.0101,/*dt*/timestep,/*dtOut*/0.01,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

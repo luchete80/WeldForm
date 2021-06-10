@@ -1,14 +1,14 @@
 #include "Domain.h"
 
-#define TAU		0.005
-#define VMAX	16.
+#define TAU		0.5	
+#define UMAX	0.5	//A central displacement of 0.1m
 
 void UserAcc(SPH::Domain & domi)
 {
 	double vtraction;
 
 	if (domi.getTime() < TAU ) 
-		vtraction = VMAX/TAU * domi.getTime();
+		vtraction = UMAX/TAU /** domi.getTime()*/;
 	else
 		vtraction = 0.0;
 	
@@ -65,7 +65,7 @@ int main(int argc, char **argv) try
     	rho	= 2700.0;
 		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
-		Fy	= 1000.e10;
+		Fy	= 300.e6;
 
 		dx = 0.1;
     	h	= dx*1.1; //Very important
@@ -128,7 +128,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve(/*tf*/1.0101,/*dt*/timestep,/*dtOut*/0.01,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

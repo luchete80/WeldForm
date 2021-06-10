@@ -254,6 +254,8 @@ inline void Particle::Mat2MVerlet(double dt) {
 	Mult(ShearStress,RotationRateT,SRT);
 	Mult(RotationRate,ShearStress,RS);
 
+	double dep = 0.;
+
 	// Elastic prediction step (ShearStress_e n+1)
 	Stress			= ShearStress;
 	if (ct == 30)
@@ -270,15 +272,22 @@ inline void Particle::Mat2MVerlet(double dt) {
 		double sig_trial = sqrt(3.0*J2);
 		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
 		if ( sig_trial > Sigmay) {
-			double dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			pl_strain += dep;
 			Sigmay += dep*Ep;
-
 		}
 	}
 
 	Sigma			= -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
-
+	
+	if ( dep > 0.0 ) {
+		Strain_pl(0,0)= 1./Sigmay*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
+		Strain_pl(1,1)= 1./Sigmay*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
+		Strain_pl(1,1)= 1./Sigmay*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+		Strain_pl(0,1)= 1./Sigmay*(Sigma(0,1));
+		Strain_pl(0,2)= 1./Sigmay*(Sigma(0,2));
+		Strain_pl(1,2)= 1./Sigmay*(Sigma(1,2));
+	}
 	Stress	= Strain;
 	if (ct == 30)
 		Strain	= dt*StrainRate + Strain;

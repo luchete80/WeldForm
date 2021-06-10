@@ -72,8 +72,8 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic);
-    	dom.Scheme	= 3;	//Mod Verlet
+    	dom.Kernel_Set(Qubic_Spline);
+    	dom.Scheme	= 0;	//Mod Verlet
      	//dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
@@ -88,8 +88,8 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.010;
-    	h	= dx*1.3; //Very important
+		dx = 0.005;
+    	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
 
@@ -125,7 +125,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 0.;
+    		dom.Particles[a]->Alpha		= 1.;
     		dom.Particles[a]->Beta		= 0.;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;

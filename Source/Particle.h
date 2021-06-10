@@ -92,7 +92,9 @@ namespace SPH {
 		Mat3_t	Strain;		///< Total Strain n+1
 		Mat3_t	Straina;	///< Total Strain n+1/2 (Leapfrog)
 		Mat3_t	Strainb;	///< Total Strain n-1 (Modified Verlet)
-		double 	pl_strain,delta_pl_strain;	//Accum and incremental Effective plastic strain 
+		Mat3_t  Strain_pl;	//// Plastic Strain
+		
+		double 	pl_strain,delta_pl_strain;	//Accum and incremental Effective (Von Mises) plastic strain 
 
 		Mat3_t	TIR;		///< Tensile Instability stress tensor R
 		double	TI;		///< Tensile instability factor
