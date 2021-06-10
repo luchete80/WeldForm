@@ -94,7 +94,7 @@ int main(int argc, char **argv) try
 		G= E / (2.* (1.+nu));
 		Fy	= 350.e6;
 
-		dx = 0.0065;
+		dx = 0.01;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -117,7 +117,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 
-		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/20.), R, Lz_side + Lz_side/20.,
+		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/5.), R, Lz_side + Lz_side/5.,
 											Lz_neckmin,Lz_necktot,Rxy_center,
 											dx/2., rho, h, false);
 
@@ -146,7 +146,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve(/*tf*/0.002505,/*dt*/timestep,/*dtOut*/0.0005,"test06",999);
         return 0;
 }
 MECHSYS_CATCH
