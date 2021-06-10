@@ -52,7 +52,7 @@ add_definitions(-D_USE_MATH_DEFINES) #COMPACTNSEARCH??
 # include_directories("Source")
 # include_directories("External")
 
-# #add_subdirectory("examples")
+add_subdirectory("examples/CUDA")
 # endif()
 
 # include_directories("D:/Luciano/Numerico/CompactNSearch/include")

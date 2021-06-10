@@ -1,0 +1,19 @@
+https://forums.developer.nvidia.com/t/how-to-use-class-in-cuda-c/61761
+
+Regarding your compilation problems: Just read carefully what the compiler tells you.
+
+You can’t call a host function (such as cudaMalloc, cudaMemcpy) from a device function.
+
+A possible fix is to remove the device attribute from member functions set() and get_result(), possibly declaring it a host function instead.
+
+You have to initiate all your memory allocations and transfers of device memory on the host, e.g. by calling set() from host code on a gpu_attribute_handler object.
+
+Note that you can’t have the same object instance on both the CPU and the GPU. An object you create on the host resides in host memory. An object you create in a GPU kernel resides in device memory.
+
+Your dev_a, dev_b, dev_c instances are thusly labelled incorrectly. They are host side object instances, living on the CPU’s stack frame.
+
+You could copy an object’s contents into an object instance on device memory (provided that the object’s memory layout on both host and device is full compatible).
+
+CUDA unified memory can assist in making the object accessible on CPU and GPU in the same memory space (maybe incurring some extra overhead). 
+cudaMallocManaged() is the API functions to use in this case. But then, this may involve using custom allocators (e.g. with new/delete operator overloading) for your objects, 
+which is quite an advanced C++ language feature.
