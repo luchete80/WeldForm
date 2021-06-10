@@ -21,7 +21,7 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	1.0
+#define VMAX	5.0
 
 
 
@@ -29,10 +29,10 @@ void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
 
-//	if (domi.getTime() < TAU ) 
-		vcompress = VMAX;// /TAU * domi.getTime();
-	// else
-		// vcompress = VMAX;
+	if (domi.getTime() < TAU ) 
+		vcompress = VMAX/TAU * domi.getTime();
+	else
+		vcompress = VMAX;
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -46,17 +46,17 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(vcompress,0.0,0.0);
-			domi.Particles[i]->va		= Vec3_t(vcompress,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(vcompress,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(-vcompress,0.0,0.0);
-			domi.Particles[i]->va		= Vec3_t(-vcompress,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(-vcompress,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -79,7 +79,7 @@ int main(int argc, char **argv) try
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
 
-    	R	= 0.056;
+    	R	= 0.028;
     	L	= 0.56;
 		
     	rho	= 2700.0;
@@ -88,7 +88,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.01;
+		dx = 0.005;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -112,8 +112,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		//dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
-		dom.AddBoxLength(1 ,Vec3_t ( -L/20.0 , -R/2.0 , -R/2.0 ), L + L/10.0 + dx/10.0 , R + dx/10.0 ,  R + dx/10.0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -130,19 +129,19 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Beta		= 0.;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
-    		double x = dom.Particles[a]->x(0);
-    		if ( x < 0 ){
+    		double z = dom.Particles[a]->x(2);
+    		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
     			// dom.Particles[a]->IsFree=false;
     			// dom.Particles[a]->NoSlip=true;
 			}
-    		if ( x >=L )
+    		if ( z >=L )
     			dom.Particles[a]->ID=3;
     			// dom.Particles[a]->IsFree=false;
     			// dom.Particles[a]->NoSlip=true;
     	}
 		dom.WriteXDMF("maz");
-		//dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
+		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
     	dom.Solve(/*tf*/0.00105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
