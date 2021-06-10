@@ -137,8 +137,11 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 )
+    		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
+				dom.Particles[a]->IsFree=false;
+				dom.Particles[a]->NoSlip=true;			
+			}
     		if ( z > L )
     			dom.Particles[a]->ID=3;
     	}

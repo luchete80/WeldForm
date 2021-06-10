@@ -70,9 +70,9 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-	Cantilever2_pl
+	#Cantilever2_pl
 	#Elastic
-	#Traction
+	Traction
 	#Plate-Yield_hcorr
 	#Plate-Yield_CNS
 	#Plate-Yield_Hard
