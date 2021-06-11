@@ -78,7 +78,7 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = H;
         dom.DomMin(0) = -H;
 
-     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20., -H/2.0 -H/20. ), H + H/20., H +H/20.,  H + H/20. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/40., -H/2.0 -H/40., -H/2.0 -H/40. ), H + H/20.+dx, H +H/20.+dx,  H + H/20.+dx , dx/2.0 ,rho, h, 1 , 0 , false, false );
 		//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20.,0. ), H + H/20., H +H/20.,  0. , dx/2.0 ,rho, h, 1 , 0 , false, false );
      	
 // dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
@@ -86,7 +86,9 @@ int main(int argc, char **argv) try
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x;
-
+		
+		double total_heatflux = 100000.0;	//100kW
+		int heatflux_partcount = 0;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		x = dom.Particles[a]->x(0);
@@ -100,8 +102,19 @@ int main(int argc, char **argv) try
     			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
 				// cout << "Particle " << a << "is convection BC" <<endl;
 			}
+    		else if ( x > H/2.0 -dx/2.) {
+    			dom.Particles[a]->ID 	= 3;
+				heatflux_partcount++;
+    			//dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+				// cout << "Particle " << a << "is convection BC" <<endl;
+			}
     	}
-
+		
+		double source = total_heatflux/heatflux_partcount ; //surface=1m2
+    	for (size_t a=0; a<dom.Particles.Size(); a++)
+			if (dom.Particles[a]->ID== 3)
+				dom.Particles[a]->q_source = source;	
+		
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
 		cout << "Time Step: "<<timestep<<endl;
 		//timestep=1.e-6;
@@ -111,7 +124,7 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+		dom.ThermalSolve(/*tf*/1.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
 //		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 

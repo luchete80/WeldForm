@@ -65,7 +65,7 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
 	#Compression
-	Compression_smallD
+	#Compression_smallD
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
@@ -83,6 +83,7 @@ SET(EXES
 	#Plate-Yield_3d_al_CNS
 	#SolidBlock_Heat
 	#SolidBlock_Heat_CNS
+	SolidBlock_Heat_source
 	#Neighbour_Test
 	#Neighbour_Test_CNS
 	#"Source/WeldForm"

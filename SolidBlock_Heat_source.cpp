@@ -52,7 +52,7 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic_Spline);
+    	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 0;
 //     	dom.XSPH	= 0.5; //Very important
 
@@ -78,7 +78,7 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = H;
         dom.DomMin(0) = -H;
 
-     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20., -H/2.0 -H/20. ), H + H/20., H +H/20.,  H + H/20. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/40., -H/2.0 -H/40., -H/2.0 -H/40. ), H + H/20., H +H/20.,  H + H/20. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 		//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20.,0. ), H + H/20., H +H/20.,  0. , dx/2.0 ,rho, h, 1 , 0 , false, false );
      	
 // dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
@@ -86,7 +86,10 @@ int main(int argc, char **argv) try
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x;
-
+		
+		double total_heatflux = 100000.0;	//100kW
+		int heatflux_partcount = 0;
+		int conv_partcount = 0;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		x = dom.Particles[a]->x(0);
@@ -95,13 +98,34 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				= 20.0;			
-    		if ( x < -H/2.0 ) {
+    		dom.Particles[a]->PresEq	= 0;
+    		dom.Particles[a]->Cs		= Cs;
+    		dom.Particles[a]->Shepard	= false;
+    		dom.Particles[a]->Alpha		= 0.0;
+    		dom.Particles[a]->Beta		= 0.0;
+			
+    		if ( x <= -H/2.0 +dx) {
     			dom.Particles[a]->ID 			= 2;
     			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
 				// cout << "Particle " << a << "is convection BC" <<endl;
+				conv_partcount++;
+			}
+    		else if ( x >= H/2.0 -dx) {
+    			dom.Particles[a]->ID 	= 3;
+				heatflux_partcount++;
+    			//dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+				// cout << "Particle " << a << "is convection BC" <<endl;
 			}
     	}
-
+		
+		cout << "Heat source particle count: "<<heatflux_partcount<<endl;
+		cout << "Convection particle count: "<<conv_partcount<<endl;
+		
+		double source = total_heatflux/heatflux_partcount ; //surface=1m2
+    	for (size_t a=0; a<dom.Particles.Size(); a++)
+			if (dom.Particles[a]->ID == 3)
+				dom.Particles[a]->q_source = source * dom.Particles[a]->Density / dom.Particles[a]->Mass;	
+		
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
 		cout << "Time Step: "<<timestep<<endl;
 		//timestep=1.e-6;

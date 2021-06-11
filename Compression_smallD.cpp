@@ -21,7 +21,7 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	0.5
+#define VMAX	0.05
 
 
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.008;
+		dx = 0.010;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -145,7 +145,7 @@ int main(int argc, char **argv) try
 		//dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/0.00105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

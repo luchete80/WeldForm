@@ -96,7 +96,7 @@ int main(int argc, char **argv) try
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		dom.Particles[a]->G		= G;
+    		dom.Particles[a]->G			= G;
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;

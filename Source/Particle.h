@@ -128,7 +128,8 @@ namespace SPH {
 		bool	FirstStep;	///< to initialize the integration scheme
 		
 		//LUCIANO: THERMAL PROPERTIES
-		double T,k_T,cp_T,dTdt;			// Temperature, avoid permeability		
+		double T,k_T,cp_T,dTdt;			// Temperature, avoid permeability	
+		double q_source;
 		double q_conv,T_inf,h_conv;				//Different heat source terms
 		double q_plheat;				//Plastic Work Heat generation
 		int 	Nb;

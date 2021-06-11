@@ -87,7 +87,7 @@ inline void Domain::CalcTempInc () {
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
-		Particles[i]->dTdt = 1./(Particles[i]->Density * Particles[i]->cp_T ) * ( temp[i] + Particles[i]->q_conv);	
+		Particles[i]->dTdt = 1./(Particles[i]->Density * Particles[i]->cp_T ) * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source);	
 		if (Particles[i]->dTdt>max){
 			max= Particles[i]->dTdt;
 			imax=i;
@@ -115,6 +115,7 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 			dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
 			//cout << "dS2" <<dS2<<endl;
 			//cout << Particles[i]->Density<<endl;
+			//Fraser Eq 3.121
 			Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
 			if (Particles[i]->q_conv>max){
 				max= Particles[i]->q_conv;
