@@ -21,7 +21,7 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	1.0
+#define VMAX	0.5
 
 
 
@@ -88,7 +88,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.01;
+		dx = 0.008;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
