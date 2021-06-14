@@ -73,6 +73,7 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	#Elastic
+	#Heat_2D
 	#Traction
 	#Plate-Yield_hcorr
 	#Plate-Yield_CNS
