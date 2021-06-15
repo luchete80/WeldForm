@@ -58,12 +58,13 @@ int main(int argc, char **argv) try
 
         double dx,h,rho,K,G,Cs,Fy;
     	double H,L,n;
+		double time_th_factor=0.5;
 
     	H	= 1.;
 
     	rho	= 1000.0;
-    	dx	= 0.04;
-    	h	= dx*1.2; //Very important
+    	dx	= 0.05;
+    	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -77,8 +78,12 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = H;
         dom.DomMin(0) = -H;
 
+     	// dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -dx/2.-2.*dx, -H/2.0 -dx/2.-2.*dx, -H/2.0 -dx/2.-2.*dx), 
+										// H + 5.*dx + dx/20, H +5.*dx + dx/20,  H +5.*dx +dx/20 , 
+										// dx/2.0 , rho, h, 1 , 0 , false, false );
+
      	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -dx/2., -H/2.0 -dx/2., -H/2.0 -dx/2.), 
-										H + dx + dx/20, H +dx + dx/20,  H +dx +dx/20 , 
+										H +dx+ dx/20, H+ dx +  dx/20,  H + dx + dx/20 , 
 										dx/2.0 , rho, h, 1 , 0 , false, false );
 										
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
@@ -102,17 +107,33 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Alpha		= 0.0;
     		dom.Particles[a]->Beta		= 0.0;
 			
-    		if ( x <= -H/2.0 +dx/20 || y <= -H/2.0 +dx/20 || y >= H/2.0 -dx/2 ) {
-    			dom.Particles[a]->ID 			= 2;
-    			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-				// cout << "Particle " << a << "is convection BC" <<endl;
-				conv_partcount++;
-			}
-    		else if ( x >= H/2.0 -dx/2) {
+			//cout <<"x,y: "<<x<<", "<<y<<endl;
+			if ( x >= H/2.0 -dx/2.){
+				if (y >= -H/2.0 && y <= H/2.0 ) {
     			dom.Particles[a]->ID 	= 3;
 				heatflux_partcount++;
-    			//dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-				// cout << "Particle " << a << "is convection BC" <<endl;
+				}
+			}
+    		else if ( x == -H/2.0){
+				if (y >= -H/2.0 && y <= H/2.0  ) {
+					dom.Particles[a]->ID 			= 2;
+					dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+					conv_partcount++;
+				}
+			}
+    		else if ( y == -H/2.0){
+				if (x >= -H/2.0 && x <= H/2.0  ) {
+					dom.Particles[a]->ID 			= 2;
+					dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+					conv_partcount++;		
+				}					
+			}
+			else if ( y >= H/2.0 -dx /2 ){
+				if (x >= -H/2.0 && x <= H/2.0  ) {
+					dom.Particles[a]->ID 			= 2;
+					dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+					conv_partcount++;	
+				}					
 			}
     	}
 		
@@ -124,7 +145,7 @@ int main(int argc, char **argv) try
 			if (dom.Particles[a]->ID == 3)
 				dom.Particles[a]->q_source = source * dom.Particles[a]->Density / dom.Particles[a]->Mass;	
 		
-        timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
+        timestep = time_th_factor*(0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
 		cout << "Time Step: "<<timestep<<endl;
 		//timestep=1.e-6;
 		//0.3 rho cp h^2/k

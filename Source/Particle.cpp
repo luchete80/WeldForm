@@ -376,6 +376,29 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 
 }
 
+void Particle::TempCalcLeapfrog	(double dt){
+	
+		if (FirstStep) {
+		//Densitya = T - dt/2.0*dDensity;
+		//va = v - dt/2.0*a;
+		//Tb=T;
+		Ta = T - dt/2.0*dTdt;
+		
+		FirstStep = false;
+	}
+	// Densityb = Densitya;
+	// Densitya += dt*dDensity;
+	// Density = (Densitya+Densityb)/2.0;
+	// vb = va;
+	// va += dt*a;
+	// v = (va + vb)/2.0;
+	// x += dt*va;
+	Tb  = Ta;
+	Ta += dTdt * dt;
+	T = ( Ta + Tb ) / 2.;
+	
+}
+
 inline void Particle::CalculateEquivalentStress () {
 	// Sigma_eq	= sqrt ( Sigma(0,0)*Sigma(0,0) + Sigma(1,1)*Sigma(1,1) + Sigma(2,2)*Sigma(2,2) -
 						// ( Sigma(0,0)*Sigma(1,1) + Sigma(1,1)*Sigma(2,2) + Sigma(0,0)*Sigma(2,2) ) + 

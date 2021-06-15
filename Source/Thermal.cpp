@@ -219,6 +219,9 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	avg/=nb.size();
 	cout << "Avg Neigbour : "<<avg<<endl;
 	
+	CalcConvHeat();
+	CalcTempInc();
+	
 	while (Time<tf && idx_out<=maxidx) {
 
 		auto start_task = std::chrono::system_clock::now();
@@ -229,12 +232,13 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
 		clock_beg = clock();
 
-		CalcConvHeat();
-		CalcTempInc();
+		// CalcConvHeat();
+		// CalcTempInc();
 		//TODO Add 
 		double max=0,min=1000.;
 		for (size_t i=0; i<Particles.Size(); i++){
-			Particles[i]->T+= dt*Particles[i]->dTdt;
+			//Particles[i]->T+= dt*Particles[i]->dTdt;
+			Particles[i]->TempCalcLeapfrog(dt);
 			if (Particles[i]->T > max)
 				max=Particles[i]->T;
 			if (Particles[i]->T < min)
@@ -244,7 +248,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 
 			
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-
+		GeneralAfter(*this);
 		// output
 		if (Time>=tout){
 			if (TheFileKey!=NULL) {
@@ -272,7 +276,10 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 
 		}
 
-		AdaptiveTimeStep();
+		//AdaptiveTimeStep();
+		
+				CalcConvHeat();
+		CalcTempInc();
 
 		Time += deltat;
 		
@@ -330,6 +337,7 @@ inline void Domain::ThermalSolve_wo_init (double tf, double dt, double dtOut, ch
 	for (int p=0;p<Particles.Size();p++){
 		Particles[p]->Nb=nb[p];
 	}
+	
 		
 	while (Time<tf && idx_out<=maxidx) {
 

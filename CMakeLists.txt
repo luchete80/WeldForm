@@ -58,6 +58,7 @@ include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 
 
 SET(EXES
+	Ale
 	# 1-Poiseuille
 	# 2-Couette
 	# 3-DamBreak
@@ -84,7 +85,9 @@ SET(EXES
 	#Plate-Yield_3d_al_CNS
 	#SolidBlock_Heat
 	#SolidBlock_Heat_CNS
-	SolidBlock_Heat_source
+	#SolidBlock_Heat_conv3faces
+	SolidBlock_Heat_source2
+	#SolidBlock_Heat_source2_boundpart
 	#Neighbour_Test
 	#Neighbour_Test_CNS
 	#"Source/WeldForm"
