@@ -71,6 +71,10 @@ public:
 	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,
 											double r, double Density, double h, bool Fixed);
+											
+	void Calculate3DMass(double Density);
+	void Add3DCubicBoxParticles(int tag, Vec3_t const & V, double Lx, double Ly, double Lz, 
+									double r, double Density, double h);
 
 
     void AddBoxNo						(int tag, Vec3_t const &V, size_t nx, size_t ny, size_t nz,double r, double Density,
@@ -116,6 +120,8 @@ public:
 	void CalcTempInc 	(); 		//LUCIANO: Temperature increment
 	inline void CalcConvHeat ();
 	inline void CalcPlasticWorkHeat();
+	inline void CalcGradCorrMatrix();	//BONET GRADIENT CORRECTION
+
 	
 	
     // Data
@@ -128,6 +134,7 @@ public:
 
     double					MuMax;		///< Max Dynamic viscosity for calculating the timestep
     double					CsMax;		///< Max speed of sound for calculating the timestep
+	double 					Vol;		///LUCIANO
 
     Vec3_t					Gravity;       	///< Gravity acceleration
 
@@ -142,8 +149,11 @@ public:
 
     int						*** HOC;	///< Array of "Head of Chain" for each cell
 
-    bool					FSI;		///< Selecting variable to choose Fluid-Structure Interaction
-
+    bool					FSI;			///< Selecting variable to choose Fluid-Structure Interaction
+	
+	// BONET KERNEL CORRECTION
+	bool 					gradKernelCorr;	
+	
     double 					XSPH;		///< Velocity correction factor
     double 					InitialDist;	///< Initial distance of particles for Inflow BC
 

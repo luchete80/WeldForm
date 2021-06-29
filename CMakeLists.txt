@@ -86,7 +86,7 @@ SET(EXES
 	#SolidBlock_Heat
 	#SolidBlock_Heat_CNS
 	#SolidBlock_Heat_conv3faces
-	SolidBlock_Heat_source2
+	#SolidBlock_Heat_source2
 	#SolidBlock_Heat_source2_boundpart
 	#Neighbour_Test
 	#Neighbour_Test_CNS

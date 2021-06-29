@@ -69,7 +69,9 @@ inline void Domain::CalcTempInc () {
 			P2	= Particles[SMPairs[k][a].second];
 			xij	= P1->x - P2->x;
 			h	= (P1->h+P2->h)/2.0;
-			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);
+			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
+			
+			
 			di = P1->Density; mi = P1->Mass;
 			dj = P2->Density; mj = P2->Mass;
 
@@ -81,6 +83,12 @@ inline void Domain::CalcTempInc () {
 			temp [SMPairs[k][a].second] -= m;
 		}
 	}//Nproc
+	if (gradKernelCorr){
+		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		for (int i=0; i<Particles.Size(); i++) {
+			temp[i] =  Particles[i] ->gradCorrM  * temp[i]; 
+		}	
+	}
 	
 	double max = 0;
 	int imax;

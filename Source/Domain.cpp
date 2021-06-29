@@ -104,6 +104,8 @@ inline Domain::Domain ()
     DomMax = -100000000000.0;
     DomMin = 100000000000.0;
     I = OrthoSys::I;
+	
+	Vol=0.;
 }
 
 inline Domain::~Domain ()
@@ -205,6 +207,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 			zp = V(2);
 
 			while ( zp <= (V(2)+Lz-r) ) {
+				
 				j = 0;
 				yp = V(1);
 				while (yp <= (V(1)+Ly-r)) {
@@ -225,6 +228,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 				}
 				k++;
 				zp = V(2) + ((2*sqrt(6.0)/3)*k+1)*r;
+				cout << "Z: "<<z<<endl;
 			}
     	}
     	else {
@@ -238,6 +242,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 				yp = V(1);
 				while (yp <= (V(1)+Ly-r))
 				{
+					//cout << "Y: "<<yp<<endl;
 					i = 0;
 					xp = V(0);
 					while (xp <= (V(0)+Lx-r))
@@ -248,13 +253,15 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 							else    Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 						i++;
-						xp = V(0) + (2*i+1)*r;
+						xp = V(0) + (2*i+1)*r; //COMMENTED BY LUCIANO
+						//cout << "X: "<<xp<<endl;
 					}
 					j++;
-					yp = V(1) + (2.0*j+1)*r;
+					yp = V(1) + (2.0*j+1)*r;//COMMENTED BY LUCIANO
 				}
 				k++;
-				zp = V(2) + (2.0*k+1)*r;
+				zp = V(2) + (2.0*k+1)*r;//COMMENTED BY LUCIANO
+				cout << "Z: "<<z<<endl;
 			}
     	}
 
@@ -267,6 +274,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		}
 		Max +=r;
 		temp = Max-V;
+		cout << "BoxDimensions: "<<temp(0)<<", "<<temp(1)<<", "<<temp(2)<<", "<<endl;
 		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
 
 		#pragma omp parallel for num_threads(Nproc)
@@ -356,6 +364,78 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 	R = r;
 }
 
+inline void Domain::Add3DCubicBoxParticles(int tag, Vec3_t const & V, double Lx, double Ly, double Lz, 
+									double r, double Density, double h) {
+//	Util::Stopwatch stopwatch;
+    std::cout << "\n--------------Generating particles by AddBoxLength with defined length of particles-----------" << std::endl;
+
+    double x,y,xp,yp;
+    size_t i,j;
+	size_t PrePS = Particles.Size();
+    
+	if (Dimension==3) {
+		//Cubic packing
+		double z,zp;
+		size_t k=0;
+		zp = V(2);
+
+		while (zp <= (V(2)+Lz-r)) {
+			
+			j = 0;
+			yp = V(1);
+			while (yp <= (V(1)+Ly-r))
+			{
+				//cout << "Y: "<<yp<<endl;
+				i = 0;
+				xp = V(0);
+				while (xp <= (V(0)+Lx-r))
+				{
+					x = V(0) + (2.0*i+1)*r;
+					y = V(1) + (2.0*j+1)*r;
+					z = V(2) + (2.0*k+1)*r;
+					Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,false));
+					i++;
+					xp = V(0) + (2*i+1)*r; //COMMENTED BY LUCIANO
+					//cout << "X: "<<xp<<endl;
+				}
+				j++;
+				yp = V(1) + (2.0*j+1)*r;//COMMENTED BY LUCIANO
+			}
+			k++;
+			cout << "Z: "<<z<<endl;
+			zp = V(2) + (2.0*k+1)*r;//COMMENTED BY LUCIANO
+		}
+    	//Vol+=(Lx*Ly*Lz);
+        Vec3_t temp, Max=V;
+		for (size_t i=PrePS; i<Particles.Size(); i++) {
+			if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
+			if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
+			if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
+		}
+		Max +=r;
+		temp = Max-V;
+		cout << "BoxDimensions: "<<temp(0)<<", "<<temp(1)<<", "<<temp(2)<<", "<<endl;
+		Vol+=temp(0)*temp(1)*temp(2);
+		//double Mass = temp(0)*temp(1)*temp(2)
+    }//Dimension
+}
+
+// Calculate Mass for 3D particles
+inline void Domain::Calculate3DMass(double Density){
+	double Mass = Vol*Density/Particles.Size();
+	cout << "Particle Mass: "<<Mass<<endl;
+	#pragma omp parallel for num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif
+	{
+		Particles[i]->Mass = Mass;
+	}
+
+}
+	
 //////Return half (on the quadrant) particle count from a single position in an axis
 int calcHalfPartCount(const double &r, const double &R, const int xinc){
 	int ypartcount = -1;
@@ -1180,6 +1260,49 @@ inline void Domain::LastComputeAcceleration ()
 				}
 			}
 		}
+}
+
+//New, for Bonet gradient correction
+inline void Domain::CalcGradCorrMatrix () {
+	double di=0.0,dj=0.0,mi=0.0,mj=0.0;
+	
+	std::vector < Mat3_t> temp(Particles.Size());
+	Mat3_t m,mt;
+
+	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
+	for ( size_t k = 0; k < Nproc ; k++) {
+		Particle *P1,*P2;
+		Vec3_t xij;
+		double h,GK;
+		//TODO: DO THE LOCK PARALLEL THING
+		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+			P1	= Particles[SMPairs[k][a].first];
+			P2	= Particles[SMPairs[k][a].second];
+			xij	= P1->x - P2->x;
+			h	= (P1->h+P2->h)/2.0;
+			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
+			
+			di = P1->Density; mi = P1->Mass;
+			dj = P2->Density; mj = P2->Mass;
+		
+			Dyad (Vec3_t(GK*xij),xij,m);
+			mt = mj/dj * m;
+			//omp_set_lock(&P1->my_lock);
+			temp[SMPairs[k][a].first] = temp[SMPairs[k][a].first]  + mt;
+			temp[SMPairs[k][a].second]= temp[SMPairs[k][a].second] - mt;
+		}
+	}//Nproc
+
+	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+	for (int i=0; i<Particles.Size(); i++){
+		//cout << "temp "<<temp[i]<<endl;
+		/** Inverse.*/
+		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
+		Inv(temp[i],m);		
+		Particles[i] ->gradCorrM = m;
+	}
+	
 }
 
 inline void Domain::Move (double dt) {
