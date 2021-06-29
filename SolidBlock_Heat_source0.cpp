@@ -63,7 +63,7 @@ int main(int argc, char **argv) try
 
     	rho	= 1000.0;
     	dx	= 0.05;
-    	h	= dx*1.3; //Very important
+    	h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -102,13 +102,13 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Alpha		= 0.0;
     		dom.Particles[a]->Beta		= 0.0;
 			
-    		if ( x <= -H/2.0 +dx/20 || y <= -H/2.0 +dx/20 || y >= H/2.0 -dx/2 ) {
-    			dom.Particles[a]->ID 			= 2;
-    			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-				// cout << "Particle " << a << "is convection BC" <<endl;
-				conv_partcount++;
-			}
-    		else if ( x >= H/2.0 -dx/2) {
+    		// if ( x <= -H/2.0 +dx/20 || y <= -H/2.0 +dx/20 || y >= H/2.0 -dx/2 ) {
+    			// dom.Particles[a]->ID 			= 2;
+    			// dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+				// // cout << "Particle " << a << "is convection BC" <<endl;
+				// conv_partcount++;
+			// }
+    		 if ( x >= H/2.0 -dx/2) {
     			dom.Particles[a]->ID 	= 3;
 				heatflux_partcount++;
     			//dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
@@ -119,10 +119,10 @@ int main(int argc, char **argv) try
 		cout << "Heat source particle count: "<<heatflux_partcount<<endl;
 		cout << "Convection particle count: "<<conv_partcount<<endl;
 		
-		// double source = total_heatflux/heatflux_partcount ; //surface=1m2
-    	// for (size_t a=0; a<dom.Particles.Size(); a++)
-			// if (dom.Particles[a]->ID == 3)
-				// dom.Particles[a]->q_source = source * dom.Particles[a]->Density / dom.Particles[a]->Mass;	
+		double source = total_heatflux/heatflux_partcount ; //surface=1m2
+    	for (size_t a=0; a<dom.Particles.Size(); a++)
+			if (dom.Particles[a]->ID == 3)
+				dom.Particles[a]->q_source = source * dom.Particles[a]->Density / dom.Particles[a]->Mass;	
 		
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
 		cout << "Time Step: "<<timestep<<endl;
@@ -132,8 +132,6 @@ int main(int argc, char **argv) try
 		
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-
-		dom.gradKernelCorr = true;
 
 		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 

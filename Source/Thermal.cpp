@@ -74,21 +74,33 @@ inline void Domain::CalcTempInc () {
 			
 			di = P1->Density; mi = P1->Mass;
 			dj = P2->Density; mj = P2->Mass;
-
+			
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			//LUCIANO: TODO EXCLUDE THIS PRODUCT
-			double m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
+			double m, mc[2];
+			if (gradKernelCorr){
+				Mat3_t GKc[2];
+				GKc[0] = GK * P1->gradCorrM;
+				GKc[1] = GK * P2->gradCorrM;
+				
+				//Left in vector form and multiply after??
+				for (int i=0;i<2;i++){
+					Vec3_t v;
+					Mult (GKc[i], xij, v);
+					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v )/ (norm(xij)*norm(xij));
+				}				
+			} else {
+				m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
+				mc[0]=mc[1]=m;
+			}
 			//omp_set_lock(&P1->my_lock);
-			temp [SMPairs[k][a].first]  += m;
-			temp [SMPairs[k][a].second] -= m;
+			temp [SMPairs[k][a].first]  += mc[0];
+			temp [SMPairs[k][a].second] -= mc[1];
 		}
 	}//Nproc
-	if (gradKernelCorr){
-		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
-		for (int i=0; i<Particles.Size(); i++) {
-			temp[i] =  Particles[i] ->gradCorrM  * temp[i]; 
-		}	
-	}
+	
+	//TODO: MULTIPLY CORRECTED GRADIENT HERE AFTER ALL SUM 
+		//temp [i];
 	
 	double max = 0;
 	int imax;
@@ -204,6 +216,8 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	}
 	
 	MainNeighbourSearch();
+	if (gradKernelCorr)
+		CalcGradCorrMatrix();
 	for ( size_t k = 0; k < Nproc ; k++) 
 		cout << "Pares: " <<SMPairs[k].Size()<<endl;
 

@@ -99,7 +99,7 @@ namespace SPH {
 		double 	pl_strain,delta_pl_strain;	//Accum and incremental Effective (Von Mises) plastic strain 
 		
 		// BONET GRADIENT CORRECTION MATRIX
-		Array<Mat3_t>			gradCorrM;
+		Mat3_t	gradCorrM;
 
 		Mat3_t	TIR;		///< Tensile Instability stress tensor R
 		double	TI;		///< Tensile instability factor
