@@ -1,0 +1,1239 @@
+D:\Luciano\Numerico\WeldForm_bin>Ale_modelo3.1.exe
+t  = 0
+Cs = 0
+K  = 0
+G  = 0
+Fy = 0
+
+--------------Generating particles by AddBoxLength with defined length of particles-----------
+Z: -0.0024
+Z: -0.0012
+Z: 0
+Z: 0.0012
+Z: 0.0024
+BoxDimensions: 0.1008, 0.0252, 0.006,
+Particle Number: 8820
+ Particle measured is 4577
+x,y,<:-0.0002, 0.015, 0
+Convection particle count: 3326
+Time Step: 0.0280825
+
+--------------Solving---------------------------------------------------------------
+Max allowable time step using CFL = inf S
+User Time Step = 0.0280825 S
+
+Initial Condition has been generated
+
+Pares: 265878
+Pares: 284481
+Pares: 284391
+Pares: 351540
+Avg Neigbour : 266
+
+Output No. 2 at 0 has been generated
+Current Time Step = 0.0280825
+Total time: 0.202695, Neigbour search time: 0, Accel Calc time: 0
+Max, Min, Avg temps: 11, 11, 11
+Max flux: 6.91692e-323
+
+Output No. 3 at 1.01097 has been generated
+Current Time Step = 0.0280825
+Total time: 1.03435, Neigbour search time: 0, Accel Calc time: 0.016
+Max, Min, Avg temps: 552.792, 11, 281.896
+Max flux: 1728.47
+
+Output No. 4 at 2.02194 has been generated
+Current Time Step = 0.0280825
+Total time: 1.87263, Neigbour search time: 0, Accel Calc time: 0.019
+Max, Min, Avg temps: 738.029, 11, 374.514
+Max flux: 552.585
+
+Output No. 5 at 3.00483 has been generated
+Current Time Step = 0.0280825
+Total time: 2.69557, Neigbour search time: 0, Accel Calc time: 0.02
+Max, Min, Avg temps: 855.848, 11, 433.424
+Max flux: 1778.39
+
+Output No. 6 at 4.0158 has been generated
+Current Time Step = 0.0280825
+Total time: 3.57127, Neigbour search time: 0, Accel Calc time: 0.02
+Max, Min, Avg temps: 944.705, 11, 477.852
+Max flux: 210.873
+
+Output No. 7 at 5.02677 has been generated
+Current Time Step = 0.0280825
+Total time: 4.44379, Neigbour search time: 0, Accel Calc time: 0.02
+Max, Min, Avg temps: 1007.04, 11, 509.018
+Max flux: 489.423
+
+Output No. 8 at 6.00966 has been generated
+Current Time Step = 0.0280825
+Total time: 5.28311, Neigbour search time: 0, Accel Calc time: 0.036
+Max, Min, Avg temps: 1064.1, 11, 537.549
+Max flux: 1719.52
+
+Output No. 9 at 7.02063 has been generated
+Current Time Step = 0.0280825
+Total time: 6.11489, Neigbour search time: 0, Accel Calc time: 0.036
+Max, Min, Avg temps: 1100.55, 11, 555.774
+Max flux: 1759.75
+
+Output No. 10 at 8.00352 has been generated
+Current Time Step = 0.0280825
+Total time: 7.02441, Neigbour search time: 0, Accel Calc time: 0.052
+Max, Min, Avg temps: 1139.24, 11, 575.12
+Max flux: 1743.26
+
+Output No. 11 at 9.01449 has been generated
+Current Time Step = 0.0280825
+Total time: 7.96152, Neigbour search time: 0, Accel Calc time: 0.052
+Max, Min, Avg temps: 1165.05, 11, 588.024
+Max flux: 270.162
+
+Output No. 12 at 10.0255 has been generated
+Current Time Step = 0.0280825
+Total time: 8.91235, Neigbour search time: 0, Accel Calc time: 0.068
+Max, Min, Avg temps: 1188.61, 11.0001, 599.803
+Max flux: 1650.35
+
+Output No. 13 at 11.0084 has been generated
+Current Time Step = 0.0280825
+Total time: 9.87039, Neigbour search time: 0, Accel Calc time: 0.068
+Max, Min, Avg temps: 1211.3, 11.0004, 611.15
+Max flux: 200.31
+
+Output No. 14 at 12.0193 has been generated
+Current Time Step = 0.0280825
+Total time: 10.8102, Neigbour search time: 0, Accel Calc time: 0.07
+Max, Min, Avg temps: 1226.48, 11.0015, 618.74
+Max flux: 273.104
+
+Output No. 15 at 13.0022 has been generated
+Current Time Step = 0.0280825
+Total time: 11.6614, Neigbour search time: 0, Accel Calc time: 0.07
+Max, Min, Avg temps: 1244.33, 11.0042, 627.669
+Max flux: 522.362
+
+Output No. 16 at 14.0132 has been generated
+Current Time Step = 0.0280825
+Total time: 12.6085, Neigbour search time: 0, Accel Calc time: 0.086
+Max, Min, Avg temps: 1256.9, 11.0105, 633.957
+Max flux: 1335.9
+
+Output No. 17 at 15.0242 has been generated
+Current Time Step = 0.0280825
+Total time: 13.5507, Neigbour search time: 0, Accel Calc time: 0.088
+Max, Min, Avg temps: 1267.68, 11.0239, 639.353
+Max flux: 1784.43
+
+Output No. 18 at 16.007 has been generated
+Current Time Step = 0.0280825
+Total time: 14.4702, Neigbour search time: 0, Accel Calc time: 0.106
+Max, Min, Avg temps: 1281.06, 11.0487, 646.052
+Max flux: 227.288
+
+Output No. 19 at 17.018 has been generated
+Current Time Step = 0.0280825
+Total time: 15.4245, Neigbour search time: 0, Accel Calc time: 0.106
+Max, Min, Avg temps: 1285.36, 11.0947, 648.227
+Max flux: 1239.8
+
+Output No. 20 at 18.0009 has been generated
+Current Time Step = 0.0280825
+Total time: 16.2817, Neigbour search time: 0, Accel Calc time: 0.106
+Max, Min, Avg temps: 1298.5, 11.1708, 654.838
+Max flux: 193.73
+
+Output No. 21 at 19.0119 has been generated
+Current Time Step = 0.0280825
+Total time: 17.1378, Neigbour search time: 0, Accel Calc time: 0.106
+Max, Min, Avg temps: 1302.27, 11.2986, 656.785
+Max flux: 273.838
+
+Output No. 22 at 20.0228 has been generated
+Current Time Step = 0.0280825
+Total time: 18.0176, Neigbour search time: 0, Accel Calc time: 0.107
+Max, Min, Avg temps: 1309.32, 11.5012, 660.412
+Max flux: 1746.87
+
+Output No. 23 at 21.0057 has been generated
+Current Time Step = 0.0280825
+Total time: 18.8291, Neigbour search time: 0, Accel Calc time: 0.107
+Max, Min, Avg temps: 1316.91, 11.8021, 664.356
+Max flux: 556.851
+
+Output No. 24 at 22.0167 has been generated
+Current Time Step = 0.0280825
+Total time: 19.8036, Neigbour search time: 0, Accel Calc time: 0.11
+Max, Min, Avg temps: 1317.55, 12.2634, 664.908
+Max flux: 1356.34
+
+Output No. 25 at 23.0277 has been generated
+Current Time Step = 0.0280825
+Total time: 20.7036, Neigbour search time: 0, Accel Calc time: 0.11
+Max, Min, Avg temps: 1328.38, 12.9397, 670.658
+Max flux: 203.722
+
+Output No. 26 at 24.0106 has been generated
+Current Time Step = 0.0280825
+Total time: 21.5703, Neigbour search time: 0, Accel Calc time: 0.11
+Max, Min, Avg temps: 1326.27, 13.8808, 670.077
+Max flux: 490.435
+
+Output No. 27 at 25.0215 has been generated
+Current Time Step = 0.0280825
+Total time: 22.4824, Neigbour search time: 0, Accel Calc time: 0.11
+Max, Min, Avg temps: 1335.83, 15.245, 675.536
+Max flux: 1293.5
+
+Output No. 28 at 26.0044 has been generated
+Current Time Step = 0.0280825
+Total time: 23.3276, Neigbour search time: 0, Accel Calc time: 0.11
+Max, Min, Avg temps: 1335.91, 17.0867, 676.5
+Max flux: 1763.13
+
+Output No. 29 at 27.0154 has been generated
+Current Time Step = 0.0280825
+Total time: 24.2072, Neigbour search time: 0, Accel Calc time: 0.11
+Max, Min, Avg temps: 1339.25, 19.6839, 679.465
+Max flux: 1283.84
+
+Output No. 30 at 28.0264 has been generated
+Current Time Step = 0.0280825
+Total time: 25.0994, Neigbour search time: 0, Accel Calc time: 0.126
+Max, Min, Avg temps: 1345.35, 23.215, 684.284
+Max flux: 229.787
+
+Output No. 31 at 29.0093 has been generated
+Current Time Step = 0.0280825
+Total time: 26.028, Neigbour search time: 0, Accel Calc time: 0.142
+Max, Min, Avg temps: 1341.04, 27.8059, 684.421
+Max flux: 1653.86
+
+Output No. 32 at 30.0202 has been generated
+Current Time Step = 0.0280825
+Total time: 26.889, Neigbour search time: 0, Accel Calc time: 0.143
+Max, Min, Avg temps: 867.839, 34.0475, 450.943
+Max flux: 35.0758
+
+Output No. 33 at 31.0031 has been generated
+Current Time Step = 0.0280825
+Total time: 27.7435, Neigbour search time: 0, Accel Calc time: 0.143
+Max, Min, Avg temps: 748.501, 41.9655, 395.233
+Max flux: 25.0201
+
+Output No. 34 at 32.0141 has been generated
+Current Time Step = 0.0280825
+Total time: 28.6904, Neigbour search time: 0, Accel Calc time: 0.143
+Max, Min, Avg temps: 673.704, 52.3432, 363.024
+Max flux: 21.8741
+
+Output No. 35 at 33.0251 has been generated
+Current Time Step = 0.0280825
+Total time: 29.5936, Neigbour search time: 0, Accel Calc time: 0.159
+Max, Min, Avg temps: 622.118, 64.8461, 343.482
+Max flux: 18.41
+
+Output No. 36 at 34.0079 has been generated
+Current Time Step = 0.0280825
+Total time: 30.461, Neigbour search time: 0, Accel Calc time: 0.159
+Max, Min, Avg temps: 584.383, 78.416, 331.399
+Max flux: 15.9016
+
+Output No. 37 at 35.0189 has been generated
+Current Time Step = 0.0280825
+Total time: 31.3128, Neigbour search time: 0, Accel Calc time: 0.175
+Max, Min, Avg temps: 553.952, 93.0598, 323.506
+Max flux: 14.6635
+
+Output No. 38 at 36.0018 has been generated
+Current Time Step = 0.0280825
+Total time: 32.2687, Neigbour search time: 0, Accel Calc time: 0.175
+Max, Min, Avg temps: 530.034, 107.343, 318.688
+Max flux: 14.3917
+
+Output No. 39 at 37.0128 has been generated
+Current Time Step = 0.0280825
+Total time: 33.1418, Neigbour search time: 0, Accel Calc time: 0.175
+Max, Min, Avg temps: 509.621, 121.625, 315.623
+Max flux: 13.8151
+
+Output No. 40 at 38.0237 has been generated
+Current Time Step = 0.0280825
+Total time: 34.1504, Neigbour search time: 0, Accel Calc time: 0.191
+Max, Min, Avg temps: 492.345, 135.204, 313.774
+Max flux: 13.0228
+
+Output No. 41 at 39.0066 has been generated
+Current Time Step = 0.0280825
+Total time: 35.0221, Neigbour search time: 0, Accel Calc time: 0.191
+Max, Min, Avg temps: 478.12, 147.58, 312.85
+Max flux: 12.15
+
+Output No. 42 at 40.0176 has been generated
+Current Time Step = 0.0280825
+Total time: 35.9184, Neigbour search time: 0, Accel Calc time: 0.191
+Max, Min, Avg temps: 465.255, 159.393, 312.324
+Max flux: 11.2188
+
+Output No. 43 at 41.0005 has been generated
+Current Time Step = 0.0280825
+Total time: 36.781, Neigbour search time: 0, Accel Calc time: 0.191
+Max, Min, Avg temps: 454.305, 169.978, 312.142
+Max flux: 10.3247
+
+Output No. 44 at 42.0115 has been generated
+Current Time Step = 0.0280825
+Total time: 37.6996, Neigbour search time: 0, Accel Calc time: 0.191
+Max, Min, Avg temps: 444.213, 179.967, 312.09
+Max flux: 9.4438
+
+Output No. 45 at 43.0224 has been generated
+Current Time Step = 0.0280825
+Total time: 38.5953, Neigbour search time: 0, Accel Calc time: 0.191
+Max, Min, Avg temps: 435.266, 189.092, 312.179
+Max flux: 8.61741
+
+Output No. 46 at 44.0053 has been generated
+Current Time Step = 0.0280825
+Total time: 39.445, Neigbour search time: 0, Accel Calc time: 0.191
+Max, Min, Avg temps: 427.311, 197.191, 312.251
+Max flux: 7.87299
+
+Output No. 47 at 45.0163 has been generated
+Current Time Step = 0.0280825
+Total time: 40.3103, Neigbour search time: 0, Accel Calc time: 0.191
+Max, Min, Avg temps: 419.877, 204.789, 312.333
+Max flux: 7.16986
+
+Output No. 48 at 46.0273 has been generated
+Current Time Step = 0.0280825
+Total time: 41.1171, Neigbour search time: 0, Accel Calc time: 0.223
+Max, Min, Avg temps: 413.109, 211.709, 312.409
+Max flux: 6.52888
+
+Output No. 49 at 47.0102 has been generated
+Current Time Step = 0.0280825
+Total time: 41.9331, Neigbour search time: 0, Accel Calc time: 0.223
+Max, Min, Avg temps: 407, 217.843, 312.422
+Max flux: 5.96228
+
+Output No. 50 at 48.0211 has been generated
+Current Time Step = 0.0280825
+Total time: 42.8145, Neigbour search time: 0, Accel Calc time: 0.223
+Max, Min, Avg temps: 401.149, 223.599, 312.374
+Max flux: 5.43363
+
+Output No. 51 at 49.004 has been generated
+Current Time Step = 0.0280825
+Total time: 43.6647, Neigbour search time: 0, Accel Calc time: 0.223
+Max, Min, Avg temps: 395.862, 226.466, 311.164
+Max flux: 4.968
+
+Output No. 52 at 50.015 has been generated
+Current Time Step = 0.0280825
+Total time: 44.5404, Neigbour search time: 0, Accel Calc time: 0.238
+Max, Min, Avg temps: 390.818, 228.55, 309.684
+Max flux: 4.53423
+
+Output No. 53 at 51.026 has been generated
+Current Time Step = 0.0280825
+Total time: 45.3907, Neigbour search time: 0, Accel Calc time: 0.238
+Max, Min, Avg temps: 386.073, 230.554, 308.314
+Max flux: 4.14181
+
+Output No. 54 at 52.0088 has been generated
+Current Time Step = 0.0280825
+Total time: 46.2078, Neigbour search time: 0, Accel Calc time: 0.238
+Max, Min, Avg temps: 381.718, 232.429, 307.073
+Max flux: 3.79589
+
+Output No. 55 at 53.0198 has been generated
+Current Time Step = 0.0280825
+Total time: 46.9985, Neigbour search time: 0, Accel Calc time: 0.238
+Max, Min, Avg temps: 377.482, 234.281, 305.882
+Max flux: 3.4729
+
+Output No. 56 at 54.0027 has been generated
+Current Time Step = 0.0280825
+Total time: 47.8566, Neigbour search time: 0, Accel Calc time: 0.254
+Max, Min, Avg temps: 373.58, 236.01, 304.795
+Max flux: 3.18742
+
+Output No. 57 at 55.0137 has been generated
+Current Time Step = 0.0280825
+Total time: 48.7323, Neigbour search time: 0, Accel Calc time: 0.254
+Max, Min, Avg temps: 369.769, 237.716, 303.742
+Max flux: 2.92002
+
+Output No. 58 at 56.0246 has been generated
+Current Time Step = 0.0280825
+Total time: 49.5918, Neigbour search time: 0, Accel Calc time: 0.254
+Max, Min, Avg temps: 366.147, 239.35, 302.749
+Max flux: 2.67637
+
+Output No. 59 at 57.0075 has been generated
+Current Time Step = 0.0280825
+Total time: 50.4597, Neigbour search time: 0, Accel Calc time: 0.27
+Max, Min, Avg temps: 362.803, 240.871, 301.837
+Max flux: 2.45984
+
+Output No. 60 at 58.0185 has been generated
+Current Time Step = 0.0280825
+Total time: 51.3498, Neigbour search time: 0, Accel Calc time: 0.27
+Max, Min, Avg temps: 359.533, 242.367, 300.95
+Max flux: 2.25584
+
+Output No. 61 at 59.0014 has been generated
+Current Time Step = 0.0280825
+Total time: 52.23, Neigbour search time: 0, Accel Calc time: 0.273
+Max, Min, Avg temps: 356.494, 243.756, 300.125
+Max flux: 2.07382
+
+Output No. 62 at 60.0124 has been generated
+Current Time Step = 0.0280825
+Total time: 53.2266, Neigbour search time: 0, Accel Calc time: 0.28
+Max, Min, Avg temps: 353.502, 245.12, 299.311
+Max flux: 1.90166
+
+Output No. 63 at 61.0233 has been generated
+Current Time Step = 0.0280825
+Total time: 54.1603, Neigbour search time: 0, Accel Calc time: 0.281
+Max, Min, Avg temps: 350.637, 246.418, 298.528
+Max flux: 1.74321
+
+Output No. 64 at 62.0062 has been generated
+Current Time Step = 0.0280825
+Total time: 55.069, Neigbour search time: 0, Accel Calc time: 0.283
+Max, Min, Avg temps: 347.965, 247.62, 297.793
+Max flux: 1.60099
+
+Output No. 65 at 63.0172 has been generated
+Current Time Step = 0.0280825
+Total time: 56.062, Neigbour search time: 0, Accel Calc time: 0.287
+Max, Min, Avg temps: 345.328, 248.795, 297.062
+Max flux: 1.4657
+
+Output No. 66 at 64.0001 has been generated
+Current Time Step = 0.0280825
+Total time: 56.9787, Neigbour search time: 0, Accel Calc time: 0.289
+Max, Min, Avg temps: 342.865, 249.88, 296.372
+Max flux: 1.34384
+
+Output No. 67 at 65.0111 has been generated
+Current Time Step = 0.0280825
+Total time: 57.9056, Neigbour search time: 0, Accel Calc time: 0.296
+Max, Min, Avg temps: 340.429, 250.937, 295.683
+Max flux: 1.22751
+
+Output No. 68 at 66.022 has been generated
+Current Time Step = 0.0280825
+Total time: 58.8514, Neigbour search time: 0, Accel Calc time: 0.301
+Max, Min, Avg temps: 338.086, 251.938, 295.012
+Max flux: 1.11949
+
+Output No. 69 at 67.0049 has been generated
+Current Time Step = 0.0280825
+Total time: 59.7887, Neigbour search time: 0, Accel Calc time: 0.305
+Max, Min, Avg temps: 335.893, 252.857, 294.375
+Max flux: 1.02172
+
+Output No. 70 at 68.0159 has been generated
+Current Time Step = 0.0280825
+Total time: 60.7278, Neigbour search time: 0, Accel Calc time: 0.306
+Max, Min, Avg temps: 333.719, 253.749, 293.734
+Max flux: 0.927963
+
+Output No. 71 at 69.0269 has been generated
+Current Time Step = 0.0280825
+Total time: 61.6479, Neigbour search time: 0, Accel Calc time: 0.31
+Max, Min, Avg temps: 331.624, 254.588, 293.106
+Max flux: 0.840522
+
+Output No. 72 at 70.0097 has been generated
+Current Time Step = 0.0280825
+Total time: 62.5582, Neigbour search time: 0, Accel Calc time: 0.315
+Max, Min, Avg temps: 329.658, 255.356, 292.507
+Max flux: 0.761063
+
+Output No. 73 at 71.0207 has been generated
+Current Time Step = 0.0280825
+Total time: 63.4667, Neigbour search time: 0, Accel Calc time: 0.316
+Max, Min, Avg temps: 327.706, 256.097, 291.902
+Max flux: 0.710319
+
+Output No. 74 at 72.0036 has been generated
+Current Time Step = 0.0280825
+Total time: 64.3563, Neigbour search time: 0, Accel Calc time: 0.317
+Max, Min, Avg temps: 325.872, 256.771, 291.322
+Max flux: 0.665471
+
+Output No. 75 at 73.0146 has been generated
+Current Time Step = 0.0280825
+Total time: 65.246, Neigbour search time: 0, Accel Calc time: 0.318
+Max, Min, Avg temps: 324.049, 257.42, 290.734
+Max flux: 0.620773
+
+Output No. 76 at 74.0255 has been generated
+Current Time Step = 0.0280825
+Total time: 66.1445, Neigbour search time: 0, Accel Calc time: 0.319
+Max, Min, Avg temps: 322.285, 258.023, 290.154
+Max flux: 0.577519
+
+Output No. 77 at 75.0084 has been generated
+Current Time Step = 0.0280825
+Total time: 67.0697, Neigbour search time: 0, Accel Calc time: 0.323
+Max, Min, Avg temps: 320.629, 258.569, 289.599
+Max flux: 0.536839
+
+Output No. 78 at 76.0194 has been generated
+Current Time Step = 0.0280825
+Total time: 67.9536, Neigbour search time: 0, Accel Calc time: 0.324
+Max, Min, Avg temps: 318.984, 259.089, 289.036
+Max flux: 0.496395
+
+Output No. 79 at 77.0023 has been generated
+Current Time Step = 0.0280825
+Total time: 68.8291, Neigbour search time: 0, Accel Calc time: 0.328
+Max, Min, Avg temps: 317.434, 259.556, 288.495
+Max flux: 0.458415
+
+Output No. 80 at 78.0133 has been generated
+Current Time Step = 0.0280825
+Total time: 69.7299, Neigbour search time: 0, Accel Calc time: 0.334
+Max, Min, Avg temps: 315.888, 259.998, 287.943
+Max flux: 0.420707
+
+Output No. 81 at 79.0242 has been generated
+Current Time Step = 0.0280825
+Total time: 70.623, Neigbour search time: 0, Accel Calc time: 0.335
+Max, Min, Avg temps: 314.389, 260.402, 287.396
+Max flux: 0.384352
+
+Output No. 82 at 80.0071 has been generated
+Current Time Step = 0.0280825
+Total time: 71.4225, Neigbour search time: 0, Accel Calc time: 0.335
+Max, Min, Avg temps: 312.974, 260.761, 286.868
+Max flux: 0.350277
+
+Output No. 83 at 81.0181 has been generated
+Current Time Step = 0.0280825
+Total time: 72.2996, Neigbour search time: 0, Accel Calc time: 0.336
+Max, Min, Avg temps: 311.56, 261.096, 286.328
+Max flux: 0.316509
+
+Output No. 84 at 82.001 has been generated
+Current Time Step = 0.0280825
+Total time: 73.2085, Neigbour search time: 0, Accel Calc time: 0.339
+Max, Min, Avg temps: 310.224, 261.39, 285.807
+Max flux: 0.284895
+
+Output No. 85 at 83.012 has been generated
+Current Time Step = 0.0280825
+Total time: 74.0978, Neigbour search time: 0, Accel Calc time: 0.35
+Max, Min, Avg temps: 308.888, 261.661, 285.274
+Max flux: 0.253597
+
+Output No. 86 at 84.0229 has been generated
+Current Time Step = 0.0280825
+Total time: 74.9799, Neigbour search time: 0, Accel Calc time: 0.351
+Max, Min, Avg temps: 307.587, 261.9, 284.744
+Max flux: 0.223504
+
+Output No. 87 at 85.0058 has been generated
+Current Time Step = 0.0280825
+Total time: 75.8884, Neigbour search time: 0, Accel Calc time: 0.352
+Max, Min, Avg temps: 306.357, 262.105, 284.231
+Max flux: 0.195371
+
+Output No. 88 at 86.0168 has been generated
+Current Time Step = 0.0280825
+Total time: 76.761, Neigbour search time: 0, Accel Calc time: 0.353
+Max, Min, Avg temps: 305.129, 262.287, 283.708
+Max flux: 0.167557
+
+Output No. 89 at 87.0278 has been generated
+Current Time Step = 0.0280825
+Total time: 77.6024, Neigbour search time: 0, Accel Calc time: 0.37
+Max, Min, Avg temps: 303.937, 262.442, 283.189
+Max flux: 0.140849
+
+Output No. 90 at 88.0106 has been generated
+Current Time Step = 0.0280825
+Total time: 78.4016, Neigbour search time: 0, Accel Calc time: 0.386
+Max, Min, Avg temps: 302.806, 262.567, 282.687
+Max flux: 0.11591
+
+Output No. 91 at 89.0216 has been generated
+Current Time Step = 0.0280825
+Total time: 79.3032, Neigbour search time: 0, Accel Calc time: 0.388
+Max, Min, Avg temps: 301.671, 262.671, 282.171
+Max flux: 0.0912824
+
+Output No. 92 at 90.0045 has been generated
+Current Time Step = 0.0280825
+Total time: 80.2717, Neigbour search time: 0, Accel Calc time: 0.414
+Max, Min, Avg temps: 300.593, 262.749, 281.671
+Max flux: 0.0683022
+
+Output No. 93 at 91.0155 has been generated
+Current Time Step = 0.0280825
+Total time: 81.1669, Neigbour search time: 0, Accel Calc time: 0.414
+Max, Min, Avg temps: 299.51, 262.806, 281.158
+Max flux: 0.0456237
+
+Output No. 94 at 92.0264 has been generated
+Current Time Step = 0.0280825
+Total time: 82.2349, Neigbour search time: 0, Accel Calc time: 0.416
+Max, Min, Avg temps: 298.451, 262.841, 280.646
+Max flux: 0.023884
+
+Output No. 95 at 93.0093 has been generated
+Current Time Step = 0.0280825
+Total time: 83.1354, Neigbour search time: 0, Accel Calc time: 0.431
+Max, Min, Avg temps: 297.45, 262.855, 280.152
+Max flux: 0.00377678
+
+Output No. 96 at 94.0203 has been generated
+Current Time Step = 0.0280825
+Total time: 84.1009, Neigbour search time: 0, Accel Calc time: 0.433
+Max, Min, Avg temps: 296.445, 262.849, 279.647
+Max flux: 0
+
+Output No. 97 at 95.0032 has been generated
+Current Time Step = 0.0280825
+Total time: 85.0268, Neigbour search time: 0, Accel Calc time: 0.435
+Max, Min, Avg temps: 295.489, 262.824, 279.156
+Max flux: 0
+
+Output No. 98 at 96.0142 has been generated
+Current Time Step = 0.0280825
+Total time: 85.8902, Neigbour search time: 0, Accel Calc time: 0.435
+Max, Min, Avg temps: 294.525, 262.779, 278.652
+Max flux: 0
+
+Output No. 99 at 97.0251 has been generated
+Current Time Step = 0.0280825
+Total time: 86.7789, Neigbour search time: 0, Accel Calc time: 0.436
+Max, Min, Avg temps: 293.579, 262.717, 278.148
+Max flux: 0
+
+Output No. 100 at 98.008 has been generated
+Current Time Step = 0.0280825
+Total time: 87.5755, Neigbour search time: 0, Accel Calc time: 0.436
+Max, Min, Avg temps: 292.678, 262.64, 277.659
+Max flux: 0
+
+Output No. 101 at 99.019 has been generated
+Current Time Step = 0.0280825
+Total time: 88.4496, Neigbour search time: 0, Accel Calc time: 0.436
+Max, Min, Avg temps: 291.777, 262.545, 277.161
+Max flux: 0
+
+Output No. 102 at 100.002 has been generated
+Current Time Step = 0.0280825
+Total time: 89.2843, Neigbour search time: 0, Accel Calc time: 0.436
+Max, Min, Avg temps: 290.916, 262.437, 276.677
+Max flux: 0
+
+Output No. 103 at 101.013 has been generated
+Current Time Step = 0.0280825
+Total time: 90.1893, Neigbour search time: 0, Accel Calc time: 0.438
+Max, Min, Avg temps: 290.046, 262.311, 276.178
+Max flux: 0
+
+Output No. 104 at 102.024 has been generated
+Current Time Step = 0.0280825
+Total time: 91.0458, Neigbour search time: 0, Accel Calc time: 0.44
+Max, Min, Avg temps: 289.19, 262.171, 275.681
+Max flux: 0
+
+Output No. 105 at 103.007 has been generated
+Current Time Step = 0.0280825
+Total time: 91.9189, Neigbour search time: 0, Accel Calc time: 0.441
+Max, Min, Avg temps: 288.375, 262.021, 275.198
+Max flux: 0
+
+Output No. 106 at 104.018 has been generated
+Current Time Step = 0.0280825
+Total time: 92.7917, Neigbour search time: 0, Accel Calc time: 0.441
+Max, Min, Avg temps: 287.555, 261.854, 274.705
+Max flux: 0
+
+Output No. 107 at 105.001 has been generated
+Current Time Step = 0.0280825
+Total time: 93.648, Neigbour search time: 0, Accel Calc time: 0.442
+Max, Min, Avg temps: 286.769, 261.68, 274.224
+Max flux: 0
+
+Output No. 108 at 106.012 has been generated
+Current Time Step = 0.0280825
+Total time: 94.5023, Neigbour search time: 0, Accel Calc time: 0.442
+Max, Min, Avg temps: 285.973, 261.488, 273.73
+Max flux: 0
+
+Output No. 109 at 107.023 has been generated
+Current Time Step = 0.0280825
+Total time: 95.3953, Neigbour search time: 0, Accel Calc time: 0.442
+Max, Min, Avg temps: 285.191, 261.285, 273.238
+Max flux: 0
+
+Output No. 110 at 108.005 has been generated
+Current Time Step = 0.0280825
+Total time: 96.2569, Neigbour search time: 0, Accel Calc time: 0.503
+Max, Min, Avg temps: 284.445, 261.077, 272.761
+Max flux: 0
+
+Output No. 111 at 109.016 has been generated
+Current Time Step = 0.0280825
+Total time: 97.1066, Neigbour search time: 0, Accel Calc time: 0.518
+Max, Min, Avg temps: 283.688, 260.853, 272.271
+Max flux: 0
+
+Output No. 112 at 110.027 has been generated
+Current Time Step = 0.0280825
+Total time: 97.9695, Neigbour search time: 0, Accel Calc time: 0.518
+Max, Min, Avg temps: 282.941, 260.618, 271.78
+Max flux: 0
+
+Output No. 113 at 111.01 has been generated
+Current Time Step = 0.0280825
+Total time: 98.7707, Neigbour search time: 0, Accel Calc time: 0.534
+Max, Min, Avg temps: 282.228, 260.381, 271.305
+Max flux: 0
+
+Output No. 114 at 112.021 has been generated
+Current Time Step = 0.0280825
+Total time: 99.6468, Neigbour search time: 0, Accel Calc time: 0.534
+Max, Min, Avg temps: 281.506, 260.128, 270.817
+Max flux: 0
+
+Output No. 115 at 113.004 has been generated
+Current Time Step = 0.0280825
+Total time: 100.47, Neigbour search time: 0, Accel Calc time: 0.565
+Max, Min, Avg temps: 280.811, 259.874, 270.342
+Max flux: 0
+
+Output No. 116 at 114.015 has been generated
+Current Time Step = 0.0280825
+Total time: 101.334, Neigbour search time: 0, Accel Calc time: 0.565
+Max, Min, Avg temps: 280.106, 259.604, 269.855
+Max flux: 0
+
+Output No. 117 at 115.026 has been generated
+Current Time Step = 0.0280825
+Total time: 102.182, Neigbour search time: 0, Accel Calc time: 0.565
+Max, Min, Avg temps: 279.413, 259.326, 269.369
+Max flux: 0
+
+Output No. 118 at 116.009 has been generated
+Current Time Step = 0.0280825
+Total time: 103.001, Neigbour search time: 0, Accel Calc time: 0.581
+Max, Min, Avg temps: 278.745, 259.048, 268.897
+Max flux: 0
+
+Output No. 119 at 117.02 has been generated
+Current Time Step = 0.0280825
+Total time: 103.883, Neigbour search time: 0, Accel Calc time: 0.581
+Max, Min, Avg temps: 278.066, 258.755, 268.411
+Max flux: 0
+
+Output No. 120 at 118.003 has been generated
+Current Time Step = 0.0280825
+Total time: 104.736, Neigbour search time: 0, Accel Calc time: 0.581
+Max, Min, Avg temps: 277.417, 258.464, 267.941
+Max flux: 0
+
+Output No. 121 at 119.014 has been generated
+Current Time Step = 0.0280825
+Total time: 105.585, Neigbour search time: 0, Accel Calc time: 0.581
+Max, Min, Avg temps: 276.755, 258.158, 267.456
+Max flux: 0
+
+Output No. 122 at 120.025 has been generated
+Current Time Step = 0.0280825
+Total time: 106.474, Neigbour search time: 0, Accel Calc time: 0.582
+Max, Min, Avg temps: 276.099, 257.846, 266.972
+Max flux: 0
+
+Output No. 123 at 121.008 has been generated
+Current Time Step = 0.0280825
+Total time: 107.324, Neigbour search time: 0, Accel Calc time: 0.583
+Max, Min, Avg temps: 275.471, 257.536, 266.503
+Max flux: 0
+
+Output No. 124 at 122.019 has been generated
+Current Time Step = 0.0280825
+Total time: 108.183, Neigbour search time: 0, Accel Calc time: 0.583
+Max, Min, Avg temps: 274.829, 257.212, 266.021
+Max flux: 0
+
+Output No. 125 at 123.001 has been generated
+Current Time Step = 0.0280825
+Total time: 109.047, Neigbour search time: 0, Accel Calc time: 0.584
+Max, Min, Avg temps: 274.211, 256.891, 265.551
+Max flux: 0
+
+Output No. 126 at 124.012 has been generated
+Current Time Step = 0.0280825
+Total time: 109.968, Neigbour search time: 0, Accel Calc time: 0.586
+Max, Min, Avg temps: 273.584, 256.557, 265.07
+Max flux: 0
+
+Output No. 127 at 125.023 has been generated
+Current Time Step = 0.0280825
+Total time: 110.832, Neigbour search time: 0, Accel Calc time: 0.588
+Max, Min, Avg temps: 272.961, 256.217, 264.589
+Max flux: 0
+
+Output No. 128 at 126.006 has been generated
+Current Time Step = 0.0280825
+Total time: 111.702, Neigbour search time: 0, Accel Calc time: 0.59
+Max, Min, Avg temps: 272.36, 255.882, 264.121
+Max flux: 0
+
+Output No. 129 at 127.017 has been generated
+Current Time Step = 0.0280825
+Total time: 112.641, Neigbour search time: 0, Accel Calc time: 0.592
+Max, Min, Avg temps: 271.749, 255.533, 263.641
+Max flux: 0
+
+Output No. 130 at 128 has been generated
+Current Time Step = 0.0280825
+Total time: 113.51, Neigbour search time: 0, Accel Calc time: 0.594
+Max, Min, Avg temps: 271.158, 255.19, 263.174
+Max flux: 0
+
+Output No. 131 at 129.011 has been generated
+Current Time Step = 0.0280825
+Total time: 114.366, Neigbour search time: 0, Accel Calc time: 0.597
+Max, Min, Avg temps: 270.555, 254.833, 262.694
+Max flux: 0
+
+Output No. 132 at 130.022 has been generated
+Current Time Step = 0.0280825
+Total time: 115.28, Neigbour search time: 0, Accel Calc time: 0.598
+Max, Min, Avg temps: 269.957, 254.472, 262.215
+Max flux: 0
+
+Output No. 133 at 131.005 has been generated
+Current Time Step = 0.0280825
+Total time: 116.137, Neigbour search time: 0, Accel Calc time: 0.605
+Max, Min, Avg temps: 269.379, 254.117, 261.748
+Max flux: 0
+
+Output No. 134 at 132.016 has been generated
+Current Time Step = 0.0280825
+Total time: 116.965, Neigbour search time: 0, Accel Calc time: 0.608
+Max, Min, Avg temps: 268.789, 253.749, 261.269
+Max flux: 0
+
+Output No. 135 at 133.027 has been generated
+Current Time Step = 0.0280825
+Total time: 117.829, Neigbour search time: 0, Accel Calc time: 0.609
+Max, Min, Avg temps: 268.204, 253.378, 260.791
+Max flux: 0
+
+Output No. 136 at 134.01 has been generated
+Current Time Step = 0.0280825
+Total time: 118.741, Neigbour search time: 0, Accel Calc time: 0.612
+Max, Min, Avg temps: 267.636, 253.013, 260.325
+Max flux: 0
+
+Output No. 137 at 135.021 has been generated
+Current Time Step = 0.0280825
+Total time: 119.649, Neigbour search time: 0, Accel Calc time: 0.612
+Max, Min, Avg temps: 267.058, 252.636, 259.847
+Max flux: 0
+
+Output No. 138 at 136.004 has been generated
+Current Time Step = 0.0280825
+Total time: 120.576, Neigbour search time: 0, Accel Calc time: 0.615
+Max, Min, Avg temps: 266.498, 252.266, 259.382
+Max flux: 0
+
+Output No. 139 at 137.015 has been generated
+Current Time Step = 0.0280825
+Total time: 121.465, Neigbour search time: 0, Accel Calc time: 0.616
+Max, Min, Avg temps: 265.924, 251.882, 258.903
+Max flux: 0
+
+Output No. 140 at 138.026 has been generated
+Current Time Step = 0.0280825
+Total time: 122.35, Neigbour search time: 0, Accel Calc time: 0.617
+Max, Min, Avg temps: 265.354, 251.497, 258.425
+Max flux: 0
+
+Output No. 141 at 139.009 has been generated
+Current Time Step = 0.0280825
+Total time: 123.224, Neigbour search time: 0, Accel Calc time: 0.62
+Max, Min, Avg temps: 264.803, 251.119, 257.961
+Max flux: 0
+
+Output No. 142 at 140.019 has been generated
+Current Time Step = 0.0280825
+Total time: 124.162, Neigbour search time: 0, Accel Calc time: 0.623
+Max, Min, Avg temps: 264.238, 250.729, 257.483
+Max flux: 0
+
+Output No. 143 at 141.002 has been generated
+Current Time Step = 0.0280825
+Total time: 125.099, Neigbour search time: 0, Accel Calc time: 0.624
+Max, Min, Avg temps: 263.69, 250.347, 257.019
+Max flux: 0
+
+Output No. 144 at 142.013 has been generated
+Current Time Step = 0.0280825
+Total time: 125.961, Neigbour search time: 0, Accel Calc time: 0.628
+Max, Min, Avg temps: 263.131, 249.952, 256.542
+Max flux: 0
+
+Output No. 145 at 143.024 has been generated
+Current Time Step = 0.0280825
+Total time: 126.816, Neigbour search time: 0, Accel Calc time: 0.629
+Max, Min, Avg temps: 262.573, 249.556, 256.064
+Max flux: 0
+
+Output No. 146 at 144.007 has been generated
+Current Time Step = 0.0280825
+Total time: 127.681, Neigbour search time: 0, Accel Calc time: 0.631
+Max, Min, Avg temps: 262.033, 249.168, 255.601
+Max flux: 0
+
+Output No. 147 at 145.018 has been generated
+Current Time Step = 0.0280825
+Total time: 128.633, Neigbour search time: 0, Accel Calc time: 0.634
+Max, Min, Avg temps: 261.479, 248.768, 255.123
+Max flux: 0
+
+Output No. 148 at 146.001 has been generated
+Current Time Step = 0.0280825
+Total time: 129.508, Neigbour search time: 0, Accel Calc time: 0.636
+Max, Min, Avg temps: 260.943, 248.377, 254.66
+Max flux: 0
+
+Output No. 149 at 147.012 has been generated
+Current Time Step = 0.0280825
+Total time: 130.439, Neigbour search time: 0, Accel Calc time: 0.642
+Max, Min, Avg temps: 260.393, 247.973, 254.183
+Max flux: 0
+
+Output No. 150 at 148.023 has been generated
+Current Time Step = 0.0280825
+Total time: 131.338, Neigbour search time: 0, Accel Calc time: 0.644
+Max, Min, Avg temps: 259.845, 247.569, 253.707
+Max flux: 0
+
+Output No. 151 at 149.006 has been generated
+Current Time Step = 0.0280825
+Total time: 132.215, Neigbour search time: 0, Accel Calc time: 0.66
+Max, Min, Avg temps: 259.314, 247.173, 253.244
+Max flux: 0
+
+Output No. 152 at 150.017 has been generated
+Current Time Step = 0.0280825
+Total time: 133.098, Neigbour search time: 0, Accel Calc time: 0.675
+Max, Min, Avg temps: 258.769, 246.766, 252.768
+Max flux: 0
+
+Output No. 153 at 151.028 has been generated
+Current Time Step = 0.0280825
+Total time: 133.985, Neigbour search time: 0, Accel Calc time: 0.675
+Max, Min, Avg temps: 258.226, 246.357, 252.292
+Max flux: 0
+
+Output No. 154 at 152.011 has been generated
+Current Time Step = 0.0280825
+Total time: 134.813, Neigbour search time: 0, Accel Calc time: 0.675
+Max, Min, Avg temps: 257.7, 245.958, 251.829
+Max flux: 0
+
+Output No. 155 at 153.022 has been generated
+Current Time Step = 0.0280825
+Total time: 135.685, Neigbour search time: 0, Accel Calc time: 0.675
+Max, Min, Avg temps: 257.161, 245.547, 251.354
+Max flux: 0
+
+Output No. 156 at 154.005 has been generated
+Current Time Step = 0.0280825
+Total time: 136.56, Neigbour search time: 0, Accel Calc time: 0.69
+Max, Min, Avg temps: 256.638, 245.147, 250.892
+Max flux: 0
+
+Output No. 157 at 155.016 has been generated
+Current Time Step = 0.0280825
+Total time: 137.428, Neigbour search time: 0, Accel Calc time: 0.69
+Max, Min, Avg temps: 256.101, 244.734, 250.417
+Max flux: 0
+
+Output No. 158 at 156.027 has been generated
+Current Time Step = 0.0280825
+Total time: 138.259, Neigbour search time: 0, Accel Calc time: 0.69
+Max, Min, Avg temps: 255.566, 244.32, 249.943
+Max flux: 0
+
+Output No. 159 at 157.009 has been generated
+Current Time Step = 0.0280825
+Total time: 139.103, Neigbour search time: 0, Accel Calc time: 0.708
+Max, Min, Avg temps: 255.047, 243.917, 249.482
+Max flux: 0
+
+Output No. 160 at 158.02 has been generated
+Current Time Step = 0.0280825
+Total time: 140.057, Neigbour search time: 0, Accel Calc time: 0.71
+Max, Min, Avg temps: 254.515, 243.501, 249.008
+Max flux: 0
+
+Output No. 161 at 159.003 has been generated
+Current Time Step = 0.0280825
+Total time: 140.969, Neigbour search time: 0, Accel Calc time: 0.711
+Max, Min, Avg temps: 253.998, 243.097, 248.547
+Max flux: 0
+
+Output No. 162 at 160.014 has been generated
+Current Time Step = 0.0280825
+Total time: 141.893, Neigbour search time: 0, Accel Calc time: 0.715
+Max, Min, Avg temps: 253.469, 242.68, 248.074
+Max flux: 0
+
+Output No. 163 at 161.025 has been generated
+Current Time Step = 0.0280825
+Total time: 142.802, Neigbour search time: 0, Accel Calc time: 0.717
+Max, Min, Avg temps: 252.941, 242.263, 247.602
+Max flux: 0
+
+Output No. 164 at 162.008 has been generated
+Current Time Step = 0.0280825
+Total time: 143.651, Neigbour search time: 0, Accel Calc time: 0.734
+Max, Min, Avg temps: 252.429, 241.856, 247.143
+Max flux: 0
+
+Output No. 165 at 163.019 has been generated
+Current Time Step = 0.0280825
+Total time: 144.605, Neigbour search time: 0, Accel Calc time: 0.735
+Max, Min, Avg temps: 251.904, 241.438, 246.671
+Max flux: 0
+
+Output No. 166 at 164.002 has been generated
+Current Time Step = 0.0280825
+Total time: 145.473, Neigbour search time: 0, Accel Calc time: 0.735
+Max, Min, Avg temps: 251.394, 241.031, 246.212
+Max flux: 0
+
+Output No. 167 at 165.013 has been generated
+Current Time Step = 0.0280825
+Total time: 146.395, Neigbour search time: 0, Accel Calc time: 0.735
+Max, Min, Avg temps: 250.872, 240.611, 245.742
+Max flux: 0
+
+Output No. 168 at 166.024 has been generated
+Current Time Step = 0.0280825
+Total time: 147.291, Neigbour search time: 0, Accel Calc time: 0.751
+Max, Min, Avg temps: 250.351, 240.192, 245.271
+Max flux: 0
+
+Output No. 169 at 167.007 has been generated
+Current Time Step = 0.0280825
+Total time: 148.223, Neigbour search time: 0, Accel Calc time: 0.766
+Max, Min, Avg temps: 249.845, 239.783, 244.814
+Max flux: 0
+
+Output No. 170 at 168.018 has been generated
+Current Time Step = 0.0280825
+Total time: 149.137, Neigbour search time: 0, Accel Calc time: 0.766
+Max, Min, Avg temps: 249.327, 239.363, 244.345
+Max flux: 0
+
+Output No. 171 at 169.001 has been generated
+Current Time Step = 0.0280825
+Total time: 149.995, Neigbour search time: 0, Accel Calc time: 0.782
+Max, Min, Avg temps: 248.824, 238.954, 243.889
+Max flux: 0
+
+Output No. 172 at 170.012 has been generated
+Current Time Step = 0.0280825
+Total time: 151.211, Neigbour search time: 0, Accel Calc time: 0.782
+Max, Min, Avg temps: 248.308, 238.534, 243.421
+Max flux: 0
+
+Output No. 173 at 171.023 has been generated
+Current Time Step = 0.0280825
+Total time: 152.259, Neigbour search time: 0, Accel Calc time: 0.814
+Max, Min, Avg temps: 247.793, 238.113, 242.953
+Max flux: 0
+
+Output No. 174 at 172.005 has been generated
+Current Time Step = 0.0280825
+Total time: 153.163, Neigbour search time: 0, Accel Calc time: 0.83
+Max, Min, Avg temps: 247.294, 237.703, 242.499
+Max flux: 0
+
+Output No. 175 at 173.016 has been generated
+Current Time Step = 0.0280825
+Total time: 154.042, Neigbour search time: 0, Accel Calc time: 0.83
+Max, Min, Avg temps: 246.782, 237.282, 242.032
+Max flux: 0
+
+Output No. 176 at 174.027 has been generated
+Current Time Step = 0.0280825
+Total time: 155.049, Neigbour search time: 0, Accel Calc time: 0.83
+Max, Min, Avg temps: 246.272, 236.861, 241.566
+Max flux: 0
+
+Output No. 177 at 175.01 has been generated
+Current Time Step = 0.0280825
+Total time: 155.914, Neigbour search time: 0, Accel Calc time: 0.83
+Max, Min, Avg temps: 245.777, 236.451, 241.114
+Max flux: 0
+
+Output No. 178 at 176.021 has been generated
+Current Time Step = 0.0280825
+Total time: 156.834, Neigbour search time: 0, Accel Calc time: 0.846
+Max, Min, Avg temps: 245.269, 236.03, 240.649
+Max flux: 0
+
+Output No. 179 at 177.004 has been generated
+Current Time Step = 0.0280825
+Total time: 157.814, Neigbour search time: 0, Accel Calc time: 0.857
+Max, Min, Avg temps: 244.776, 235.62, 240.198
+Max flux: 0
+
+Output No. 180 at 178.015 has been generated
+Current Time Step = 0.0280825
+Total time: 158.781, Neigbour search time: 0, Accel Calc time: 0.873
+Max, Min, Avg temps: 244.27, 235.199, 239.735
+Max flux: 0
+
+Output No. 181 at 179.026 has been generated
+Current Time Step = 0.0280825
+Total time: 159.725, Neigbour search time: 0, Accel Calc time: 0.873
+Max, Min, Avg temps: 243.766, 234.778, 239.272
+Max flux: 0
+
+Output No. 182 at 180.009 has been generated
+Current Time Step = 0.0280825
+Total time: 160.641, Neigbour search time: 0, Accel Calc time: 0.875
+Max, Min, Avg temps: 243.277, 234.368, 238.823
+Max flux: 0
+
+Output No. 183 at 181.02 has been generated
+Current Time Step = 0.0280825
+Total time: 161.485, Neigbour search time: 0, Accel Calc time: 0.875
+Max, Min, Avg temps: 242.776, 233.947, 238.362
+Max flux: 0
+
+Output No. 184 at 182.003 has been generated
+Current Time Step = 0.0280825
+Total time: 162.362, Neigbour search time: 0, Accel Calc time: 0.875
+Max, Min, Avg temps: 242.29, 233.538, 237.914
+Max flux: 0
+
+Output No. 185 at 183.014 has been generated
+Current Time Step = 0.0280825
+Total time: 163.246, Neigbour search time: 0, Accel Calc time: 0.875
+Max, Min, Avg temps: 241.791, 233.117, 237.454
+Max flux: 0
+
+Output No. 186 at 184.025 has been generated
+Current Time Step = 0.0280825
+Total time: 164.167, Neigbour search time: 0, Accel Calc time: 0.875
+Max, Min, Avg temps: 241.293, 232.696, 236.995
+Max flux: 0
+
+Output No. 187 at 185.008 has been generated
+Current Time Step = 0.0280825
+Total time: 165.056, Neigbour search time: 0, Accel Calc time: 0.891
+Max, Min, Avg temps: 240.811, 232.287, 236.549
+Max flux: 0
+
+Output No. 188 at 186.019 has been generated
+Current Time Step = 0.0280825
+Total time: 166, Neigbour search time: 0, Accel Calc time: 0.891
+Max, Min, Avg temps: 240.316, 231.867, 236.091
+Max flux: 0
+
+Output No. 189 at 187.002 has been generated
+Current Time Step = 0.0280825
+Total time: 166.798, Neigbour search time: 0, Accel Calc time: 0.891
+Max, Min, Avg temps: 239.836, 231.458, 235.647
+Max flux: 0
+
+Output No. 190 at 188.013 has been generated
+Current Time Step = 0.0280825
+Total time: 167.659, Neigbour search time: 0, Accel Calc time: 0.891
+Max, Min, Avg temps: 239.344, 231.038, 235.191
+Max flux: 0
+
+Output No. 191 at 189.023 has been generated
+Current Time Step = 0.0280825
+Total time: 168.456, Neigbour search time: 0, Accel Calc time: 0.891
+Max, Min, Avg temps: 238.852, 230.618, 234.735
+Max flux: 0
+
+Output No. 192 at 190.006 has been generated
+Current Time Step = 0.0280825
+Total time: 169.3, Neigbour search time: 0, Accel Calc time: 0.891
+Max, Min, Avg temps: 238.376, 230.211, 234.293
+Max flux: 0
+
+Output No. 193 at 191.017 has been generated
+Current Time Step = 0.0280825
+Total time: 170.155, Neigbour search time: 0, Accel Calc time: 0.891
+Max, Min, Avg temps: 237.888, 229.791, 233.839
+Max flux: 0
+
+Output No. 194 at 192 has been generated
+Current Time Step = 0.0280825
+Total time: 171.017, Neigbour search time: 0, Accel Calc time: 0.891
+Max, Min, Avg temps: 237.414, 229.384, 233.399
+Max flux: 0
+
+Output No. 195 at 193.011 has been generated
+Current Time Step = 0.0280825
+Total time: 172.016, Neigbour search time: 0, Accel Calc time: 0.903
+Max, Min, Avg temps: 236.928, 228.965, 232.946
+Max flux: 0
+
+Output No. 196 at 194.022 has been generated
+Current Time Step = 0.0280825
+Total time: 172.857, Neigbour search time: 0, Accel Calc time: 0.905
+Max, Min, Avg temps: 236.443, 228.547, 232.495
+Max flux: 0
+
+Output No. 197 at 195.005 has been generated
+Current Time Step = 0.0280825
+Total time: 173.705, Neigbour search time: 0, Accel Calc time: 0.911
+Max, Min, Avg temps: 235.973, 228.14, 232.057
+Max flux: 0
+
+Output No. 198 at 196.016 has been generated
+Current Time Step = 0.0280825
+Total time: 174.562, Neigbour search time: 0, Accel Calc time: 0.912
+Max, Min, Avg temps: 235.49, 227.723, 231.606
+Max flux: 0
+
+Output No. 199 at 197.027 has been generated
+Current Time Step = 0.0280825
+Total time: 175.494, Neigbour search time: 0, Accel Calc time: 0.914
+Max, Min, Avg temps: 235.009, 227.305, 231.157
+Max flux: 0
+
+Output No. 200 at 198.01 has been generated
+Current Time Step = 0.0280825
+Total time: 176.473, Neigbour search time: 0, Accel Calc time: 0.916
+Max, Min, Avg temps: 234.542, 226.9, 230.721
+Max flux: 0
+
+Output No. 201 at 199.021 has been generated
+Current Time Step = 0.0280825
+Total time: 177.447, Neigbour search time: 0, Accel Calc time: 0.919
+Max, Min, Avg temps: 234.064, 226.483, 230.274
+Max flux: 0
+
+Output No. 202 at 200.004 has been generated
+Current Time Step = 0.0280825
+Total time: 178.314, Neigbour search time: 0, Accel Calc time: 0.92
+Max, Min, Avg temps: 233.6, 226.079, 229.839
+Max flux: 0
+
+--------------Solving is finished---------------------------------------------------

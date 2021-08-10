@@ -57,14 +57,14 @@ int main(int argc, char **argv) try
 //     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
-    	double H,L,n;
+    	double H,L;
 
     	H	= 1.;
-    	n	= 20.0;
 
     	rho	= 1000.0;
-    	dx	= H / n;
-    	h	= dx*1.3; //Very important
+		float n = 30.;
+    	dx	= H/n;
+    	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -78,14 +78,12 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = H;
         dom.DomMin(0) = -H;
 
-     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/40., -H/2.0 -H/40., -H/2.0 -H/40. ), H + H/20., H +H/20.,  H + H/20. , dx/2.0 ,rho, h, 1 , 0 , false, false );
-		//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20.,0. ), H + H/20., H +H/20.,  0. , dx/2.0 ,rho, h, 1 , 0 , false, false );
-     	
-// dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
-							// H , H ,  H , 
-							// dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , -H/2.0 ), 
+										H + dx/10. , H +dx/10. ,  H +dx/10. , 
+										dx/2.0 , rho, h, 1 , 0 , false, false );
+										
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
-     	double x;
+     	double x,y;
 		
 		double total_heatflux = 100000.0;	//100kW
 		int heatflux_partcount = 0;
@@ -93,6 +91,7 @@ int main(int argc, char **argv) try
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		x = dom.Particles[a]->x(0);
+    		y = dom.Particles[a]->x(1);
 			dom.Particles[a]->k_T			=	3000.;
 			dom.Particles[a]->cp_T			=	1.;
 			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
@@ -104,13 +103,13 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Alpha		= 0.0;
     		dom.Particles[a]->Beta		= 0.0;
 			
-    		if ( x <= -H/2.0 +dx) {
+    		if ( x == -H/2.0 +dx/2. || y  == -H/2.0 +dx/2. || y >= H/2.0 -dx/2 ) {
     			dom.Particles[a]->ID 			= 2;
     			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
 				// cout << "Particle " << a << "is convection BC" <<endl;
 				conv_partcount++;
 			}
-    		else if ( x >= H/2.0 -dx) {
+    		else if ( x >= H/2.0 -dx/2) {
     			dom.Particles[a]->ID 	= 3;
 				heatflux_partcount++;
     			//dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
@@ -134,6 +133,8 @@ int main(int argc, char **argv) try
 		
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+
+		dom.gradKernelCorr = false;
 
 		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 

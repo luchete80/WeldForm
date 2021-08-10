@@ -106,6 +106,8 @@ inline Domain::Domain ()
     I = OrthoSys::I;
 	
 	Vol=0.;
+	
+	gradKernelCorr = false;
 }
 
 inline Domain::~Domain ()
@@ -444,7 +446,7 @@ int calcHalfPartCount(const double &r, const double &R, const int xinc){
 		double yp = r;
 		double xp = r + (double)(xinc - 1 ) *2.*r; 
 		double rad = sqrt(yp*yp + xp*xp);
-		while( rad < R ){
+		while( rad <= R -r ){
 			yp += 2.*r;
 			rad = sqrt(yp*yp + xp*xp);
 			ypartcount++;

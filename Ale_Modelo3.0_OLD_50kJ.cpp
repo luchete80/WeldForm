@@ -17,19 +17,12 @@
 * You should have received a copy of the GNU General Public License along with     *
 * PersianSPH; if not, see <http://www.gnu.org/licenses/>                           *
 ************************************************************************************/
-#define T_WELD			25.0	//Seg
-#define ARC_RADIUS		0.004
-#define WELD_LENGTH		0.070	//This include 2 * radiuos
-#define PROBE_LENGTH	0.12
+#define	WELDING_SPEED	0.110 	//m/min
+#define ARC_RADIUS		0.0075
+#define WELD_LENGTH		0.07	//This include 2 * radiuos
 #define THICKNESS		0.006
-#define HEAT_EFF		0.7
-#define WELD_EGY		40000.0 //ES LA TOTAL (SIN SIMETRIA)
-#define T_AMB			15.0
-#define T_0				90.0
-#define WALL_HEIGHT		0.006
-
-
-#define	WELDING_SPEED	(WELD_LENGTH-2.0*ARC_RADIUS)/(T_WELD/60.) 	//m/min, Son 55mm en 25 minutos
+#define HEAT_EFF		0.65
+#define WELD_EGY		50000.0 //ES LA TOTAL (SIN SIMETRIA)
 
 #include <fstream>      // std::ofstream
 
@@ -38,11 +31,10 @@
 double last_time_saved = 0.;
 Vec3_t meas_pos[3]; //Temperature measurement points
 int meas_part_idx[3];
-double t_heat;
+
 int meas_mov_part_idx[3];
 
 bool endheat;
-double r;
 
 int find_part_idx(SPH::Domain & dom, Vec3_t pos){
 	int ret;
@@ -60,14 +52,13 @@ int find_part_idx(SPH::Domain & dom, Vec3_t pos){
 }
 
 std::ofstream ofs,ofsmov;
-
 void UserAcc(SPH::Domain & dom)
 {
 	int meas_mov_part_idx;
 	
 	double xstart = -WELD_LENGTH/2. + ARC_RADIUS;
 	double x,y,z;
-	t_heat = (WELD_LENGTH-2.0*ARC_RADIUS)/WELDING_SPEED*60;
+	double t_heat = (WELD_LENGTH-2.0*ARC_RADIUS)/WELDING_SPEED*60;
 	double total_heatflux = HEAT_EFF * ( WELD_EGY/2.) / t_heat;	//100kW
 	//cout << "Total heat, t_heat"<<total_heatflux<<", "<< t_heat << endl;
 	int heatflux_partcount = 0;
@@ -81,7 +72,7 @@ void UserAcc(SPH::Domain & dom)
 			y = dom.Particles[i]->x(1);
 			z = dom.Particles[i]->x(2);
 			//cout << "z "<< dom.Particles[i]->x(2)<<endl;
-			if (y <= ARC_RADIUS && y >= -ARC_RADIUS && z == THICKNESS/2. - r  + WALL_HEIGHT){
+			if (y <= ARC_RADIUS && y >= -ARC_RADIUS && z == THICKNESS/2. + WALL_HEIGHT){
 				// cout << "z "<< dom.Particles[i]->x(2)<<endl;
 				//cout << "x source "<<xsource<<", x: "<<dom.Particles[i]->x(0)  << endl;
 				dom.Particles[i]->q_source = 0.;
@@ -119,7 +110,6 @@ void UserAcc(SPH::Domain & dom)
 	
 	if ( dom.getTime() > last_time_saved ){
 		int p = meas_part_idx[0];
-		cout << "t, T Punto fijo: "<<dom.getTime() << ", " <<dom.Particles[p]->T<<endl;
 		ofs << dom.getTime() << ", " <<dom.Particles[p]->T<<endl;
 
 		Vec3_t pos; 
@@ -135,7 +125,6 @@ void UserAcc(SPH::Domain & dom)
 		
 		last_time_saved += 1.;
 	}}
-
 
 using std::cout;
 using std::endl;
@@ -155,13 +144,12 @@ int main(int argc, char **argv) try
 		double th_factor = 0.5;
 
     	W	= 0.025;
-    	L	= PROBE_LENGTH;
+    	L	= 0.1;
 		T	= THICKNESS;
 		n 	= 5.;
 		
     	rho	= 7850.0;
     	dx	= T/n;
-		r= dx/2.;
     	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
@@ -172,39 +160,15 @@ int main(int argc, char **argv) try
         cout<<"K  = "<<K<<endl;
         cout<<"G  = "<<G<<endl;
         cout<<"Fy = "<<Fy<<endl;
-		cout<<"Welding Speed: "<<WELDING_SPEED<<endl;
-		cout << "Time heating"<<endl;
     	dom.GeneralAfter = & UserAcc;
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
-		
-		if (WALL_HEIGHT == 0.0){
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 , 0.0 , -T/2.0 ), 
+
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 /*-dx/2.*/, 0.0 /*-dx/2.*/, -T/2.0 /*-dx/2.*/), 
 										L +dx, W +dx,  T +dx, 
 										dx/2.0 , rho, h, 1 , 0 , false, false );
-		
-		} else {
-			///////////////////////////////
-			dom.Add3DCubicBoxParticles(1, Vec3_t ( -L/2.0 , 0.0 /*-dx/2.*/, -T/2.0  ),
-										L +dx, W +dx,  T +dx,  
-										dx/2., rho, h);
-			
-			
-			int idx = find_part_idx(dom , Vec3_t(-WELD_LENGTH/2.0,0,-T/2.0));
-			cout << "Init Partcile: "<< idx<< ", "<<dom.Particles[idx]->x(0)<<endl;
-			Vec3_t pos_ini = Vec3_t (dom.Particles[idx]->x(0)-r,0.0,T/2.);
-			 
-			dom.Add3DCubicBoxParticles(1, pos_ini,
-										WELD_LENGTH +dx, ARC_RADIUS + dx,  WALL_HEIGHT,  
-										dx/2., rho, h);
-
-			dom.Calculate3DMass(rho);	
-			cout << "Domain Volume"<<dom.Vol<<endl;
-		}
-		////////////////////////////////////////
-		
-		std::cout << "Particle Number & Mass: "<< dom.Particles.size() <<", "<<dom.Particles[0]->Mass<< endl;
-		
+										
+		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x,y,z;
 		
 		int conv_partcount = 0;
@@ -215,18 +179,17 @@ int main(int argc, char **argv) try
     		z = dom.Particles[a]->x(2);
 			dom.Particles[a]->k_T			=	50.;
 			dom.Particles[a]->cp_T			=	490.;
-			dom.Particles[a]->h_conv		= 	25.0; //W/m2-K
-			dom.Particles[a]->T_inf 		= 	T_AMB;
-			dom.Particles[a]->T				= 	T_0;			
-    		dom.Particles[a]->PresEq		= 0;
-    		dom.Particles[a]->Cs			= Cs;
-    		dom.Particles[a]->Shepard		= false;
-    		dom.Particles[a]->Alpha			= 0.0;
-    		dom.Particles[a]->Beta			= 0.0;
+			dom.Particles[a]->h_conv		= 	30.0; //W/m2-K
+			dom.Particles[a]->T_inf 		= 	20.;
+			dom.Particles[a]->T				= 	20.0;			
+    		dom.Particles[a]->PresEq	= 0;
+    		dom.Particles[a]->Cs		= Cs;
+    		dom.Particles[a]->Shepard	= false;
+    		dom.Particles[a]->Alpha		= 0.0;
+    		dom.Particles[a]->Beta		= 0.0;
 			
 			//cout << "z "<< dom.Particles[a]->x(2)<<endl;
-    		if ( z == -T/2.+ r || (z == T/2.0 - r && y > ARC_RADIUS + r ) || abs(y - W) < dx/2. || x == -L/2. + r || abs(x - L/2.)<dx/2. 
-				|| ( abs(y - ARC_RADIUS) < dx/2. && z > T/2.0 )) {
+    		if ( z == -T/2. || (z == T/2.0 && y > ARC_RADIUS) || abs(y - W) < dx/2. || x == -L/2. || abs(x - L/2.)<dx/2. ) {
     			dom.Particles[a]->ID 			= 2;
     			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
 				// cout << "Particle " << a << "is convection BC" <<endl;
@@ -236,22 +199,11 @@ int main(int argc, char **argv) try
     	}
 		meas_pos[0](0)=0.0; meas_pos[0](1)=0.015;meas_pos[0](2)=0.0;
 		
-		for (int p=0;p<1;p++){
-			double mindist=1.;
-			for (size_t a=0; a<dom.Particles.Size(); a++) {
-				
-				
-				Vec3_t dist =meas_pos[p] - dom.Particles[a]->x;
-				if ( norm(dist)<mindist ) {
-					mindist=norm(dist);
-					meas_part_idx[p] = a;
-				}
-				//if ()
-			}
+		double mindist=1.;
+		for (int p=0;p<3;p++){
+			Vec3_t dist =meas_pos - dom.Particles[p]->x;
+			//if ()
 		}
-		cout << " Particle measured is "<<meas_part_idx[0]<<endl;
-		int a = meas_part_idx[0];
-		cout << "x,y,<:" <<dom.Particles[a]->x(0)<<", "<<dom.Particles[a]->x(1)<<", "<<dom.Particles[a]->x(2)<<endl;
 		
 		cout << "Convection particle count: "<<conv_partcount<<endl;
 		
@@ -267,15 +219,11 @@ int main(int argc, char **argv) try
 
 		//dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 		
-		ofs.open   ("test.txt", std::ofstream::out | std::ofstream::app);
-		ofsmov.open("test_mov.txt", std::ofstream::out | std::ofstream::app);
-		
-		endheat = false;
-		
-		dom.ThermalSolve(/*tf*/200.1,/*dt*/timestep,/*dtOut*/1.0,"test06",999);
+		ofs.open("test.txt", std::ofstream::out | std::ofstream::app);
+
+		dom.ThermalSolve(/*tf*/30.1,/*dt*/timestep,/*dtOut*/1.0,"test06",999);
 
 		ofs.close();
-		ofsmov.close();
         return 0;
 }
 

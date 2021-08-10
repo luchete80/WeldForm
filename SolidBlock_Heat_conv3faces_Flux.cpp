@@ -119,10 +119,10 @@ int main(int argc, char **argv) try
 		cout << "Heat source particle count: "<<heatflux_partcount<<endl;
 		cout << "Convection particle count: "<<conv_partcount<<endl;
 		
-		// double source = total_heatflux/heatflux_partcount ; //surface=1m2
-    	// for (size_t a=0; a<dom.Particles.Size(); a++)
-			// if (dom.Particles[a]->ID == 3)
-				// dom.Particles[a]->q_source = source * dom.Particles[a]->Density / dom.Particles[a]->Mass;	
+		double source = total_heatflux/heatflux_partcount ; //surface=1m2
+    	for (size_t a=0; a<dom.Particles.Size(); a++)
+			if (dom.Particles[a]->ID == 3)
+				dom.Particles[a]->q_source = source * dom.Particles[a]->Density / dom.Particles[a]->Mass;	
 		
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
 		cout << "Time Step: "<<timestep<<endl;

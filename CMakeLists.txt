@@ -59,18 +59,22 @@ include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 
 SET(EXES
 	#Ale
+	#Ale_modelo6
+	#SolidBlock_Heat_conv3faces_Flux_n30
+	#Ale_Modelo3.0_OLD_50kJ
 	# 1-Poiseuille
 	# 2-Couette
 	# 3-DamBreak
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	#Compression
+	Compression
 	#Compression_smallD
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
+	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
 	#Elastic
@@ -85,7 +89,9 @@ SET(EXES
 	#Plate-Yield_3d_al_CNS
 	#SolidBlock_Heat
 	#SolidBlock_Heat_CNS
-	SolidBlock_Heat_conv3faces
+	#SolidBlock_Heat_conv3faces
+	#SolidBlock_Heat_source
+	#SolidBlock_Heat_conv3faces_Flux
 	#SolidBlock_Heat_source2
 	#SolidBlock_Heat_source2_boundpart
 	#Neighbour_Test
