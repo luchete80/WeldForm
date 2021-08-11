@@ -29,10 +29,14 @@ void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
 
-	if (domi.getTime() < TAU ) 
-		vcompress = VMAX/TAU * domi.getTime();
-	else
-		vcompress = VMAX;
+	//VAR
+	// if (domi.getTime() < TAU ) 
+		// vcompress = VMAX/TAU * domi.getTime();
+	// else
+		// vcompress = VMAX;
+	
+	//CTE
+	vcompress = 0.5;
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -112,8 +116,17 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
-		
+		//dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
+
+		// inline void Domain::AddBoxLength(int tag, Vec3_t const & V, 
+									//double Lx, double Ly, double Lz, 
+									// double r, double Density, double h, int type, int rotation, bool random, bool Fixed)
+									
+
+     	dom.AddBoxLength(1 ,Vec3_t ( 0. , 0. , -L/10.0 ), 
+							2.*R , 2.*R,  L + 2.*L/10., 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );
+							
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -144,7 +157,7 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/0.00101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.00501,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

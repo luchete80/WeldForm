@@ -70,7 +70,7 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic_Spline);
+    	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 0;	//Mod Verlet
 //     	dom.XSPH	= 0.5; //Very important
 
@@ -94,7 +94,7 @@ int main(int argc, char **argv) try
 		G= E / (2.* (1.+nu));
 		Fy	= 350.e6;
 
-		dx = 0.01;
+		dx = 0.0065;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -117,7 +117,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 
-		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/5.), R, Lz_side + Lz_side/5.,
+		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/20.), R, Lz_side + Lz_side/20.,
 											Lz_neckmin,Lz_necktot,Rxy_center,
 											dx/2., rho, h, false);
 
@@ -137,19 +137,16 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 ){
+    		if ( z < 0 )
     			dom.Particles[a]->ID=2;
-				dom.Particles[a]->IsFree=false;
-				dom.Particles[a]->NoSlip=true;			
-			}
     		if ( z > L )
-    			dom.Particles[a]->ID=3;	
+    			dom.Particles[a]->ID=3;
     	}
 		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.002505,/*dt*/timestep,/*dtOut*/0.0005,"test06",999);
+    	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

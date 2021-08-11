@@ -520,15 +520,18 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 			zp = V(2) + (2.0*k+1)*r;
 		}
 		//Calculate particles' mass in 3D
-		Vec3_t temp, Max=V;
-		for (size_t i=PrePS; i<Particles.Size(); i++) {
-			if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
-			if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
-			if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
-		}
-		Max +=r;
-		temp = Max-V;
-		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
+		// Vec3_t temp, Max=V;
+		// for (size_t i=PrePS; i<Particles.Size(); i++) {
+			// if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
+			// if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
+			// if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
+		// }
+		// Max +=r;
+		// temp = Max-V;
+		// double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
+		
+		double Vol = M_PI * Rxy * Rxy * Lz;		
+		double Mass = Vol * Density / (Particles.Size()-PrePS);
 
 		#pragma omp parallel for num_threads(Nproc)
 		#ifdef __GNUC__
