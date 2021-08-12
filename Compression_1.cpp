@@ -20,8 +20,8 @@
 
 #include "Domain.h"
 
-#define TAU		0.05
-#define VMAX	1.0
+#define TAU		0.005
+#define VMAX	10.0
 
 
 
@@ -32,8 +32,8 @@ void UserAcc(SPH::Domain & domi)
 	if (domi.getTime() < TAU ) 
 		vcompress = VMAX/TAU * domi.getTime();
 	else
-		vcompress = VMAX;
-	
+		vcompress = 0.0;
+	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
 	#ifdef __GNUC__
@@ -70,9 +70,9 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Qubic_Spline);
+    	dom.Kernel_Set(Quintic_Spline);
     	dom.Scheme	= 0;	//Mod Verlet
-     	dom.XSPH	= 0.5; //Very important
+     	//dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
@@ -109,7 +109,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20.,  dx/2., rho, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -128,9 +128,11 @@ int main(int argc, char **argv) try
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-    		
+	    			dom.Particles[a]->IsFree=false;
+    			dom.Particles[a]->NoSlip=true;			
+				
 				}
-				if ( z > L )
+    		if ( z > L )
     			dom.Particles[a]->ID=3;
     	}
 		dom.WriteXDMF("maz");
