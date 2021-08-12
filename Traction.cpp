@@ -72,7 +72,7 @@ int main(int argc, char **argv) try
         dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 0;	//Mod Verlet
-//     	dom.XSPH	= 0.5; //Very important
+			dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
@@ -137,9 +137,12 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 )
+    		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-    		if ( z > L )
+    			dom.Particles[a]->IsFree=false;
+    			dom.Particles[a]->NoSlip=true;    		
+				}
+				if ( z > L )
     			dom.Particles[a]->ID=3;
     	}
 		dom.WriteXDMF("maz");

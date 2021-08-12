@@ -278,7 +278,9 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		temp = Max-V;
 		cout << "BoxDimensions: "<<temp(0)<<", "<<temp(1)<<", "<<temp(2)<<", "<<endl;
 		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
-
+		
+		cout << "Particle mass: " << Mass <<endl;
+		
 		#pragma omp parallel for num_threads(Nproc)
 		#ifdef __GNUC__
 		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
@@ -519,7 +521,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 			k++;
 			zp = V(2) + (2.0*k+1)*r;
 		}
-		//Calculate particles' mass in 3D
+		///////Calculate particles' mass in 3D
 		// Vec3_t temp, Max=V;
 		// for (size_t i=PrePS; i<Particles.Size(); i++) {
 			// if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
@@ -531,7 +533,10 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		// double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
 		
 		double Vol = M_PI * Rxy * Rxy * Lz;		
-		double Mass = Vol * Density / (Particles.Size()-PrePS);
+		//double Mass = Vol * Density / (Particles.Size()-PrePS);
+		double Mass = Vol * Density /Particles.Size();
+		
+		cout << "Particle mass: " << Mass <<endl;
 
 		#pragma omp parallel for num_threads(Nproc)
 		#ifdef __GNUC__
@@ -642,12 +647,15 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 		// Max +=r;
 		// temp = Max-V;
 		// double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
+
 		double L_cone = ( Lz_necktot - Lz_neckmin )/2.;
 		double Vol = 2.0 * Lz_side * M_PI * Rxy * Rxy + 
 								       Lz_neckmin * M_PI * Rxy_center * Rxy_center +
 							   2.0 * L_cone * M_PI * (Rxy_center * Rxy_center + Rxy * Rxy + Rxy * Rxy_center ) / 3.0 ; //Cones
 		double Mass = Vol * Density / (Particles.Size()-PrePS);
-
+		
+		cout << "Particle mass: " << Mass <<endl;
+		
 		#pragma omp parallel for num_threads(Nproc)
 		#ifdef __GNUC__
 		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
