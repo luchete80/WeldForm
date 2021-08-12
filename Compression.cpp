@@ -72,7 +72,7 @@ int main(int argc, char **argv) try
         dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 0;	//Mod Verlet
-//     	dom.XSPH	= 0.5; //Very important
+     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
@@ -88,7 +88,7 @@ int main(int argc, char **argv) try
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
 		dx = 0.015;
-    	h	= dx*1.1; //Very important
+    	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;

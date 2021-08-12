@@ -626,17 +626,27 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 			k++;
 			zp = V(2) + (2.0*k+1)*r;
 		}
-			
+
+//
+// double Rxy, double Lz_side,
+											// double Lz_neckmin,double Lz_necktot,double Rxy_center,
+											// double r, double Density, double h, bool Fixed) {
+												
 		//Calculate particles' mass in 3D
-		Vec3_t temp, Max=V;
-		for (size_t i=PrePS; i<Particles.Size(); i++) {
-			if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
-			if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
-			if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
-		}
-		Max +=r;
-		temp = Max-V;
-		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
+		// Vec3_t temp, Max=V;
+		// for (size_t i=PrePS; i<Particles.Size(); i++) {
+			// if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
+			// if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
+			// if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
+		// }
+		// Max +=r;
+		// temp = Max-V;
+		// double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
+		double L_cone = ( Lz_necktot - Lz_neckmin )/2.;
+		double Vol = 2.0 * Lz_side * M_PI * Rxy * Rxy + 
+								       Lz_neckmin * M_PI * Rxy_center * Rxy_center +
+							   2.0 * L_cone * M_PI * (Rxy_center * Rxy_center + Rxy * Rxy + Rxy * Rxy_center ) / 3.0 ; //Cones
+		double Mass = Vol * Density / (Particles.Size()-PrePS);
 
 		#pragma omp parallel for num_threads(Nproc)
 		#ifdef __GNUC__
