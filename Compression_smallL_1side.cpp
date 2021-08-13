@@ -1,4 +1,4 @@
-/**********************************************************************************
+/***********************************************************************************
 * PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
 *             and soils) using Smoothed Particle Hydrodynamics method              *   
 * Copyright (C) 2013 Maziar Gholami Korzani and Sergio Galindo-Torres              *
@@ -29,10 +29,14 @@ void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
 
+	//VAR
 	if (domi.getTime() < TAU ) 
 		vcompress = VMAX/TAU * domi.getTime();
 	else
 		vcompress = VMAX;
+	
+	//CTE
+	//vcompress = 0.5;
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -47,18 +51,21 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vcompress);
-			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vcompress);
 			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
 			// //domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+// // //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
+			// //domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.);
 		}
 	}
 }
@@ -75,7 +82,7 @@ int main(int argc, char **argv) try
         dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 0;	//Mod Verlet
-     	dom.XSPH	= 0.5; //Very important
+     	//dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
@@ -113,8 +120,17 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10., dx/2., rho, h, false); 
-		
+		//dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
+
+		// inline void Domain::AddBoxLength(int tag, Vec3_t const & V, 
+									//double Lx, double Ly, double Lz, 
+									// double r, double Density, double h, int type, int rotation, bool random, bool Fixed)
+									
+
+     	dom.AddBoxLength(1 ,Vec3_t ( 0. , 0. , -L/10.0 ), 
+							2.*R , 2.*R,  L + 2.*L/10., 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );
+							
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -133,8 +149,8 @@ int main(int argc, char **argv) try
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-    			// dom.Particles[a]->IsFree=false;
-    			// dom.Particles[a]->NoSlip=true;
+    			dom.Particles[a]->IsFree=false;
+    			dom.Particles[a]->NoSlip=true;
 			}
     		if ( z >=L )
     			dom.Particles[a]->ID=3;
