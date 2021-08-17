@@ -57,15 +57,15 @@ void UserAcc(SPH::Domain & domi)
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// //domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 // //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
-			// //domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.);
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.);
 		}
 	}
 }
@@ -149,8 +149,8 @@ int main(int argc, char **argv) try
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-    			// dom.Particles[a]->IsFree=false;
-    			// dom.Particles[a]->NoSlip=true;
+    			dom.Particles[a]->IsFree=false;
+    			dom.Particles[a]->NoSlip=true;
 			}
     		if ( z >=L )
     			dom.Particles[a]->ID=3;
@@ -161,7 +161,7 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    	dom.Solve(/*tf*/0.00501,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve(/*tf*/0.00501,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

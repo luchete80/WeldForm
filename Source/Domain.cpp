@@ -25,6 +25,8 @@
 
 #include <vector>
 
+#define MIN_PS_FOR_NBSEARCH		0.001	//TODO: MOVE TO CLASS MEMBER
+
 using namespace std;
 
 namespace SPH {
@@ -1547,12 +1549,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 		}
 		
-		if (max > 0.001 && !isyielding){ //First time yielding, data has not been cleared from first search
+		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
 			MainNeighbourSearch();
 			isyielding  = true ;
 		}
-		if ( max > 0.001 || isfirst ){	//TO MODIFY: CHANGE
+		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
@@ -1624,12 +1626,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			neigbour_time_spent_per_interval=0.;
 		}
 
-		//AdaptiveTimeStep();
+		AdaptiveTimeStep();
 		Move(deltat);
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
-		if (max>0.01){	//TODO: CHANGE TO FIND NEIGHBOURS
+		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
 			if ( ts_i == (ts_nb_inc - 1) ){
 				ClearNbData();
 			}

@@ -109,7 +109,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, dx/2., rho, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20. + dx, dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -126,8 +126,11 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 )
+    		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
+    			dom.Particles[a]->IsFree=false;
+    			dom.Particles[a]->NoSlip=true;
+				}
     		if ( z > L )
     			dom.Particles[a]->ID=3;
     	}

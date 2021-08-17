@@ -69,11 +69,10 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
 	#Compression
-	#Compression_2
-	Compression_3
+	Compression_2
 	#Compression_12_solver_orig
 	#Compression_smallD
-	#Compression_smallL_1side
+	#Compression_smallL
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
