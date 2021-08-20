@@ -33,7 +33,7 @@ void UserAcc(SPH::Domain & domi)
 		vcompress = VMAX/TAU * domi.getTime();
 	else
 		vcompress = VMAX;
-	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
+	cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
 	#ifdef __GNUC__
@@ -47,8 +47,7 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -69,10 +68,10 @@ int main(int argc, char **argv) try
 {
        SPH::Domain	dom;
 
-      dom.Dimension	= 3;
-      dom.Nproc	= 4;
+        dom.Dimension	= 3;
+        dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
-    	dom.Scheme	= 1;	//Mod Verlet
+    	dom.Scheme	= 0;	//Mod Verlet
      	//dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
@@ -80,7 +79,7 @@ int main(int argc, char **argv) try
 
     	R	= 0.15;
     	L	= 0.56;
-    	n	= 30.0;		//in length, radius is same distance
+    	n	= 40.0;		//in length, radius is same distance
 		
 		rho	= 2700.0;
 		K	= 6.7549e10;
@@ -88,7 +87,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.015;
+		dx = 0.0125;
     	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -124,7 +123,6 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
     		dom.Particles[a]->Alpha		= 1.0;
-    		dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
@@ -141,7 +139,7 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    dom.Solve(/*tf*/0.00105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    dom.Solve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

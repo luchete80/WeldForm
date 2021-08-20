@@ -61,7 +61,7 @@ SET(EXES
 	#Ale
 	#Ale_modelo6
 	#SolidBlock_Heat_conv3faces_Flux_n30
-	#Ale_Modelo3.0_OLD_50kJ
+	#Ale_Modelo6_placa
 	# 1-Poiseuille
 	# 2-Couette
 	# 3-DamBreak
@@ -73,6 +73,7 @@ SET(EXES
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL
+	#Compression_smallL_1side
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
