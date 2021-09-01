@@ -108,6 +108,8 @@ inline Domain::Domain ()
     I = OrthoSys::I;
 	
 	Vol=0.;
+		auto_ts = true;
+		
 	
 	gradKernelCorr = false;
 }
@@ -1625,8 +1627,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
 		}
-
-		AdaptiveTimeStep();
+		
+		if (auto_ts)
+			AdaptiveTimeStep();
 		Move(deltat);
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();

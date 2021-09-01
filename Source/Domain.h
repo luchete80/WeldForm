@@ -191,6 +191,7 @@ public:
 	
 	iKernel m_kernel;
 	bool					m_isNbDataCleared;
+	bool						auto_ts;				//LUCIANO: Auto Time Stepping
 	
 	
 	private:
@@ -210,6 +211,7 @@ public:
 		double					deltat;					//Time Step
     double					deltatmin;			//Minimum Time Step
     double					deltatint;			//Initial Time Step
+
 
 };
 
