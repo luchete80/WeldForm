@@ -69,7 +69,7 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
 	#Compression
-	Compression_2
+	Compression_WORKS
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL
@@ -106,7 +106,7 @@ SET(EXES
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
-	"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
+	#"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
