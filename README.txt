@@ -19,6 +19,8 @@ LAPACK
 
 VISUAL STUDIO CONFIG
 
+CompactNSearch and CuNSearch must be separated (either they are in conflict)
+
 1)  For blitz se debe copiar el archivo que hay en Blitz-VS.NET.zip
     al binario path%binario\blitz\ms
 2) 

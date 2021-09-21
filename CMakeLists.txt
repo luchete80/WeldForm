@@ -107,6 +107,7 @@ SET(EXES
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
+																	Source_cuda/tensor.cu
 	#"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
@@ -116,13 +117,3 @@ ENDFOREACH(var)
     # ADD_EXECUTABLE        (${EXES} "Plate-Yield.cpp")
     # TARGET_LINK_LIBRARIES (${EXES} ${LIBS} blitz)
     # SET_TARGET_PROPERTIES (${EXES} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
-
-
-SET(BUILD_GPU ON)
-add_subdirectory(Source_cuda/CuNSearch)
-project (gpuweldform LANGUAGES CXX CUDA)
-include_directories(Source_cuda/CuNSearch/include)
-include_directories(${CUNSEARCH_SRC_DIR}/Utils)
-link_directories(${CUNSEARCH_LIB_DIR})
-# add_executable(gpuweldform example_gpu.cu) 
-# target_link_libraries (gpuweldform cuNSearch )
