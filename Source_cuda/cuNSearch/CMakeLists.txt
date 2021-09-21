@@ -95,11 +95,11 @@ install(TARGETS cuNSearch
 	ARCHIVE DESTINATION lib
 	)
 
-option(BUILD_DEMO "Build example of how to use this library."
-		ON)
-if(BUILD_DEMO)
-	add_subdirectory(demo)
-endif(BUILD_DEMO)
+# option(BUILD_DEMO "Build example of how to use this library."
+		# ON)
+# if(BUILD_DEMO)
+	# add_subdirectory(demo)
+# endif(BUILD_DEMO)
 
 
 unset(USE_DOUBLE_PRECISION CACHE)

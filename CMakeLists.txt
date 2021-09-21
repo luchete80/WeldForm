@@ -52,7 +52,7 @@ include_directories("External")
 
 endif()
 
-add_subdirectory("examples")
+#add_subdirectory("examples")
 
 include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 
