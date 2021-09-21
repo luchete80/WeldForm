@@ -12,6 +12,6 @@ For MS buiding
 "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
 
 set PATH=%PATH%;D:\Luciano\Programas\mingw64\bin
-cmake ..\cuNSearch -G "Visual Studio 16 2019" -DCMAKE_CUDA_COMPILER="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/bin/nvcc.exe"
+cmake ..\WeldForm -G "NMake Makefiles" -DCMAKE_CUDA_COMPILER="C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.2/bin/nvcc.exe" -DCUNSEARCH_SRC_DIR=D:/Luciano/Numerico/cuNSearch -DCMAKE_BUILD_TYPE=RELEASE -CCUNSEARCH_SRC_DIR=D:/Luciano/cuNSearch -DCUNSEARCH_LIB_DIR=D:/Luciano/cuNSearch_bin_release
 
 set CUDA_PATH="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.2"

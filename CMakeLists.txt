@@ -69,7 +69,7 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
 	#Compression
-	Compression_9
+	#Compression_10
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL
@@ -83,7 +83,8 @@ SET(EXES
 	#Cantilever2_pl
 	#Elastic
 	#Heat_2D
-	#Traction
+	Traction
+	4-DamBreak3D
 	#Plate-Yield_hcorr
 	#Plate-Yield_CNS
 	#Plate-Yield_Hard
@@ -115,3 +116,13 @@ ENDFOREACH(var)
     # ADD_EXECUTABLE        (${EXES} "Plate-Yield.cpp")
     # TARGET_LINK_LIBRARIES (${EXES} ${LIBS} blitz)
     # SET_TARGET_PROPERTIES (${EXES} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
+
+
+SET(BUILD_GPU ON)
+add_subdirectory(Source_cuda/CuNSearch)
+project (gpuweldform LANGUAGES CXX CUDA)
+include_directories(Source_cuda/CuNSearch/include)
+include_directories(${CUNSEARCH_SRC_DIR}/Utils)
+link_directories(${CUNSEARCH_LIB_DIR})
+# add_executable(gpuweldform example_gpu.cu) 
+# target_link_libraries (gpuweldform cuNSearch )

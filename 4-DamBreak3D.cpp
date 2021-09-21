@@ -40,7 +40,7 @@ int main(int argc, char **argv) try
   TL  = 1.5*H;
   W   = H/2.0;
   TW  = H;
-  res = 40.0;
+  res = 30.0;
 
   g   = 9.81;
   Rho = 998.21;
