@@ -107,7 +107,6 @@ SET(EXES
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
-																	Source_cuda/tensor.cu
 	#"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
