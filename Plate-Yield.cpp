@@ -74,7 +74,7 @@ int main(int argc, char **argv) try
     	G	= 7.15e5;
 		Fy	= 4000.0;
     	dx	= H / n;
-    	h	= dx*1.3; //Very important
+    	h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;

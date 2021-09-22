@@ -95,8 +95,8 @@ int main(int argc, char **argv) try
 		G= E / (2.* (1.+nu));
 		Fy	= 350.e6;
 
-		dx = 0.007;
-    	h	= dx*1.1; //Very important
+		dx = 0.009;
+    h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;

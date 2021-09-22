@@ -27,6 +27,10 @@
 
 #define MIN_PS_FOR_NBSEARCH		0.001	//TODO: MOVE TO CLASS MEMBER
 
+#include <CompactNSearch> //External search
+
+#include <set>
+
 using namespace std;
 
 namespace SPH {
@@ -1555,14 +1559,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
-			MainNeighbourSearch();
+			MainNeighbourSearch_Ext();
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					MainNeighbourSearch();
+					MainNeighbourSearch_Ext();
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
 			isfirst = false;
@@ -1624,8 +1628,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
 			
 			std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
-			cout << "Total Neighbour search time in this interval: " << neigbour_time_spent_per_interval;
-			cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step);
+			cout << "Total Nb search time in this interval: " << neigbour_time_spent_per_interval;
+			cout << "Average Nb search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step)<<endl;
+			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
 		}
@@ -1824,4 +1829,79 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 		// if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();	
 	// //}
 // }
+
+using namespace CompactNSearch;
+
+
+void Domain::MainNeighbourSearch_Ext(){
+
+	std::vector<std::array<Real, 3>> positions;
+
+	for (unsigned int p = 0; p < Particles.Size(); p++){
+		
+		std::array<Real, 3> x = {{
+			static_cast<Real>(Particles[p]->x[0]),
+			static_cast<Real>(Particles[p]->x[1]),
+			static_cast<Real>(Particles[p]->x[2])
+		}};
+		positions.push_back(x);
+
+	} 
+	
+	NeighborhoodSearch nsearch(2.6*Particles[0]->h, true);
+	
+	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
+	//nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
+	nsearch.find_neighbors();
+
+	nsearch.update_point_sets();
+
+	
+	std::set< std:: pair<int,int> > neigbours_set;
+	auto const& d = nsearch.point_set(0);
+	for (int i = 0; i < d.n_points(); ++i){
+		const std::vector<unsigned int>& nbs = d.neighbor_list(0, i);
+		//res += static_cast<unsigned long>(d.n_neighbors(0, i));
+		
+
+		for (int k=0;k< nbs.size();k++) {
+			neigbours_set.insert(std::make_pair( std::min(i,int(nbs[k])), std::max(i,int(nbs[k]))) );
+			
+		}
+	}	
+
+	std::set<std:: pair<int,int>>::iterator it = neigbours_set.begin();
+	int pairsperproc = neigbours_set.size()/Nproc;
+	//cout << "Pairs per proc: " <<pairsperproc<<endl;
+	int pair=0;
+	int nproc=0;
+	while (it != neigbours_set.end()) {
+		if (pair > (nproc + 1 ) * pairsperproc){
+			nproc++;
+			//cout<<"changing proc"<< nproc<<", pair "<<pair<<endl;
+		}
+		if (nproc< Nproc) //TODO:CORRECT THIS!!!!!
+		//cout << "nproc"<< nproc<<endl;
+			SMPairs[nproc].Push(std::make_pair(it->first, it->second));
+		it++;
+		pair++;
+		
+	}
+}
+	
+int Domain::AvgNeighbourCount(){	
+		std::vector<int> nbcount(Particles.Size());
+		for (int p=0;p<Nproc;p++)
+			for (int i=0;i<SMPairs[p].size();i++){
+				nbcount[SMPairs[p][i].first]++;
+				nbcount[SMPairs[p][i].second]++;
+			}
+		int tot=0;
+		for (int p=0;p<nbcount.size();p++)
+		tot+=nbcount[p];
+	
+	return tot/Particles.Size();
+
+}
+
 }; // namespace SPH
