@@ -1848,7 +1848,7 @@ void Domain::MainNeighbourSearch_Ext(){
 
 	} 
 	
-	NeighborhoodSearch nsearch(2.6*Particles[0]->h, true);
+	NeighborhoodSearch nsearch(3.8*Particles[0]->h, true);
 	
 	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
 	//nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
