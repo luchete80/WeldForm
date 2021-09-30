@@ -59,7 +59,7 @@ int main(int argc, char **argv) try
         dom.Dimension	= 2;
         dom.Nproc	= 4;
     	dom.Kernel_Set(Quintic);
-    	dom.Scheme	= 0;
+    	dom.Scheme	= 1;
 //     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
@@ -67,14 +67,14 @@ int main(int argc, char **argv) try
 
     	H	= 0.01;
     	L	= 0.03;
-    	n	= 60.0;	//ORIGINAL IS 40
+    	n	= 40.0;	//ORIGINAL IS 40
 		
     	rho	= 1000.0;
     	K	= 3.25e6;
     	G	= 7.15e5;
 		Fy	= 4000.0;
     	dx	= H / n;
-    	h	= dx*1.1; //Very important
+    	h	= dx*1.3; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
@@ -117,7 +117,10 @@ int main(int argc, char **argv) try
 
 	
 //    	dom.WriteXDMF("maz");
-    	dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	//dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+			//dom.Solve_orig(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+			//dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+			dom.Solve_orig_Ext(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

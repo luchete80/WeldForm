@@ -94,6 +94,7 @@ public:
 
     void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
     void Solve_orig 			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
+		void Solve_orig_Ext 	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
 	void ThermalSolve			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
 	void ThermalSolve_wo_init	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
 

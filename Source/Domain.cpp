@@ -25,7 +25,7 @@
 
 #include <vector>
 
-#define MIN_PS_FOR_NBSEARCH		0.001	//TODO: MOVE TO CLASS MEMBER
+#define MIN_PS_FOR_NBSEARCH		1.e-6//TODO: MOVE TO CLASS MEMBER
 
 #include <CompactNSearch> //External search
 
@@ -1484,6 +1484,79 @@ inline void Domain::Solve_orig (double tf, double dt, double dtOut, char const *
 }
 
 
+inline void Domain::Solve_orig_Ext (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
+	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
+
+	size_t idx_out = 1;
+	double tout = Time;
+
+	//Initializing adaptive time step variables
+	deltat = deltatint = deltatmin	= dt;
+	
+	auto start_whole = std::chrono::steady_clock::now();
+
+	InitialChecks();
+	CellInitiate();
+	ListGenerate();
+	PrintInput(TheFileKey);
+	TimestepCheck();
+	WholeVelocity();
+
+
+	//Initial model output
+	if (TheFileKey!=NULL) {
+		String fn;
+		fn.Printf    ("%s_Initial", TheFileKey);
+		WriteXDMF    (fn.CStr());
+		std::cout << "\nInitial Condition has been generated\n" << std::endl;
+	}
+	
+
+	unsigned long steps=0;
+	unsigned int first_step;
+	while (Time<tf && idx_out<=maxidx) {
+		StartAcceleration(Gravity);
+		if (BC.InOutFlow>0) InFlowBCFresh();
+		MainNeighbourSearch_Ext();
+		GeneralBefore(*this);
+		PrimaryComputeAcceleration();
+		LastComputeAcceleration();
+		for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
+			SMPairs[i].Clear();
+			FSMPairs[i].Clear();
+			NSMPairs[i].Clear();
+		}
+		GeneralAfter(*this);
+		steps++;
+
+		// output
+		if (Time>=tout){
+			if (TheFileKey!=NULL) {
+				String fn;
+				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+				WriteXDMF    (fn.CStr());
+
+			}
+			idx_out++;
+			tout += dtOut;
+			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+		}
+
+		AdaptiveTimeStep();
+		Move(deltat);
+		Time += deltat;
+		if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
+		CellReset();
+		ListGenerate();
+		
+		
+	}
+	
+
+	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
+
+}
+
 inline void Domain::ClearNbData(){
 	
 	for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
@@ -1535,7 +1608,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	unsigned long steps=0;
 	unsigned int first_step;
 	
-	int ts_nb_inc=5;	// Always > 0
+	int ts_nb_inc=3;	// Always > 0
 	int ts_i=0;
 
 	bool isfirst = true;
@@ -1559,14 +1632,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
-			MainNeighbourSearch_Ext();
+			MainNeighbourSearch();
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					MainNeighbourSearch_Ext();
+					MainNeighbourSearch();
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
 			isfirst = false;
@@ -1830,10 +1903,14 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 	// //}
 // }
 
-using namespace CompactNSearch;
-
-
-void Domain::MainNeighbourSearch_Ext(){
+  #ifdef _GPU_NEIBSEARCH
+  void Domain::MainNeighbourSearch_Ext(){
+	}
+	
+	
+	#else
+  using namespace CompactNSearch;
+  void Domain::MainNeighbourSearch_Ext(){
 
 	std::vector<std::array<Real, 3>> positions;
 
@@ -1848,7 +1925,7 @@ void Domain::MainNeighbourSearch_Ext(){
 
 	} 
 	
-	NeighborhoodSearch nsearch(3.8*Particles[0]->h, true);
+	NeighborhoodSearch nsearch(2.2*Particles[0]->h, true);
 	
 	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
 	//nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
@@ -1888,9 +1965,11 @@ void Domain::MainNeighbourSearch_Ext(){
 		
 	}
 }
-	
+#endif
 int Domain::AvgNeighbourCount(){	
 		std::vector<int> nbcount(Particles.Size());
+		
+		#pragma omp parallel for schedule (static) num_threads(Nproc)
 		for (int p=0;p<Nproc;p++)
 			for (int i=0;i<SMPairs[p].size();i++){
 				nbcount[SMPairs[p][i].first]++;

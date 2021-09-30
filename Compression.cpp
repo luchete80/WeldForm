@@ -74,7 +74,7 @@ int main(int argc, char **argv) try
       dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 1;	//Mod Verlet
-     	//dom.XSPH	= 0.5; //Very important
+     	//dom.XSPH	= 0.1; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
@@ -89,7 +89,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.015;
+		dx = 0.018;
     h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -111,7 +111,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20.,  dx/2., rho, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -142,7 +142,9 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-        return 0;
+    //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+		dom.Solve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    
+		return 0;
 }
 MECHSYS_CATCH

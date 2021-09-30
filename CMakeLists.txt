@@ -20,6 +20,9 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
+OPTION (GPU_NBSEARCH OFF)
+MESSAGE("GPU SEARCH " ${GPU_NBSEARCH})
+
 PROJECT                (New_Test)
 cmake_policy(SET CMP0054 NEW) #elseif
 add_definitions(-D_CRT_NO_VA_START_VALIDATION)
@@ -52,6 +55,13 @@ include_directories("External")
 
 endif()
 
+if (GPU_NBSEARCH)
+add_definitions(-D_GPU_NEIBSEARCH)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GPU_NEIBSEARCH")
+
+link_directories("D:/Luciano/Numerico/cuNSearch_bin_release")
+endif()
+
 #add_subdirectory("examples")
 
 include_directories("D:/Luciano/Numerico/CompactNSearch/include")
@@ -68,7 +78,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	Compression
+	#Compression
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL
@@ -82,8 +92,9 @@ SET(EXES
 	#Cantilever2_pl
 	#Elastic
 	#Heat_2D
-	#Traction
+	Traction
 	#4-DamBreak3D
+	#Plate-Yield
 	#Plate-Yield_hcorr
 	#Plate-Yield_CNS
 	#Plate-Yield_Hard
