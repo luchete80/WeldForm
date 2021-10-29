@@ -1927,11 +1927,9 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 
 	} 
 	
-<<<<<<< HEAD
+
 	NeighborhoodSearch nsearch(2.6*Particles[0]->h, true);
-=======
-	NeighborhoodSearch nsearch(2.4*Particles[0]->h, true);
->>>>>>> 6a5a855f3fbaa355a45eb8e310b0486307eada47
+
 	
 	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
 	//nsearch.add_point_set(positions.front().data(), positions.size(), true, true);

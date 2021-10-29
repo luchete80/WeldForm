@@ -138,6 +138,7 @@ namespace SPH {
 		double q_source;
 		double q_conv,T_inf,h_conv;				//Different heat source terms
 		double q_plheat;				//Plastic Work Heat generation
+		double thermal_exp;		//Constant
 		int 	Nb;
 		
 		omp_lock_t my_lock;		///< Open MP lock

@@ -543,6 +543,11 @@ inline void Particle::CalcPlasticWorkHeat(){
 					);
 }
 
-inline void ParticleCalcThermalExpStrainRate
+//THIS SHOULD BE CALLED AFTER CalcForces2233
+inline void Particle::CalcThermalExpStrainRate(){
+	
+	StrainRate	= StrainRate + thermal_exp*dTdt*OrthoSys::I;
+	
+}
 
 }; // namespace SPH
