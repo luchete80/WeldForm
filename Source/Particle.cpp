@@ -543,4 +543,6 @@ inline void Particle::CalcPlasticWorkHeat(){
 					);
 }
 
+inline void ParticleCalcThermalExpStrainRate
+
 }; // namespace SPH

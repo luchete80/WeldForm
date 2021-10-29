@@ -1632,14 +1632,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
-			MainNeighbourSearch();
+			MainNeighbourSearch/*_Ext*/();
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					MainNeighbourSearch();
+					MainNeighbourSearch/*_Ext*/();
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
 			isfirst = false;
@@ -1925,7 +1925,7 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 
 	} 
 	
-	NeighborhoodSearch nsearch(2.2*Particles[0]->h, true);
+	NeighborhoodSearch nsearch(2.6*Particles[0]->h, true);
 	
 	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
 	//nsearch.add_point_set(positions.front().data(), positions.size(), true, true);

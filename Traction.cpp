@@ -95,7 +95,7 @@ int main(int argc, char **argv) try
 		G= E / (2.* (1.+nu));
 		Fy	= 350.e6;
 
-		dx = 0.010;
+		dx = 0.008;
     h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -117,7 +117,7 @@ int main(int argc, char **argv) try
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
-
+		//dom.auto_ts = false;
 		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/10.), R, Lz_side + Lz_side/10.,
 											Lz_neckmin,Lz_necktot,Rxy_center,
 											dx/2., rho, h, false);

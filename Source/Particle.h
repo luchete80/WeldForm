@@ -158,6 +158,7 @@ namespace SPH {
 		void Mat2Leapfrog		(double dt);
 		void PlasticHeatTest	();
 		void CalcPlasticWorkHeat();
+		void CalcThermalExpStrainRate();
 		void CalculateEquivalentStress();
 		void Move_Euler (Mat3_t I, double dt);
 		void Mat2Euler(double dt);
