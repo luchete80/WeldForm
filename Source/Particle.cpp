@@ -546,7 +546,7 @@ inline void Particle::CalcPlasticWorkHeat(){
 //THIS SHOULD BE CALLED AFTER CalcForces2233
 inline void Particle::CalcThermalExpStrainRate(){
 	
-	StrainRate	= StrainRate + thermal_exp*dTdt*OrthoSys::I;
+	StrainRate	= StrainRate + th_exp*dTdt*OrthoSys::I;
 	
 }
 

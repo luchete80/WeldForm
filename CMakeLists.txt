@@ -92,7 +92,8 @@ SET(EXES
 	#Cantilever2_pl
 	#Elastic
 	#Heat_2D
-	Traction
+	#Traction
+	Thermal_Expansion
 	#4-DamBreak3D
 	#Plate-Yield
 	#Plate-Yield_hcorr

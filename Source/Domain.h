@@ -96,7 +96,10 @@ public:
     void Solve_orig 			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
 		void Solve_orig_Ext 	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
 	void ThermalSolve			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
+	void ThermalStructSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); //Coupled Thermal Structural
 	void ThermalSolve_wo_init	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
+	
+	inline void CalcThermalExpStrainRate();
 
 
     void Solve_wo_init (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function	
@@ -225,5 +228,6 @@ public:
 #include "Output.cpp"
 #include "InOutFlow.cpp"
 #include "Thermal.cpp"
+#include "ThermalStuct.cpp"
 
 #endif // SPH_DOMAIN_H
