@@ -22,9 +22,9 @@
 
 void UserAcc(SPH::Domain & domi)
 {
-	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-	// for (size_t i=0; i<domi.Particles.Size(); i++)
-	// {
+	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
+	for (size_t i=0; i<domi.Particles.Size(); i++)
+	{
 		// if (domi.Particles[i]->ID == 3)
 		// {
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
@@ -32,14 +32,14 @@ void UserAcc(SPH::Domain & domi)
 			// domi.Particles[i]->vb		= Vec3_t(1.0e-2,0.0,0.0);
 // //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		// }
-		// if (domi.Particles[i]->ID == 2)
-		// {
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(-1.0e-2,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(-1.0e-2,0.0,0.0);
-// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		// }
-	// }
+		if (domi.Particles[i]->ID == 2)
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+	}
 }
 
 
@@ -93,7 +93,8 @@ int main(int argc, char **argv) try
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x;
-
+			
+			int bcpart=0;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		x = dom.Particles[a]->x(0);
@@ -106,9 +107,13 @@ int main(int argc, char **argv) try
     		if ( x < -H/2.0 ) {
     			dom.Particles[a]->ID 			= 2;
     			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+					dom.Particles[a]->IsFree=false;
+    			dom.Particles[a]->NoSlip=true;			
+					bcpart++;
 				// cout << "Particle " << a << "is convection BC" <<endl;
-			}
+				}
     	}
+			cout << "Boundary particles: "<<bcpart<<endl;
 
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
 		cout << "Time Step: "<<timestep<<endl;
