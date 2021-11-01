@@ -32,12 +32,12 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 	std::chrono::duration<double> total_time,neighbour_time;
 	
 	clock_t clock_beg;
-	double clock_time_spent,pr_acc_time_spent,acc_time_spent;
+	
 	double neigbour_time_spent_per_interval=0.;
 	
-	clock_time_spent=pr_acc_time_spent=acc_time_spent=0.;
-
-
+	double clock_time_spent,pr_acc_time_spent,acc_time_spent;
+	clock_time_spent=acc_time_spent=0.;
+	
 	//Initial model output
 	if (TheFileKey!=NULL) {
 		String fn;
@@ -45,24 +45,25 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		WriteXDMF    (fn.CStr());
 		std::cout << "\nInitial Condition has been generated\n" << std::endl;
 	}
-	
 
-	unsigned long steps=0;
-	unsigned int first_step;
-	
-	int ts_nb_inc=5;	// Always > 0
+	int ts_nb_inc=3;	// Always > 0
 	int ts_i=0;
 
 	bool isfirst = true;
 	bool isyielding = false;
-	
+
+
+	std::vector <int> nb(Particles.Size());
+	std::vector <int> nbcount(Particles.Size());
+
 	CalcConvHeat();
 	CalcTempInc();
 	
-	while (Time<=tf && idx_out<=maxidx) {
+	while (Time<tf && idx_out<=maxidx) {
+
 		StartAcceleration(Gravity);
-		//if (BC.InOutFlow>0) InFlowBCFresh();
-		auto start_task = std::chrono::system_clock::now();
+		// //if (BC.InOutFlow>0) InFlowBCFresh();
+		// auto start_task = std::chrono::system_clock::now();
 		
 
 		double max = 0;
@@ -85,19 +86,17 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
+					cout << "Performing Nb search"<<endl;
 					MainNeighbourSearch/*_Ext*/();
 
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
 			isfirst = false;
 		}
-		
-		
-		// for ( size_t k = 0; k < Nproc ; k++)		
-			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
 		std::vector <int> nb(Particles.Size());
 		std::vector <int> nbcount(Particles.Size());
+		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 		for ( size_t k = 0; k < Nproc ; k++) {
 			for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
@@ -109,12 +108,13 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 			for (int p=0;p<Particles.Size();p++){
 			Particles[p]->Nb=nb[p];
 		}
-	// for (int i=0;i<nb.size();i++)
-		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
-
+		
+		auto start_task = std::chrono::system_clock::now();
+		clock_beg = clock();
+		clock_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
-		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
+
 		GeneralBefore(*this);
 		clock_beg = clock();
 		PrimaryComputeAcceleration();
@@ -122,18 +122,33 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		clock_beg = clock();
 		LastComputeAcceleration();	//Define Strain Rate
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		GeneralAfter(*this);
 
-		//Thermal calculations
 		CalcConvHeat();
-		CalcTempInc();	
+		CalcTempInc();
 		CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term
 		
-		for (size_t i=0; i<Particles.Size(); i++)
+		
+		GeneralAfter(*this);
+
+		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
+		clock_beg = clock();
+
+		// CalcConvHeat();
+		// CalcTempInc();
+		//TODO Add 
+		double min=1000.;
+		for (size_t i=0; i<Particles.Size(); i++){
 			Particles[i]->TempCalcLeapfrog(dt);
+			if (Particles[i]->T > max)
+				max=Particles[i]->T;
+			if (Particles[i]->T < min)
+				min=Particles[i]->T;
+		}
+		// std::cout << "Max temp: "<< max << std::endl;
+
 			
-		steps++;
-		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
+		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		GeneralAfter(*this);
 		// output
 		if (Time>=tout){
 			if (TheFileKey!=NULL) {
@@ -147,46 +162,40 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 			total_time = std::chrono::steady_clock::now() - start_whole;
 			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
-			
-			clock_time_spent += neigbour_time_spent_per_interval;
-			std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Pr Accel Calc time: " <<
-			pr_acc_time_spent << "Las Acel Calc Time" << acc_time_spent<<
+			std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
+			acc_time_spent <<
 			std::endl;
-						
-			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
+			std::cout << "Max, Min, Avg temps: "<< max << ", " << min << ", " << (max+min)/2. <<std::endl;
 			
-			std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
-			cout << "Total Nb search time in this interval: " << neigbour_time_spent_per_interval;
-			cout << "Average Nb search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step)<<endl;
-			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
-			first_step=steps;
-			neigbour_time_spent_per_interval=0.;
-		}
-		
-		if (auto_ts)
-			AdaptiveTimeStep();
-		Move(deltat);
-		Time += deltat;
-		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
-		
-		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
-			if ( ts_i == (ts_nb_inc - 1) ){
-				ClearNbData();
+			double max_flux = 0.;
+			for (size_t i=0; i<Particles.Size(); i++){
+				if (Particles[i]->dTdt > max_flux)
+					max_flux=Particles[i]->dTdt;
 			}
+			std::cout << "Max flux: "<< max_flux << std::endl;
 
-			ts_i ++;
-			if ( ts_i > (ts_nb_inc - 1) ) 
-				ts_i = 0;
-		
+
+        Vec3_t Max=0.;
+			for (size_t i=0; i<Particles.Size(); i++) {
+				if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
+				if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
+				if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
+			}
+			cout << "Max Displacements: "<< Max(0)<< ", "<<
+																			Max(1)<<", "<<
+																			Max(2)<<", "<<
+																			endl;		
 		}
+
+		//AdaptiveTimeStep();
 		
-	
+		Time += deltat;
+		
 	}
 	
 
 	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
 
 }
-
 
 }; //SPH
