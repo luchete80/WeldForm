@@ -68,20 +68,20 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
-       SPH::Domain	dom;
+		 SPH::Domain	dom;
 
-      dom.Dimension	= 3;
-      dom.Nproc	= 4;
-    	dom.Kernel_Set(Qubic_Spline);
-    	dom.Scheme	= 1;	//Mod Verlet
-     	//dom.XSPH	= 0.1; //Very important
+		dom.Dimension	= 3;
+		dom.Nproc	= 4;
+		dom.Kernel_Set(Qubic_Spline);
+		dom.Scheme	= 1;	//Mod Verlet
+		//dom.XSPH	= 0.1; //Very important
 
-        double dx,h,rho,K,G,Cs,Fy;
-    	double R,L,n;
+			double dx,h,rho,K,G,Cs,Fy;
+		double R,L,n;
 
-    	R	= 0.15;
-    	L	= 0.56;
-    	n	= 30.0;		//in length, radius is same distance
+		R	= 0.15;
+		L	= 0.56;
+		n	= 30.0;		//in length, radius is same distance
 		
 		rho	= 2700.0;
 		K	= 6.7549e10;

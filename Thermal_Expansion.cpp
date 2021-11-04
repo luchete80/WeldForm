@@ -66,9 +66,12 @@ int main(int argc, char **argv) try
     	dx	= H / n;
     	h	= dx*1.2; //Very important
 			
-			rho	= 2700.0;
-			K	= 6.7549e10;
-			G	= 2.5902e10;	
+			//rho	= 2700.0;
+			// K	= 6.7549e10;
+			// G	= 2.5902e10;	
+    	K	= 3.25e6;
+    	G	= 7.15e5;
+			
 			Fy	= 300.e10;			
 			
 			
@@ -103,13 +106,15 @@ int main(int argc, char **argv) try
 				dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 				dom.Particles[a]->T_inf 		= 500.;
 				dom.Particles[a]->T					= 20.0;	
-				dom.Particles[a]->th_exp 		= 2.3e-5;				
-    		if ( x < -H/2.0 ) {
+				//dom.Particles[a]->th_exp 		= 2.3e-5;		
+				dom.Particles[a]->th_exp 		= 0.01;					
+    		
+				if ( x < -H/2.0 ) {
     			dom.Particles[a]->ID 			= 2;
     			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-					dom.Particles[a]->IsFree=false;
+					//dom.Particles[a]->IsFree=false;
     			dom.Particles[a]->NoSlip=true;			
-					bcpart++;
+					// bcpart++;
 				// cout << "Particle " << a << "is convection BC" <<endl;
 				}
     	}
@@ -124,9 +129,9 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalStructSolve(/*tf*/0.21,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+		dom.ThermalStructSolve(/*tf*/0.11,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
-//		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+//		dom.ThermalSolve(/*tf*/0.11,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
         return 0;
 }

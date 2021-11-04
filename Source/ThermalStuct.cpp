@@ -125,16 +125,18 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 
 		CalcConvHeat();
 		CalcTempInc();
-		CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term
-		
+		CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
 		
 		GeneralAfter(*this);
 
+		// if (auto_ts)
+			// AdaptiveTimeStep();
+		Move(deltat);		
+		Time += deltat;
+		
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
 		clock_beg = clock();
 
-		// CalcConvHeat();
-		// CalcTempInc();
 		//TODO Add 
 		double min=1000.;
 		for (size_t i=0; i<Particles.Size(); i++){
@@ -148,7 +150,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 
 			
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		GeneralAfter(*this);
+
 		// output
 		if (Time>=tout){
 			if (TheFileKey!=NULL) {
@@ -175,23 +177,22 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 			std::cout << "Max flux: "<< max_flux << std::endl;
 
 
-        Vec3_t Max=0.;
+      Vec3_t Max=1.e-10;
+			int maxp[3];
 			for (size_t i=0; i<Particles.Size(); i++) {
-				if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
-				if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
-				if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
+			if (Particles[i]->Displacement(0)*Particles[i]->Displacement(0) > Max(0)){Max(0) = Particles[i]->Displacement(0)*Particles[i]->Displacement(0); maxp[0]=i;}
+				if (Particles[i]->Displacement(1)*Particles[i]->Displacement(0) > Max(1)){ Max(1) = Particles[i]->Displacement(1)*Particles[i]->Displacement(0);maxp[1]=i;}
+				if (Particles[i]->Displacement(2)*Particles[i]->Displacement(0) > Max(2)){ Max(2) = Particles[i]->Displacement(2)*Particles[i]->Displacement(0);maxp[2]=i;}
 			}
-			cout << "Max Displacements: "<< Max(0)<< ", "<<
-																			Max(1)<<", "<<
-																			Max(2)<<", "<<
+			cout << "Max Displacements: "<< sqrt(Max(0))<< ", "<<
+																			sqrt(Max(1))<<", "<<
+																			sqrt(Max(2))<<", "<<
 																			endl;		
+			//cout << "In particle" << maxp[0]<<", " << maxp[1]<<" , "<<maxp[2];
 		}
 
-		//AdaptiveTimeStep();
 		
-		Time += deltat;
-		
-	}
+	}//Main while
 	
 
 	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
