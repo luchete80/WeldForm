@@ -109,7 +109,19 @@ int main(int argc, char **argv) try
 				dom.Particles[a]->T_inf 		= 500.;
 				dom.Particles[a]->T					= 20.0;	
 				//dom.Particles[a]->th_exp 		= 2.3e-5;		
-				dom.Particles[a]->th_exp 		= 0.01;					
+				dom.Particles[a]->th_exp 		= 1.e-5;			
+
+				//MECHANICAL PARAMS
+				dom.Particles[a]->PresEq	= 0;
+    		dom.Particles[a]->Cs		= Cs;
+    		dom.Particles[a]->Shepard	= false;
+    		dom.Particles[a]->Material	= 2;
+    		dom.Particles[a]->Fail		= 1;
+    		dom.Particles[a]->Sigmay	= Fy;
+    		dom.Particles[a]->Alpha		= 1.0;
+    		//dom.Particles[a]->Beta		= 1.0;
+    		dom.Particles[a]->TI		= 0.3;
+    		dom.Particles[a]->TIInitDist	= dx;				
     		
 				if ( x < -H/2.0 ) {
     			dom.Particles[a]->ID 			= 2;
