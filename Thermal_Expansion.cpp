@@ -53,7 +53,7 @@ int main(int argc, char **argv) try
         dom.Dimension	= 3;
         dom.Nproc	= 4;
     	dom.Kernel_Set(Quintic_Spline);
-    	dom.Scheme	= 0;
+    	dom.Scheme	= 1;
 //     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
@@ -100,6 +100,8 @@ int main(int argc, char **argv) try
 			int bcpart=0;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
+				dom.Particles[a]->G			= G;
+				dom.Particles[a]->K			= K;
     		x = dom.Particles[a]->x(0);
 				dom.Particles[a]->k_T			=	3000.;
 				dom.Particles[a]->cp_T			=	1.;

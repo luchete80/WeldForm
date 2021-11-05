@@ -26,3 +26,17 @@ CompactNSearch and CuNSearch must be separated (either they are in conflict)
 2) 
 3) GSL: Obtained from here: 
 4) The files for visual studio are located in :
+
+Thermal - Struct Solver Steps
+
+StartAcceleration(); ----->THIS RESETS STRAIN RATE!!!!
+PrimaryComputeAcceleration();
+LastComputeAcceleration(); //--->>>CALCULATES Strain Rate BUT FROM ZERO!
+														//AND CALCULATES ACCELERATION FROM SIGMA (PREV. IT)
+
+CalcConvHeat();
+CalcTempInc();
+CalcThermalExpStrainRate(); //Add Thermal expansion Strain Rate Term
+//...... BUT SIGMA IS ALREADY CALCULATED!
+Move(deltat); /// Uses ACCELERATION TO MOVE PARTICLE (calc u && v)
+//CALCULATE SIGMA FOM STRAIN RATE

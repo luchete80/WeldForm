@@ -20,6 +20,9 @@
 
 #include "Particle.h"
 
+#include <iostream>
+using namespace std;
+
 namespace SPH {
 
 inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0,bool Fixed)
@@ -455,6 +458,7 @@ inline void Particle::CalculateEquivalentStress () {
 }
 
 inline void Particle::Mat2Leapfrog(double dt) {
+	
 	Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
 
 	// Jaumann rate terms
@@ -466,7 +470,6 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	// Elastic prediction step (ShearStress_e n+1)
 	if (FirstStep)
 		ShearStressa	= -dt/2.0*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStress;
-
 	ShearStressb	= ShearStressa;
 	ShearStressa	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressa;
 
@@ -488,6 +491,8 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);
 	
 	Sigma = -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
+	
+	
 
 	if (FirstStep)
 		Straina	= -dt/2.0*StrainRate + Strain;

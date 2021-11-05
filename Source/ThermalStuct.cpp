@@ -120,7 +120,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		PrimaryComputeAcceleration();
 		pr_acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
-		LastComputeAcceleration();	//Define Strain Rate
+		LastComputeAcceleration();	//Define Strain Rate, and accelertion from prev sigma
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
 		CalcConvHeat();
@@ -131,7 +131,14 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 
 		// if (auto_ts)
 			// AdaptiveTimeStep();
-		Move(deltat);		
+		
+			// if (Time>0.1)
+				// for (size_t i=0; i<Particles.Size(); i++){
+				// cout <<"StrainRate"<<Particles[i]->StrainRate<<endl;}
+		Move(deltat);		 //Calculates Sigma, u && v from accel
+			//if (Time>0.1)
+				// for (size_t i=0; i<Particles.Size(); i++){
+				// cout <<"ShearStress"<<Particles[i]->ShearStress<<endl;}
 		Time += deltat;
 		
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
