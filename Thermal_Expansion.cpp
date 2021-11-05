@@ -122,8 +122,10 @@ int main(int argc, char **argv) try
     	}
 			cout << "Boundary particles: "<<bcpart<<endl;
 
-        timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
-		cout << "Time Step: "<<timestep<<endl;
+        timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);
+				cout << "Thermal Time Step: "<<timestep<<endl;
+				timestep = (0.2*h/(Cs));				
+				cout << "Mechanical Time Step: "<<timestep<<endl;
 		//timestep=1.e-6;
 		//0.3 rho cp h^2/k
 	
@@ -131,7 +133,7 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalStructSolve(/*tf*/0.11,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+		dom.ThermalStructSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
 //		dom.ThermalSolve(/*tf*/0.11,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
