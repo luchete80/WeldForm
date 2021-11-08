@@ -93,7 +93,7 @@ SET(EXES
 	#Elastic
 	#Heat_2D
 	#Traction
-	Thermal_Expansion
+	Thermal_Expansion_2
 	#4-DamBreak3D
 	#Plate-Yield
 	#Plate-Yield_hcorr
