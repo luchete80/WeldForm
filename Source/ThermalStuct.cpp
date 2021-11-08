@@ -132,9 +132,9 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		// if (auto_ts)
 			// AdaptiveTimeStep();
 		
-			if (Time>0.1)
-				for (size_t i=0; i<Particles.Size(); i++){
-				cout <<"StrainRate"<<Particles[i]->StrainRate<<endl;}
+			// if (Time>0.1)
+				// for (size_t i=0; i<Particles.Size(); i++){
+				// cout <<"StrainRate"<<Particles[i]->StrainRate<<endl;}
 		Move(deltat);		 //Calculates Sigma, u && v from accel
 			//if (Time>0.1)
 				// for (size_t i=0; i<Particles.Size(); i++){

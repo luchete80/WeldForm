@@ -80,6 +80,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     Shepard = false;
     InOut = 0;
     FirstStep = true;
+    ThermalFirstStep = true;
+
     V = Mass/RefDensity;
     // RhoF = 0.0;
     IsSat = false;
@@ -424,13 +426,13 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 
 void Particle::TempCalcLeapfrog	(double dt){
 	
-		if (FirstStep) {
+		if (ThermalFirstStep) {
 		//Densitya = T - dt/2.0*dDensity;
 		//va = v - dt/2.0*a;
 		//Tb=T;
 		Ta = T - dt/2.0*dTdt;
 		
-		FirstStep = false;
+		ThermalFirstStep = false;
 	}
 	// Densityb = Densitya;
 	// Densitya += dt*dDensity;

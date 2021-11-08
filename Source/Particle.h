@@ -131,6 +131,7 @@ namespace SPH {
 		int		ct;		///< Correction step for the Modified Verlet Algorithm
 		double	SumKernel;	///< Summation of the kernel value for neighbour particles
 		bool	FirstStep;	///< to initialize the integration scheme
+		bool	ThermalFirstStep;	///< to initialize the integration scheme
 		
 		//LUCIANO: THERMAL PROPERTIES
 		double T,k_T,cp_T,dTdt;			// Temperature, avoid permeability	
