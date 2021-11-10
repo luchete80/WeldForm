@@ -494,7 +494,14 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	
 	Sigma = -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
 	
-	
+	if ( dep > 0.0 ) {
+		Strain_pl(0,0)= 1./Sigmay*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
+		Strain_pl(1,1)= 1./Sigmay*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
+		Strain_pl(1,1)= 1./Sigmay*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+		Strain_pl(0,1)= 1./Sigmay*(Sigma(0,1));
+		Strain_pl(0,2)= 1./Sigmay*(Sigma(0,2));
+		Strain_pl(1,2)= 1./Sigmay*(Sigma(1,2));
+	}	
 
 	if (FirstStep)
 		Straina	= -dt/2.0*StrainRate + Strain;
