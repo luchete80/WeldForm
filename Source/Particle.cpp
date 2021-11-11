@@ -97,6 +97,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	Thermal_BC = TH_BC_NONE;
 	pl_strain=0;
 	Strain_pl = 0.; //Tensor
+	q_conv = 0;
 	q_source = 0;
 	q_plheat = 0.;
 	

@@ -136,7 +136,8 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 			//cout << "dS2" <<dS2<<endl;
 			//cout << Particles[i]->Density<<endl;
 			//Fraser Eq 3.121
-			Particles[i]->q_conv=Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+			Particles[i]->q_conv = Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+			
 			if (Particles[i]->q_conv>max){
 				max= Particles[i]->q_conv;
 				imax=i;
