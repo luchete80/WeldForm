@@ -332,13 +332,15 @@ inline void Particle::Mat2MVerlet(double dt) {
 	Sigma			= -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
 	
 	if ( dep > 0.0 ) {
-		Strain_pl(0,0)= 1./Sigmay*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
-		Strain_pl(1,1)= 1./Sigmay*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
-		Strain_pl(1,1)= 1./Sigmay*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
-		Strain_pl(0,1)= 1./Sigmay*(Sigma(0,1));
-		Strain_pl(0,2)= 1./Sigmay*(Sigma(0,2));
-		Strain_pl(1,2)= 1./Sigmay*(Sigma(1,2));
-	}
+		double f = dep/Sigmay;
+		Strain_pl(0,0) += f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
+		Strain_pl(1,1) += f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
+		Strain_pl(2,2) += f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+		Strain_pl(0,1) += 1.5*f*(Sigma(0,1));
+		Strain_pl(0,2) += 1.5*f*(Sigma(0,2));
+		Strain_pl(1,2) += 1.5*f*(Sigma(1,2));
+	}	
+	
 	Stress	= Strain;
 	if (ct == 30)
 		Strain	= dt*StrainRate + Strain;
@@ -500,7 +502,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		double f = dep/Sigmay;
 		Strain_pl(0,0) += f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
 		Strain_pl(1,1) += f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
-		Strain_pl(1,1) += f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+		Strain_pl(2,2) += f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
 		Strain_pl(0,1) += 1.5*f*(Sigma(0,1));
 		Strain_pl(0,2) += 1.5*f*(Sigma(0,2));
 		Strain_pl(1,2) += 1.5*f*(Sigma(1,2));
