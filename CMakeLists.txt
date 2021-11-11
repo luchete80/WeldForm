@@ -78,7 +78,8 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	Compression
+	#Compression
+	Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL

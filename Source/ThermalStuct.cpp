@@ -11,6 +11,14 @@ inline void Domain::CalcThermalExpStrainRate(){
 		}		
 }
 
+inline void Domain::CalcPlasticWorkHeat(const double &dt){
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	for (int p=0;p<Particles.Size();p++){
+		Particles[p]->CalcPlasticWorkHeat(dt);	//Add Thermal expansion Strain Rate Term
+	}		
+	
+}
+
 inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
@@ -126,6 +134,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		CalcConvHeat();
 		CalcTempInc();
 		CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
+		CalcPlasticWorkHeat(dt);
 		
 		GeneralAfter(*this);
 

@@ -97,7 +97,9 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	Thermal_BC = TH_BC_NONE;
 	pl_strain=0;
 	Strain_pl = 0.; //Tensor
-	q_source =0;
+	q_source = 0;
+	q_plheat = 0.;
+	
 	
 	Nb=0;
 	
@@ -551,14 +553,16 @@ inline void Particle::translate(double dt, Vec3_t Domainsize, Vec3_t domainmax, 
 	}
 }
 
-inline void Particle::CalcPlasticWorkHeat(){
+inline void Particle::CalcPlasticWorkHeat(const double &dt){
 	
-	q_plheat 	= 	0.5*(
-					Sigma(0,0)*StrainRate(0,0) + 
-					2.0*Sigma(0,1)*StrainRate(1,0) + 2.0*Sigma(0,2)*StrainRate(2,0) + 
-					Sigma(1,1)*StrainRate(1,1) +
-					2.0*Sigma(1,2)*StrainRate(2,1) + 
-					Sigma(2,2)*StrainRate(2,2)
+	Mat3_t depdt = 1./dt*Strain_pl;
+	// Double inner product, Fraser 3-106
+	q_plheat 	= 0.9  *	0.5*(
+					Sigma(0,0)*depdt(0,0) + 
+					2.0*Sigma(0,1)*depdt(1,0) + 2.0*Sigma(0,2)*depdt(2,0) + 
+					Sigma(1,1)*depdt(1,1) +
+					2.0*Sigma(1,2)*depdt(2,1) + 
+					Sigma(2,2)*depdt(2,2)
 					);
 }
 

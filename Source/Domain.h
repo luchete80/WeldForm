@@ -100,6 +100,7 @@ public:
 	void ThermalSolve_wo_init	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
 	
 	inline void CalcThermalExpStrainRate();
+	inline void CalcPlasticWorkHeat(const double &dt);
 
 
     void Solve_wo_init (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function	
