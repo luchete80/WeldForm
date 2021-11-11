@@ -96,6 +96,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	///////// THERMAL ///////
 	Thermal_BC = TH_BC_NONE;
 	pl_strain=0;
+	Strain_pl = 0.; //Tensor
 	q_source =0;
 	
 	Nb=0;
@@ -468,7 +469,8 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	Trans(RotationRate,RotationRateT);
 	Mult(ShearStress,RotationRateT,SRT);
 	Mult(RotationRate,ShearStress,RS);
-
+	double dep =0.;
+	
 	// Elastic prediction step (ShearStress_e n+1)
 	if (FirstStep)
 		ShearStressa	= -dt/2.0*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStress;
@@ -484,7 +486,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		
 		double sig_trial = sqrt(3.0*J2);
 		if ( sig_trial > Sigmay) {
-			double dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			pl_strain += dep;
 			Sigmay += dep*Ep;
 
@@ -493,14 +495,15 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);
 	
 	Sigma = -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
-	
+	// dlambda = 3/2 dep /sigmay
 	if ( dep > 0.0 ) {
-		Strain_pl(0,0)= 1./Sigmay*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
-		Strain_pl(1,1)= 1./Sigmay*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
-		Strain_pl(1,1)= 1./Sigmay*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
-		Strain_pl(0,1)= 1./Sigmay*(Sigma(0,1));
-		Strain_pl(0,2)= 1./Sigmay*(Sigma(0,2));
-		Strain_pl(1,2)= 1./Sigmay*(Sigma(1,2));
+		double f = dep/Sigmay;
+		Strain_pl(0,0) += f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
+		Strain_pl(1,1) += f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
+		Strain_pl(1,1) += f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+		Strain_pl(0,1) += 1.5*f*(Sigma(0,1));
+		Strain_pl(0,2) += 1.5*f*(Sigma(0,2));
+		Strain_pl(1,2) += 1.5*f*(Sigma(1,2));
 	}	
 
 	if (FirstStep)
