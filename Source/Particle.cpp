@@ -494,7 +494,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			pl_strain += dep;
 			Sigmay += dep*Ep;
-
+			delta_pl_strain = dep;
 		}
 	}
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);
@@ -503,6 +503,13 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	// dlambda = 3/2 dep /sigmay
 	if ( dep > 0.0 ) {
 		double f = dep/Sigmay;
+		Strain_pl_incr (0,0) = f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
+		Strain_pl_incr (1,1) = f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
+		Strain_pl_incr (2,2) = f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+		Strain_pl_incr (0,1) = Strain_pl_incr (1,0) = 1.5*f*(Sigma(0,1));
+		Strain_pl_incr (0,2) = Strain_pl_incr (2,0) = 1.5*f*(Sigma(0,2));
+		Strain_pl_incr (1,2) = Strain_pl_incr (2,1) = 1.5*f*(Sigma(1,2));
+		
 		Strain_pl(0,0) += f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
 		Strain_pl(1,1) += f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
 		Strain_pl(2,2) += f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
@@ -556,15 +563,17 @@ inline void Particle::translate(double dt, Vec3_t Domainsize, Vec3_t domainmax, 
 
 inline void Particle::CalcPlasticWorkHeat(const double &dt){
 	
-	Mat3_t depdt = 1./dt*Strain_pl;
-	// Double inner product, Fraser 3-106
-	q_plheat 	= 0.9  *	0.5*(
-					Sigma(0,0)*depdt(0,0) + 
-					2.0*Sigma(0,1)*depdt(1,0) + 2.0*Sigma(0,2)*depdt(2,0) + 
-					Sigma(1,1)*depdt(1,1) +
-					2.0*Sigma(1,2)*depdt(2,1) + 
-					Sigma(2,2)*depdt(2,2)
-					);
+	if (delta_pl_strain) {
+		Mat3_t depdt = 1./dt*Strain_pl_incr;
+		// Double inner product, Fraser 3-106
+		q_plheat 	= 0.9  *	0.5*(
+						Sigma(0,0)*depdt(0,0) + 
+						2.0*Sigma(0,1)*depdt(1,0) + 2.0*Sigma(0,2)*depdt(2,0) + 
+						Sigma(1,1)*depdt(1,1) +
+						2.0*Sigma(1,2)*depdt(2,1) + 
+						Sigma(2,2)*depdt(2,2)
+						);
+	}
 }
 
 //THIS SHOULD BE CALLED AFTER CalcForces2233

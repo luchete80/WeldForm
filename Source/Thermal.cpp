@@ -113,7 +113,7 @@ inline void Domain::CalcTempInc () {
 			imax=i;
 		}
 	}
-	cout << "Max dTdt: " << max <<"in particle: " << imax<<endl;
+	//cout << "Max dTdt: " << max <<"in particle: " << imax<<endl;
 	
 }
 

@@ -90,10 +90,11 @@ namespace SPH {
 		double Sigma_eq;	//Von Mises
 		
 		////////////////// PLASTIC THINGS
-		Mat3_t	Strain;		///< Total Strain n+1
-		Mat3_t	Straina;	///< Total Strain n+1/2 (Leapfrog)
-		Mat3_t	Strainb;	///< Total Strain n-1 (Modified Verlet)
-		Mat3_t  Strain_pl;	//// Plastic Strain
+		Mat3_t	Strain;							///< Total Strain n+1
+		Mat3_t	Straina;					///< Total Strain n+1/2 (Leapfrog)
+		Mat3_t	Strainb;					///< Total Strain n-1 (Modified Verlet)
+		Mat3_t  Strain_pl;				//// Plastic Strain
+		Mat3_t  Strain_pl_incr;		//// Plastic Strain - INTERNAL, JUST FOR PLASTIC THERMAL HEAT GEN CALCULATION
 		
 		
 		double 	pl_strain,delta_pl_strain;	//Accum and incremental Effective (Von Mises) plastic strain 
