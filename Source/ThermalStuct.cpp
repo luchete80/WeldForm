@@ -141,8 +141,8 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		
 		GeneralAfter(*this);
 
-		// if (auto_ts)
-			// AdaptiveTimeStep();
+		if (auto_ts)
+			AdaptiveTimeStep();
 		
 			// if (Time>0.1)
 				// for (size_t i=0; i<Particles.Size(); i++){
