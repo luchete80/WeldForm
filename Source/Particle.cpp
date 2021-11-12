@@ -100,7 +100,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	q_conv = 0;
 	q_source = 0;
 	q_plheat = 0.;
-	
+	th_exp = 0.;
 	
 	Nb=0;
 	
