@@ -218,7 +218,9 @@ public:
 		double					deltat;					//Time Step
     double					deltatmin;			//Minimum Time Step
     double					deltatint;			//Initial Time Step
-
+		
+		bool enable_th_exp;
+		bool enable_plastic_heat_gen;
 
 };
 

@@ -135,9 +135,9 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
 		CalcConvHeat();
-		CalcTempInc();
-		CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
 		CalcPlasticWorkHeat(dt);
+		CalcTempInc();
+		//CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
 		
 		GeneralAfter(*this);
 
@@ -165,7 +165,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 			if (Particles[i]->T < min)
 				min=Particles[i]->T;
 		}
-		// std::cout << "Max temp: "<< max << std::endl;
+		std::cout << "Max temp: "<< max << std::endl;
 
 			
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
