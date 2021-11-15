@@ -1633,14 +1633,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
 
-			MainNeighbourSearch/*_Ext*/();
+			MainNeighbourSearch_Ext();
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					MainNeighbourSearch/*_Ext*/();
+					MainNeighbourSearch_Ext();
 
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
@@ -1928,7 +1928,7 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 	} 
 	
 
-	NeighborhoodSearch nsearch(2.6*Particles[0]->h, true);
+	NeighborhoodSearch nsearch(2.2*Particles[0]->h, true);
 
 	
 	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
@@ -1961,9 +1961,13 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 			nproc++;
 			//cout<<"changing proc"<< nproc<<", pair "<<pair<<endl;
 		}
-		if (nproc< Nproc) //TODO:CORRECT THIS!!!!!
+		if (nproc< Nproc) {//TODO:CORRECT THIS!!!!!
 		//cout << "nproc"<< nproc<<endl;
-			SMPairs[nproc].Push(std::make_pair(it->first, it->second));
+			if (Particles[it->first]->IsFree*Particles[it->second]->IsFree)
+				SMPairs[nproc].Push(std::make_pair(it->first, it->second));
+			else
+				FSMPairs[nproc].Push(std::make_pair(it->first, it->second));
+		}
 		it++;
 		pair++;
 		

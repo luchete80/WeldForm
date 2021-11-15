@@ -78,8 +78,8 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	#Compression
-	Compression_thermal
+	Compression
+	#Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL
@@ -111,6 +111,7 @@ SET(EXES
 	#SolidBlock_Heat_conv3faces_Flux
 	#SolidBlock_Heat_source2
 	#SolidBlock_Heat_source2_boundpart
+	#Thermal_Expansion_2
 	#Neighbour_Test
 	#Neighbour_Test_CNS
 	#"Source/WeldForm"

@@ -90,7 +90,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
 
-			MainNeighbourSearch/*_Ext*/();
+			MainNeighbourSearch_Ext();
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
@@ -98,7 +98,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 				clock_beg = clock();
 				if (m_isNbDataCleared)
 					cout << "Performing Nb search"<<endl;
-					MainNeighbourSearch/*_Ext*/();
+					MainNeighbourSearch_Ext();
 
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
@@ -137,7 +137,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		CalcConvHeat();
 		CalcPlasticWorkHeat(dt);
 		CalcTempInc();
-		//CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
+		CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
 		
 		GeneralAfter(*this);
 
