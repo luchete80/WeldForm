@@ -1,4 +1,7 @@
 //#include "Mesh.h"
+#include <iostream>
+using namespace std;
+
 namespace SPH {
 
 	
@@ -27,17 +30,18 @@ TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, co
 	
 	dir [2] = axis;
 	
-	x3 = p(dir[2]);
+	x3 = p1(dir[2]);
 
-	x2=p(dir[1]); 
+	x2=p1(dir[1]); 
 	//Plane is in 0 and 1 dirs
 	for (int j=0; j<dens+1; j++) {
-		x1 = p(dir[0]);
+		x1 = p1(dir[0]);
 		for (int i=0; i<dens+1; i++){
 			Vec3_t v;
 			v(dir[0])=x1;v(dir[1])=x2;v(dir[2])=x3;
 			node.Push(new Vec3_t(x1,x2,x3));
 			x1+=dens;
+			cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
 		}
 		x2+=dens;
 	}
