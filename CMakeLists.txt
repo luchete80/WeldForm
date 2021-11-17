@@ -78,7 +78,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	Compression
+	#Compression
 	#Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
@@ -91,6 +91,7 @@ SET(EXES
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
+	Mesh_example
 	#Elastic
 	#Heat_2D
 	#Traction
@@ -120,7 +121,8 @@ SET(EXES
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
-	"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
+	#"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
+	#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
