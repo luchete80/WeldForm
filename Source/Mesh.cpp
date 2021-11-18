@@ -13,6 +13,7 @@ TriMesh::TriMesh(){
 Element::Element(const int &n1, const int &n2, const int &n3){
 	
 	//centroid = Vec3_t();
+	node[0] = n1; node [1] = n2; node[2] = n3;
 	
 }
 
@@ -72,11 +73,29 @@ TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, co
 				
 				Vec3_t v = ( *node[elcon[e][0]] + *node[elcon[e][1]] + *node[elcon[e][2]] ) / 3. ;
 				element[el] -> centroid = v; el++;
+				cout << "Centroid" << endl;
 			}
 		}// i for
 		
 	}
 	///////////////////////////////////////////
+	//// MESH GENERATION END
+
+}
+
+//This is done once, Since mesh is rigid
+void TriMesh::CalcSpheres(){
+	double max;
+	for (int e = 0; e < element.Size();e++){ 
+		max = 0.;
+		Vec3_t rv;
+		for (int n = 0 ;n < 3; n++){
+			rv = element[e]->node[n] - element[e] -> centroid;
+			if (norm(rv) > max) max = norm(rv);
+		}
+		element[e]->radius = max;
+	}
+	
 }
 
 TriMesh::CalcNormals(){

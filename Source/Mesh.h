@@ -43,6 +43,7 @@ class TriMesh{
 	TriMesh();
 	AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2, const int &dens);
 	CalcNormals();
+	void CalcSpheres();
 };
 
 };
