@@ -81,8 +81,8 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 				
 				Vec3_t v = ( *node[elcon[e][0]] + *node[elcon[e][1]] + *node[elcon[e][2]] ) / 3. ;
 				element[el] -> centroid = v; 
+				cout << "Centroid" << element[el] -> centroid << endl;
 				el++;
-				//cout << "Centroid" << endl;
 			}
 		}// i for
 		
@@ -95,16 +95,14 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 //This is done once, Since mesh is rigid
 inline void TriMesh::CalcSpheres(){
 	double max;
-	cout << "Element radius: "<<endl;
 	for (int e = 0; e < element.Size(); e++){ 
 		max = 0.;
 		Vec3_t rv;
 		for (int n = 0 ;n < 3; n++){
-			rv = element[e]->node[n] - element[e] -> centroid;
+			rv = *node [element[e]->node[n]] - element[e] -> centroid;
 			if (norm(rv) > max) max = norm(rv);
 		}
 		element[e]->radius = max;
-		cout << element[e]->radius<< endl;
 	}
 	
 }
