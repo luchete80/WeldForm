@@ -94,5 +94,7 @@ int main(){
 									// double r, double Density, double h, bool Fixed) {
 										
 		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+		
+		dom.AddTrimeshParticles(mesh,10);
 	
 }

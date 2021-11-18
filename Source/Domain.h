@@ -134,7 +134,10 @@ public:
 	
 	/////////////////////// CONTACT /////////////////////////////
 	void AddTrimeshParticles(const TriMesh &mesh, const int &id);
+	inline void ContactNbSearch();	//Performed AFTER neighbour search
 	
+	
+	/////////////// MEMBERS //
     // Data
     Array <Particle*>				Particles; 	///< Array of particles
     double					R;		///< Particle Radius in addrandombox
@@ -237,6 +240,6 @@ public:
 
 #include "Thermal.cpp"
 #include "ThermalStuct.cpp"
-//#include "Contact.cpp"
+#include "Contact.cpp"
 
 #endif // SPH_DOMAIN_H

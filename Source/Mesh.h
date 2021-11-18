@@ -28,6 +28,7 @@ class Element{
 	
 	//SPHERE
 	Vec3_t 	centroid;
+	Vec3_t 	normal;
 	double 	radius;
 	int 		node[3];
 	//Sphere* centroid;

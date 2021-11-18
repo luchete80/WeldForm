@@ -6,7 +6,7 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const int &id){
 	
 	double Density =0.;
 	double h = 1.1;
-	bool Fixed = false;
+	bool Fixed = true;	//Always are fixed ...
 	 
 	for ( int e = 0; e < mesh.element.Size(); e++ ){
 		Vec3_t pos = mesh.element[e]->centroid;
@@ -14,5 +14,24 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const int &id){
 	}
 }
 
+inline void Domain::ContactNbSearch(){
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t k=0; k<Nproc;k++) 
+	#else
+	for (int k=0; k<Nproc;k++) 
+	#endif	
+	{
+		size_t P1,P2;
+		Vec3_t xij;
+		double h,K;
+		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
+		for (size_t a=0; a<FSMPairs[k].Size();a++) {
+			P1	= FSMPairs[k][a].first;
+			P2	= FSMPairs[k][a].second;	
+		}
+	
+	}
+}
 
-};
+}; //SPH
