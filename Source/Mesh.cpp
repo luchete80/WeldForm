@@ -33,6 +33,7 @@ TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, co
 	x3 = p1(dir[2]);
 
 	x2=p1(dir[1]); 
+	double dl = p(dir[0])/dens;	//Could be allowed 2 diff densities
 	//Plane is in 0 and 1 dirs
 	for (int j=0; j<dens+1; j++) {
 		x1 = p1(dir[0]);
@@ -40,18 +41,18 @@ TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, co
 			Vec3_t v;
 			v(dir[0])=x1;v(dir[1])=x2;v(dir[2])=x3;
 			node.Push(new Vec3_t(x1,x2,x3));
-			x1+=dens;
 			cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
+			x1+=dl;
 		}
-		x2+=dens;
+		x2+=dl;
 	}
 
 	int n[4];
 	int el =0;
-
+	
 	for (int j = 0 ; j < dens; j++ ) {
 		for (int i=0; i < dens; i++ ){
-				n[0]=i; n[1]=i+1; n[2] = dens * j;n[3] = dens * j + 1;
+				n[0]=(dens+1)*j+i; n[1]=n[0] + 1; n[2] = (dens+1)* (j+1) + i ;n[3] = n[2] + 1;
 			
 			int elcon[2][3];	// TODO: check x, y and z normals and node direction 
 												// For all plane orientations
@@ -64,12 +65,16 @@ TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, co
 			}
 			
 			for ( int e= 0; e<2;e++) { // 2 triangles
-				element.Push(new Element(elcon[e][0],elcon[e][1],elcon[e][2]));			
+				element.Push(new Element(elcon[e][0],elcon[e][1],elcon[e][2]));		
+				cout << "Element "<< el <<": ";
+				for (int en = 0 ; en<3; en++) cout << elcon[e][en]<<", ";
+				cout <<endl;
+				
 				Vec3_t v = ( *node[elcon[e][0]] + *node[elcon[e][1]] + *node[elcon[e][2]] ) / 3. ;
 				element[el] -> centroid = v; el++;
 			}
-
-		}
+		}// i for
+		
 	}
 	///////////////////////////////////////////
 }
