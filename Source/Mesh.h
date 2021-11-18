@@ -2,6 +2,7 @@
 #define _MESH_H_
 
 #include "matvec.h"
+//#include
 
 namespace SPH{
 	
@@ -38,12 +39,12 @@ class TriMesh{
 	
 	public:
 
-	Array <Vec3_t*> node;
-	Array <Element*> element;
+	Array <Element* > element;
+	Array <Vec3_t* > node;
 	TriMesh();
-	AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2, const int &dens);
-	CalcNormals();
-	void CalcSpheres();
+	inline void AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2, const int &dens);
+	inline void CalcNormals();
+	inline void CalcSpheres();
 };
 
 };

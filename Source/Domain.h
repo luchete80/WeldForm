@@ -40,6 +40,7 @@
 #include <string>
 #include <cmath>
 
+#include "Mesh.h"
 
 //C++ Enum used for easiness of coding in the input files
 enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spline=3};
@@ -236,6 +237,6 @@ public:
 
 #include "Thermal.cpp"
 #include "ThermalStuct.cpp"
-#include "Contact.cpp"
+//#include "Contact.cpp"
 
 #endif // SPH_DOMAIN_H
