@@ -681,6 +681,7 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 	R = r;
 }
 
+
 inline void Domain::DelParticles (int const & Tags)
 {
     Array<int> idxs; // indices to be deleted

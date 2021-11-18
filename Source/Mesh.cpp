@@ -51,10 +51,11 @@ TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, co
 	int n[4];
 	int el =0;
 	
-	for (int j = 0 ; j < dens; j++ ) {
-		for (int i=0; i < dens; i++ ){
-				n[0]=(dens+1)*j+i; n[1]=n[0] + 1; n[2] = (dens+1)* (j+1) + i ;n[3] = n[2] + 1;
-			
+	for (int a = 0 ;a  < 3; a++ ) {
+		int j = a;
+		for (int i = 0; i < dens; i++ ){
+				n[0]=(dens + 1)*j + i; n[1]=n[0] + 1; n[2] = (dens+1)* (j+1) + i ;n[3] = n[2] + 1;
+			cout <<" j" << j<<endl;
 			int elcon[2][3];	// TODO: check x, y and z normals and node direction 
 												// For all plane orientations
 			if (positaxisorent) {
@@ -64,7 +65,7 @@ TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, co
 				elcon[0][0] = n[0];elcon[0][1] = n[2];elcon[0][2] = n[1];
 				elcon[1][0] = n[1];elcon[1][1] = n[2];elcon[1][2] = n[3];				
 			}
-			
+			cout << "elnodes"<<endl;
 			for ( int e= 0; e<2;e++) { // 2 triangles
 				element.Push(new Element(elcon[e][0],elcon[e][1],elcon[e][2]));		
 				cout << "Element "<< el <<": ";
@@ -86,7 +87,8 @@ TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, co
 //This is done once, Since mesh is rigid
 void TriMesh::CalcSpheres(){
 	double max;
-	for (int e = 0; e < element.Size();e++){ 
+	cout << "Element radius: "<<endl;
+	for (int e = 0; e < element.Size(); e++){ 
 		max = 0.;
 		Vec3_t rv;
 		for (int n = 0 ;n < 3; n++){
@@ -94,6 +96,7 @@ void TriMesh::CalcSpheres(){
 			if (norm(rv) > max) max = norm(rv);
 		}
 		element[e]->radius = max;
+		cout << element[e]->radius<< endl;
 	}
 	
 }

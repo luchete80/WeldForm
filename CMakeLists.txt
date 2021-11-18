@@ -121,7 +121,7 @@ SET(EXES
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
-	#"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
+	"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
 	#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)

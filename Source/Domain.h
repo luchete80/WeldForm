@@ -131,6 +131,9 @@ public:
 
 	
 	
+	/////////////////////// CONTACT /////////////////////////////
+	void AddTrimeshParticles(const TriMesh &mesh, const int &id);
+	
     // Data
     Array <Particle*>				Particles; 	///< Array of particles
     double					R;		///< Particle Radius in addrandombox
@@ -230,7 +233,9 @@ public:
 #include "Domain.cpp"
 #include "Output.cpp"
 #include "InOutFlow.cpp"
+
 #include "Thermal.cpp"
 #include "ThermalStuct.cpp"
+#include "Contact.cpp"
 
 #endif // SPH_DOMAIN_H
