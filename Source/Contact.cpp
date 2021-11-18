@@ -7,6 +7,7 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const int &id){
 	double Density =0.;
 	double h = 1.1;
 	bool Fixed = true;	//Always are fixed ...
+	contact_surf_id = id;
 	 
 	for ( int e = 0; e < mesh.element.Size(); e++ ){
 		Vec3_t pos = mesh.element[e]->centroid;
@@ -29,6 +30,9 @@ inline void Domain::ContactNbSearch(){
 		for (size_t a=0; a<FSMPairs[k].Size();a++) {
 			P1	= FSMPairs[k][a].first;
 			P2	= FSMPairs[k][a].second;	
+			if (Particles[P1]->id == contact_surf_id || Particles[P1]->id == contact_surf_id ) {
+				
+			}
 		}
 	
 	}
