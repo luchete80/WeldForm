@@ -195,6 +195,9 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	SMPairs;
     Array<Array<std::pair<size_t,size_t> > >	NSMPairs;
     Array<Array<std::pair<size_t,size_t> > >	FSMPairs;
+
+    Array<Array<std::pair<size_t,size_t> > >	ContPairs;
+		
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;
 	double 	& getTime (){return Time;}		//LUCIANO

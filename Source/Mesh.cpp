@@ -89,11 +89,11 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 	}
 	///////////////////////////////////////////
 	//// MESH GENERATION END
-	
+	cout << "Creating normals"<<endl;
 	for (int e = 0; e < element.Size(); e++){ 
 		double f=-1.;
 		if (positaxisorent) f= 1.;
-		element[el] -> normal (axis) = f;
+		element[e] -> normal (axis) = f;
 	}
 
 }

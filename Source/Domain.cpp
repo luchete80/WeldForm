@@ -1564,6 +1564,7 @@ inline void Domain::ClearNbData(){
 		SMPairs[i].Clear();
 		FSMPairs[i].Clear();
 		NSMPairs[i].Clear();
+		ContPairs[i].Clear();//New
 	}
 	CellReset();
 	ListGenerate();

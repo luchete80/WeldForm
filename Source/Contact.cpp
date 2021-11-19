@@ -27,11 +27,18 @@ inline void Domain::ContactNbSearch(){
 		Vec3_t xij;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
+		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
 		for (size_t a=0; a<FSMPairs[k].Size();a++) {
 			P1	= FSMPairs[k][a].first;
 			P2	= FSMPairs[k][a].second;	
-			if (Particles[P1]->id == contact_surf_id || Particles[P1]->id == contact_surf_id ) {
+			if (Particles[P1]->ID == contact_surf_id || Particles[P1]->ID == contact_surf_id ) {
+				ContPairs[k].Push(std::make_pair(P1, P2));
+				//ContPairs[k].Push(FSMPairs[k][a]);
+				//If the problem is not thermal (only mechanic)
+				//Could be deleted this pair in Whole Pairs
 				
+				FSMPairs[k].DelItem(a);//Erase, NOT EFFICIENT
+				a--;
 			}
 		}
 	
