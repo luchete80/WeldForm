@@ -681,6 +681,54 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 	R = r;
 }
 
+void Domain::CalculateSurface(){
+	double mi,mj;
+	Particle *P1,*P2;
+	Vec3_t xij;
+	//TODO: SAVE THIS AT THE BEGINING AND PARALLELIZE
+	double totmass=0.;
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+		totmass += Particles[i]->Mass;
+		
+	totmass /= Particles.Size();;
+		
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t k=0; k<Nproc;k++) 
+	#else
+	for (int k=0; k<Nproc;k++) 
+	#endif	
+	{
+		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+			P1	= Particles[SMPairs[k][a].first];
+			P2	= Particles[SMPairs[k][a].second];
+			xij	= P1->x - P2->x;
+			// h	= (P1->h+P2->h)/2.0;
+			// GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
+			
+			
+			mi = P1->Mass;
+			mj = P2->Mass;	
+			
+			P1->normal += mj * xij; 
+			P2->normal -= mi * xij;					
+		} //Nproc //Pairs
+
+	}//Nproc
+	
+	//Calculate Particle Neighbours
+	
+	//TODO: Parallelize with lock
+	for (size_t i=0; i<Particles.Size(); i++)	{//Like in Domain::Move
+	
+		Particles[i]->normal *= 1./totmass;
+		
+		if ( norm(Particles[i]->normal) >= 0.25 && Particles[i]->Nb <= 46) 
+			Particles[i]->ID=1;
+	}
+}
+
 
 inline void Domain::DelParticles (int const & Tags)
 {
@@ -816,6 +864,8 @@ inline void Domain::CellInitiate ()
 	SMPairs.Push(Initial);
 	NSMPairs.Push(Initial);
 	FSMPairs.Push(Initial);
+	
+	ContPairs.Push(Initial);
     }
 }
 

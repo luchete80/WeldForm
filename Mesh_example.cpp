@@ -109,6 +109,11 @@ int main(){
 	cout << "Main Nb Search"<<endl;
 	dom.MainNeighbourSearch_Ext();	//MUST DO CELL INITIATE FIRST
 	cout << "Contact Nb Search" <<endl;
+	
+	cout << "FSM Pairs" <<endl;
+	for (int k = 0 ; k< dom.Nproc; k++)
+		cout << dom.FSMPairs[k].Size() <<endl;
+	
 	dom.ContactNbSearch();
 	
 	cout << "SM Pairs" <<endl;
@@ -119,7 +124,7 @@ int main(){
 	// for (int k = 0 ; k< dom.Nproc; k++)
 		// cout << dom.ContPairs[k].Size() <<endl;
 
-	cout << "FSM Pairs" <<endl;
+	cout << "FSM Pairs after contact" <<endl;
 	for (int k = 0 ; k< dom.Nproc; k++)
 		cout << dom.FSMPairs[k].Size() <<endl;
 	

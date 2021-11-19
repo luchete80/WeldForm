@@ -31,9 +31,10 @@ inline void Domain::ContactNbSearch(){
 		for (size_t a=0; a<FSMPairs[k].Size();a++) {
 			P1	= FSMPairs[k][a].first;
 			P2	= FSMPairs[k][a].second;	
-			if (Particles[P1]->ID == contact_surf_id || Particles[P1]->ID == contact_surf_id ) {
-				ContPairs[k].Push(std::make_pair(P1, P2));
-				//ContPairs[k].Push(FSMPairs[k][a]);
+			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
+				cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
+				//ContPairs[k].Push(std::make_pair(P1, P2));
+				ContPairs[k].Push(FSMPairs[k][a]);
 				//If the problem is not thermal (only mechanic)
 				//Could be deleted this pair in Whole Pairs
 				

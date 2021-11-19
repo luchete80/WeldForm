@@ -136,7 +136,7 @@ public:
 	void AddTrimeshParticles(const TriMesh &mesh, const int &id);
 	inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
-	
+	void CalculateSurface();
 	
 	/////////////// MEMBERS //
     // Data

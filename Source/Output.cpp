@@ -95,11 +95,12 @@ inline void Domain::WriteXDMF (char const * FileKey)
     float * ShearS   	= new float[6*Particles.Size()]; 	//LUCIANO
     float * Strain		= new float[6*Particles.Size()];
 	float * StrainRate	= new float[6*Particles.Size()];
-	float * Strain_pl	= new float[6*Particles.Size()];
-	float * Sigma_eq	= new float[  Particles.Size()];	//LUCIANO
-	float * Temp		= new float[  Particles.Size()];	//LUCIANO
-	float * Pl_Strain	= new float[  Particles.Size()];	//LUCIANO
-	int   * Nb			= new int  [  Particles.Size()];	//LUCIANO
+	float * Strain_pl		= new float[6*Particles.Size()];
+	float * Sigma_eq		= new float[  Particles.Size()];	//LUCIANO
+	float * Temp				= new float[  Particles.Size()];	//LUCIANO
+	float * Pl_Strain		= new float[  Particles.Size()];	//LUCIANO
+	int   * Nb					= new int  [  Particles.Size()];	//LUCIANO
+	int   * ContNb			= new int  [  Particles.Size()];	//LUCIANO
     float * Disvec	= new float[3*Particles.Size()];		//LUCIANO
 	
 	double P1,P2,P3;
@@ -154,11 +155,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Strain_pl  [6*i+3] = float(Particles[i]->Strain_pl(0,1));
         Strain_pl  [6*i+4] = float(Particles[i]->Strain_pl(1,2));
         Strain_pl  [6*i+5] = float(Particles[i]->Strain_pl(0,2));
-		Sigma_eq[i    ] = float(Particles[i]->Sigma_eq);
-		Temp	[i    ] = float(Particles[i]->T);
-		Pl_Strain	[i] = float(Particles[i]->pl_strain);
-		Nb		[i    ] = int(Particles[i]->Nb);
-		
+		Sigma_eq[i    ] 	= float(Particles[i]->Sigma_eq);
+		Temp	[i    ] 		= float(Particles[i]->T);
+		Pl_Strain	[i] 		= float(Particles[i]->pl_strain);
+		Nb		[i    ] 		= int(Particles[i]->Nb); //All neighbours
+		ContNb		[i    ] = int(Particles[i]->ContNb); //Contact Neighbours
 		
         Disvec  [3*i  ] = float(Particles[i]->Displacement(0));
         Disvec  [3*i+1] = float(Particles[i]->Displacement(1));
@@ -221,6 +222,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Pl_Strain);
     dsname.Printf("Neighbors");
     H5LTmake_dataset_int(file_id,dsname.CStr(),1,dims,Nb);
+    dsname.Printf("ContNeib");
+    H5LTmake_dataset_int(file_id,dsname.CStr(),1,dims,ContNb);
     dims[0] = 3*Particles.Size();
 	dsname.Printf("Displacement");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Disvec);
@@ -245,6 +248,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	delete [] Sigma_eq;
 	delete [] Pl_Strain;
 	delete [] Nb;
+	delete [] ContNb;
 	delete [] Disvec;
 	
    //Closing the file
@@ -350,6 +354,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Neighbors\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Int\" Precision=\"10\"  Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/Neighbors \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"ContNeib\" AttributeType=\"Scalar\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Int\" Precision=\"10\"  Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Neighbors \n";
     oss << "       </DataItem>\n";

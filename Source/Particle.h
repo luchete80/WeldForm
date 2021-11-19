@@ -141,11 +141,19 @@ namespace SPH {
 		double q_conv,T_inf,h_conv;				//Different heat source terms
 		double q_plheat;				//Plastic Work Heat generation
 		double th_exp;		//Constant
+		
 		int 	Nb;
+		int 	ContNb;
 		
 		omp_lock_t my_lock;		///< Open MP lock
-
-
+		
+		////////////////// CONTACT //////////////////////
+		
+		/////////////////////// SURFACE NORMALS /////////////////////
+		Vec3_t normal;	
+		bool is_surface;	// BUT A SPECIFIC ID WILL BE ADDED
+		
+		
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);
 
@@ -165,6 +173,7 @@ namespace SPH {
 		void CalculateEquivalentStress();
 		void Move_Euler (Mat3_t I, double dt);
 		void Mat2Euler(double dt);
+		
 		
 
 	};
