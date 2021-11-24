@@ -89,6 +89,11 @@ int main(){
 
 	mesh.AxisPlaneMesh(2,true,Vec3_t(-0.5,-0.5,L + L/10.),Vec3_t(0.5,0.5, L + L/10.),30);
 	
+	
+	for (int v=0;v<mesh.node.Size();v++){
+			
+	}
+	
 	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
 	cout << "Creating Spheres.."<<endl;
 	mesh.CalcSpheres();

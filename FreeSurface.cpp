@@ -43,8 +43,8 @@ int main(int argc, char **argv) try
 	Fy	= 350.e6;
 
 
-	dx = 0.010;
-	h	= dx*1.2; //Very important
+	dx = 0.008;
+	h	= dx*1.1; //Very important
 
 	Cs	= sqrt(K/rho);
 
@@ -58,13 +58,21 @@ int main(int argc, char **argv) try
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-	dom.AddTractionProbeLength(0, Vec3_t(0.,0.,-Lz_side/10.), R, Lz_side + Lz_side/10.,
+	dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/10.), R, Lz_side + Lz_side/10.,
 								Lz_neckmin,Lz_necktot,Rxy_center,
 								dx/2., rho, h, false);
 
 
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
-	dom.CalculateSurface(1);
+	
+	dom.CellInitiate();
+	dom.ListGenerate();
+	cout << "Main Nb Search"<<endl;
+	dom.MainNeighbourSearch_Ext();	//MUST DO CELL INITIATE FIRST
+	dom.SaveNeighbourData();
+	
+	
+	dom.CalculateSurface(2);
 
 	dom.WriteXDMF("maz");
 

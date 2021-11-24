@@ -92,7 +92,7 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	Mesh_example
-	#FreeSurface
+	FreeSurface
 	#Elastic
 	#Heat_2D
 	#Traction
