@@ -46,9 +46,6 @@ int main(){
 	TriMesh mesh;
 
 	cout << "Creating Mesh" << endl;
-	mesh.AxisPlaneMesh(2,true,Vec3_t(0.,0.,0.),Vec3_t(1.,1.,0.),4);
-	cout << "Creating Spheres.."<<endl;
-	mesh.CalcSpheres();
 
 
 	 SPH::Domain	dom;
@@ -90,16 +87,19 @@ int main(){
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-
-	// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
-								// double r, double Density, double h, bool Fixed) {
+	mesh.AxisPlaneMesh(2,true,Vec3_t(-0.5,-0.5,L + L/10.),Vec3_t(0.5,0.5, L + L/10.),30);
+	
+	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
+	cout << "Creating Spheres.."<<endl;
+	mesh.CalcSpheres();
+	
 									
 	dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 
 	dom.AddTrimeshParticles(mesh,10); //AddTrimeshParticles(const TriMesh &mesh, const int &id){
 		
 		
-		
+	cout << "Generating Nb List" <<endl; 
 	//dom.InitialChecks();
 	dom.CellInitiate();
 	dom.ListGenerate();
@@ -115,6 +115,7 @@ int main(){
 		cout << dom.FSMPairs[k].Size() <<endl;
 	
 	dom.ContactNbSearch();
+	dom.SaveNeighbourData();
 	
 	cout << "SM Pairs" <<endl;
 	for (int k = 0 ; k< dom.Nproc; k++)

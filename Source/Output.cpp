@@ -360,7 +360,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"ContNeib\" AttributeType=\"Scalar\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Int\" Precision=\"10\"  Format=\"HDF\">\n";
-    oss << "        " << fn.CStr() <<":/Neighbors \n";
+    oss << "        " << fn.CStr() <<":/ContNeib \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Displacement\" AttributeType=\"Vector\" Center=\"Node\">\n";

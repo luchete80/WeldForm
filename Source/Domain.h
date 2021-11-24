@@ -87,6 +87,9 @@ public:
     void MainNeighbourSearch				();									//Create pairs of particles in the whole domain
 		void MainNeighbourSearch_Ext		();									//Create pairs of particles in the whole domain
 		int AvgNeighbourCount						();									//Create pairs of particles in the whole domain
+		
+		void SaveNeighbourData();
+		
     void StartAcceleration					(Vec3_t const & a = Vec3_t(0.0,0.0,0.0));	//Add a fixed acceleration such as the Gravity
     void PrimaryComputeAcceleration	();									//Compute the solid boundary properties
     void LastComputeAcceleration		();									//Compute the acceleration due to the other particles
@@ -136,7 +139,7 @@ public:
 	void AddTrimeshParticles(const TriMesh &mesh, const int &id);
 	inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
-	void CalculateSurface();
+	void CalculateSurface(const int &id = 1);
 	
 	/////////////// MEMBERS //
     // Data

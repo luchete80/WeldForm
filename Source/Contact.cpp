@@ -42,7 +42,22 @@ inline void Domain::ContactNbSearch(){
 				a--;
 			}
 		}
-	
+
+		for (size_t a=0; a<SMPairs[k].Size();a++) {
+			P1	= SMPairs[k][a].first;
+			P2	= SMPairs[k][a].second;	
+			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
+				cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
+				//ContPairs[k].Push(std::make_pair(P1, P2));
+				ContPairs[k].Push(SMPairs[k][a]);
+				//If the problem is not thermal (only mechanic)
+				//Could be deleted this pair in Whole Pairs
+				
+				SMPairs[k].DelItem(a);//Erase, NOT EFFICIENT
+				a--;
+			}
+		}
+		
 	}
 }
 

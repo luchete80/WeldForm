@@ -681,7 +681,7 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 	R = r;
 }
 
-void Domain::CalculateSurface(){
+void Domain::CalculateSurface(const int &id){
 	double mi,mj;
 	Particle *P1,*P2;
 	Vec3_t xij;
@@ -691,7 +691,7 @@ void Domain::CalculateSurface(){
 		totmass += Particles[i]->Mass;
 		
 	totmass /= Particles.Size();;
-		
+	cout << "Totmass" <<	totmass <<endl;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -704,13 +704,10 @@ void Domain::CalculateSurface(){
 			P1	= Particles[SMPairs[k][a].first];
 			P2	= Particles[SMPairs[k][a].second];
 			xij	= P1->x - P2->x;
-			// h	= (P1->h+P2->h)/2.0;
-			// GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
-			
-			
+						
 			mi = P1->Mass;
 			mj = P2->Mass;	
-			
+			//Eqn 3-112 Fraser Thesis
 			P1->normal += mj * xij; 
 			P2->normal -= mi * xij;					
 		} //Nproc //Pairs
@@ -724,8 +721,8 @@ void Domain::CalculateSurface(){
 	
 		Particles[i]->normal *= 1./totmass;
 		
-		if ( norm(Particles[i]->normal) >= 0.25 && Particles[i]->Nb <= 46) 
-			Particles[i]->ID=1;
+		if ( norm(Particles[i]->normal) >= 0.25 && Particles[i]->Nb <= 46) //3-114 Fraser
+			Particles[i]->ID=id;
 	}
 }
 
@@ -1621,6 +1618,32 @@ inline void Domain::ClearNbData(){
 	m_isNbDataCleared = true;
 }
 
+inline void Domain::SaveNeighbourData(){
+		std::vector <int> nb(Particles.Size());
+		std::vector <int> contnb(Particles.Size());
+		
+		for ( size_t k = 0; k < Nproc ; k++) {
+			for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+				nb[SMPairs[k][a].first ]+=1;
+				nb[SMPairs[k][a].second]+=1;
+				
+			}
+		}
+		for ( size_t k = 0; k < Nproc ; k++) {
+			for (size_t a=0; a<ContPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+				contnb[ContPairs[k][a].first ]+=1;
+				contnb[ContPairs[k][a].second]+=1;
+				
+			}			
+		}
+		for (int p=0;p<Particles.Size();p++){
+			Particles[p]->Nb=nb[p];
+			Particles[p]->ContNb = contnb[p];
+		}
+}
+
 inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
@@ -1704,7 +1727,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
 		std::vector <int> nb(Particles.Size());
-		std::vector <int> nbcount(Particles.Size());
 		for ( size_t k = 0; k < Nproc ; k++) {
 			for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
