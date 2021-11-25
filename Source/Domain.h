@@ -136,10 +136,11 @@ public:
 	
 	
 	/////////////////////// CONTACT /////////////////////////////
-	void AddTrimeshParticles(const TriMesh &mesh, const int &id);
+	void AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const int &id);
 	inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
 	void CalculateSurface(const int &id = 1);
+	void DetectContactPoints();
 	
 	/////////////// MEMBERS //
     // Data
@@ -153,7 +154,9 @@ public:
     double					MuMax;		///< Max Dynamic viscosity for calculating the timestep
     double					CsMax;		///< Max speed of sound for calculating the timestep
 	double 					Vol;		///LUCIANO
-
+	
+		int 						first_fem_particle_idx;			//The rest are ridig bodies
+		/*Array<*/int/*>*/ 			id_free_surf;								//TODO: 
     Vec3_t					Gravity;       	///< Gravity acceleration
 
 

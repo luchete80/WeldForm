@@ -87,7 +87,7 @@ int main(){
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-	mesh.AxisPlaneMesh(2,true,Vec3_t(-0.5,-0.5,L + L/10.),Vec3_t(0.5,0.5, L + L/10.),30);
+	mesh.AxisPlaneMesh(2,true,Vec3_t(-0.5,-0.5,L + L/10.-dx/2.),Vec3_t(0.5,0.5, L + L/10.-dx/2.),30);
 	
 	
 	for (int v=0;v<mesh.node.Size();v++){
@@ -101,7 +101,8 @@ int main(){
 									
 	dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 
-	dom.AddTrimeshParticles(mesh,10); //AddTrimeshParticles(const TriMesh &mesh, const int &id){
+	//ALWAYS AFTER SPH PARTICLES
+	dom.AddTrimeshParticles(mesh, 1.1, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 		
 		
 	cout << "Generating Nb List" <<endl; 
@@ -113,6 +114,8 @@ int main(){
 	// dom.WholeVelocity();
 	cout << "Main Nb Search"<<endl;
 	dom.MainNeighbourSearch_Ext();	//MUST DO CELL INITIATE FIRST
+	dom.SaveNeighbourData();
+	dom.CalculateSurface(2);				//After Nb search	
 	cout << "Contact Nb Search" <<endl;
 	
 	cout << "FSM Pairs" <<endl;

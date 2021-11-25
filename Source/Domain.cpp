@@ -682,6 +682,7 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 }
 
 void Domain::CalculateSurface(const int &id){
+	id_free_surf = id;
 	double mi,mj;
 	Particle *P1,*P2;
 	Vec3_t xij;
@@ -1639,8 +1640,9 @@ inline void Domain::SaveNeighbourData(){
 			}			
 		}
 		for (int p=0;p<Particles.Size();p++){
-			Particles[p]->Nb=nb[p];
-			Particles[p]->ContNb = contnb[p];
+			Particles[p]->Nb = nb[p];
+			if (p < first_fem_particle_idx)
+				Particles[p]->ContNb = contnb[p];
 		}
 }
 
