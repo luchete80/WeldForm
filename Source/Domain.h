@@ -140,7 +140,7 @@ public:
 	inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
 	void CalculateSurface(const int &id = 1);
-	void DetectContactPoints();
+	void CalcContactForces();
 	
 	/////////////// MEMBERS //
     // Data
@@ -217,6 +217,7 @@ public:
 	bool					m_isNbDataCleared;
 	bool						auto_ts;				//LUCIANO: Auto Time Stepping
 	
+	TriMesh*			trimesh;
 	
 	private:
 		void Periodic_X_Correction	(Vec3_t & x, double const & h, Particle * P1, Particle * P2);		//Corrects xij for the periodic boundary condition
@@ -238,6 +239,8 @@ public:
 		
 		bool enable_th_exp;
 		bool enable_plastic_heat_gen;
+		
+		
 
 };
 

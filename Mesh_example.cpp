@@ -114,7 +114,7 @@ int main(){
 	// dom.WholeVelocity();
 	cout << "Main Nb Search"<<endl;
 	dom.MainNeighbourSearch_Ext();	//MUST DO CELL INITIATE FIRST
-	dom.SaveNeighbourData();
+	dom.SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 	dom.CalculateSurface(2);				//After Nb search	
 	cout << "Contact Nb Search" <<endl;
 	
@@ -123,7 +123,7 @@ int main(){
 		cout << dom.FSMPairs[k].Size() <<endl;
 	
 	dom.ContactNbSearch();
-	dom.SaveNeighbourData();
+	dom.SaveNeighbourData();	//Again Save Nb data
 	
 	cout << "SM Pairs" <<endl;
 	for (int k = 0 ; k< dom.Nproc; k++)

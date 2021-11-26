@@ -105,6 +105,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	Nb=0;
 	
 	Displacement = 0;
+	
+	element = -1;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);

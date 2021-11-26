@@ -32,6 +32,7 @@ class Element{
 	Vec3_t 	v;			//At centroid
 	double 	radius;
 	int 		node[3];
+	double pplane;	//In boundary elements, plane coefficient, useful for contact
 	//Sphere* centroid;
 	//Mesh*		mesh;
 };

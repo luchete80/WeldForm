@@ -99,16 +99,20 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 }
 
 //This is done once, Since mesh is rigid
+//Calculate radius and plane coefficient
 inline void TriMesh::CalcSpheres(){
 	double max;
 	for (int e = 0; e < element.Size(); e++){ 
 		max = 0.;
+		int  nmax;	//node far away from baricenter -> THIS IS USEFUL FOR CONTACT
 		Vec3_t rv;
 		for (int n = 0 ;n < 3; n++){
 			rv = *node [element[e]->node[n]] - element[e] -> centroid;
 			if (norm(rv) > max) max = norm(rv);
+			nmax = n;
 		}
-		element[e]->radius = max;
+		element[e]-> radius = max;	//Fraser Eq 3-136
+		element[e]-> pplane = dot(*node [element[e] -> node[nmax]],element[e] -> normal);
 	}
 	
 }
