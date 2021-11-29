@@ -1326,7 +1326,12 @@ inline void Domain::LastComputeAcceleration ()
 		// FSMPairs[i].Clear();
 		// NSMPairs[i].Clear();
 	// }
-
+	
+	// CONTACT FORCES
+	if (contact) {
+		CalcContactForces();
+		
+	}
 		//Min time step check based on the acceleration
 		double test	= 0.0;
 		deltatmin	= deltatint;
@@ -1664,6 +1669,16 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	TimestepCheck();
 	WholeVelocity();
 	
+	if (contact) { //Calculate particle Stiffness
+		//Cs	= sqrt(K/rho);
+		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		for (int i=0; i<Particles.Size(); i++){
+			double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
+			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G); 
+		}		
+		cout << "Contact Stiffness" << Particles [0] -> cont_stiff <<endl;
+	}
+	
 	std::chrono::duration<double> total_time,neighbour_time;
 	
 	clock_t clock_beg;
@@ -1711,6 +1726,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			ClearNbData();
 
 			MainNeighbourSearch_Ext();
+			if (contact) {
+				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+				CalculateSurface(2);				//After Nb search			
+				ContactNbSearch();
+				SaveNeighbourData();	//Again Save Nb data
+			}//contact
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
@@ -1720,7 +1741,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 					MainNeighbourSearch_Ext();
 
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-			}
+				
+				if (contact) {
+					SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+					CalculateSurface(2);				//After Nb search			
+					ContactNbSearch();
+					SaveNeighbourData();	//Again Save Nb data
+				}//contact
+			}// ts_i == 0
 			isfirst = false;
 		}
 		

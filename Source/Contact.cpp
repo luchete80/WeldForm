@@ -51,7 +51,7 @@ inline void Domain::ContactNbSearch(){
 					double rcutoff = ( Particles[P1]->h + Particles[P2]->h ) / 2.;
 					//cout << "r, rcutoff, h1, h2"<< r << ", "<< rcutoff << ", "<< Particles[P1]->h <<", "<<Particles[P2]->h<<endl;
 					if ( r < 2.0 *rcutoff ){
-					cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
+					//cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
 					//ContPairs[k].Push(std::make_pair(P1, P2));
 					ContPairs[k].Push(FSMPairs[k][a]);
 					//If the problem is not thermal (only mechanic)
@@ -99,8 +99,8 @@ void Domain::CalcContactForces(){
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
 		for (size_t a = 0; a < ContPairs[k].Size();a++) {
-			//P1 is SPH particle
-			if (Particles[ContPairs[k][a].first]->ID == contact_surf_id ) 	{ 	//Cont Sur is partcicles from FEM
+			//P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
+			if (Particles[ContPairs[k][a].first]->ID == contact_surf_id ) 	{ 	//Cont Surf is partcicles from FEM
 				P1 = ContPairs[k][a].second; P2 = ContPairs[k][a].first; 	}
 			else {
 				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
@@ -121,17 +121,17 @@ void Domain::CalcContactForces(){
 				//Calculate time step for external forces
 				double dtmin;
 				if (deltat_cont < dtmin){
-					//Find point of contact Qi 	
-					Vec3_t Qi = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h, Particles[P2]->normal); //Fraser 3-146
+					//Find point of contact Qj
+					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h, Particles[P2]->normal); //Fraser 3-146
 					//Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
 					bool inside = true;
-					int i=0;			
+					int i=0,j;			
 					bool end = false;
 					while (i<3 && !end){
 						j = i+1;	if (j>2) j = 0;
-						double crit = dot (cross ( e -> node[j] - e -> node[i],Qi),Particles[P2]->normal);
+						double crit = dot (cross ( e -> node[j] - e -> node[i],Qj),Particles[P2]->normal);
 						if (crit < 0) end =true;
 					}
 					
@@ -141,6 +141,21 @@ void Domain::CalcContactForces(){
 						
 						//Calculate penetration depth
 						double delta = (deltat - deltat_cont) * delta_;
+						
+						// DAMPING
+						//Calculate SPH and FEM elements stiffness (series)
+						//Since FEM is assumed as rigid, stiffness is simply the SPH one 
+						double kij = PFAC * Particles[P1]-> cont_stiff;
+						double omega = sqrt (kij/Particles[P1]->Mass);
+						double psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
+						
+						// TANGENTIAL COMPONENNT
+						//Fraser Eqn 3-167
+						
+						omp_set_lock(&Particles[P1]->my_lock);
+						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION
+						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+						omp_unset_lock(&Particles[P1]->my_lock);
 					}
 				} //deltat <min
 

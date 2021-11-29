@@ -35,7 +35,7 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 
 	x2=p1(dir[1]); 
 	double dl = p(dir[0])/dens;	//Could be allowed 2 diff densities
-	cout <<"dens: "<<dens<<endl;
+	//cout <<"dens: "<<dens<<endl;
 	//Plane is in 0 and 1 dirs
 	int test =dens+1;
 	for (int j=0; j<test; j++) {
@@ -45,7 +45,7 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 			v(dir[0])=x1;v(dir[1])=x2;v(dir[2])=x3;
 			//cout << "i,j" << i << ", " << j<<endl; 
 			node.Push(new Vec3_t(x1,x2,x3));
-			cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
+			//cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
 			x1+=dl;
 		}
 		x2+=dl;
@@ -55,11 +55,11 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 	int el =0;
 	int i;
 	for (size_t j = 0 ;j  < dens; j++ ) {
-				cout <<"j, dens" <<j<<", "<<dens<<endl;
-				cout <<"j<dens"<< (j  < dens)<<endl;
+				// cout <<"j, dens" <<j<<", "<<dens<<endl;
+				// cout <<"j<dens"<< (j  < dens)<<endl;
 		for ( i = 0; i < dens; i++ ){
-				cout <<"i, dens" <<i<<", "<<dens<<endl;
-				cout <<"i <dens"<< (i  < dens)<<endl;
+				// cout <<"i, dens" <<i<<", "<<dens<<endl;
+				// cout <<"i <dens"<< (i  < dens)<<endl;
 				n[0] = (dens + 1)* j + i; 		n[1] = n[0] + 1; 
 				n[2] = (dens + 1)* (j+1) + i; n[3] = n[2] + 1;
 			//cout <<" jj" << jj<<endl;
@@ -75,13 +75,13 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 			//cout << "elnodes"<<endl;
 			for ( int e= 0; e<2;e++) { // 2 triangles
 				element.Push(new Element(elcon[e][0],elcon[e][1],elcon[e][2]));		
-				cout << "Element "<< el <<": ";
-				for (int en = 0 ; en<3; en++) cout << elcon[e][en]<<", ";
-				cout <<endl;
+				//cout << "Element "<< el <<": ";
+				// for (int en = 0 ; en<3; en++) cout << elcon[e][en]<<", ";
+				// cout <<endl;
 				
 				Vec3_t v = ( *node[elcon[e][0]] + *node[elcon[e][1]] + *node[elcon[e][2]] ) / 3. ;
 				element[el] -> centroid = v; 
-				cout << "Centroid" << element[el] -> centroid << endl;
+				//cout << "Centroid" << element[el] -> centroid << endl;
 				el++;
 			}
 		}// i for

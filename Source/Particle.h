@@ -148,12 +148,14 @@ namespace SPH {
 		omp_lock_t my_lock;		///< Open MP lock
 		
 		////////////////// CONTACT //////////////////////
+		double 	cont_stiff;
+		Vec3_t	contforce;
 		
 		/////////////////////// SURFACE NORMALS /////////////////////
 		Vec3_t normal;	
 		bool is_surface;		// BUT A SPECIFIC ID WILL BE ADDED
 		int element;				// Element index (if comes from FEM)
-		Vec3_t	contforce;	
+			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);
 
