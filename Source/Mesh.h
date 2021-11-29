@@ -51,6 +51,7 @@ class TriMesh{
 	TriMesh();
 	inline void AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2, const int &dens);
 	inline void ApplyConstVel(const Vec3_t &v);
+	inline void CalcCentroidVelFromNodes();
 	inline void UpdatePlaneCoeff();
 	inline void UpdatePos(const double &dt);
 	inline void CalcNormals();

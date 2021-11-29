@@ -130,6 +130,11 @@ inline void TriMesh::ApplyConstVel(const Vec3_t &v){
 			*node_v[n] = v;
 }
 
+inline void TriMesh::CalcCentroidVelFromNodes(){
+	
+	
+}
+
 inline void TriMesh::UpdatePos(const double &dt){
 	
 	//Seems to be More accurate to do this by node vel

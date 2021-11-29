@@ -91,8 +91,8 @@ SET(EXES
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
-	#Contact_Neighbours
-	Contact_Compression
+	Contact_Neighbours
+	#Contact_Compression
 	#FreeSurface
 	#Elastic
 	#Heat_2D

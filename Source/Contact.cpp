@@ -23,9 +23,10 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const i
 		Vec3_t pos = mesh.element[e]->centroid;
 		h = hfac * mesh.element[e]->radius;
 		Particles.Push(new Particle(id,pos,Vec3_t(0,0,0),0.0,Density,h,Fixed));
-		Particles[e] -> normal  = mesh.element[e] -> normal;
-		Particles[e] -> element = e; 
+		Particles[first_fem_particle_idx + e] -> normal  = mesh.element[e] -> normal;
+		Particles[first_fem_particle_idx + e] -> element = e; 
 	}
+	cout << Particles.Size() - first_fem_particle_idx << "particles added."<<endl;
 }
 
 inline void Domain::ContactNbSearch(){
@@ -45,6 +46,7 @@ inline void Domain::ContactNbSearch(){
 			P1	= FSMPairs[k][a].first;
 			P2	= FSMPairs[k][a].second;	
 			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
+				//cout << "contact surface id found"<<endl;
 				if (Particles[P1]->ID == id_free_surf || Particles[P2]->ID == id_free_surf ) {
 					Vec3_t xij	= Particles[P1]->x - Particles[P2]->x;
 					double r = norm(xij);
@@ -86,6 +88,7 @@ inline void Domain::ContactNbSearch(){
 //// 
 ////////////////////////////////
 void Domain::CalcContactForces(){
+	double maxforce=0.;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -98,6 +101,7 @@ void Domain::CalcContactForces(){
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
+		cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
 		for (size_t a = 0; a < ContPairs[k].Size();a++) {
 			//P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
 			if (Particles[ContPairs[k][a].first]->ID == contact_surf_id ) 	{ 	//Cont Surf is partcicles from FEM
@@ -106,10 +110,15 @@ void Domain::CalcContactForces(){
 				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
 		
 			Vec3_t vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
+			cout << "Particle P1v: "<<Particles[P1]->v<<endl;
+			cout << "Particle P2v: "<<Particles[P2]->v<<endl;
 			//ok, FEM Particles normals can be calculated by two ways, the one used to
 			//calculate SPH ones, and could be given by mesh input
 			double delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
 			
+			cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
+			cout << " vr: "<< vr<<endl;
+			cout << "delta: "<<delta_<<endl;
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
 				Element* e = trimesh-> element[Particles[P2]->element];
@@ -119,7 +128,7 @@ void Domain::CalcContactForces(){
 				
 				//Check for contact in this time step 
 				//Calculate time step for external forces
-				double dtmin;
+				double dtmin=1000.;
 				if (deltat_cont < dtmin){
 					//Find point of contact Qj
 					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h, Particles[P2]->normal); //Fraser 3-146
@@ -137,7 +146,7 @@ void Domain::CalcContactForces(){
 					
 					if (!end ) { //Contact point inside element, contact proceeds
 						//Recalculate vr (for large FEM mesh densities)
-						
+						cout << "inside element"<<endl;
 						
 						//Calculate penetration depth
 						double delta = (deltat - deltat_cont) * delta_;
@@ -152,16 +161,20 @@ void Domain::CalcContactForces(){
 						// TANGENTIAL COMPONENNT
 						//Fraser Eqn 3-167
 						
+						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						omp_unset_lock(&Particles[P1]->my_lock);
+						
+						if (force2 > maxforce) maxforce = force2;
 					}
 				} //deltat <min
 
 			}//delta > 0 : PARTICLES ARE APPROACHING EACH OTHER
 		}//Contact Pairs
 	}//Nproc
+	cout << "Max Contact Force: "<<sqrt(maxforce)<<endl;
 }
 
 }; //SPH
