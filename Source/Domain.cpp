@@ -681,6 +681,7 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 	R = r;
 }
 
+// Calculate Free Surface (for contact and convection)
 void Domain::CalculateSurface(const int &id){
 	id_free_surf = id;
 	double mi,mj;
@@ -692,7 +693,7 @@ void Domain::CalculateSurface(const int &id){
 		totmass += Particles[i]->Mass;
 		
 	totmass /= Particles.Size();;
-	cout << "Totmass" <<	totmass <<endl;
+	//cout << "Totmass" <<	totmass <<endl;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -1817,6 +1818,13 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (auto_ts)
 			AdaptiveTimeStep();
 		Move(deltat);
+		
+		// Update velocity, plane coeff pplane and other things
+		if (contact){
+			trimesh->UpdatePos (deltat); //Update Node Pos
+			//Update Normals
+			trimesh->UpdatePlaneCoeff();	//If normal does not change..
+		}
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		

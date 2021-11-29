@@ -25,7 +25,7 @@ void UserAcc(SPH::Domain & domi) {
 	#endif
 	
 	{
-		if (domi.Particles[i]->ID == 3)
+		if (domi.Particles[i]->ID == 10)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
@@ -41,6 +41,9 @@ void UserAcc(SPH::Domain & domi) {
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
+	
+	//TODO: Modify this by relating FEM & AND partciles 
+	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
 }
 
 
@@ -99,7 +102,8 @@ int main(){
 	
 	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
 	cout << "Creating Spheres.."<<endl;
-	mesh.CalcSpheres();
+	//mesh.v = Vec3_t(0.,0.,);
+	mesh.CalcSpheres(); //DONE ONCE
 	
 									
 	dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
@@ -120,8 +124,8 @@ int main(){
 		double z = dom.Particles[a]->x(2);
 		if ( z < 0 ){
 			dom.Particles[a]->ID=2;
-				dom.Particles[a]->IsFree=false;
-			dom.Particles[a]->NoSlip=true;			
+				// dom.Particles[a]->IsFree=false;
+			// dom.Particles[a]->NoSlip=true;			
 		
 		}
 		if ( z > L )

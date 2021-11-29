@@ -45,6 +45,7 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 			v(dir[0])=x1;v(dir[1])=x2;v(dir[2])=x3;
 			//cout << "i,j" << i << ", " << j<<endl; 
 			node.Push(new Vec3_t(x1,x2,x3));
+			node_v.Push(new Vec3_t(0.,0.,0.));
 			//cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
 			x1+=dl;
 		}
@@ -104,20 +105,38 @@ inline void TriMesh::CalcSpheres(){
 	double max;
 	for (int e = 0; e < element.Size(); e++){ 
 		max = 0.;
-		int  nmax;	//node far away from baricenter -> THIS IS USEFUL FOR CONTACT
 		Vec3_t rv;
 		for (int n = 0 ;n < 3; n++){
 			rv = *node [element[e]->node[n]] - element[e] -> centroid;
 			if (norm(rv) > max) max = norm(rv);
-			nmax = n;
+			element[e]-> nfar = n;
 		}
 		element[e]-> radius = max;	//Fraser Eq 3-136
-		element[e]-> pplane = dot(*node [element[e] -> node[nmax]],element[e] -> normal);
 	}
+	UpdatePlaneCoeff();
+	
+}
+inline void TriMesh::UpdatePlaneCoeff(){
+	//Update pplane
+	for (int e = 0; e < element.Size(); e++) 
+		element[e]-> pplane = dot(*node [element[e] -> node[element[e] ->nfar]],element[e] -> normal);
+}
+inline void TriMesh::CalcNormals(){
 	
 }
 
-inline void TriMesh::CalcNormals(){
+inline void TriMesh::ApplyConstVel(const Vec3_t &v){
+		for (int n=0;n<node.Size();n++)
+			*node_v[n] = v;
+}
+
+inline void TriMesh::UpdatePos(const double &dt){
+	
+	//Seems to be More accurate to do this by node vel
+	//This is used by normals
+	for (int n=0;n<node.Size();n++){
+		*node[n] = *node[n] + (*node_v[n])*dt;
+	}
 	
 }
 
