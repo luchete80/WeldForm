@@ -117,6 +117,7 @@ void Domain::CalcContactForces(){
 			// cout << "Particle P2v: "<<Particles[P2]->v<<endl;
 			//ok, FEM Particles normals can be calculated by two ways, the one used to
 			//calculate SPH ones, and could be given by mesh input
+			//delta_ Is the projection of relative velocity 
 			double delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
 			
 			// cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
@@ -128,12 +129,12 @@ void Domain::CalcContactForces(){
 				double pplane = e -> pplane; 
 				double deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (-delta_);								//Eq 3-142 
 				Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
-				cout << "dt contact: "<<deltat_cont<<endl;
+				//cout << "dt contact: "<<deltat_cont<<endl;
 				//Check for contact in this time step 
 				//Calculate time step for external forces
-				double dtmin=1000.;
-				if (deltat_cont < dtmin){
-					cout << "Inside dt contact" <<endl;
+				
+				if (deltat_cont < deltat){
+					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
 					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h, Particles[P2]->normal); //Fraser 3-146
 					//Check if it is inside triangular element
@@ -143,13 +144,16 @@ void Domain::CalcContactForces(){
 					int i=0,j;			
 					while (i<3 && inside){
 						j = i+1;	if (j>2) j = 0;
-						double crit = dot (cross ( *trimesh->node[e -> node[j]] - *trimesh->node[e -> node[i]],Qj),Particles[P2]->normal);
+						double crit = dot (cross ( *trimesh->node[e -> node[j]] - *trimesh->node[e -> node[i]],
+																																Qj  - *trimesh->node[e -> node[i]]),
+															Particles[P2]->normal);
 						if (crit < 0.0) inside = false;
+						i++;
 					}
 					
 					if (inside ) { //Contact point inside element, contact proceeds
 						//Recalculate vr (for large FEM mesh densities)
-						cout << "inside element"<<endl;
+						//cout << "inside element"<<endl;
 						
 						//Calculate penetration depth
 						double delta = (deltat - deltat_cont) * delta_;
@@ -171,14 +175,14 @@ void Domain::CalcContactForces(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						
 						if (force2 > max_contact_force) max_contact_force = force2;
-						max_contact_force = force2;
-					}
+					}// if inside
 				} //deltat <min
 
-			}//delta > 0 : PARTICLES ARE APPROACHING EACH OTHER
+			}//delta_ > 0 : PARTICLES ARE APPROACHING EACH OTHER
 		}//Contact Pairs
 	}//Nproc
-	//cout << "Max Contact Force: "<<sqrt(max_contact_force)<<endl;
+	max_contact_force = sqrt (max_contact_force);
+	cout << "Max Contact Force: "<< max_contact_force <<endl;
 }
 
 }; //SPH
