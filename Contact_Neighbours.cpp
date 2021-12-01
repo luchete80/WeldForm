@@ -87,7 +87,8 @@ int main(){
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-	mesh.AxisPlaneMesh(2,true,Vec3_t(-0.5,-0.5,L + L/10.-dx/2.),Vec3_t(0.5,0.5, L + L/10.-dx/2.),30);
+	//AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2,  const int &dens)
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5,L + L/10.-dx/2.),Vec3_t(0.5,0.5, L + L/10.-dx/2.),30);
 	
 	
 	for (int v=0;v<mesh.node.Size();v++){

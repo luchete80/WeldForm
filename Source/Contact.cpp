@@ -91,7 +91,7 @@ inline void Domain::ContactNbSearch(){
 //// 
 ////////////////////////////////
 void Domain::CalcContactForces(){
-	double maxforce=0.;
+	max_contact_force = 0.;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -104,7 +104,7 @@ void Domain::CalcContactForces(){
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
-		cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
+		//cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
 		for (size_t a = 0; a < ContPairs[k].Size();a++) {
 			//P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
 			if (Particles[ContPairs[k][a].first]->ID == contact_surf_id ) 	{ 	//Cont Surf is partcicles from FEM
@@ -113,26 +113,27 @@ void Domain::CalcContactForces(){
 				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
 		
 			Vec3_t vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
-			cout << "Particle P1v: "<<Particles[P1]->v<<endl;
-			cout << "Particle P2v: "<<Particles[P2]->v<<endl;
+			// cout << "Particle P1v: "<<Particles[P1]->v<<endl;
+			// cout << "Particle P2v: "<<Particles[P2]->v<<endl;
 			//ok, FEM Particles normals can be calculated by two ways, the one used to
 			//calculate SPH ones, and could be given by mesh input
 			double delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
 			
-			cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
-			cout << " vr: "<< vr<<endl;
-			cout << "delta: "<<delta_<<endl;
+			// cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
+			// cout << " vr: "<< vr<<endl;
+			// cout << "delta_: "<<delta_<<endl;
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
 				Element* e = trimesh-> element[Particles[P2]->element];
 				double pplane = e -> pplane; 
 				double deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (-delta_);								//Eq 3-142 
 				Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
-				
+				cout << "dt contact: "<<deltat_cont<<endl;
 				//Check for contact in this time step 
 				//Calculate time step for external forces
 				double dtmin=1000.;
 				if (deltat_cont < dtmin){
+					cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
 					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h, Particles[P2]->normal); //Fraser 3-146
 					//Check if it is inside triangular element
@@ -140,14 +141,13 @@ void Domain::CalcContactForces(){
 					//Fraser 3-147
 					bool inside = true;
 					int i=0,j;			
-					bool end = false;
-					while (i<3 && !end){
+					while (i<3 && inside){
 						j = i+1;	if (j>2) j = 0;
-						double crit = dot (cross ( e -> node[j] - e -> node[i],Qj),Particles[P2]->normal);
-						if (crit < 0) end =true;
+						double crit = dot (cross ( *trimesh->node[e -> node[j]] - *trimesh->node[e -> node[i]],Qj),Particles[P2]->normal);
+						if (crit < 0.0) inside = false;
 					}
 					
-					if (!end ) { //Contact point inside element, contact proceeds
+					if (inside ) { //Contact point inside element, contact proceeds
 						//Recalculate vr (for large FEM mesh densities)
 						cout << "inside element"<<endl;
 						
@@ -170,14 +170,15 @@ void Domain::CalcContactForces(){
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						omp_unset_lock(&Particles[P1]->my_lock);
 						
-						if (force2 > maxforce) maxforce = force2;
+						if (force2 > max_contact_force) max_contact_force = force2;
+						max_contact_force = force2;
 					}
 				} //deltat <min
 
 			}//delta > 0 : PARTICLES ARE APPROACHING EACH OTHER
 		}//Contact Pairs
 	}//Nproc
-	cout << "Max Contact Force: "<<sqrt(maxforce)<<endl;
+	//cout << "Max Contact Force: "<<sqrt(max_contact_force)<<endl;
 }
 
 }; //SPH

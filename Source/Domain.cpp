@@ -1819,6 +1819,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
+			
+			if (contact)
+				cout << "Max Contact Force: "<<max_contact_force<<endl;
 		}
 		
 		if (auto_ts)

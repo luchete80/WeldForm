@@ -94,7 +94,7 @@ int main(){
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-	mesh.AxisPlaneMesh(2,true,Vec3_t(-0.5,-0.5,L + L/10.-dx/2.),Vec3_t(0.5,0.5, L + L/10.-dx/2.),30);
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5,L + L/10.-dx/2.),Vec3_t(0.5,0.5, L + L/10.-dx/2.),30);
 	
 	
 	for (int v=0;v<mesh.node.Size();v++){
@@ -146,7 +146,7 @@ int main(){
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	dom.AddTrimeshParticles(mesh, 1.1, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 	
-	dom.Solve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+	dom.Solve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
 	
 	dom.WriteXDMF("ContactTest");
 }

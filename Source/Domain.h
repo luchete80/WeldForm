@@ -221,6 +221,7 @@ public:
 	//CONTACT 
 	double PFAC, DFAC;		// Penalty and damping factors
 	bool 		contact;
+	double max_contact_force;
 		
 		
 	private:
