@@ -719,7 +719,13 @@ void Domain::CalculateSurface(const int &id){
 	//Calculate Particle Neighbours
 	
 	//TODO: Parallelize with lock
-	for (size_t i=0; i<Particles.Size(); i++)	{//Like in Domain::Move
+	int maxid;
+	if (contact)
+		maxid = first_fem_particle_idx;
+	else 
+		first_fem_particle_idx = Particles.Size();
+	
+	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 	
 		Particles[i]->normal *= 1./totmass;
 		

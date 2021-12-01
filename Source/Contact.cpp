@@ -26,7 +26,8 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const i
 		Particles[first_fem_particle_idx + e] -> normal  = mesh.element[e] -> normal;
 		Particles[first_fem_particle_idx + e] -> element = e; 
 	}
-	cout << Particles.Size() - first_fem_particle_idx << "particles added."<<endl;
+	cout << Particles.Size() - first_fem_particle_idx << "particles added with ID " << contact_surf_id <<endl;
+	cout << first_fem_particle_idx << " is the first solid particle index."<<endl;
 }
 
 inline void Domain::ContactNbSearch(){
@@ -45,6 +46,8 @@ inline void Domain::ContactNbSearch(){
 		for (size_t a=0; a<FSMPairs[k].Size();a++) {
 			P1	= FSMPairs[k][a].first;
 			P2	= FSMPairs[k][a].second;	
+			// cout << "Fist Particle index, ID: "<<P1 << ", " << Particles[P1]->ID  <<endl;
+			// cout << "Sec Particle index, ID: "<<P2 << ", " << Particles[P2]->ID  <<endl;
 			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
 				//cout << "contact surface id found"<<endl;
 				if (Particles[P1]->ID == id_free_surf || Particles[P2]->ID == id_free_surf ) {
