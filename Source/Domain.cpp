@@ -1735,7 +1735,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			MainNeighbourSearch_Ext();
 			if (contact) {
 				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-				CalculateSurface(2);				//After Nb search			
+				CalculateSurface(1);				//After Nb search			
 				ContactNbSearch();
 				SaveNeighbourData();	//Again Save Nb data
 			}//contact
@@ -1751,7 +1751,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				
 				if (contact) {
 					SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-					CalculateSurface(2);				//After Nb search			
+					CalculateSurface(1);				//After Nb search			
 					ContactNbSearch();
 					SaveNeighbourData();	//Again Save Nb data
 				}//contact

@@ -107,7 +107,7 @@ int main(){
 	mesh.CalcSpheres(); //DONE ONCE
 	
 									
-	dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
@@ -125,8 +125,8 @@ int main(){
 		double z = dom.Particles[a]->x(2);
 		if ( z < 0 ){
 			dom.Particles[a]->ID=2;
-				// dom.Particles[a]->IsFree=false;
-			// dom.Particles[a]->NoSlip=true;			
+			dom.Particles[a]->IsFree=false;
+			dom.Particles[a]->NoSlip=true;			
 		
 		}
 		if ( z > L )
