@@ -146,7 +146,7 @@ int main(){
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	dom.AddTrimeshParticles(mesh, 1.1, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 	
-	dom.Solve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+	dom.Solve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/1.e-5,"test06",999);
 	
 	dom.WriteXDMF("ContactTest");
 }

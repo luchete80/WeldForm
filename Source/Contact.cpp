@@ -92,6 +92,7 @@ inline void Domain::ContactNbSearch(){
 ////////////////////////////////
 void Domain::CalcContactForces(){
 	max_contact_force = 0.;
+	int inside_pairs = 0;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -175,6 +176,7 @@ void Domain::CalcContactForces(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						
 						if (force2 > max_contact_force) max_contact_force = force2;
+						inside_pairs++;
 					}// if inside
 				} //deltat <min
 
@@ -182,7 +184,7 @@ void Domain::CalcContactForces(){
 		}//Contact Pairs
 	}//Nproc
 	max_contact_force = sqrt (max_contact_force);
-	cout << "Max Contact Force: "<< max_contact_force <<endl;
+	cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 }
 
 }; //SPH
