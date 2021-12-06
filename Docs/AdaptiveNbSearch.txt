@@ -1,0 +1,27 @@
+ ACCORDING TO Fraser
+The adaptive search process is as follows:
+	-Perform a neighbor search over the whole domain for the first cycle. This involves
+	- Finding the bounds of the simulation
+ Determining the number of cells in each dimension
+ Binning particles into their cells
+
+Searching for neighbors
+ Calculate conservation of mass, momentum, material models, external forces, etc
+ The effective plastic strain increment is determined based on the material model
+ Build a list of elements with an effective plastic strain (𝛥𝜀𝑝) that surpasses a threshold,
+adapt_thresh. This is done by:
+ Cycle through the elements, if an elements 𝛥𝜀𝑝 is greater than adapt_thresh place the
+element id in a list called AdaptSearchList
+ Mark the element in another array called AdaptNode, this array can be used to show which
+elements are adapted in the post-processor
+ Increment a counter (nNodeAdaptSearch) to keep track of how many elements are in the
+AdaptSearchList. On the GPU, we use an atomicinc() function to prevent incorrect
+incrementation of nNodeAdaptSearch.
+ Pass nNodeAdaptSearch and AdaptSearchList to the cell search subroutine. The search is performed
+only for the nodes in the AdaptSearchList
+ The neighbors are updated
+ The smoothing function values are updated
+ The neighbor list and smoothing function values are kept and re-used for the SPH elements that
+are not on the AdaptSearchList
+The AdaptNode array is used to visualize which elements are processed in the adaptive search. This is
+an important consideration to ensure that the field of elements adapted is not overly discontinuous

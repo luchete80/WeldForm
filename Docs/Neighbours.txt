@@ -1,0 +1,35 @@
+Internal vs External Nb lists 
+
+StartAcceleration(); 					----->THIS RESETS STRAIN RATE!!!!
+PrimaryComputeAcceleration();	//Uses FSMPairs and FixedParticles 
+															//Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
+															// Calculateing the finala value of the smoothed pressure, velocity and stress for fixed particles
+																
+															//Takes into account cellfac
+LastComputeAcceleration(); 		//Calls CalcForce2233
+															--->>>CALCULATES Strain Rate BUT FROM ZERO!
+															//AND CALCULATES ACCELERATION FROM SIGMA (PREV. IT)
+
+
+//...... BUT SIGMA IS ALREADY CALCULATED!
+Move(deltat); 								/// Uses ACCELERATION TO MOVE PARTICLE (calc u && v)
+															//CALCULATE SIGMA FOM STRAIN RATE
+
+
+- Neighbour list is reduced in Interaction.cpp by Cellfac
+
+
+
+inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
+{
+	double h	= (P1->h+P2->h)/2;
+	Vec3_t xij	= P1->x - P2->x;
+
+	Periodic_X_Correction(xij, h, P1, P2);
+
+	double rij	= norm(xij);
+
+	if ((rij/h)<=Cellfac)
+	{
+
+	

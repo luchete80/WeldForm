@@ -78,7 +78,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	#Compression
+	Compression
 	#Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
@@ -88,7 +88,7 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-	Cantilever
+	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours

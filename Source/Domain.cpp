@@ -760,389 +760,6 @@ inline void Domain::DelParticles (int const & Tags)
     std::cout << "\n" << "Particle(s) with Tag No. " << Tags << " has been deleted" << std::endl;
 }
 
-inline void Domain::CellInitiate ()
-{
-	if (!(norm(TRPR)>0.0) && !(norm(BLPF)>0.0))
-	{
-		// Calculate Domain Size
-		BLPF = Particles[0]->x;
-		TRPR = Particles[0]->x;
-		hmax = Particles[0]->h;
-		rhomax = Particles[0]->Density;
-
-		for (size_t i=0; i<Particles.Size(); i++)
-		{
-			if (Particles[i]->x(0) > TRPR(0)) TRPR(0) = Particles[i]->x(0);
-			if (Particles[i]->x(1) > TRPR(1)) TRPR(1) = Particles[i]->x(1);
-			if (Particles[i]->x(2) > TRPR(2)) TRPR(2) = Particles[i]->x(2);
-
-			if (Particles[i]->x(0) < BLPF(0)) BLPF(0) = Particles[i]->x(0);
-			if (Particles[i]->x(1) < BLPF(1)) BLPF(1) = Particles[i]->x(1);
-			if (Particles[i]->x(2) < BLPF(2)) BLPF(2) = Particles[i]->x(2);
-
-			if (Particles[i]->h > hmax) hmax=Particles[i]->h;
-			if (Particles[i]->Density > rhomax) rhomax=Particles[i]->Density;
-			if (Particles[i]->Mu > MuMax) MuMax=Particles[i]->Mu;
-			if (Particles[i]->Cs > CsMax) CsMax=Particles[i]->Cs;
-		}
-	}
-
-	// Override the calculated domain size
-	if (DomMax(0)>TRPR(0)) TRPR(0) = DomMax(0);
-	if (DomMax(1)>TRPR(1)) TRPR(1) = DomMax(1);
-	if (DomMax(2)>TRPR(2)) TRPR(2) = DomMax(2);
-	if (DomMin(0)<BLPF(0)) BLPF(0) = DomMin(0);
-	if (DomMin(1)<BLPF(1)) BLPF(1) = DomMin(1);
-	if (DomMin(2)<BLPF(2)) BLPF(2) = DomMin(2);
-
-
-	//Because of Hexagonal close packing in x direction domain is modified
-	if (!BC.Periodic[0]) {TRPR(0) += hmax/2;	BLPF(0) -= hmax/2;}else{TRPR(0) += R; BLPF(0) -= R;}
-	if (!BC.Periodic[1]) {TRPR(1) += hmax/2;	BLPF(1) -= hmax/2;}else{TRPR(1) += R; BLPF(1) -= R;}
-	if (!BC.Periodic[2]) {TRPR(2) += hmax/2;	BLPF(2) -= hmax/2;}else{TRPR(2) += R; BLPF(2) -= R;}
-
-    // Calculate Cells Properties
-	switch (Dimension)
-	{case 2:
-		if (double (ceil(((TRPR(0)-BLPF(0))/(Cellfac*hmax)))-((TRPR(0)-BLPF(0))/(Cellfac*hmax)))<(hmax/10.0))
-			CellNo[0] = int(ceil((TRPR(0)-BLPF(0))/(Cellfac*hmax)));
-		else
-			CellNo[0] = int(floor((TRPR(0)-BLPF(0))/(Cellfac*hmax)));
-
-		if (double (ceil(((TRPR(1)-BLPF(1))/(Cellfac*hmax)))-((TRPR(1)-BLPF(1))/(Cellfac*hmax)))<(hmax/10.0))
-			CellNo[1] = int(ceil((TRPR(1)-BLPF(1))/(Cellfac*hmax)));
-		else
-			CellNo[1] = int(floor((TRPR(1)-BLPF(1))/(Cellfac*hmax)));
-
-		CellNo[2] = 1;
-
-		CellSize  = Vec3_t ((TRPR(0)-BLPF(0))/CellNo[0],(TRPR(1)-BLPF(1))/CellNo[1],0.0);
-		break;
-
-	case 3:
-		if (double (ceil(((TRPR(0)-BLPF(0))/(Cellfac*hmax)))-((TRPR(0)-BLPF(0))/(Cellfac*hmax)))<(hmax/10.0))
-			CellNo[0] = int(ceil((TRPR(0)-BLPF(0))/(Cellfac*hmax)));
-		else
-			CellNo[0] = int(floor((TRPR(0)-BLPF(0))/(Cellfac*hmax)));
-
-		if (double (ceil(((TRPR(1)-BLPF(1))/(Cellfac*hmax)))-((TRPR(1)-BLPF(1))/(Cellfac*hmax)))<(hmax/10.0))
-			CellNo[1] = int(ceil((TRPR(1)-BLPF(1))/(Cellfac*hmax)));
-		else
-			CellNo[1] = int(floor((TRPR(1)-BLPF(1))/(Cellfac*hmax)));
-
-		if (double (ceil(((TRPR(2)-BLPF(2))/(Cellfac*hmax)))-((TRPR(2)-BLPF(2))/(Cellfac*hmax)))<(hmax/10.0))
-			CellNo[2] = int(ceil((TRPR(2)-BLPF(2))/(Cellfac*hmax)));
-		else
-			CellNo[2] = int(floor((TRPR(2)-BLPF(2))/(Cellfac*hmax)));
-
-		CellSize  = Vec3_t ((TRPR(0)-BLPF(0))/CellNo[0],(TRPR(1)-BLPF(1))/CellNo[1],(TRPR(2)-BLPF(2))/CellNo[2]);
-		break;
-
-	default:
-    	std::cout << "Please correct the dimension (2=>2D or 3=>3D) and run again" << std::endl;
-		abort();
-		break;
-	}
-
-	// Periodic BC modifications
-	if (BC.Periodic[0]) CellNo[0] += 2;
-    if (BC.Periodic[1]) CellNo[1] += 2;
-    if (BC.Periodic[2]) CellNo[2] += 2;
-
-    if (BC.Periodic[0]) DomSize[0] = (TRPR(0)-BLPF(0));
-    if (BC.Periodic[1]) DomSize[1] = (TRPR(1)-BLPF(1));
-    if (BC.Periodic[2]) DomSize[2] = (TRPR(2)-BLPF(2));
-
-    // Initiate Head of Chain array for Linked-List
-    HOC = new int**[(int) CellNo[0]];
-    for(int i =0; i<CellNo[0]; i++){
-       HOC[i] = new int*[CellNo[1]];
-       for(int j =0; j<CellNo[1]; j++){
-           HOC[i][j] = new int[CellNo[2]];
-           for(int k = 0; k<CellNo[2];k++){
-              HOC[i][j][k] = -1;
-           }
-       }
-    }
-    // Initiate Pairs array for neibour searching
-    for(size_t i=0 ; i<Nproc ; i++)
-    {
-	SMPairs.Push(Initial);
-	NSMPairs.Push(Initial);
-	FSMPairs.Push(Initial);
-	
-	ContPairs.Push(Initial);
-    }
-}
-
-inline void Domain::ListGenerate ()
-{
-	int i, j, k, temp=0;
-	switch (Dimension)
-	{case 2:
-		for (size_t a=0; a<Particles.Size(); a++)
-		{
-			i= (int) (floor((Particles[a]->x(0) - BLPF(0)) / CellSize(0)));
-			j= (int) (floor((Particles[a]->x(1) - BLPF(1)) / CellSize(1)));
-
-			if (i<0)
-            {
-                    if ((BLPF(0) - Particles[a]->x(0)) <= hmax) i=0;
-                            else std::cout<<"Leaving i<0"<<std::endl;
-            }
-            if (j<0)
-            {
-                    if ((BLPF(1) - Particles[a]->x(1)) <= hmax) j=0;
-                            else std::cout<<"Leaving j<0"<<std::endl;
-            }
-			if (i>=CellNo[0])
-			{
-					if ((Particles[a]->x(0) - TRPR(0)) <= hmax) i=CellNo[0]-1;
-							else std::cout<<"Leaving i>=CellNo"<<std::endl;
-			}
-            if (j>=CellNo[1])
-            {
-                    if ((Particles[a]->x(1) - TRPR(1)) <= hmax) j=CellNo[1]-1;
-                            else std::cout<<"Leaving j>=CellNo"<<std::endl;
-            }
-
-			temp = HOC[i][j][0];
-			HOC[i][j][0] = a;
-			Particles[a]->LL = temp;
-			Particles[a]->CC[0] = i;
-			Particles[a]->CC[1] = j;
-			Particles[a]->CC[2] = 0;
-			if (!Particles[a]->IsFree) FixedParticles.Push(a);
-		}
-		break;
-
-	case 3:
-		for (size_t a=0; a<Particles.Size(); a++)
-		{
-			i= (int) (floor((Particles[a]->x(0) - BLPF(0)) / CellSize(0)));
-			j= (int) (floor((Particles[a]->x(1) - BLPF(1)) / CellSize(1)));
-			k= (int) (floor((Particles[a]->x(2) - BLPF(2)) / CellSize(2)));
-
-            if (i<0)
-            {
-                    if ((BLPF(0) - Particles[a]->x(0))<=hmax) i=0;
-                            else std::cout<<"Leaving"<<std::endl;
-            }
-            if (j<0)
-            {
-                    if ((BLPF(1) - Particles[a]->x(1))<=hmax) j=0;
-                            else std::cout<<"Leaving"<<std::endl;
-            }
-            if (k<0)
-            {
-                    if ((BLPF(2) - Particles[a]->x(2))<=hmax) k=0;
-                            else std::cout<<"Leaving"<<std::endl;
-            }
-			if (i>=CellNo[0])
-			{
-					if ((Particles[a]->x(0) - TRPR(0))<=hmax) i=CellNo[0]-1;
-							else std::cout<<"Leaving"<<std::endl;
-			}
-            if (j>=CellNo[1])
-            {
-                    if ((Particles[a]->x(1) - TRPR(1))<=hmax) j=CellNo[1]-1;
-                            else std::cout<<"Leaving"<<std::endl;
-            }
-            if (k>=CellNo[2])
-            {
-                    if ((Particles[a]->x(2) - TRPR(2))<=hmax) k=CellNo[2]-1;
-                            else std::cout<<"Leaving"<<std::endl;
-            }
-
-            temp = HOC[i][j][k];
-			HOC[i][j][k] = a;
-			Particles[a]->LL = temp;
-			Particles[a]->CC[0] = i;
-			Particles[a]->CC[1] = j;
-			Particles[a]->CC[2] = k;
-			if (!Particles[a]->IsFree) FixedParticles.Push(a);
-		}
-		break;
-
-	default:
-    	std::cout << "Please correct the dimension (2=>2D or 3=>3D) and run again" << std::endl;
-		abort();
-		break;
-	}
-
-	if (BC.Periodic[0]) {
-	   for(int j =0; j<CellNo[1]; j++)
-		   for(int k =0; k<CellNo[2]; k++) {
-			  HOC[CellNo[0]-1][j][k] =  HOC[1][j][k];
-			  HOC[CellNo[0]-2][j][k] =  HOC[0][j][k];
-		   }
-	} 
-	if (BC.Periodic[1]) {
-	   for(int i =0; i<CellNo[0]; i++)
-		   for(int k =0; k<CellNo[2]; k++) {
-			  HOC[i][CellNo[1]-1][k] =  HOC[i][1][k];
-			  HOC[i][CellNo[1]-2][k] =  HOC[i][0][k];
-		   }
-	}
-	if (BC.Periodic[2]) {
-	   for(int i =0; i<CellNo[0]; i++)
-		   for(int j =0; j<CellNo[1]; j++) {
-				  HOC[i][j][CellNo[2]-1] =  HOC[i][j][1];
-				  HOC[i][j][CellNo[2]-2] =  HOC[i][j][0];
-			   }
-	}
-}
-
-inline void Domain::CellReset ()
-{
-
-    #pragma omp parallel for schedule (static) num_threads(Nproc)
-
-    for(int i =0; i<CellNo[0]; i++)
-    {
-		for(int j =0; j<CellNo[1]; j++)
-		for(int k =0; k<CellNo[2];k++)
-		{
-			HOC[i][j][k] = -1;
-		}
-    }
-	#pragma omp parallel for schedule(static) num_threads(Nproc)
-	#ifdef __GNUC__
-	for (size_t a=0; a<Particles.Size(); a++)	//Like in Domain::Move
-	#else
-	for (int a=0; a<Particles.Size(); a++)//Like in Domain::Move
-	#endif
-	{
-
-    	Particles[a]->LL = -1;
-    }
-
-    FixedParticles.Clear();
-}
-
-inline void Domain::MainNeighbourSearch() {
-    int q1;
-
-    if (BC.Periodic[0]) {
-	#pragma omp parallel for schedule (dynamic) num_threads(Nproc)
-	for (q1=1;q1<(CellNo[0]-1); q1++)	YZPlaneCellsNeighbourSearch(q1);
-    } else {
-	#pragma omp parallel for schedule (dynamic) num_threads(Nproc)
-    	for (q1=0;q1<CellNo[0]; q1++)	YZPlaneCellsNeighbourSearch(q1);
-    }
-	m_isNbDataCleared = false;
-}
-
-inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
-	int q3,q2;
-	size_t T = omp_get_thread_num();
-
-	for (BC.Periodic[2] ? q3=1 : q3=0;BC.Periodic[2] ? (q3<(CellNo[2]-1)) : (q3<CellNo[2]); q3++)
-	for (BC.Periodic[1] ? q2=1 : q2=0;BC.Periodic[1] ? (q2<(CellNo[1]-1)) : (q2<CellNo[1]); q2++) {
-		if (HOC[q1][q2][q3]==-1) continue;
-		else {
-			int temp1, temp2;
-			temp1 = HOC[q1][q2][q3];
-
-			while (temp1 != -1) {// The current cell  => self cell interactions
-				temp2 = Particles[temp1]->LL;
-				while (temp2 != -1){
-					if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
-						if (Particles[temp1]->Material == Particles[temp2]->Material)
-						{
-							if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)//Both free, most common
-								SMPairs[T].Push(std::make_pair(temp1, temp2));
-							else
-								FSMPairs[T].Push(std::make_pair(temp1, temp2));
-						} else
-							NSMPairs[T].Push(std::make_pair(temp1, temp2));
-					}
-					temp2 = Particles[temp2]->LL;
-				}
-
-				// (q1 + 1, q2 , q3)
-				if (q1+1< CellNo[0])
-				{
-					temp2 = HOC[q1+1][q2][q3];
-					while (temp2 != -1)
-					{
-						if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
-						{
-							if (Particles[temp1]->Material == Particles[temp2]->Material)
-							{
-								if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)
-									SMPairs[T].Push(std::make_pair(temp1, temp2));
-								else
-									FSMPairs[T].Push(std::make_pair(temp1, temp2));
-
-							}
-							else
-								NSMPairs[T].Push(std::make_pair(temp1, temp2));
-						}
-						temp2 = Particles[temp2]->LL;
-					}
-				}
-
-				// (q1 + a, q2 + 1, q3) & a[-1,1]
-				if (q2+1< CellNo[1])
-				{
-					for (int i = q1-1; i <= q1+1; i++)
-					{
-						if (i<CellNo[0] && i>=0)
-						{
-							temp2 = HOC[i][q2+1][q3];
-							while (temp2 != -1)
-							{
-								if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
-								{
-									if (Particles[temp1]->Material == Particles[temp2]->Material)
-									{
-										if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)
-											SMPairs[T].Push(std::make_pair(temp1, temp2));
-										else
-											FSMPairs[T].Push(std::make_pair(temp1, temp2));
-
-									}
-									else
-										NSMPairs[T].Push(std::make_pair(temp1, temp2));
-								}
-								temp2 = Particles[temp2]->LL;
-							}
-						}
-					}
-				}
-
-				// (q1 + a, q2 + b, q3 + 1) & a,b[-1,1] => all 9 cells above the current cell
-				if (q3+1< CellNo[2]) {
-					for (int j=q2-1; j<=q2+1; j++)
-					for (int i=q1-1; i<=q1+1; i++) {
-						if (i<CellNo[0] && i>=0 && j<CellNo[1] && j>=0) {
-							temp2 = HOC[i][j][q3+1];
-							while (temp2 != -1)
-							{
-								if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
-								{
-									if (Particles[temp1]->Material == Particles[temp2]->Material)
-									{
-										if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)
-											SMPairs[T].Push(std::make_pair(temp1, temp2));
-										else
-											FSMPairs[T].Push(std::make_pair(temp1, temp2));
-
-									}
-									else
-										NSMPairs[T].Push(std::make_pair(temp1, temp2));
-								}
-								temp2 = Particles[temp2]->LL;
-							}
-						}
-					}
-				}
-				temp1 = Particles[temp1]->LL;
-			}
-		}
-	}
-}
 
 inline void Domain::StartAcceleration (Vec3_t const & a) {
 
@@ -1619,46 +1236,6 @@ inline void Domain::Solve_orig_Ext (double tf, double dt, double dtOut, char con
 
 }
 
-inline void Domain::ClearNbData(){
-	
-	for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
-		SMPairs[i].Clear();
-		FSMPairs[i].Clear();
-		NSMPairs[i].Clear();
-		ContPairs[i].Clear();//New
-	}
-	CellReset();
-	ListGenerate();
-	m_isNbDataCleared = true;
-}
-
-inline void Domain::SaveNeighbourData(){
-		std::vector <int> nb(Particles.Size());
-		std::vector <int> contnb(Particles.Size());
-		
-		for ( size_t k = 0; k < Nproc ; k++) {
-			for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
-				nb[SMPairs[k][a].first ]+=1;
-				nb[SMPairs[k][a].second]+=1;
-				
-			}
-		}
-		for ( size_t k = 0; k < Nproc ; k++) {
-			for (size_t a=0; a<ContPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
-				contnb[ContPairs[k][a].first ]+=1;
-				contnb[ContPairs[k][a].second]+=1;
-				
-			}			
-		}
-		for (int p=0;p<Particles.Size();p++){
-			Particles[p]->Nb = nb[p];
-			if (p < first_fem_particle_idx)
-				Particles[p]->ContNb = contnb[p];
-		}
-}
-
 inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
@@ -1677,6 +1254,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	TimestepCheck();
 	WholeVelocity();
 	
+	cout << "Cell Size: "<<CellSize<<endl;
+	
 	if (contact) { //Calculate particle Stiffness
 		//Cs	= sqrt(K/rho);
 		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
@@ -1686,6 +1265,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		}		
 		cout << "Contact Stiffness" << Particles [0] -> cont_stiff <<endl;
 	}
+	cout << "Fixed Particles Size: "<<FixedParticles.Size()<<endl;
+	cout << "Initial Cell Number: "<<CellNo[0]<<", " <<CellNo[1]<<", "<< CellNo[2]<<", " <<endl;
 	
 	std::chrono::duration<double> total_time,neighbour_time;
 	
@@ -1733,7 +1314,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
 
-			MainNeighbourSearch_Ext();
+			MainNeighbourSearch/*_Ext*/();
 			if (contact) {
 				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 				CalculateSurface(1);				//After Nb search			
@@ -1746,7 +1327,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					MainNeighbourSearch_Ext();
+					MainNeighbourSearch/*_Ext*/();
 
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 				

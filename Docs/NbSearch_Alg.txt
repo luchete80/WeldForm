@@ -1,0 +1,22 @@
+Domain::CellInitiate
+Domain::ListGenerate ()
+
+-----------------------------------
+CellInitiate 
+Defines: CellNo, CellSize(3), TRPR and BLPF (TOP Right botomkeft), HOC
+					// Initiate Head of Chain array for Linked-List
+
+
+
+Domain::ListGenerate ()
+Define i,j,k indices of cell in each particle
+Writes HOC of each cell
+		Particle->LL;		///< Linked-List variable to show the next particle in the list of a cell
+		
+for (size_t a=0; a<Particles.Size(); a++)
+{
+	i= (int) (floor((Particles[a]->x(0) - BLPF(0)) / CellSize(0)));
+	j= (int) (floor((Particles[a]->x(1) - BLPF(1)) / CellSize(1)));
+	k= (int) (floor((Particles[a]->x(2) - BLPF(2)) / CellSize(2)));
+		
+
