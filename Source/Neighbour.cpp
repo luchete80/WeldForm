@@ -282,8 +282,8 @@ inline bool  Domain::CheckRadius(Particle* P1, Particle *P2){
 	Periodic_X_Correction(xij, h, P1, P2);
 	double rij	= norm(xij);
 	if ((rij/h)<=Cellfac) ret = true;
-	cout << "Checking radius "<<endl;
-	cout << "rij h rij/h cellfac "<<rij<<", "<< h << ", " << rij/h<<", "<<Cellfac<<endl;
+	// cout << "Checking radius "<<endl;
+	// cout << "rij h rij/h cellfac "<<rij<<", "<< h << ", " << rij/h<<", "<<Cellfac<<endl;
 	return ret;
 }
 
@@ -301,7 +301,7 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 			while (temp1 != -1) {// The current cell  => self cell interactions
 				temp2 = Particles[temp1]->LL;
 				while (temp2 != -1){
-						if ( CheckRadius(Particles[temp1],Particles[temp1])){
+						if ( CheckRadius(Particles[temp1],Particles[temp2])){
 							if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
 								if (Particles[temp1]->Material == Particles[temp2]->Material)
 								{
@@ -322,7 +322,7 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 					temp2 = HOC[q1+1][q2][q3];
 					while (temp2 != -1)
 					{
-						if ( CheckRadius(Particles[temp1],Particles[temp1])){
+						if ( CheckRadius(Particles[temp1],Particles[temp2])){
 							if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
 							{
 								if (Particles[temp1]->Material == Particles[temp2]->Material)
@@ -351,7 +351,7 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 							temp2 = HOC[i][q2+1][q3];
 							while (temp2 != -1)
 							{
-								if ( CheckRadius(Particles[temp1],Particles[temp1])){
+								if ( CheckRadius(Particles[temp1],Particles[temp2])){
 									if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
 									{
 										if (Particles[temp1]->Material == Particles[temp2]->Material)
@@ -380,7 +380,7 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 							temp2 = HOC[i][j][q3+1];
 							while (temp2 != -1)
 							{
-									if ( CheckRadius(Particles[temp1],Particles[temp1])){
+									if ( CheckRadius(Particles[temp1],Particles[temp2])){
 									if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
 									{
 										if (Particles[temp1]->Material == Particles[temp2]->Material)

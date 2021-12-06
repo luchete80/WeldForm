@@ -49,7 +49,7 @@ int main(int argc, char **argv) try
         dom.Dimension	= 3;
         dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
-    	dom.Scheme	= 0;	//Mod Verlet
+    	dom.Scheme	= 1;	//Mod Verlet
 //     	dom.XSPH	= 0.5; //Very important
 		
         double dx,h,rho,K,G,Cs,Fy;
@@ -67,12 +67,12 @@ int main(int argc, char **argv) try
 		G= E / (2.* (1.+nu));
 		Fy	= 1000.e10;
 
-		dx = 0.002;
-    	h	= dx*1.1; //Very important
-        Cs	= sqrt(K/rho);
+	dx = 0.002;
+	h	= dx*1.2; //Very important
+	Cs	= sqrt(K/rho);
 
-        double timestep;
-        timestep = (0.2*h/(Cs));
+	double timestep;
+	timestep = (0.2*h/(Cs));
 		
 		//timestep = 2.5e-6;
 		//timestep = 5.e-7;
@@ -107,7 +107,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 1.0;
+    		dom.Particles[a]->Alpha		= 0.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double x = dom.Particles[a]->x(0);
