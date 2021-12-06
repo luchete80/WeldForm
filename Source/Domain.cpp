@@ -116,6 +116,7 @@ inline Domain::Domain ()
 		
 	
 	gradKernelCorr = false;
+	contact = false;
 }
 
 inline Domain::~Domain ()
