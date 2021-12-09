@@ -1,0 +1,15 @@
+Compression test 1 - 5ms
+12144 particles, h=1.2, adaptive ts, Artifficial Visc alpha=1, no contact
+
+Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz   3.19 GHz 16GB RAM
+
+Original Neighbours
+
+New Neighbours
+time (ms) - CPU time(s) - Max Plstic Strain - time step
+0									- 7.19739e-07 S	
+1		308		0				- 1.89e-7
+2		960		6.95e-3	- 1.22e-7
+3		1725	2.68e-2 - 1.16e-7
+4		2537	5.27e-2	-	1.09e-7
+5		3437 	0.084		-	1.01e-7

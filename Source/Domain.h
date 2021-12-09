@@ -141,6 +141,7 @@ public:
 	int contact_surf_id;						//particles id from surface
 	void CalculateSurface(const int &id = 1);
 	void CalcContactForces();
+	double contact_force_factor;
 	
 	/////////////// MEMBERS //
     // Data

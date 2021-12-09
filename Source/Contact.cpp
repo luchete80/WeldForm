@@ -133,8 +133,8 @@ void Domain::CalcContactForces(){
 				//cout << "dt contact: "<<deltat_cont<<endl;
 				//Check for contact in this time step 
 				//Calculate time step for external forces
-				
-				if (deltat_cont < deltat){
+				double dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));	//Fraser 3-145
+				if (deltat_cont < std::min(deltat,dt_fext)){
 					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
 					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h, Particles[P2]->normal); //Fraser 3-146
@@ -184,7 +184,7 @@ void Domain::CalcContactForces(){
 		}//Contact Pairs
 	}//Nproc
 	max_contact_force = sqrt (max_contact_force);
-	cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+	//cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 }
 
 }; //SPH
