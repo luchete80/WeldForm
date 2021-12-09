@@ -145,7 +145,9 @@ int main(){
 	//ALWAYS AFTER SPH PARTICLES
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	dom.AddTrimeshParticles(mesh, 1.1, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-	
+	//ID 	0 Internal
+	//		1	Outer Surface
+	//		2,3 //Boundaries
 	dom.Solve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/1.e-4,"test06",999);
 	
 	dom.WriteXDMF("ContactTest");

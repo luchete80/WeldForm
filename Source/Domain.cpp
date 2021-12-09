@@ -734,6 +734,7 @@ void Domain::CalculateSurface(const int &id){
 		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= 46) //3-114 Fraser
 			Particles[i]->ID=id;
 	}
+
 }
 
 
@@ -1315,7 +1316,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
 
-			MainNeighbourSearch/*_Ext*/();
+			MainNeighbourSearch_Ext();
+			
 			if (contact) {
 				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 				CalculateSurface(1);				//After Nb search			
@@ -1328,7 +1330,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					MainNeighbourSearch/*_Ext*/();
+					MainNeighbourSearch_Ext();
 
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 				
@@ -1632,7 +1634,7 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 	} 
 	
 
-	NeighborhoodSearch nsearch(2.2*Particles[0]->h, true);
+	NeighborhoodSearch nsearch(2*Particles[0]->h, true);
 
 	
 	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);

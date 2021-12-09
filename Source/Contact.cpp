@@ -31,6 +31,7 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const i
 }
 
 inline void Domain::ContactNbSearch(){
+	cout << "Performing Nb Search"<<endl;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -85,6 +86,10 @@ inline void Domain::ContactNbSearch(){
 		// }
 		
 	}
+	cout << "Contact Pairs Count"<<endl;
+	for (int k=0; k<Nproc;k++) 
+		cout << ContPairs[k].Size()<<", ";
+	cout <<endl;
 }
 
 //////////////////////////////// 
