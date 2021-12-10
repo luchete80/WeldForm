@@ -31,8 +31,8 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 
 	double rij	= norm(xij);
 
-	if ((rij/h)<=Cellfac)
-	{
+	// if ((rij/h)<=Cellfac)
+	// {
 		double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 		double Alpha	= (P1->Alpha + P2->Alpha)/2.0;
 		double Beta	= (P1->Beta + P2->Beta)/2.0;
@@ -195,7 +195,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 					P2->SumDen += mi*    K;
 
 		omp_unset_lock(&P2->my_lock);
-	}
+	//}//Interaction
 }
 
 

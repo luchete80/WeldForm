@@ -1,0 +1,33 @@
+Compression test 1 - 5ms
+12144 particles, h=1.2, adaptive ts, Artifficial Visc alpha=1, no contact
+
+Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz   3.19 GHz 16GB RAM
+
+
+New Neighbours
+time (ms) - CPU time(s) - Max Plstic Strain - time step
+0									- 7.19739e-07 S	
+1		308		0				- 1.89e-7
+2		960		6.95e-3	- 1.22e-7
+3		1725	2.68e-2 - 1.16e-7
+4		2537	5.27e-2	-	1.09e-7
+5		3437 	0.084		-	1.01e-7
+
+--------------------------------------------------------------
+EXTERNAL NEIGHBOURS (CompactNSearch)
+In the first time step neighbours are nearly the same, but acceleration is taking too much
+time (ms) - CPU time(s) - Max Plstic Strain - time step
+0									- 7.19739e-07 S	
+1		109		0				- 1.92e-7
+2		434		2.42e-3	-	
+3		838
+4		
+5		1739	
+
+Output No. 7 at 0.00500009 has been generated
+Current Time Step = 1.03376e-07
+Total CPU time: 1739.41, Neigbour search time: 635.754, Pr Accel Calc time: 128.991Las Acel Calc Time739.127
+Max plastic strain: 0.145668in particle1114
+Steps count in this interval: 9260Total Step count36970
+Total Nb search time in this interval: 189.187Average Nb search time in this interval: 0.0204306
+Avg Neighbour Count48

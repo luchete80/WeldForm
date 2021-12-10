@@ -1,0 +1,40 @@
+-- Original Neighbour list before correct with rcutoff
+
+
+------------------------------------------------------------
+New internal Neighbour with cutoff
+
+Output No. 3 at 0.00100014 has been generated
+Current Time Step = 1.68446e-07
+Total CPU time: 208.792, Neigbour search time: 0.047, Pr Accel Calc time: 4.001Las Acel Calc Time179.835
+Max plastic strain: 0in particle1876038272
+Steps count in this interval: 4277Total Step count4278
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count26
+
+Output No. 7 at 0.00500004 has been generated
+Current Time Step = 9.49593e-08
+Total CPU time: 2467.04, Neigbour search time: 306.152, Pr Accel Calc time: 41.159Las Acel Calc Time1876.73
+Max plastic strain: 0.0899171in particle6218
+Steps count in this interval: 10190Total Step count41360
+Total Nb search time in this interval: 91.191Average Nb search time in this interval: 0.00894907
+Avg Neighbour Count31
+
+------------------------
+External Neighbour
+
+Output No. 3 at 0.00100012 has been generated
+Current Time Step = 1.71783e-07
+Total CPU time: 80.246, Neigbour search time: 0.063, Pr Accel Calc time: 10.1Las Acel Calc Time47.05
+Max plastic strain: 0in particle1876038272
+Steps count in this interval: 4192Total Step count4193
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count26
+
+Output No. 7 at 0.00500006 has been generated
+Current Time Step = 9.67441e-08
+Total CPU time: 1234.27, Neigbour search time: 392.379, Pr Accel Calc time: 106.184Las Acel Calc Time499.173
+Max plastic strain: 0.1326in particle1125
+Steps count in this interval: 9946Total Step count40473
+Total Nb search time in this interval: 120.254Average Nb search time in this interval: 0.0120907
+Avg Neighbour Count31
