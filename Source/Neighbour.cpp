@@ -287,7 +287,21 @@ inline bool  Domain::CheckRadius(Particle* P1, Particle *P2){
 	return ret;
 }
 
-//inline void Domain::AllocateParticle(){}
+inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int &T){
+		if ( CheckRadius(Particles[temp1],Particles[temp2])){
+
+		if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
+			if (Particles[temp1]->Material == Particles[temp2]->Material)
+			{
+				if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)//Both free, most common
+					SMPairs[T].Push(std::make_pair(temp1, temp2));
+				else
+					FSMPairs[T].Push(std::make_pair(temp1, temp2));
+			} else
+				NSMPairs[T].Push(std::make_pair(temp1, temp2));
+		}
+	}
+}
 inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 	int q3,q2;
 	size_t T = omp_get_thread_num();
@@ -302,73 +316,27 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 			while (temp1 != -1) {// The current cell  => self cell interactions
 				temp2 = Particles[temp1]->LL;
 				while (temp2 != -1){
-						
-						if ( CheckRadius(Particles[temp1],Particles[temp2])){
-
-							if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
-								if (Particles[temp1]->Material == Particles[temp2]->Material)
-								{
-									if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)//Both free, most common
-										SMPairs[T].Push(std::make_pair(temp1, temp2));
-									else
-										FSMPairs[T].Push(std::make_pair(temp1, temp2));
-								} else
-									NSMPairs[T].Push(std::make_pair(temp1, temp2));
-							}
-						}
+						AllocateNbPair(temp1,temp2,T);
 						temp2 = Particles[temp2]->LL;
 				}//while
 
 				// (q1 + 1, q2 , q3)
-				if (q1+1< CellNo[0])
-				{
+				if (q1+1< CellNo[0]) {
 					temp2 = HOC[q1+1][q2][q3];
-					while (temp2 != -1)
-					{
-						if ( CheckRadius(Particles[temp1],Particles[temp2])){
-							if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
-							{
-								if (Particles[temp1]->Material == Particles[temp2]->Material)
-								{
-									if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)
-										SMPairs[T].Push(std::make_pair(temp1, temp2));
-									else
-										FSMPairs[T].Push(std::make_pair(temp1, temp2));
-
-								}
-								else
-									NSMPairs[T].Push(std::make_pair(temp1, temp2));
-							}
-						}//CheckRadius
+					while (temp2 != -1) {
+						AllocateNbPair(temp1,temp2,T);
 						temp2 = Particles[temp2]->LL;
 					}//while temp2!=-1
 				}// (q1 + 1, q2 , q3)
 
 				// (q1 + a, q2 + 1, q3) & a[-1,1]
-				if (q2+1< CellNo[1])
-				{
-					for (int i = q1-1; i <= q1+1; i++)
-					{
-						if (i<CellNo[0] && i>=0)
-						{
+				if (q2+1< CellNo[1]) {
+					for (int i = q1-1; i <= q1+1; i++) {
+						if (i<CellNo[0] && i>=0) {
 							temp2 = HOC[i][q2+1][q3];
 							while (temp2 != -1)
 							{
-								if ( CheckRadius(Particles[temp1],Particles[temp2])){
-									if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
-									{
-										if (Particles[temp1]->Material == Particles[temp2]->Material)
-										{
-											if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)
-												SMPairs[T].Push(std::make_pair(temp1, temp2));
-											else
-												FSMPairs[T].Push(std::make_pair(temp1, temp2));
-
-										}
-										else
-											NSMPairs[T].Push(std::make_pair(temp1, temp2));
-									}
-								}//						if CheckRadius(Particles[temp1],Particles[temp1]){
+								AllocateNbPair(temp1,temp2,T);
 								temp2 = Particles[temp2]->LL;
 							}
 						}
@@ -383,21 +351,7 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 							temp2 = HOC[i][j][q3+1];
 							while (temp2 != -1)
 							{
-									if ( CheckRadius(Particles[temp1],Particles[temp2])){
-									if (Particles[temp1]->IsFree || Particles[temp2]->IsFree)
-									{
-										if (Particles[temp1]->Material == Particles[temp2]->Material)
-										{
-											if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)
-												SMPairs[T].Push(std::make_pair(temp1, temp2));
-											else
-												FSMPairs[T].Push(std::make_pair(temp1, temp2));
-
-										}
-										else
-											NSMPairs[T].Push(std::make_pair(temp1, temp2));
-									}
-								}//	if CheckRadius(Particles[temp1],Particles[temp1]){
+								AllocateNbPair(temp1,temp2,T);
 								temp2 = Particles[temp2]->LL;
 							}
 						}

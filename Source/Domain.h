@@ -248,7 +248,7 @@ public:
 		
 		bool enable_th_exp;
 		bool enable_plastic_heat_gen;
-		
+		void AllocateNbPair(const int &temp1, const int &temp2, const int &T);
 
 };
 
