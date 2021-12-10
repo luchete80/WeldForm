@@ -706,6 +706,7 @@ void Domain::CalculateSurface(const int &id){
 	int surf_part =0;
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 		Particles[i]->normal = 0.;
+		Particles [i] -> ID = Particles [i] -> ID_orig;
 	}
 	
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
@@ -744,7 +745,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	cout << "Surface particles" << surf_part<<endl;
+	//cout << "Surface particles" << surf_part<<endl;
 }
 
 
@@ -1265,6 +1266,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	PrintInput(TheFileKey);
 	TimestepCheck();
 	WholeVelocity();
+	
+	//TODO: MOVE
+	if (contact){
+		for (int i=0; i<Particles.Size(); i++)
+			Particles [i] -> ID_orig = Particles [i] -> ID;
+	}
 	
 	cout << "Cell Size: "<<CellSize<<endl;
 	

@@ -47,6 +47,7 @@ namespace SPH {
 		bool   	NoSlip;		///< No-Slip BC
 
 		int    	ID;		///< an Integer value to identify the particle set
+		int 		ID_orig;
 		int 	Thermal_BC;
 		int    	Material;	///< an Integer value to identify the particle material type: 1 = Fluid, 2 = Solid, 3 = Soil
 
