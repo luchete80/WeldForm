@@ -50,7 +50,6 @@ inline void Domain::ContactNbSearch(){
 			// cout << "Fist Particle index, ID: "<<P1 << ", " << Particles[P1]->ID  <<endl;
 			// cout << "Sec Particle index, ID: "<<P2 << ", " << Particles[P2]->ID  <<endl;
 			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
-				cout << "contact surface id found"<<endl;
 				if (Particles[P1]->ID == id_free_surf || Particles[P2]->ID == id_free_surf ) {
 					Vec3_t xij	= Particles[P1]->x - Particles[P2]->x;
 					double r = norm(xij);

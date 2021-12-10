@@ -1,0 +1,8 @@
+Internal Nb with FSM 
+FSM Pairs
+11166, 13176, 11162, 13168,
+SM Pairs
+36594, 43512, 37038, 42960,
+Cont Pairs
+0, 0, 0, 0,
+

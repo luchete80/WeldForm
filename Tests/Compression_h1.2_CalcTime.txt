@@ -4,7 +4,12 @@ Compression test 1 - 5ms
 Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz   3.19 GHz 16GB RAM
 
 
-New Neighbours
+New Internal Neighbours
+FSM Pairs (If one core, wich is not the case)
+2856, 0, 0, 0,
+SM Pairs
+160104, 0, 0, 0,
+
 time (ms) - CPU time(s) - Max Plstic Strain - time step
 0									- 7.19739e-07 S	
 1		308		0				- 1.89e-7

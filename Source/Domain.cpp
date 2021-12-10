@@ -1330,10 +1330,25 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					MainNeighbourSearch/*_Ext*/();
-							
-				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-				
+					MainNeighbourSearch_Ext();
+			
+			// cout << "FSM Pairs"<<endl;
+			// for (int p=0;p<Nproc;p++)
+				// cout << FSMPairs[p].size()<<", ";		
+				// cout <<endl;
+
+			// cout << "SM Pairs"<<endl;
+			// for (int p=0;p<Nproc;p++)
+				// cout << SMPairs[p].size()<<", ";		
+				// cout <<endl;
+
+			// cout << "Cont Pairs"<<endl;
+			// for (int p=0;p<Nproc;p++)
+				// cout << ContPairs[p].size()<<", ";		
+				// cout <<endl;					
+			
+			neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+				//cout << "performing contact search"<<endl;
 				if (contact) {
 					SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 					CalculateSurface(1);				//After Nb search			
@@ -1343,7 +1358,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}// ts_i == 0
 			isfirst = false;
 		}
-		
+
 		
 		// for ( size_t k = 0; k < Nproc ; k++)		
 			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
@@ -1678,9 +1693,9 @@ inline void Domain::Solve_wo_init (double tf, double dt, double dtOut, char cons
 		pair++;
 		
 	}
-	cout << "Nb pairs found: "<<pair-1<<endl;
-	cout << "Original pairs: "<<neigbours_set.size()<<endl;
-	cout << "Pairs per proc: " << pairsperproc << endl;
+	// cout << "Nb pairs found: "<<pair-1<<endl;
+	// cout << "Original pairs: "<<neigbours_set.size()<<endl;
+	// cout << "Pairs per proc: " << pairsperproc << endl;
 
 }
 #endif

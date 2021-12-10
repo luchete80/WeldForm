@@ -1,5 +1,9 @@
 -- Original Neighbour list before correct with rcutoff
 
+FSM Pairs (If one core, wich is not the case)
+2856, 0, 0, 0,
+SM Pairs
+160104, 0, 0, 0,
 
 ------------------------------------------------------------
 New internal Neighbour with cutoff

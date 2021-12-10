@@ -106,13 +106,12 @@ inline void Domain::CellInitiate () {
        }
     }
     // Initiate Pairs array for neibour searching
-    for(size_t i=0 ; i<Nproc ; i++)
-    {
-	SMPairs.Push(Initial);
-	NSMPairs.Push(Initial);
-	FSMPairs.Push(Initial);
-	
-	ContPairs.Push(Initial);
+    for(size_t i=0 ; i<Nproc ; i++) {
+			SMPairs.Push(Initial);
+			NSMPairs.Push(Initial);
+			FSMPairs.Push(Initial);
+			
+			ContPairs.Push(Initial);
     }
 }
 
@@ -288,18 +287,42 @@ inline bool  Domain::CheckRadius(Particle* P1, Particle *P2){
 }
 
 inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int &T){
-		if ( CheckRadius(Particles[temp1],Particles[temp2])){
 
-		if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
-			if (Particles[temp1]->Material == Particles[temp2]->Material)
-			{
-				if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)//Both free, most common
-					SMPairs[T].Push(std::make_pair(temp1, temp2));
-				else
-					FSMPairs[T].Push(std::make_pair(temp1, temp2));
-			} else
-				NSMPairs[T].Push(std::make_pair(temp1, temp2));
-		}
+		// if (contact) { //ONLY PAIRS WITH ONE PARTICLE ON THE SURFACE AND ONE PARTICLE ON THE RIGID SURFACE
+			// // if (  (Particles[temp1]->ID == contact_surf_id && Particles[temp2]->ID == id_free_surf ) || 
+						// // (Particles[temp1]->ID == id_free_surf && Particles[temp2]->ID == contact_surf_id )) {	
+			// if (Particles[temp1]->ID == contact_surf_id || Particles[temp2]->ID == contact_surf_id ) {
+				// if (Particles[temp1]->ID == id_free_surf || Particles[temp2]->ID == id_free_surf ) {
+					// //cout << "cont pair found!"<<endl;
+					
+					// // Vec3_t xij	= Particles[temp1]->x - Particles[temp2]->x;
+					// // double r = norm(xij);
+					// // double rcutoff = ( Particles[temp1]->h + Particles[temp2]->h ) / 2.;
+					// // //cout << "r, rcutoff, h1, h2"<< r << ", "<< rcutoff << ", "<< Particles[temp1]->h <<", "<<Particles[temp2]->h<<endl;
+					// // if ( r < 2.0 *rcutoff ){
+						// // cout << "Found contact pair: "<< temp1 << ", " << temp2 << endl;
+						// // //ContPairs[k].Push(std::make_pair(P1, P2));
+						// // ContPairs[T].Push(std::make_pair(temp1, temp2));
+				
+						// // //FSMPairs[T].Push(std::make_pair(temp1, temp2));
+					// // }
+					// FSMPairs[T].Push(std::make_pair(temp1, temp2));
+				// }
+				// return;	//If either one particle or another is in the surface 
+			// }				
+		// }
+			
+		if ( CheckRadius(Particles[temp1],Particles[temp2])){
+			if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
+				//if (Particles[temp1]->Material == Particles[temp2]->Material)
+				//{
+					if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)//Both free, most common
+						SMPairs[T].Push(std::make_pair(temp1, temp2));
+					else
+						FSMPairs[T].Push(std::make_pair(temp1, temp2));
+				// } else
+					// NSMPairs[T].Push(std::make_pair(temp1, temp2));
+			}
 	}
 }
 inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {

@@ -77,7 +77,7 @@ int main(){
 		//dx	= L / (n-1);
 	//dx = L/(n-1);
 	dx = 0.015;
-	h	= dx*1.2; //Very important
+	h	= dx*1.1; //Very important
 	Cs	= sqrt(K/rho);
 
 	double timestep;
