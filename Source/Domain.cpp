@@ -696,6 +696,18 @@ void Domain::CalculateSurface(const int &id){
 		
 	totmass /= Particles.Size();;
 	//cout << "Totmass" <<	totmass <<endl;
+	
+	int maxid;
+	if (contact)
+		maxid = first_fem_particle_idx;
+	else 
+		first_fem_particle_idx = Particles.Size();
+	
+	int surf_part =0;
+	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
+		Particles[i]->normal = 0.;
+	}
+	
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -721,20 +733,18 @@ void Domain::CalculateSurface(const int &id){
 	//Calculate Particle Neighbours
 	
 	//TODO: Parallelize with lock
-	int maxid;
-	if (contact)
-		maxid = first_fem_particle_idx;
-	else 
-		first_fem_particle_idx = Particles.Size();
-	
+
+	surf_part =0;
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 	
 		Particles[i]->normal *= 1./totmass;
 		
-		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= 46) //3-114 Fraser
+		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= 46) {//3-114 Fraser {
 			Particles[i]->ID=id;
+			surf_part++;
+		}
 	}
-
+	cout << "Surface particles" << surf_part<<endl;
 }
 
 

@@ -1,8 +1,40 @@
-Internal Nb with FSM 
-FSM Pairs
-11166, 13176, 11162, 13168,
-SM Pairs
-36594, 43512, 37038, 42960,
-Cont Pairs
-0, 0, 0, 0,
+First Tries, internal newighbours
+
+Output No. 3 at 1.00265e-05 has been generated
+Current Time Step = 9.01096e-08
+Total CPU time: 5.03989, Neigbour search time: 0.655, Pr Accel Calc time: 0.062Las Acel Calc Time2.233
+Max plastic strain: 0.00114159in particle11603
+Steps count in this interval: 176Total Step count177
+Total Nb search time in this interval: 0.593Average Nb search time in this interval: 0.00336932
+Avg Neighbour Count22
+Max Contact Force: 0
+
+
+Output No. 12 at 0.0001 has been generated
+Current Time Step = 8.79454e-09
+Total CPU time: 180.237, Neigbour search time: 42.627, Pr Accel Calc time: 3.125Las Acel Calc Time60.248
+Max plastic strain: 0.168618in particle11964
+Steps count in this interval: 581Total Step count4674
+Total Nb search time in this interval: 5.318Average Nb search time in this interval: 0.00915318
+Avg Neighbour Count22
+Max Contact Force: 0
+
+Output No. 102 at 0.00100002 has been generated
+Current Time Step = 7.52057e-08
+Total CPU time: 1466.33, Neigbour search time: 361.523, Pr Accel Calc time: 26.818Las Acel Calc Time499.382
+Max plastic strain: 0.1865in particle11964
+Steps count in this interval: 132Total Step count38990
+Total Nb search time in this interval: 1.203Average Nb search time in this interval: 0.00911364
+Avg Neighbour Count23
+Max Contact Force: 350709
+
+Output No. 502 at 0.00500002 has been generated
+Current Time Step = 6.75773e-08
+Total CPU time: 3388.57, Neigbour search time: 861.964, Pr Accel Calc time: 65.462Las Acel Calc Time1235.58
+Max plastic strain: 0.274802in particle11928
+Steps count in this interval: 242Total Step count92841
+Total Nb search time in this interval: 2.155Average Nb search time in this interval: 0.00890496
+Avg Neighbour Count26
+Max Contact Force: 472273
+
 
