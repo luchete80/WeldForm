@@ -1330,7 +1330,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					MainNeighbourSearch_Ext();
+					MainNeighbourSearch/*_Ext*/();
 			
 			// cout << "FSM Pairs"<<endl;
 			// for (int p=0;p<Nproc;p++)
