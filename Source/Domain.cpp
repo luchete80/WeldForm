@@ -887,7 +887,7 @@ inline void Domain::PrimaryComputeAcceleration () {
 	#else
 	for (int i=0; i<FixedParticles.Size(); i++)
 	#endif
-
+		if (Particles[FixedParticles[i]]-> ID != contact_surf_id)  //ADDED TO Prevent adding surface (rigid contact) particles
 		if (Particles[FixedParticles[i]]->SumKernel!= 0.0) {
 			size_t a = FixedParticles[i];
 			Particles[a]->Pressure	= Particles[a]->Pressure/Particles[a]->SumKernel;
@@ -1316,7 +1316,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
 
-			MainNeighbourSearch_Ext();
+			MainNeighbourSearch/*_Ext*/();
 			
 			if (contact) {
 				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
@@ -1331,17 +1331,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				clock_beg = clock();
 				if (m_isNbDataCleared)
 					MainNeighbourSearch/*_Ext*/();
-				
-				cout << "SM pairs: ";
-				for (int i=0;i<4;i++)
-					cout << SMPairs[i].size() << ", ";
-				cout <<endl;
-				
-				cout << "FSM pairs: ";
-				for (int i=0;i<4;i++)
-					cout << FSMPairs[i].size() << ", ";
-				cout <<endl;
-				
+							
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 				
 				if (contact) {

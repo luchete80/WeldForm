@@ -287,6 +287,7 @@ inline bool  Domain::CheckRadius(Particle* P1, Particle *P2){
 	return ret;
 }
 
+//inline void Domain::AllocateParticle(){}
 inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 	int q3,q2;
 	size_t T = omp_get_thread_num();
@@ -301,7 +302,9 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 			while (temp1 != -1) {// The current cell  => self cell interactions
 				temp2 = Particles[temp1]->LL;
 				while (temp2 != -1){
+						
 						if ( CheckRadius(Particles[temp1],Particles[temp2])){
+
 							if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
 								if (Particles[temp1]->Material == Particles[temp2]->Material)
 								{

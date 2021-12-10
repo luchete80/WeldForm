@@ -202,7 +202,9 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	SMPairs;
     Array<Array<std::pair<size_t,size_t> > >	NSMPairs;
     Array<Array<std::pair<size_t,size_t> > >	FSMPairs;
-
+    
+		Array<Array<std::pair<size_t,size_t> > >	RIGPairs;
+		
     Array<Array<std::pair<size_t,size_t> > >	ContPairs;
 		
     Array< size_t > 				FixedParticles;
