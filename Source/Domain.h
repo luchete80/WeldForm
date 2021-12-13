@@ -203,7 +203,8 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	NSMPairs;
     Array<Array<std::pair<size_t,size_t> > >	FSMPairs;
     
-		Array<Array<std::pair<size_t,size_t> > >	RIGPairs;
+		Array<Array<std::pair<size_t,size_t> > >	RIGPairs;	//Previous instance to contact pairs, because outer surface should be located
+																												//based on original neighbours
 		
     Array<Array<std::pair<size_t,size_t> > >	ContPairs;
 		

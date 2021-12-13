@@ -15,7 +15,7 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const i
 	first_fem_particle_idx = Particles.Size();
 	double Density =0.;
 	double h;
-	bool Fixed = true;	//Always are fixed ...
+	bool Fixed = false;	//Always are fixed ...
 	contact_surf_id = id;
 	trimesh = &mesh;
 	
@@ -85,10 +85,10 @@ inline void Domain::ContactNbSearch(){
 		// }
 		
 	}
-	// cout << "Contact Pairs Count"<<endl;
-	// for (int k=0; k<Nproc;k++) 
-		// cout << ContPairs[k].Size()<<", ";
-	// cout <<endl;
+	cout << "Contact Pairs Count"<<endl;
+	for (int k=0; k<Nproc;k++) 
+		cout << ContPairs[k].Size()<<", ";
+	cout <<endl;
 }
 
 //////////////////////////////// 

@@ -31,7 +31,7 @@ void UserAcc(SPH::Domain & domi) {
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
 			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+//			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -44,7 +44,7 @@ void UserAcc(SPH::Domain & domi) {
 	}
 	
 	//TODO: Modify this by relating FEM & AND partciles 
-	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
+	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
 }
 
 
