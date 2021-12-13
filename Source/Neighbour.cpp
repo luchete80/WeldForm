@@ -315,8 +315,8 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 			
 		if ( CheckRadius(Particles[temp1],Particles[temp2])){
 			if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
-				//if (Particles[temp1]->Material == Particles[temp2]->Material)
-				//{
+				if (Particles[temp1]->Material == Particles[temp2]->Material)
+				{
 					if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)//Both free, most common
 						SMPairs[T].Push(std::make_pair(temp1, temp2));
 					else
@@ -429,4 +429,4 @@ inline void Domain::SaveNeighbourData(){
 		}
 }
 
-};
+}; //SPH

@@ -426,9 +426,6 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	x += dt*va;
 	
 	Displacement += dt*va;
-	
-	if (ID == 10)
-		cout << "ID 10, vel"<<v<<endl; 
 
     Mat2Leapfrog(dt);
 	if (FirstStep) FirstStep = false;
