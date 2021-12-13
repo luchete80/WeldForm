@@ -1279,7 +1279,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		//Cs	= sqrt(K/rho);
 		for (int i=0; i<Particles.Size(); i++){
 			double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
-			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G); 
+			//TODO: If convection heat is updated every step, maybe dS could be calculated once 
+			// in order to account for this too
+			double dS = pow(Particles[i]->Mass/Particles[i]->Density,0.33333); //Fraser 3-119
+			//Fraser Thesis, Eqn. 3-153
+			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
 		}		
 		cout << "Contact Stiffness" << Particles [0] -> cont_stiff <<endl;
 	}
