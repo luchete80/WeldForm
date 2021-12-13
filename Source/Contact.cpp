@@ -44,9 +44,9 @@ inline void Domain::ContactNbSearch(){
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
-		for (size_t a=0; a<FSMPairs[k].Size();a++) {
-			P1	= FSMPairs[k][a].first;
-			P2	= FSMPairs[k][a].second;	
+		for (size_t a=0; a<RIGPairs[k].Size();a++) {
+			P1	= RIGPairs[k][a].first;
+			P2	= RIGPairs[k][a].second;	
 			// cout << "Fist Particle index, ID: "<<P1 << ", " << Particles[P1]->ID  <<endl;
 			// cout << "Sec Particle index, ID: "<<P2 << ", " << Particles[P2]->ID  <<endl;
 			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
@@ -58,13 +58,13 @@ inline void Domain::ContactNbSearch(){
 					if ( r < 2.0 *rcutoff ){
 					//cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
 					//ContPairs[k].Push(std::make_pair(P1, P2));
-					ContPairs[k].Push(FSMPairs[k][a]);
+					ContPairs[k].Push(RIGPairs[k][a]);
 					//If the problem is not thermal (only mechanic)
 					//Could be deleted this pair in Whole Pairs
 					}	//belongs to free surf
 				}
 				// Pair is removed either way is inside cutoff radius or is or in!
-				FSMPairs[k].DelItem(a);//Erase, NOT EFFICIENT
+				RIGPairs[k].DelItem(a);//Erase, NOT EFFICIENT
 				a--;
 			}
 		}

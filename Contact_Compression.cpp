@@ -28,10 +28,10 @@ void UserAcc(SPH::Domain & domi) {
 		//TODO: Modify this by relating FEM & AND partciles 
 		if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
 		{
-			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -129,8 +129,8 @@ int main(){
 			dom.Particles[a]->NoSlip=true;			
 		
 		}
-		if ( z > L )
-			dom.Particles[a]->ID=3;
+		// if ( z > L )
+			// dom.Particles[a]->ID=3;
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;

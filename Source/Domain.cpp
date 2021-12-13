@@ -1293,13 +1293,16 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	std::chrono::duration<double> total_time,neighbour_time;
 	
 	clock_t clock_beg;
-	double clock_time_spent,pr_acc_time_spent,acc_time_spent, contact_time_spent, trimesh_time_spent, start_acc_time_spent, bc_time_spent;
+	double clock_time_spent,start_acc_time_spent, pr_acc_time_spent,acc_time_spent, 
+				contact_time_spent, trimesh_time_spent, bc_time_spent,
+				mov_time_spent;
 
 	double neigbour_time_spent_per_interval=0.;
 	
 	clock_time_spent = 
 	pr_acc_time_spent=acc_time_spent= start_acc_time_spent = 
-	contact_time_spent = trimesh_time_spent = bc_time_spent = 0.;
+	contact_time_spent = trimesh_time_spent = bc_time_spent = 
+	mov_time_spent = 0.;
 
 
 	//Initial model output
@@ -1422,8 +1425,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			std::cout << "Total CPU time: "<<total_time.count() << endl <<
 			", Nb: " << clock_time_spent << ", StAcc:  " 
 			<< start_acc_time_spent << ", PrAcc: " <<
-			pr_acc_time_spent << "Ls Acc: " << acc_time_spent<< "Contact: "<< contact_time_spent << "TriMesh time: " << trimesh_time_spent <<
+			pr_acc_time_spent << "Ls Acc: " << acc_time_spent<< "Contact: "<< contact_time_spent << "Msh: " << trimesh_time_spent <<
 			", BC: "<< bc_time_spent << 
+			", mv: "<<mov_time_spent <<
 			std::endl;
 						
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
@@ -1442,7 +1446,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
 		if (auto_ts)
 			AdaptiveTimeStep();
+		clock_beg = clock();
 		Move(deltat);
+		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		
 		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things
