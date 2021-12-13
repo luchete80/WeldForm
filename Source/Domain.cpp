@@ -704,10 +704,10 @@ void Domain::CalculateSurface(const int &id){
 		first_fem_particle_idx = Particles.Size();
 	
 
-	// for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
-		// Particles[i] -> normal = 0.;
-		// Particles[i] -> ID = Particles [i] -> ID_orig;
-	// }
+	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
+		Particles[i] -> normal = 0.;
+		Particles[i] -> ID = Particles [i] -> ID_orig;
+	}
 	
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
@@ -745,7 +745,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	cout << "Surface particles" << surf_part<<endl;
+	//cout << "Surface particles" << surf_part<<endl;
 }
 
 
@@ -1293,10 +1293,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	std::chrono::duration<double> total_time,neighbour_time;
 	
 	clock_t clock_beg;
-	double clock_time_spent,pr_acc_time_spent,acc_time_spent;
+	double clock_time_spent,pr_acc_time_spent,acc_time_spent, contact_time_spent, trimesh_time_spent;
+
 	double neigbour_time_spent_per_interval=0.;
 	
-	clock_time_spent=pr_acc_time_spent=acc_time_spent=0.;
+	clock_time_spent=pr_acc_time_spent=acc_time_spent= contact_time_spent = trimesh_time_spent = 0.;
 
 
 	//Initial model output
@@ -1368,36 +1369,18 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				// cout <<endl;					
 			
 			neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-				//cout << "performing contact search"<<endl;
+				//cout << "performing contact search"<<endl
+				clock_beg = clock();
 				if (contact) {
 					SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 					CalculateSurface(1);				//After Nb search			
 					ContactNbSearch();
 					SaveNeighbourData();	//Again Save Nb data
-				}//contact
+				}//contact				
+				contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}// ts_i == 0
 			isfirst = false;
 		}
-
-		
-		// for ( size_t k = 0; k < Nproc ; k++)		
-			// cout << "Pares: " <<SMPairs[k].Size()<<endl;
-
-		std::vector <int> nb(Particles.Size());
-		for ( size_t k = 0; k < Nproc ; k++) {
-			for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
-				nb[SMPairs[k][a].first ]+=1;
-				nb[SMPairs[k][a].second]+=1;
-				
-			}
-		}	
-			for (int p=0;p<Particles.Size();p++){
-			Particles[p]->Nb=nb[p];
-		}
-	// for (int i=0;i<nb.size();i++)
-		// cout << "Neigbour "<< i <<": "<<nb[i]<<endl;
-		
 
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
@@ -1428,7 +1411,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			
 			clock_time_spent += neigbour_time_spent_per_interval;
 			std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Pr Accel Calc time: " <<
-			pr_acc_time_spent << "Las Acel Calc Time" << acc_time_spent<<
+			pr_acc_time_spent << "Las Acel Calc Time: " << acc_time_spent<< "Contact Time: "<< contact_time_spent << "TriMesh time: " << trimesh_time_spent <<
 			std::endl;
 						
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
@@ -1436,6 +1419,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
 			cout << "Total Nb search time in this interval: " << neigbour_time_spent_per_interval;
 			cout << "Average Nb search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step)<<endl;
+
 			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
@@ -1448,12 +1432,15 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			AdaptiveTimeStep();
 		Move(deltat);
 		
+		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things
 		if (contact){
 			trimesh->UpdatePos (deltat); //Update Node Pos
 			//Update Normals
 			trimesh->UpdatePlaneCoeff();	//If normal does not change..
 		}
+		trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
