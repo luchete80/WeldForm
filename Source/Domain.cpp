@@ -703,11 +703,11 @@ void Domain::CalculateSurface(const int &id){
 	else 
 		first_fem_particle_idx = Particles.Size();
 	
-	int surf_part =0;
-	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
-		Particles[i]->normal = 0.;
-		Particles [i] -> ID = Particles [i] -> ID_orig;
-	}
+
+	// for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
+		// Particles[i] -> normal = 0.;
+		// Particles[i] -> ID = Particles [i] -> ID_orig;
+	// }
 	
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
@@ -735,17 +735,17 @@ void Domain::CalculateSurface(const int &id){
 	
 	//TODO: Parallelize with lock
 
-	surf_part =0;
+	int surf_part =0;
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 	
 		Particles[i]->normal *= 1./totmass;
 		
 		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= 46) {//3-114 Fraser {
-			Particles[i]->ID=id;
+			Particles[i]->ID = id;
 			surf_part++;
 		}
 	}
-	//cout << "Surface particles" << surf_part<<endl;
+	cout << "Surface particles" << surf_part<<endl;
 }
 
 
@@ -760,7 +760,7 @@ inline void Domain::DelParticles (int const & Tags)
 	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
 	#endif
     {
-        if (Particles[i]->ID==Tags)
+        if (Particles[i]->ID == Tags)
 		{
 			omp_set_lock(&dom_lock);
         	idxs.Push(i);
@@ -1277,7 +1277,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	
 	if (contact) { //Calculate particle Stiffness
 		//Cs	= sqrt(K/rho);
-		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 		for (int i=0; i<Particles.Size(); i++){
 			double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
 			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G); 
