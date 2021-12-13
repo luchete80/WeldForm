@@ -1293,11 +1293,13 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	std::chrono::duration<double> total_time,neighbour_time;
 	
 	clock_t clock_beg;
-	double clock_time_spent,pr_acc_time_spent,acc_time_spent, contact_time_spent, trimesh_time_spent;
+	double clock_time_spent,pr_acc_time_spent,acc_time_spent, contact_time_spent, trimesh_time_spent, start_acc_time_spent, bc_time_spent;
 
 	double neigbour_time_spent_per_interval=0.;
 	
-	clock_time_spent=pr_acc_time_spent=acc_time_spent= contact_time_spent = trimesh_time_spent = 0.;
+	clock_time_spent = 
+	pr_acc_time_spent=acc_time_spent= start_acc_time_spent = 
+	contact_time_spent = trimesh_time_spent = bc_time_spent = 0.;
 
 
 	//Initial model output
@@ -1319,7 +1321,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	bool isyielding = false;
 	
 	while (Time<=tf && idx_out<=maxidx) {
+		clock_beg = clock();
 		StartAcceleration(Gravity);
+		start_acc_time_spent = (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		//if (BC.InOutFlow>0) InFlowBCFresh();
 		auto start_task = std::chrono::system_clock::now();
 		
@@ -1385,14 +1389,19 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
+		clock_beg = clock();
 		GeneralBefore(*this);
+		bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
 		PrimaryComputeAcceleration();
 		pr_acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
 		LastComputeAcceleration();
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		clock_beg = clock();
+		clock_beg = clock();
 		GeneralAfter(*this);
+		bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		steps++;
 		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
 		// output
@@ -1410,8 +1419,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			
 			clock_time_spent += neigbour_time_spent_per_interval;
-			std::cout << "Total CPU time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Pr Accel Calc time: " <<
-			pr_acc_time_spent << "Las Acel Calc Time: " << acc_time_spent<< "Contact Time: "<< contact_time_spent << "TriMesh time: " << trimesh_time_spent <<
+			std::cout << "Total CPU time: "<<total_time.count() << endl <<
+			", Nb: " << clock_time_spent << ", StAcc:  " 
+			<< start_acc_time_spent << ", PrAcc: " <<
+			pr_acc_time_spent << "Ls Acc: " << acc_time_spent<< "Contact: "<< contact_time_spent << "TriMesh time: " << trimesh_time_spent <<
+			", BC: "<< bc_time_spent << 
 			std::endl;
 						
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;

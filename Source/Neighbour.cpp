@@ -387,7 +387,8 @@ inline void Domain::YZPlaneCellsNeighbourSearch(int q1) {
 }
 
 inline void Domain::ClearNbData(){
-	
+
+	#pragma omp parallel for schedule (dynamic) num_threads(Nproc)
 	for (int i=0 ; i<Nproc ; i++) { //In the original version this was calculated after
 		SMPairs[i].Clear();
 		FSMPairs[i].Clear();
