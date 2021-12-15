@@ -1113,6 +1113,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	
 	auto start_whole = std::chrono::steady_clock::now();
 
+	Vec3_t nodeini = *(trimesh->node[0]);
+		
 	InitialChecks();
 	CellInitiate();
 	ListGenerate();

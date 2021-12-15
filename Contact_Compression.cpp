@@ -44,7 +44,8 @@ void UserAcc(SPH::Domain & domi) {
 	}
 	
 	//TODO: Modify this by relating FEM & AND partciles 
-	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
+	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
+	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
 }
 
 
@@ -94,21 +95,22 @@ int main(){
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5,L + L/10.-dx/2.),Vec3_t(0.5,0.5, L + L/10.-dx/2.),30);
+									
+	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
+
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + dom.Particles[dom.Particles.Size()-1]->h;
+
 	
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),30);
+	cout << "Plane z" << *mesh.node[0]<<endl;
 	
-	for (int v=0;v<mesh.node.Size();v++){
-			
-	}
 	
 	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
 	cout << "Creating Spheres.."<<endl;
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
 	
-									
-	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
-
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -144,7 +146,9 @@ int main(){
 
 	//ALWAYS AFTER SPH PARTICLES
 	//TODO: DO THIS INSIDE SOLVER CHECKS
-	dom.AddTrimeshParticles(mesh, 1.1, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
+											//Not for any force calc in contact formulation
+	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries

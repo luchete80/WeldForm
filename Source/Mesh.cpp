@@ -120,6 +120,7 @@ inline void TriMesh::UpdatePlaneCoeff(){
 	//Update pplane
 	for (int e = 0; e < element.Size(); e++) 
 		element[e]-> pplane = dot(*node [element[e] -> node[element[e] ->nfar]],element[e] -> normal);
+
 }
 inline void TriMesh::CalcNormals(){
 	

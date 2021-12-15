@@ -132,6 +132,8 @@ void Domain::CalcContactForces(){
 			if (delta_ > 0 ){
 				Element* e = trimesh-> element[Particles[P2]->element];
 				double pplane = e -> pplane; 
+				//cout<< "contact distance"<<Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
+				
 				double deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (-delta_);								//Eq 3-142 
 				Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
 				//cout << "dt contact: "<<deltat_cont<<endl;
@@ -141,7 +143,7 @@ void Domain::CalcContactForces(){
 				if (deltat_cont < std::min(deltat,dt_fext)){
 					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
-					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h, Particles[P2]->normal); //Fraser 3-146
+					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
 					//Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
