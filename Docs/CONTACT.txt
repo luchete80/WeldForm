@@ -1,0 +1,1 @@
+Penalty factor has influence with exists initial penetration
