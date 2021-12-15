@@ -142,6 +142,7 @@ public:
 	void CalculateSurface(const int &id = 1);
 	void CalcContactForces();
 	double contact_force_factor;
+	double friction;
 	
 	/////////////// MEMBERS //
     // Data

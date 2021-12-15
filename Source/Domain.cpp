@@ -118,6 +118,7 @@ inline Domain::Domain ()
 	gradKernelCorr = false;
 	contact = false;
 	contact_force_factor =1.;
+	friction = 0.0;
 }
 
 inline Domain::~Domain ()

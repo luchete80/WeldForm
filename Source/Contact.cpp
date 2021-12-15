@@ -171,14 +171,20 @@ void Domain::CalcContactForces(){
 						double kij = PFAC * Particles[P1]-> cont_stiff;
 						double omega = sqrt (kij/Particles[P1]->Mass);
 						double psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
-						
+											
 						// TANGENTIAL COMPONENNT
 						//Fraser Eqn 3-167
+						Vec3_t tgvr  = Qj - dot(Qj,Particles[P2]->normal) * Particles[P2]->normal;
+						Vec3_t tgdir = tgvr / norm(tgvr);
 						
 						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+						//TG DIRECTION
+						Vec3_t tgforce = friction * contforce * tgdir;
+						Particles[P1] -> a += tgforce / Particles[P1] -> Mass; 
+						
 						omp_unset_lock(&Particles[P1]->my_lock);
 						
 						if (force2 > max_contact_force) max_contact_force = force2;
