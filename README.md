@@ -24,14 +24,19 @@ Has been exclusively adapted to solid mechaincs, and it includes:
 ## Building Instructions
 
 We're going to need 4 libraries:
-1 - BLITZ++   --- VERSION 0.9!!! NOT Current 	https://github.com/luchete80/blitz-0.9-cmake.git
+1 - BLITZ++   --- VERSION 0.9!!! (NOT Current/Last version) 	https://github.com/luchete80/blitz-0.9-cmake.git
 2 - HDF5		
 3 - GSL											https://github.com/ampl/gsl/tags
 4 - LAPACK
 
 GCC Config (Working on Linux and MinGW):
 - 1 - Download precompiled libraries [here](https://drive.google.com/drive/folders/16FoY47D_TQOd_0Cb_1ltLr--S6OVOaSi?usp=sharing): 
-- 2 - 
+- 2 - Write or use an existing example
+- 3 - Set environmental vars:
+   > set SPH=D:/Luciano/Numerico/WeldForm
+   > set PKG=D:/Luciano/Numerico/Libs
+
+- 4 - Create an empty dir and execute cmake (WeldFormDir)
 
 
 VISUAL STUDIO CONFIG
