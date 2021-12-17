@@ -405,15 +405,42 @@ inline void Domain::ClearNbData(){
 inline void Domain::SaveNeighbourData(){
 		std::vector <int> nb(Particles.Size());
 		std::vector <int> contnb(Particles.Size());
-		
-		for ( size_t k = 0; k < Nproc ; k++) {
+
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t k=0; k<Nproc;k++) 
+	#else
+	for (int k=0; k<Nproc;k++) 
+	#endif			
+	{
 			for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
 				nb[SMPairs[k][a].first ]+=1;
 				nb[SMPairs[k][a].second]+=1;
 				
 			}
-		}
+	}
+		// for ( size_t k = 0; k < Nproc ; k++) {
+			// for (size_t a=0; a<ContPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			// //cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+				// contnb[ContPairs[k][a].first ]+=1;
+				// contnb[ContPairs[k][a].second]+=1;
+				
+			// }			
+		// }
+
+	#pragma omp parallel for schedule (static) num_threads(Nproc)		
+	for (int p=0;p<Particles.Size();p++){
+		omp_set_lock(&Particles[p]->my_lock);
+		Particles[p]->Nb = nb[p];
+		omp_unset_lock(&Particles[p]->my_lock);
+	}
+}
+
+inline void Domain::SaveContNeighbourData(){
+		std::vector <int> nb(Particles.Size());
+		std::vector <int> contnb(Particles.Size());
+
 		for ( size_t k = 0; k < Nproc ; k++) {
 			for (size_t a=0; a<ContPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
@@ -422,8 +449,8 @@ inline void Domain::SaveNeighbourData(){
 				
 			}			
 		}
+		
 		for (int p=0;p<Particles.Size();p++){
-			Particles[p]->Nb = nb[p];
 			if (p < first_fem_particle_idx)
 				Particles[p]->ContNb = contnb[p];
 		}

@@ -1238,7 +1238,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 					SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 					CalculateSurface(1);				//After Nb search			
 					ContactNbSearch();
-					SaveNeighbourData();	//Again Save Nb data
+					//SaveNeighbourData();	//Again Save Nb data
 				}//contact				
 				contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}// ts_i == 0

@@ -89,6 +89,7 @@ public:
 		int AvgNeighbourCount						();									//Create pairs of particles in the whole domain
 		
 		void SaveNeighbourData();
+		void SaveContNeighbourData();
 		
     void StartAcceleration					(Vec3_t const & a = Vec3_t(0.0,0.0,0.0));	//Add a fixed acceleration such as the Gravity
     void PrimaryComputeAcceleration	();									//Compute the solid boundary properties
