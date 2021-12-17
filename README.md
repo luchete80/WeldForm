@@ -3,7 +3,7 @@ PersianSPH - Open Programming Library for Mechanical Systems
 Copyright (C) 2013 Maziar Gholami Korzani and Sergio Galindo Torres
 
 
-![alt text](https://github.com/luchete80/WeldForm/blob/master/compression.png)
+![alt text](https://github.com/luchete80/WeldForm/blob/master/compression.PNG)
 
 
 PersianSPH is a programming library for the implementation of simulation 
