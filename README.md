@@ -33,8 +33,11 @@ GCC Config (Working on Linux and MinGW):
 - 1 - Download precompiled libraries [here](https://drive.google.com/drive/folders/16FoY47D_TQOd_0Cb_1ltLr--S6OVOaSi?usp=sharing): 
 - 2 - Write or use an existing example
 - 3 - Set environmental vars:
-   >>> set SPH=D:/Luciano/Numerico/WeldForm
-   >>> set PKG=D:/Luciano/Numerico/Libs
+   >>> 
+   set SPH=D:/Luciano/Numerico/WeldForm
+   
+   set PKG=D:/Luciano/Numerico/Libs
+   >>>
 
 - 4 - Create an empty dir and execute cmake (WeldFormDir)
 
