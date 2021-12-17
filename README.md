@@ -21,6 +21,7 @@ Has been exclusively adapted to solid mechaincs, and it includes:
 - Contact formulation (in progress)
 - Adaptive search only in case of plastic strain threshold (in progress)
 
+## Building Instructions
 
 We're going to need 4 libraries:
 1 - BLITZ++   --- VERSION 0.9!!! NOT Current 	https://github.com/luchete80/blitz-0.9-cmake.git
@@ -28,9 +29,9 @@ We're going to need 4 libraries:
 3 - GSL											https://github.com/ampl/gsl/tags
 4 - LAPACK
 
-GCC Config (Working on Linux and MinGW)
-1 - Download precompiled libraries here: 
-2 - 
+GCC Config (Working on Linux and MinGW):
+- 1 - Download precompiled libraries [here](https://drive.google.com/drive/folders/16FoY47D_TQOd_0Cb_1ltLr--S6OVOaSi?usp=sharing): 
+- 2 - 
 
 
 VISUAL STUDIO CONFIG
