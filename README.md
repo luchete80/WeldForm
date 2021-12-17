@@ -1,6 +1,5 @@
 # WeldForm
 
-## What is it? 
 WeldForm SPH is a CPU based Smooth Particle Hydrodynamics solver applied to high deformation model metal forming and processes.
 GPU Version is under development here 
 
