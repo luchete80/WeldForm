@@ -1,25 +1,38 @@
-PersianSPH - Open Programming Library for Mechanical Systems
+# WeldForm
 
-Copyright (C) 2013 Maziar Gholami Korzani and Sergio Galindo Torres
+## What is it? 
+WeldForm SPH is a CPU based Smooth Particle Hydrodynamics solver applied to high deformation model metal forming and processes.
+GPU Version is under development here 
 
+Has been adapted to work on both Linux Windows system (both on MinGW and MSVC compilers).
 
 ![alt text](https://github.com/luchete80/WeldForm/blob/master/compression.PNG)
 
+Is hevaily based on: 
 
-PersianSPH is a programming library for the implementation of simulation 
-tools in mechanics. Its source code is mainly written in C++ with easy
-to use templates for further custumization.
+1) PersianSPH - Maziar Gholami Korzani and Sergio Galindo Torres (https://github.com/mghkorzani/persiansph)
+2) Kirk Fraser Thesis on SPH model of FSW - https://constellation.uqac.ca/4246/1/Fraser_uqac_0862D_10345.pdf
 
-Potential applications include, for instance, solid and soil mechanics 
-and fluid dynamics using Smoothed Particle Hydrodynamics method
+## Features
+Has been exclusively adapted to solid mechaincs, and it includes:
 
-For more information, please check http://korzani.wix.com/persiansph
+- Mechanic Solver
+- Thermal Solver
+- Coupled ThermoMechanical Solver (in progress)
+- Contact formulation (in progress)
+- Adaptive search only in case of plastic strain threshold (in progress)
+
 
 We're going to need 4 libraries:
-BLITZ++   --- VERSION 0.9!!! NOT Current 	https://github.com/luchete80/blitz-0.9-cmake.git
-HDF5		
-GSL											https://github.com/ampl/gsl/tags
-LAPACK
+1 - BLITZ++   --- VERSION 0.9!!! NOT Current 	https://github.com/luchete80/blitz-0.9-cmake.git
+2 - HDF5		
+3 - GSL											https://github.com/ampl/gsl/tags
+4 - LAPACK
+
+GCC Config (Working on Linux and MinGW)
+1 - Download precompiled libraries here: 
+2 - 
+
 
 VISUAL STUDIO CONFIG
 
@@ -31,16 +44,3 @@ CompactNSearch and CuNSearch must be separated (either they are in conflict)
 3) GSL: Obtained from here: 
 4) The files for visual studio are located in :
 
-Thermal - Struct Solver Steps
-
-StartAcceleration(); ----->THIS RESETS STRAIN RATE!!!!
-PrimaryComputeAcceleration();
-LastComputeAcceleration(); //--->>>CALCULATES Strain Rate BUT FROM ZERO!
-														//AND CALCULATES ACCELERATION FROM SIGMA (PREV. IT)
-
-CalcConvHeat();
-CalcTempInc();
-CalcThermalExpStrainRate(); //Add Thermal expansion Strain Rate Term
-//...... BUT SIGMA IS ALREADY CALCULATED!
-Move(deltat); /// Uses ACCELERATION TO MOVE PARTICLE (calc u && v)
-//CALCULATE SIGMA FOM STRAIN RATE
