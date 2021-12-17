@@ -9,7 +9,7 @@ Has been adapted to work on both Linux Windows system (both on MinGW and MSVC co
 
 Is hevaily based on: 
 
-1) [PersianSPH] (https://github.com/mghkorzani/persiansph) - Maziar Gholami Korzani and Sergio Galindo Torres
+1) [PersianSPH](https://github.com/mghkorzani/persiansph) - Maziar Gholami Korzani and Sergio Galindo Torres
 2) Kirk Fraser [Thesis](https://constellation.uqac.ca/4246/1/Fraser_uqac_0862D_10345.pdf) on SPH model of FSW
 
 ## Features
