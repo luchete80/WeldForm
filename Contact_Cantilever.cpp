@@ -119,9 +119,9 @@ int main(int argc, char **argv) try
 	cout << "y max "<< ymax << endl;
 	double xmax = dom.Particles[dom.Particles.Size()-1]->x(0);
 	TriMesh mesh;
-	mesh.AxisPlaneMesh(1,false,Vec3_t(xmax-0.01,ymax + Ly,-0.01),Vec3_t(xmax+0.01,ymax + Ly,0.01),20);
+	mesh.AxisPlaneMesh(1,false,Vec3_t(xmax-0.01,ymax + Ly,-0.01),Vec3_t(xmax+0.01,ymax + Ly,0.01),10);
 	//Change plane coordinates to curved mesh
-	GenerateMesh(&mesh, Ly, xmax,20);
+	GenerateMesh(&mesh, Ly, xmax,10);
 
 	mesh.CalcSpheres(); //DONE ONCE
 		//ALWAYS AFTER SPH PARTICLES
@@ -169,7 +169,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.00101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH
