@@ -29,7 +29,7 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 	else if (axis == 1 )	{dir[0] = 0; dir[1] = 2;}
 	else									{dir[0] = 0; dir[1] = 1;}
 	
-	dir [2] = axis;
+	dir [2] = axis; //dir2 is which remains constant
 	
 	x3 = p1(dir[2]);
 
@@ -43,10 +43,11 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 		for (int i=0; i<test; i++){
 			Vec3_t v;
 			v(dir[0])=x1;v(dir[1])=x2;v(dir[2])=x3;
-			//cout << "i,j" << i << ", " << j<<endl; 
-			node.Push(new Vec3_t(x1,x2,x3));
+			cout << "i,j" << i << ", " << j<<endl; 
+			//node.Push(new Vec3_t(x1,x2,x3));
+			node.Push(new Vec3_t(v(0),v(1),v(2)));
 			node_v.Push(new Vec3_t(0.,0.,0.));
-			//cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
+			cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
 			x1+=dl;
 		}
 		x2+=dl;
