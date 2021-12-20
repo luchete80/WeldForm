@@ -6,13 +6,25 @@
 using namespace SPH;
 
 //Generated curved surface
-void GenerateMesh(TriMesh &mesh, const double &ycenter, const double &r, const double dens){
+void GenerateMesh(TriMesh *mesh, const double &r, const double &xcenter, const double dens){
 	double ang=-Util::PI/6;
 	double anginc = (Util::PI/3.)/dens;
-	for (int i=0;i<dens;i++){
-		//dom.Particles[i]->x(1) = ycenter - r*cos();
-		anginc++;
-	}	
+	int n = 0;
+	for (int j=0;j<dens+1;j++){
+		ang=-Util::PI/6;
+		for (int i=0;i<dens+1;i++){
+			(*mesh->node[n])[0] = xcenter + r*sin(ang);
+			//cout << "orig y"<< (*mesh->node[n])[1] <<endl;
+			(*mesh->node[n])[1] -= r*cos(ang);
+			//cout << "curr y"<< (*mesh->node[n])[1] <<endl;
+			//dom.Particles[i]->x(1) = ycenter - r*cos();
+			ang += anginc; //xhange angle in x axis
+			n++;
+		}	
+		//cout <<"z change"<<endl;
+	}
+	mesh->CalcCentroids();
+	mesh->CalcNormals();
 }
 
 void UserAcc(SPH::Domain & domi)
@@ -81,7 +93,7 @@ int main(int argc, char **argv) try
 	Fy	= 1000.e10;
 
 	dx = 0.002;
-	h	= dx*1.1; //Very important
+	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
 	double timestep;
@@ -100,16 +112,16 @@ int main(int argc, char **argv) try
 	dom.DomMin(0) = -Lx;
 									
 	dom.AddBoxLength(1 ,Vec3_t ( -Lx/2.0 -Lx/20.0, -Ly/2.0 , -Lz/2.0 ), 
-					Lx + Lx/20.0 , Ly /*+dx*/,  Lz /*+dx*/, 
+					Lx , Ly /*+dx*/,  Lz /*+dx*/, 
 					dx/2.0 ,rho, h, 1 , 0 , false, false );
 
 	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h;
 	cout << "y max "<< ymax << endl;
-	
+	double xmax = dom.Particles[dom.Particles.Size()-1]->x(0);
 	TriMesh mesh;
-	mesh.AxisPlaneMesh(1,false,Vec3_t(-0.01,ymax,-0.01),Vec3_t(0.01,ymax,0.01),20);
+	mesh.AxisPlaneMesh(1,false,Vec3_t(xmax-0.01,ymax + Ly,-0.01),Vec3_t(xmax+0.01,ymax + Ly,0.01),20);
 	//Change plane coordinates to curved mesh
-	GenerateMesh(mesh, ymax + Ly, Ly, 20);
+	GenerateMesh(&mesh, Ly, xmax,20);
 
 	mesh.CalcSpheres(); //DONE ONCE
 		//ALWAYS AFTER SPH PARTICLES
@@ -157,7 +169,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.Solve(/*tf*/0.00101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

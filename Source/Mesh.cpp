@@ -17,6 +17,12 @@ Element::Element(const int &n1, const int &n2, const int &n3){
 	
 }
 
+void TriMesh::CalcCentroids(){
+	
+	for (int e=0;e<element.Size();e++)
+		element[e]-> centroid = ( *node[element[e]->node[0]] + *node[element[e]->node[1]] + *node[element[e]->node[2]] ) / 3.; 
+	
+}
 // TODO: extend to all dirs
 inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2,  const int &dens){
 	int elemcount = dens * dens;

@@ -56,6 +56,7 @@ class TriMesh{
 	inline void UpdatePos(const double &dt);
 	inline void CalcNormals();
 	inline void CalcSpheres();
+	void CalcCentroids();
 };
 
 };
