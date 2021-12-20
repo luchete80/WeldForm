@@ -3,6 +3,10 @@
 #define TAU		0.005
 #define UMAX	0.0024
 
+void GenerateMesh(Domain &dom){
+	
+	
+}
 void UserAcc(SPH::Domain & domi)
 {
 	double vtraction;

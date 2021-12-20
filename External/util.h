@@ -238,7 +238,6 @@ inline void GetPyMethod (char const * InstanceName, char const * ClassName, char
 
 #endif
 
-
 }; // namespace Util
 
 #endif // MECHSYS_SORT_H

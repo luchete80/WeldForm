@@ -116,6 +116,7 @@ inline void TriMesh::CalcSpheres(){
 	UpdatePlaneCoeff();
 	
 }
+
 inline void TriMesh::UpdatePlaneCoeff(){
 	//Update pplane
 	for (int e = 0; e < element.Size(); e++) 
@@ -123,7 +124,15 @@ inline void TriMesh::UpdatePlaneCoeff(){
 
 }
 inline void TriMesh::CalcNormals(){
-	
+	Vec3_t u, v, w;
+	for (int e = 0; e < element.Size(); e++) {
+			u = *node [element[e]->node[1]] - *node [element[e]->node[0]];
+			v = *node [element[e]->node[2]] - *node [element[e]->node[0]];
+			w = cross(u,v);
+			element[e] -> normal = w/norm(w);
+			//Fraser Eqn 3.34
+			//Uj x Vj / |UjxVj|
+	}
 }
 
 inline void TriMesh::ApplyConstVel(const Vec3_t &v){

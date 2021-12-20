@@ -1941,4 +1941,12 @@ inline void PyEigenProjAnalytic (BPy::list const & Ten, BPy::list & L, BPy::list
 
 #endif
 
+inline Vec3_t cross(const Vec3_t &a, const Vec3_t &b){
+	Vec3_t ret;
+	ret(0) = a(1)*b(2)-a(2)*b(1);
+	ret(1) = a(2)*b(0)-a(0)*b(2);
+	ret(2) = a(0)*b(1)-a(1)*b(0);
+	return ret;
+}
+
 #endif // MECHSYS_MATVEC_H
