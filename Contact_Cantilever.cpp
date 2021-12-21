@@ -121,7 +121,7 @@ int main(int argc, char **argv) try
 	TriMesh mesh;
 	mesh.AxisPlaneMesh(1,false,Vec3_t(xmax-0.01,ymax + Ly,-0.01),Vec3_t(xmax+0.01,ymax + Ly,0.01),10);
 	//Change plane coordinates to curved mesh
-	GenerateMesh(&mesh, Ly, xmax,10);
+	GenerateMesh(&mesh, Ly, xmax,10); //This should be done before calc spheres
 
 	mesh.CalcSpheres(); //DONE ONCE
 		//ALWAYS AFTER SPH PARTICLES
