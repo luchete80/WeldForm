@@ -746,7 +746,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	//cout << "Surface particles" << surf_part<<endl;
+	cout << "Surface particles" << surf_part<<endl;
 }
 
 
@@ -1178,6 +1178,15 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 	bool isfirst = true;
 	bool isyielding = false;
+
+	//In case of contact this must be SURFACE particles
+	//TODO, REMOVE so many nb search
+	if (contact){
+		MainNeighbourSearch();
+		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+		CalculateSurface(1);				//After Nb search			
+	}
+	ClearNbData();
 	
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();
@@ -1216,10 +1225,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				if (m_isNbDataCleared)
 					MainNeighbourSearch/*_Ext*/();
 			
-			// cout << "FSM Pairs"<<endl;
-			// for (int p=0;p<Nproc;p++)
-				// cout << FSMPairs[p].size()<<", ";		
-				// cout <<endl;
+			cout << "RIG Pairs"<<endl;
+			for (int p=0;p<Nproc;p++)
+				cout << RIGPairs[p].size()<<", ";		
+				cout <<endl;
 
 			// cout << "SM Pairs"<<endl;
 			// for (int p=0;p<Nproc;p++)

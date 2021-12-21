@@ -263,7 +263,7 @@ inline void Domain::CellReset ()
 
 inline void Domain::MainNeighbourSearch() {
     int q1;
-
+		cout << "id free surf"<<id_free_surf<<endl;
     if (BC.Periodic[0]) {
 	#pragma omp parallel for schedule (dynamic) num_threads(Nproc)
 	for (q1=1;q1<(CellNo[0]-1); q1++)	YZPlaneCellsNeighbourSearch(q1);
@@ -294,7 +294,7 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 						// (Particles[temp1]->ID == id_free_surf && Particles[temp2]->ID == contact_surf_id )) {	
 			if (Particles[temp1]->ID == contact_surf_id || Particles[temp2]->ID == contact_surf_id ) {
 				if (Particles[temp1]->ID == id_free_surf || Particles[temp2]->ID == id_free_surf ) {
-					//cout << "cont pair found!"<<endl;
+					//cout << "rig pair found! idsurf "<<id_free_surf<<endl;
 					
 					// Vec3_t xij	= Particles[temp1]->x - Particles[temp2]->x;
 					// double r = norm(xij);

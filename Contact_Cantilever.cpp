@@ -4,7 +4,7 @@
 #define UMAX	0.0024
 
 using namespace SPH;
-
+using namespace std;
 //Generated curved surface
 void GenerateMesh(TriMesh *mesh, const double &r, const double &xcenter, const double dens){
 	double ang=-Util::PI/6;
@@ -35,9 +35,9 @@ void UserAcc(SPH::Domain & domi)
 		vtraction = UMAX/TAU ;
 	else
 		vtraction = 0.0;
+	//cout << "vtraction"<<vtraction<<endl;
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-
 	#ifdef __GNUC__
 	for (size_t i=0; i<domi.Particles.Size(); i++)
 	#else
@@ -52,13 +52,13 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->va		= Vec3_t(0.0,-vtraction,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
-		if (domi.Particles[i]->ID == 2)
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
+		// if (domi.Particles[i]->ID == 2)
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }
 	}
 	domi.trimesh->ApplyConstVel(Vec3_t(0.0,-vtraction,0.0));
 }
@@ -124,6 +124,13 @@ int main(int argc, char **argv) try
 	GenerateMesh(&mesh, Ly, xmax,10); //This should be done before calc spheres
 
 	mesh.CalcSpheres(); //DONE ONCE
+	cout << "Normal, pplane, radius"<<endl;
+	// for (int e=0;e<mesh.element.Size();e++){
+		// cout << mesh.element[e]->normal<<endl;
+		// cout << mesh.element[e]->pplane<<endl;
+		// cout << mesh.element[e]->radius<<endl;
+	// }
+	
 		//ALWAYS AFTER SPH PARTICLES
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
