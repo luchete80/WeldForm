@@ -24,9 +24,14 @@
 #include "matvec.h"
 #include "Functions.h"
 
+#include "Material.h" //Johnson Cook
+
 #define TH_BC_NONE			0
 #define TH_BC_CONVECTION	1
 #define TH_BC_CONDUCTION	2
+
+#define BILINEAR				0
+#define JOHNSON_COOK		1
 
 namespace SPH {
 
@@ -45,12 +50,14 @@ namespace SPH {
 		bool   	IsSat;		///< Check the particle if it is Saturated or not
 		bool   	SatCheck;	///< Check the particle Saturation at each time step
 		bool   	NoSlip;		///< No-Slip BC
+		int			Material_model;	//
 
 		int    	ID;		///< an Integer value to identify the particle set
 		int 		ID_orig;
 		int 	Thermal_BC;
 		int    	Material;	///< an Integer value to identify the particle material type: 1 = Fluid, 2 = Solid, 3 = Soil
-
+		Material_*	mat;	//NOT TO CONFUSE WITH MATERIAL NUMBER (TO BE DELETED)	
+	
 		Vec3_t	x;		///< Position of the particle n
 		Vec3_t	vb;		///< Velocity of the particle n-1 (Modified Verlet)
 		Vec3_t	va;		///< Velocity of the particle n+1/2 (Leapfrog)
@@ -156,6 +163,9 @@ namespace SPH {
 		Vec3_t normal;	
 		bool is_surface;		// BUT A SPECIFIC ID WILL BE ADDED
 		int element;				// Element index (if comes from FEM)
+		
+		
+		// JOHNSON COOK_PARAMS
 			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);
