@@ -140,7 +140,7 @@ int main(int argc, char **argv) try
 	
 	dom.contact = true;	
 	dom.friction = 0.0;
-	dom.PFAC = 0.5;
+	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
 	
 	//cout << "Plane z" << *mesh.node[0]<<endl;
@@ -158,7 +158,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 0.0;
+    		dom.Particles[a]->Alpha		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double x = dom.Particles[a]->x(0);

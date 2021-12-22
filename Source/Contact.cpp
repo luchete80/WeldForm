@@ -157,7 +157,7 @@ void Domain::CalcContactForces(){
 						//Recalculate vr (for large FEM mesh densities)
 						//cout << "inside element"<<endl;
 						
-						//Calculate penetration depth
+						//Calculate penetration depth (Fraser 3-49)
 						double delta = (deltat - deltat_cont) * delta_;
 						
 						// DAMPING
