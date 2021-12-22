@@ -515,7 +515,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				double prev_sy = Sigmay;			
 				Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
 				double Et = ( Sigmay - prev_sy)/dep;			//Fraser 3-54
-				//Ep = E*Et/(E-Et);
+				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
 			}	
 		}//sig_trial > Sigmay
 	} //If fail

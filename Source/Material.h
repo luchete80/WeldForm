@@ -3,16 +3,35 @@
 
 class Particle;
 
+class Elastic_{
+	private:
+	double E_m, nu_m;	//Poisson and young
+	double K_m, G_m;
+	
+	public:
+	const double& E()const{return E_m;}
+	
+};
+
 class Material_{
 	
 	protected:
-	Particle *particle;
+	Elastic_ elastic_m;
 	public:
 	Material(){}
 	virtual inline double CalcYieldStress();
-	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){};	
+	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){}
+	const Elastic_& Elastic()const{return elastic_m;}
 };
 
+class _Plastic{
+	
+	public:
+	virtual inline double CalcYieldStress();	
+	//virtual inline double CalcYieldStress();
+};
+
+//TODO: derive johnson cook as plastic material flow
 class JohnsonCook:
 public Material_{
 	double T_t,T_m;	//transition and melting temps
