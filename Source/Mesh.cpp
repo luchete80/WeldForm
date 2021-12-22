@@ -49,11 +49,11 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 		for (int i=0; i<test; i++){
 			Vec3_t v;
 			v(dir[0])=x1;v(dir[1])=x2;v(dir[2])=x3;
-			cout << "i,j" << i << ", " << j<<endl; 
+			//cout << "i,j" << i << ", " << j<<endl; 
 			//node.Push(new Vec3_t(x1,x2,x3));
 			node.Push(new Vec3_t(v(0),v(1),v(2)));
 			node_v.Push(new Vec3_t(0.,0.,0.));
-			cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
+			//cout << "xyz: "<<x1 << ", "<<x2<<", "<<x3<<endl;
 			x1+=dl;
 		}
 		x2+=dl;
@@ -73,6 +73,7 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 			//cout <<" jj" << jj<<endl;
 			int elcon[2][3];	// TODO: check x, y and z normals and node direction 
 												// For all plane orientations
+			//If connectivity  is anticlockwise normal is outwards
 			if (positaxisorent) {
 				elcon[0][0] = n[0];elcon[0][1] = n[1];elcon[0][2] = n[2];
 				elcon[1][0] = n[1];elcon[1][1] = n[3];elcon[1][2] = n[2];

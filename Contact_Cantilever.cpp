@@ -119,17 +119,17 @@ int main(int argc, char **argv) try
 	cout << "y max "<< ymax << endl;
 	double xmax = dom.Particles[dom.Particles.Size()-1]->x(0);
 	TriMesh mesh;
-	mesh.AxisPlaneMesh(1,false,Vec3_t(xmax-0.01,ymax + Ly,-0.01),Vec3_t(xmax+0.01,ymax + Ly,0.01),10);
+	mesh.AxisPlaneMesh(1,true,Vec3_t(xmax-0.01,ymax + Ly,-0.01),Vec3_t(xmax+0.01,ymax + Ly,0.01),10);
 	//Change plane coordinates to curved mesh
 	GenerateMesh(&mesh, Ly, xmax,10); //This should be done before calc spheres
 
 	mesh.CalcSpheres(); //DONE ONCE
 	cout << "Normal, pplane, radius"<<endl;
-	// for (int e=0;e<mesh.element.Size();e++){
-		// cout << mesh.element[e]->normal<<endl;
-		// cout << mesh.element[e]->pplane<<endl;
-		// cout << mesh.element[e]->radius<<endl;
-	// }
+	for (int e=0;e<mesh.element.Size();e++){
+		cout << mesh.element[e]->normal<<endl;
+		//cout << mesh.element[e]->pplane<<endl;
+		//cout << mesh.element[e]->radius<<endl;
+	}
 	
 		//ALWAYS AFTER SPH PARTICLES
 	//TODO: DO THIS INSIDE SOLVER CHECKS
