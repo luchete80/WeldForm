@@ -1,1 +1,0 @@
-#https://stackoverflow.com/questions/43541934/implementing-3d-vectors-in-python-numpy-vs-x-y-z-fields

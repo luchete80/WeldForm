@@ -5,11 +5,11 @@ GSL
 LAPACK
 
 1) 
-Para blitz se debe copiar el archivo que hay en Blitz-VS.NET.zip
+For blitz should be copied Blitz-VS.NET.zip
 
-RECORDAR QUE EL REPO ES: https://github.com/luchete80/blitz-0.9-cmake.git
+blitz repo: https://github.com/luchete80/blitz-0.9-cmake.git
 
-al binario path%binario\blitz\ms
+to binary path%binario\blitz\ms
 
 3) GSL: Obtained from here: 
 4) The files for visual studio are located in :

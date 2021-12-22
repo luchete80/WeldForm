@@ -115,18 +115,19 @@ int main(int argc, char **argv) try
 					Lx , Ly /*+dx*/,  Lz /*+dx*/, 
 					dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h;
+	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h - 1.0e-4;
 	cout << "y max "<< ymax << endl;
 	double xmax = dom.Particles[dom.Particles.Size()-1]->x(0);
 	TriMesh mesh;
-	mesh.AxisPlaneMesh(1,true,Vec3_t(xmax-0.01,ymax + Ly,-0.01),Vec3_t(xmax+0.01,ymax + Ly,0.01),10);
+	int mechdens = 8;
+	mesh.AxisPlaneMesh(1,true,Vec3_t(xmax-0.01,ymax + Ly,-0.01),Vec3_t(xmax+0.01,ymax + Ly,0.01),mechdens);
 	//Change plane coordinates to curved mesh
-	GenerateMesh(&mesh, Ly, xmax,10); //This should be done before calc spheres
+	GenerateMesh(&mesh, Ly, xmax,mechdens); //This should be done before calc spheres
 
 	mesh.CalcSpheres(); //DONE ONCE
 	cout << "Normal, pplane, radius"<<endl;
 	for (int e=0;e<mesh.element.Size();e++){
-		cout << mesh.element[e]->normal<<endl;
+		//cout << mesh.element[e]->normal<<endl;
 		//cout << mesh.element[e]->pplane<<endl;
 		//cout << mesh.element[e]->radius<<endl;
 	}
@@ -157,7 +158,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 1.0;
+    		dom.Particles[a]->Alpha		= 0.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double x = dom.Particles[a]->x(0);

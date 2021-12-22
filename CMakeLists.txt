@@ -93,6 +93,7 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
+	Cantilever_comp_contact
 	Contact_Cantilever
 	#FreeSurface
 	#Elastic

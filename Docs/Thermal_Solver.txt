@@ -1,0 +1,18 @@
+Thermal - Struct Solver Steps
+
+StartAcceleration(); 					----->THIS RESETS STRAIN RATE!!!!
+PrimaryComputeAcceleration();
+LastComputeAcceleration(); 		//--->>>CALCULATES Strain Rate BUT FROM ZERO!
+															//AND CALCULATES ACCELERATION FROM SIGMA (PREV. IT)
+
+CalcConvHeat();
+CalcTempInc();
+CalcThermalExpStrainRate(); 	//Add Thermal expansion Strain Rate Term
+															//...... BUT SIGMA IS ALREADY CALCULATED!
+Move(deltat); 								// Uses ACCELERATION TO MOVE PARTICLE (calc u && v)
+															//CALCULATE SIGMA FOM STRAIN RATE
+															
+
+
+Thermal expansion (Fraser -39 and 3-40) impacts on bulk term of strain rate
+
