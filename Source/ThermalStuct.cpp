@@ -97,7 +97,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared)
-					cout << "Performing Nb search"<<endl;
+					//cout << "Performing Nb search"<<endl;
 					MainNeighbourSearch_Ext();
 
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
