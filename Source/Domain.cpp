@@ -1113,13 +1113,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	deltat = deltatint = deltatmin	= dt;
 	
 	auto start_whole = std::chrono::steady_clock::now();
-
-	Vec3_t nodeini = *(trimesh->node[0]);
 		
+	cout << "Initial checks"<<endl;
 	InitialChecks();
+	cout << "Creating list and cells"<<endl;
 	CellInitiate();
 	ListGenerate();
 	PrintInput(TheFileKey);
+	cout << "Time Step check"<<endl;
 	TimestepCheck();
 	WholeVelocity();
 	
