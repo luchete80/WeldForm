@@ -157,13 +157,14 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		clock_beg = clock();
 
 		//TODO Add 
-		double min=1000.;
+		double Tmin=1000.;
+		double Tmax=0.0;
 		for (size_t i=0; i<Particles.Size(); i++){
 			Particles[i]->TempCalcLeapfrog(dt);
-			if (Particles[i]->T > max)
-				max=Particles[i]->T;
-			if (Particles[i]->T < min)
-				min=Particles[i]->T;
+			if (Particles[i]->T > Tmax)
+				Tmax=Particles[i]->T;
+			if (Particles[i]->T < Tmin)
+				Tmin=Particles[i]->T;
 		}
 		//std::cout << "Max temp: "<< max << std::endl;
 
@@ -186,7 +187,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 			std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
 			acc_time_spent <<
 			std::endl;
-			std::cout << "Max, Min, Avg temps: "<< max << ", " << min << ", " << (max+min)/2. <<std::endl;
+			std::cout << "Max, Min, Avg temps: "<< Tmax << ", " << Tmin << ", " << (Tmax+Tmin)/2. <<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;			
 			double max_flux = 0.;
 			for (size_t i=0; i<Particles.Size(); i++){
