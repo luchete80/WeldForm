@@ -94,7 +94,7 @@ int main(int argc, char **argv) try
         Cs	= sqrt(K/rho);
 
         double timestep;
-        timestep = (0.1*h/(Cs));
+        timestep = (0.2*h/(Cs));
 		
 		//timestep = 2.5e-6;
 
@@ -106,7 +106,7 @@ int main(int argc, char **argv) try
     	dom.GeneralAfter = & UserAcc;
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
-		dom.auto_ts = false;
+		//dom.auto_ts = false;
 
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 

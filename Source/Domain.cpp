@@ -168,7 +168,8 @@ inline void Domain::AdaptiveTimeStep()
 	}
 
 	if (deltat<(deltatint/1.0e5))
-		throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
+			cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
+	// throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
 }
 
 inline void Domain::AddSingleParticle(int tag, Vec3_t const & x, double Mass, double Density, double h, bool Fixed)
