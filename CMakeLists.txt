@@ -98,9 +98,9 @@ SET(EXES
 	#FreeSurface
 	#Elastic
 	#Heat_2D
-	#Traction
+	Traction
 	#Traction_JC
-	ThermalCompression
+	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D
 	#Plate-Yield
