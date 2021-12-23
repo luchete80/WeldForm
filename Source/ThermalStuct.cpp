@@ -63,13 +63,16 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 	bool isfirst = true;
 	bool isyielding = false;
 
-
-	std::vector <int> nb(Particles.Size());
-	std::vector <int> nbcount(Particles.Size());
-
-	CalcConvHeat();
-	CalcTempInc();
+	//In case of contact this must be SURFACE particles
+	//TODO, REMOVE so many nb search
+	if (contact){
+		MainNeighbourSearch();
+		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+		CalculateSurface(1);				//After Nb search			
+	}
 	
+	ClearNbData();
+
 	while (Time<tf && idx_out<=maxidx) {
 
 		StartAcceleration(Gravity);
@@ -90,7 +93,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
 
-			MainNeighbourSearch_Ext();
+			MainNeighbourSearch();
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
@@ -98,26 +101,11 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 				clock_beg = clock();
 				if (m_isNbDataCleared)
 					//cout << "Performing Nb search"<<endl;
-					MainNeighbourSearch_Ext();
+					MainNeighbourSearch();
 
 				neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}
 			isfirst = false;
-		}
-
-		std::vector <int> nb(Particles.Size());
-		std::vector <int> nbcount(Particles.Size());
-		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
-		for ( size_t k = 0; k < Nproc ; k++) {
-			for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
-				nb[SMPairs[k][a].first ]+=1;
-				nb[SMPairs[k][a].second]+=1;
-				
-			}
-		}	
-			for (int p=0;p<Particles.Size();p++){
-			Particles[p]->Nb=nb[p];
 		}
 		
 		auto start_task = std::chrono::system_clock::now();

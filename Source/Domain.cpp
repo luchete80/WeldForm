@@ -27,8 +27,6 @@
 
 #define MIN_PS_FOR_NBSEARCH		1.e-6//TODO: MOVE TO CLASS MEMBER
 
-#include <CompactNSearch> //External search
-
 #include <set>
 
 using namespace std;
@@ -168,8 +166,8 @@ inline void Domain::AdaptiveTimeStep()
 	}
 
 	if (deltat<(deltatint/1.0e5))
-			cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
-	// throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
+		//cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
+		throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
 }
 
 inline void Domain::AddSingleParticle(int tag, Vec3_t const & x, double Mass, double Density, double h, bool Fixed)
@@ -1383,95 +1381,5 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		// if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();	
 	// //}
 // }
-
-  #ifdef _GPU_NEIBSEARCH
-  void Domain::MainNeighbourSearch_Ext(){
-	}
-	
-	
-	#else
-  using namespace CompactNSearch;
-  void Domain::MainNeighbourSearch_Ext(){
-
-	std::vector<std::array<Real, 3>> positions;
-
-	for (unsigned int p = 0; p < Particles.Size(); p++){
-		
-		std::array<Real, 3> x = {{
-			static_cast<Real>(Particles[p]->x[0]),
-			static_cast<Real>(Particles[p]->x[1]),
-			static_cast<Real>(Particles[p]->x[2])
-		}};
-		positions.push_back(x);
-
-	} 
-	
-
-	NeighborhoodSearch nsearch(2.0*Particles[0]->h, true);
-
-	
-	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
-	//nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
-	nsearch.find_neighbors();
-
-	nsearch.update_point_sets();
-
-	
-	std::set< std:: pair<int,int> > neigbours_set;
-	auto const& d = nsearch.point_set(0);
-	for (int i = 0; i < d.n_points(); ++i){
-		const std::vector<unsigned int>& nbs = d.neighbor_list(0, i);
-		//res += static_cast<unsigned long>(d.n_neighbors(0, i));
-		
-
-		for (int k=0;k< nbs.size();k++) {
-			neigbours_set.insert(std::make_pair( std::min(i,int(nbs[k])), std::max(i,int(nbs[k]))) );
-			
-		}
-	}	
-
-	std::set<std:: pair<int,int>>::iterator it = neigbours_set.begin();
-	int pairsperproc = neigbours_set.size()/Nproc;
-	//cout << "Pairs per proc: " <<pairsperproc<<endl;
-	int pair=0;
-	int nproc=0;
-	while (it != neigbours_set.end()) {
-		if (pair > (nproc + 1 ) * pairsperproc){
-			nproc++;
-			//cout<<"changing proc"<< nproc<<", pair "<<pair<<endl;
-		}
-		if (nproc< Nproc) {//TODO:CORRECT THIS!!!!!
-		//cout << "nproc"<< nproc<<endl;
-			if (Particles[it->first]->IsFree*Particles[it->second]->IsFree)
-				SMPairs[nproc].Push(std::make_pair(it->first, it->second));
-			else
-				FSMPairs[nproc].Push(std::make_pair(it->first, it->second));
-		}
-		it++;
-		pair++;
-		
-	}
-	// cout << "Nb pairs found: "<<pair-1<<endl;
-	// cout << "Original pairs: "<<neigbours_set.size()<<endl;
-	// cout << "Pairs per proc: " << pairsperproc << endl;
-
-}
-#endif
-int Domain::AvgNeighbourCount(){	
-		std::vector<int> nbcount(Particles.Size());
-		
-		#pragma omp parallel for schedule (static) num_threads(Nproc)
-		for (int p=0;p<Nproc;p++)
-			for (int i=0;i<SMPairs[p].size();i++){
-				nbcount[SMPairs[p][i].first]++;
-				nbcount[SMPairs[p][i].second]++;
-			}
-		int tot=0;
-		for (int p=0;p<nbcount.size();p++)
-		tot+=nbcount[p];
-	
-	return tot/Particles.Size();
-
-}
 
 }; // namespace SPH

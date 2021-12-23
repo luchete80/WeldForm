@@ -20,9 +20,6 @@
 
 CMAKE_MINIMUM_REQUIRED (VERSION 2.8)
 
-OPTION (GPU_NBSEARCH OFF)
-MESSAGE("GPU SEARCH " ${GPU_NBSEARCH})
-
 PROJECT                (New_Test)
 cmake_policy(SET CMP0054 NEW) #elseif
 add_definitions(-D_CRT_NO_VA_START_VALIDATION)
@@ -38,7 +35,6 @@ MESSAGE("Using GNU compiler")
 include_directories("D:/Luciano/Numerico/blitz/include")
 link_directories("D:/Luciano/Numerico/blitz/lib")
   # using GCC
-link_directories("D:/Luciano/Numerico/CompactNSearch_bin_mingw")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   # using Intel C++
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -48,7 +44,6 @@ include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
 include_directories("D:/Luciano/Numerico/Libs/hdf5-1.12.0_install_mswin/include")
 link_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/lib")
-link_directories("D:/Luciano/Numerico/CompactNSearch_bin_nmake_release")
 
 include_directories("Source")
 include_directories("External")
@@ -59,7 +54,6 @@ if (GPU_NBSEARCH)
 add_definitions(-D_GPU_NEIBSEARCH)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GPU_NEIBSEARCH")
 
-link_directories("D:/Luciano/Numerico/cuNSearch_bin_release")
 endif()
 
 #add_subdirectory("examples")
@@ -127,7 +121,6 @@ SET(EXES
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
-	"${CMAKE_SOURCE_DIR}/Source/CompactNSearch/CompactNSearch.cpp"
 	#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)

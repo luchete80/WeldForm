@@ -456,4 +456,22 @@ inline void Domain::SaveContNeighbourData(){
 		}
 }
 
+int Domain::AvgNeighbourCount(){	
+		std::vector<int> nbcount(Particles.Size());
+		
+		#pragma omp parallel for schedule (static) num_threads(Nproc)
+		for (int p=0;p<Nproc;p++)
+			for (int i=0;i<SMPairs[p].size();i++){
+				nbcount[SMPairs[p][i].first]++;
+				nbcount[SMPairs[p][i].second]++;
+			}
+		int tot=0;
+		for (int p=0;p<nbcount.size();p++)
+		tot+=nbcount[p];
+	
+	return tot/Particles.Size();
+
+}
+
+
 }; //SPH
