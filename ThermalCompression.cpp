@@ -120,7 +120,7 @@ int main(int argc, char **argv) try
     	{
     		dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;
-			dom.Particles[a]->k_T			=	130.;
+			dom.Particles[a]->k_T			=	150.;
 			dom.Particles[a]->cp_T			=	960.;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
@@ -149,7 +149,7 @@ int main(int argc, char **argv) try
 
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.ThermalStructSolve(/*tf*/0.002,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		dom.ThermalStructSolve(/*tf*/0.005,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }

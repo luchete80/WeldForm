@@ -123,7 +123,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
 		CalcConvHeat();
-		CalcPlasticWorkHeat(dt);
+		CalcPlasticWorkHeat(deltat);
 		CalcTempInc();
 		CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
 		
@@ -148,7 +148,7 @@ inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char
 		double Tmin=1000.;
 		double Tmax=0.0;
 		for (size_t i=0; i<Particles.Size(); i++){
-			Particles[i]->TempCalcLeapfrog(dt);
+			Particles[i]->TempCalcLeapfrog(deltat);
 			if (Particles[i]->T > Tmax)
 				Tmax=Particles[i]->T;
 			if (Particles[i]->T < Tmin)
