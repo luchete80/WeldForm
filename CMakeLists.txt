@@ -78,7 +78,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	Compression
+	#Compression
 	#Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
@@ -100,7 +100,7 @@ SET(EXES
 	#Heat_2D
 	#Traction
 	#Traction_JC
-	#ThermalCompression
+	ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D
 	#Plate-Yield
