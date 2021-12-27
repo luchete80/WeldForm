@@ -1,0 +1,17 @@
+
+
+Case Bilinear/Multilinear material (Et prescribed, hence Ep)
+----------------------------------
+BILINEAR: Et = 0 
+dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+pl_strain += dep;
+delta_pl_strain = dep;
+if (Material_model == BILINEAR)
+	Sigmay += dep*Ep;									FRASER EQN 3-52
+
+
+
+Case yield_stress calculated from values
+--------------------------------------
+
+Here 

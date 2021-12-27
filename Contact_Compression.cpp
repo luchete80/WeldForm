@@ -137,7 +137,7 @@ int main(){
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction = 0.0;
-	dom.PFAC = 0.5;
+	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	

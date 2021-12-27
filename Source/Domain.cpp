@@ -745,7 +745,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	cout << "Surface particles" << surf_part<<endl;
+	//cout << "Surface particles" << surf_part<<endl;
 }
 
 
@@ -1225,10 +1225,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				if (m_isNbDataCleared)
 					MainNeighbourSearch/*_Ext*/();
 			
-			cout << "RIG Pairs"<<endl;
-			for (int p=0;p<Nproc;p++)
-				cout << RIGPairs[p].size()<<", ";		
-				cout <<endl;
+			// cout << "RIG Pairs"<<endl;
+			// for (int p=0;p<Nproc;p++)
+				// cout << RIGPairs[p].size()<<", ";		
+				// cout <<endl;
 
 			// cout << "SM Pairs"<<endl;
 			// for (int p=0;p<Nproc;p++)

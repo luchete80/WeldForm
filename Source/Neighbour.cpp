@@ -263,7 +263,7 @@ inline void Domain::CellReset ()
 
 inline void Domain::MainNeighbourSearch() {
     int q1;
-		cout << "id free surf"<<id_free_surf<<endl;
+		//cout << "id free surf"<<id_free_surf<<endl;
     if (BC.Periodic[0]) {
 	#pragma omp parallel for schedule (dynamic) num_threads(Nproc)
 	for (q1=1;q1<(CellNo[0]-1); q1++)	YZPlaneCellsNeighbourSearch(q1);

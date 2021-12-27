@@ -131,7 +131,13 @@ int main(int argc, char **argv) try
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		dom.Particles[a]->G		= G;
+				
+				dom.Particles[a]-> Material_model = JOHNSON_COOK;
+				dom.Particles[a]-> T = 100.0;
+				dom.Particles[a]->k_T			=	150.;
+				dom.Particles[a]->cp_T			=	960.; 
+				
+				dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
@@ -154,7 +160,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+    	dom.ThermalStructSolve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

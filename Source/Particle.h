@@ -31,7 +31,9 @@
 #define TH_BC_CONDUCTION	2
 
 #define BILINEAR				0
-#define JOHNSON_COOK		1
+#define POWER_LAW				1
+#define JOHNSON_COOK		2
+
 
 namespace SPH {
 
@@ -166,6 +168,7 @@ namespace SPH {
 		
 		
 		// JOHNSON COOK_PARAMS
+		double eff_strain_rate;		//Useful only for this kind of material
 			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);
