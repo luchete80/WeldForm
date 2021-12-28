@@ -111,7 +111,7 @@ int main(int argc, char **argv) try
 	dom.DomMax(0) = Lx;
 	dom.DomMin(0) = -Lx;
 									
-	dom.AddBoxLength(1 ,Vec3_t ( -Lx/2.0 -Lx/20.0, -Ly/2.0 , -Lz/2.0 ), 
+	dom.AddBoxLength(0 ,Vec3_t ( -Lx/2.0 -Lx/20.0, -Ly/2.0 , -Lz/2.0 ), 
 					Lx , Ly /*+dx*/,  Lz /*+dx*/, 
 					dx/2.0 ,rho, h, 1 , 0 , false, false );
 
@@ -141,7 +141,7 @@ int main(int argc, char **argv) try
 	dom.contact = true;	
 	dom.friction = 0.0;
 	dom.PFAC = 1.0;
-	dom.DFAC = 0.2;
+	dom.DFAC = 0.0;
 	
 	//cout << "Plane z" << *mesh.node[0]<<endl;
 	

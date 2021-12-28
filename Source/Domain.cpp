@@ -745,7 +745,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	//cout << "Surface particles" << surf_part<<endl;
+	cout << "Surface particles: " << surf_part<<endl;
 }
 
 

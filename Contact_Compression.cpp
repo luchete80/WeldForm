@@ -77,7 +77,7 @@ int main(){
 	Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.015;
+	dx = 0.013;
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -137,8 +137,8 @@ int main(){
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction = 0.0;
-	dom.PFAC = 1.0;
-	dom.DFAC = 0.2;
+	dom.PFAC = 0.2;
+	dom.DFAC = 0.0;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
