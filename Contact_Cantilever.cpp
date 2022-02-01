@@ -141,7 +141,7 @@ int main(int argc, char **argv) try
 	dom.contact = true;	
 	dom.friction = 0.0;
 	dom.PFAC = 1.0;
-	dom.DFAC = 0.0;
+	dom.DFAC = 0.2;
 	
 	//cout << "Plane z" << *mesh.node[0]<<endl;
 	
