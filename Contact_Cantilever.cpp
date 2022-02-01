@@ -115,7 +115,7 @@ int main(int argc, char **argv) try
 					Lx , Ly /*+dx*/,  Lz /*+dx*/, 
 					dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h - 1.0e-4;
+	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h - 9.5e-5;
 	cout << "y max "<< ymax << endl;
 	double xmax = dom.Particles[dom.Particles.Size()-1]->x(0);
 	TriMesh mesh;
