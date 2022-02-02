@@ -49,6 +49,23 @@ public Material_{
 	inline double CalcYieldStress(){}	
 	inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp);	
 };
+
+class Hollomon:
+public Material_{
+	double n, m;
+	double eps_0;
+	
+	public:
+	Hollomon(){}
+	//You provide the values of A, B, n, m, 
+	//θmelt, and  θ_transition
+	//as part of the metal plasticity material definition.
+	Hollomon(const double &m_):
+	m(m_){}
+	inline double CalcYieldStress(){}	
+	inline double CalcYieldStress(const double &strain);	
+};
+
 #include "Material.cpp"
 
 #endif
