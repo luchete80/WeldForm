@@ -31,7 +31,7 @@
 #define TH_BC_CONDUCTION	2
 
 #define BILINEAR				0
-#define POWER_LAW				1
+#define HOLLOMON				1 //POWER LAW
 #define JOHNSON_COOK		2
 
 

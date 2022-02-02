@@ -88,12 +88,13 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
 	#Cantilever_comp_contact
-	Contact_Cantilever
+	#Contact_Cantilever
 	#FreeSurface
 	#Elastic
 	#Heat_2D
-	#Traction
-	#Traction_JC
+	Traction
+	Traction_Hollomon
+	Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D
@@ -113,6 +114,7 @@ SET(EXES
 	#SolidBlock_Heat_source2
 	#SolidBlock_Heat_source2_boundpart
 	#Thermal_Expansion_2
+	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
 	#"Source/WeldForm"

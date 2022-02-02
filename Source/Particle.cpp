@@ -497,7 +497,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		ShearStressa= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStressa;
 		//In case of Flow Stress Model, Initial sigma_y should be calculated
 		double sig_trial = sqrt(3.0*J2);
-		if (Material_model == JOHNSON_COOK){ // If Yield stress is not constant (as bilinear
+		if (Material_model == JOHNSON_COOK || Material_model == HOLLOMON){ // If Yield stress is not constant (as bilinear
 			prev_sy = Sigmay;
 			Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
 		}
@@ -508,7 +508,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 			delta_pl_strain = dep;
 			if (Material_model == BILINEAR){
 				Sigmay += dep*Ep;
-			} else if (Material_model == JOHNSON_COOK){
+			} else /*if (Material_model == JOHNSON_COOK || Material_model == HOLLOMON)*/{ //TODO: > BILINEAR
 				///////////////// JOHNSON COOK MATERIAL ////////////////////////
 				//HERE, ET IS CALCULATED (NOT GIVEN), AND Flow stress is not incremented but calculated from expression
 				//TODO: Calculate depdt this once (also in thermal expansion)

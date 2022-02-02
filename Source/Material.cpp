@@ -10,7 +10,6 @@ inline double JohnsonCook::CalcYieldStress(const double &strain, const double &s
 }	
 
 inline double Hollomon::CalcYieldStress(const double &strain)	{
-	double T_h = (temp - T_t) / (T_m - T_t);
-	double sy = (A+B*pow(strain, n))*(1.0 + C * log (strain_rate/ eps_0) ) * (1.0 - pow(T_h,m));
+	double sy = K*pow(strain, m);
 	return sy;
 }	
