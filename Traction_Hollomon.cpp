@@ -135,6 +135,7 @@ int main(int argc, char **argv) try
     	{
 				
 				dom.Particles[a]-> Material_model = HOLLOMON;
+				dom.Particles[a]->mat = &mat;
 				
 				dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;

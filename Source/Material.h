@@ -21,9 +21,9 @@ class Material_{
 	Elastic_ elastic_m;
 	public:
 	Material(){}
-	virtual inline double CalcTangentModulus();
-	virtual inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp);
-	virtual inline double CalcTangentModulus(const double &strain);
+	virtual inline double CalcTangentModulus(){};
+	virtual inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp){};
+	virtual inline double CalcTangentModulus(const double &strain){};
 	virtual inline double CalcYieldStress();
 	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){}
 	const Elastic_& Elastic()const{return elastic_m;}
@@ -53,6 +53,7 @@ public Material_{
 	A(a),B(b),C(c){}
 	inline double CalcYieldStress(){}	
 	inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp);	
+	inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp);
 };
 
 class Hollomon:
