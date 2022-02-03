@@ -13,3 +13,8 @@ inline double Hollomon::CalcYieldStress(const double &strain)	{
 	double sy = K*pow(strain, m);
 	return sy;
 }	
+
+inline double Hollomon::CalcTangentModulus(const double &strain) {
+	double Et = K*m*pow(strain, (m-1.0));
+	return Et;
+}

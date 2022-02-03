@@ -19,6 +19,9 @@ class Material_{
 	Elastic_ elastic_m;
 	public:
 	Material(){}
+	virtual inline double CalcTangentModulus();
+	virtual inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp);
+	virtual inline double CalcTangentModulus(const double &strain);
 	virtual inline double CalcYieldStress();
 	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){}
 	const Elastic_& Elastic()const{return elastic_m;}
@@ -62,6 +65,7 @@ public Material_{
 	//as part of the metal plasticity material definition.
 	Hollomon(const double &k_, const double &m_):
 	K(k_), m(m_){}
+	inline double CalcTangentModulus(const double &strain);
 	inline double CalcYieldStress(){}	
 	inline double CalcYieldStress(const double &strain);	
 };
