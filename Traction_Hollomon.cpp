@@ -75,28 +75,30 @@ int main(int argc, char **argv) try
     	dom.Scheme	= 1;	//Mod Verlet
 			//dom.XSPH	= 0.5; //Very important
 			
-			Hollomon mat(1.,1.);
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
 		double Lz_side,Lz_neckmin,Lz_necktot,Rxy_center;
 		
-    	R	= 0.075;
+	R	= 0.075;
 
-		Lz_side =0.2;
-		Lz_neckmin = 0.050;
-		Lz_necktot = 0.100;
-		Rxy_center = 0.050;
-		L = 2. * Lz_side + Lz_necktot;
-		
-		double E  = 210.e9;
-		double nu = 0.3;
-		
-    	rho	= 7850.0;
-		K= E / ( 3.*(1.-2*nu) );
-		G= E / (2.* (1.+nu));
-		Fy	= 350.e6;
+	Lz_side =0.2;
+	Lz_neckmin = 0.050;
+	Lz_necktot = 0.100;
+	Rxy_center = 0.050;
+	L = 2. * Lz_side + Lz_necktot;
 
+	double E  = 210.e9;
+	double nu = 0.3;
+
+	rho	= 7850.0;
+	K= E / ( 3.*(1.-2*nu) );
+	G= E / (2.* (1.+nu));
+	Fy	= 350.e6;
+
+	//Hollomon(const double eps0_, const double &k_, const double &m_):
+	Hollomon mat(Fy/E,1220.,0.195);
+			
 
 		dx = 0.010;
     h	= dx*1.2; //Very important

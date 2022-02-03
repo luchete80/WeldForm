@@ -582,15 +582,9 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		if ( sig_trial > Sigmay) {
 			//TODO: USE Same CalcYieldStress function with no arguments and update material "current state" before??
 			//Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
-			Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
-			Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
-
-			//Common for both methods
-			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
-			pl_strain += dep;
-			delta_pl_strain = dep;
-			Sigmay += dep*Ep;
-			// if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
+			if (Material_model == HOLLOMON )
+				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
+			//else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
 				// ///////////////// JOHNSON COOK MATERIAL ////////////////////////
 				// //HERE, ET IS CALCULATED (NOT GIVEN), AND Flow stress is not incremented but calculated from expression
 				// //TODO: Calculate depdt this once (also in thermal expansion)
@@ -604,6 +598,13 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				// //Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
 
 			// }	
+			Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+
+			//Common for both methods
+			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			pl_strain += dep;
+			delta_pl_strain = dep; // For heating work calculation
+			Sigmay += dep*Ep;
 		}//sig_trial > Sigmay
 	} //If fail
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);

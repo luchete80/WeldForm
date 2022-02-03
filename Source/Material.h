@@ -9,6 +9,8 @@ class Elastic_{
 	double K_m, G_m;
 	
 	public:
+	Elastic_(){}
+	Elastic_(const double &e, const double &nu):E_m(e),nu_m(nu){}
 	const double& E()const{return E_m;}
 	
 };
@@ -56,15 +58,16 @@ public Material_{
 class Hollomon:
 public Material_{
 	double K, m;
-	double eps_0;
+	double eps0;
 	
 	public:
 	Hollomon(){}
 	//You provide the values of A, B, n, m, 
 	//θmelt, and  θ_transition
 	//as part of the metal plasticity material definition.
-	Hollomon(const double &k_, const double &m_):
-	K(k_), m(m_){}
+	//ASSUMING AT FIRST COEFFICIENTS ARE GIVEN TO TOTAL STRAIN-STRESS
+	Hollomon(const double eps0_, const double &k_, const double &m_):
+	K(k_), m(m_){ eps0 = eps0_;}
 	inline double CalcTangentModulus(const double &strain);
 	inline double CalcYieldStress(){}	
 	inline double CalcYieldStress(const double &strain);	
