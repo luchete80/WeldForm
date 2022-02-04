@@ -583,9 +583,9 @@ inline void Particle::Mat2Leapfrog(double dt) {
 			//TODO: USE Same CalcYieldStress function with no arguments and update material "current state" before??
 			//Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
 			if (Material_model == HOLLOMON ){
-				cout << "calculating tangent modulus"<<endl;
+				//cout << "calculating tangent modulus"<<endl;
 				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
-				cout << "calculated"<<endl;
+				//cout << "calculated"<<endl;
 			}
 			//else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
 				// ///////////////// JOHNSON COOK MATERIAL ////////////////////////
@@ -600,8 +600,8 @@ inline void Particle::Mat2Leapfrog(double dt) {
 																			// );
 				// //Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
 
-			// }	
-			Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+			if (Material_model > BILINEAR ) //Else Ep = 0
+				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
 
 			//Common for both methods
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0

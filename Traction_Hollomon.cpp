@@ -100,7 +100,7 @@ int main(int argc, char **argv) try
 	Hollomon mat(Fy/E,1220.,0.195);
 			
 
-		dx = 0.010;
+		dx = 0.0085;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -124,7 +124,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 		//dom.auto_ts = false;
-		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/10.), R, Lz_side + Lz_side/10.,
+		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/5.), R, Lz_side + Lz_side/5.,
 											Lz_neckmin,Lz_necktot,Rxy_center,
 											dx/2., rho, h, false);
 
