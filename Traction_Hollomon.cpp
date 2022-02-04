@@ -95,9 +95,10 @@ int main(int argc, char **argv) try
 	K= E / ( 3.*(1.-2*nu) );
 	G= E / (2.* (1.+nu));
 	Fy	= 350.e6;
-
+	
+	Elastic_ el(E,nu);
 	//Hollomon(const double eps0_, const double &k_, const double &m_):
-	Hollomon mat(Fy/E,1220.,0.195);
+	Hollomon mat(el,Fy/E,1220.e6,0.195);
 			
 
 		dx = 0.0085;
