@@ -1319,7 +1319,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things
 		if (contact){
-			cout << "checking contact"<<endl;
+			//cout << "checking contact"<<endl;
 			trimesh->UpdatePos (deltat); //Update Node Pos
 			//Update Normals
 			trimesh->UpdatePlaneCoeff();	//If normal does not change..
