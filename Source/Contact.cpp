@@ -217,13 +217,13 @@ void Domain::CalcContactForces(){
 		}//Contact Pairs
 	}//Nproc
 	max_contact_force = sqrt (max_contact_force);
-	// if (max_contact_force > 0.){
-		// cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
-		// cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
-		// //TEMP
-		// if (min_force_ts> 0)
-			// deltat = min_force_ts;
-	// }
+	if (max_contact_force > 0.){
+		cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
+		//TEMP
+		if (min_force_ts> 0)
+			deltat = min_force_ts;
+	}
 	//Correct time step!
 //	std::min(deltat,dt_fext)
 }

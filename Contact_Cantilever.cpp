@@ -142,11 +142,11 @@ int main(int argc, char **argv) try
 	dom.contact = true;	
 	dom.friction = 0.0;
 	dom.PFAC = 1.0;
-	dom.DFAC = 0.2;
+	dom.DFAC = 0.0;
 	
 	//cout << "Plane z" << *mesh.node[0]<<endl;
 	
-	
+	dom.auto_ts = false;
 
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
