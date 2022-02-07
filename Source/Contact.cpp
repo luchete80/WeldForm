@@ -151,7 +151,7 @@ void Domain::CalcContactForces(){
 				Particles[P1] -> contforce = 0.; //RESET
 				// if (dt_fext > deltat)
 					// cout << "Time step size ("<<deltat<<" is larger than max allowable contact forces step ("<<dt_fext<<")"<<endl;
-				if (deltat_cont < std::min(deltat,dt_fext)){
+				if (deltat_cont >= deltat){
 					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
 					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
@@ -171,7 +171,7 @@ void Domain::CalcContactForces(){
 					
 					if (inside ) { //Contact point inside element, contact proceeds
 						//Recalculate vr (for large FEM mesh densities)
-						cout << "particle "<<P1 <<" inside element"<<endl;
+						//cout << "particle "<<P1 <<" inside element"<<endl;
 						
 						//Calculate penetration depth (Fraser 3-49)
 						double delta = (deltat - deltat_cont) * delta_;
@@ -217,13 +217,15 @@ void Domain::CalcContactForces(){
 		}//Contact Pairs
 	}//Nproc
 	max_contact_force = sqrt (max_contact_force);
-	if (max_contact_force > 0.){
-		cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
-		cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
-		//TEMP
+	// if (max_contact_force > 0.){
+		// cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		// cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
+		// //TEMP
 		// if (min_force_ts> 0)
 			// deltat = min_force_ts;
-	}
+	// }
+	//Correct time step!
+//	std::min(deltat,dt_fext)
 }
 
 }; //SPH
