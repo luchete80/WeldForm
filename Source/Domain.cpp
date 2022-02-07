@@ -1310,6 +1310,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				cout << "Max Contact Force: "<<max_contact_force<<endl;
 		}
 		
+		// for (int i=0; i<Particles.Size(); i++){
+			// if (Particles[i]->contforce>0.)
+		
 		if (auto_ts)
 			AdaptiveTimeStep();
 		clock_beg = clock();

@@ -90,6 +90,17 @@ inline void Domain::ContactNbSearch(){
 //// 
 ////////////////////////////////
 void Domain::CalcContactForces(){
+	
+	#pragma omp parallel for num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif
+		Particles[i] -> contforce = 0.;
+	 
+		
+			
 	max_contact_force = 0.;
 	int inside_pairs = 0;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
@@ -175,9 +186,9 @@ void Domain::CalcContactForces(){
 							// Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
 							// Vec3_t tgdir = tgvr / norm(tgvr);
 						// }
-						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION
+						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						//cout << "normal contforce "<<Particles[P1] -> contforce<<endl;
 
