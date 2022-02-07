@@ -99,7 +99,8 @@ int main(int argc, char **argv) try
 	double timestep;
 	timestep = (0.2*h/(Cs));
 
-	//timestep = 2.5e-6;
+	// timestep = 1.0e-9;
+	// dom.auto_ts = false;
 	//timestep = 5.e-7;
 
 	cout<<"t  = "<<timestep<<endl;
@@ -177,7 +178,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.00001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

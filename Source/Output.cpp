@@ -102,7 +102,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	int   * Nb					= new int  [  Particles.Size()];	//LUCIANO
 	int   * ContNb			= new int  [  Particles.Size()];	//LUCIANO
     float * Disvec	= new float[3*Particles.Size()];		//LUCIANO
-	
+		float * ContForce	= new float[3*Particles.Size()];		//LUCIANO
+		
 	double P1,P2,P3;
 
     #pragma omp parallel for schedule (static) private(P1,P2,P3) num_threads(Nproc)
@@ -164,7 +165,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Disvec  [3*i  ] = float(Particles[i]->Displacement(0));
         Disvec  [3*i+1] = float(Particles[i]->Displacement(1));
         Disvec  [3*i+2] = float(Particles[i]->Displacement(2));		
-		
+
+        ContForce  [3*i  ] = float(Particles[i]->contforce(0));
+        ContForce  [3*i+1] = float(Particles[i]->contforce(1));
+        ContForce  [3*i+2] = float(Particles[i]->contforce(2));		
+				
 	UserOutput(Particles[i],P1,P2,P3);
         Prop1	[i    ] = float(P1);
         Prop2	[i    ] = float(P2);
@@ -227,7 +232,9 @@ inline void Domain::WriteXDMF (char const * FileKey)
     dims[0] = 3*Particles.Size();
 	dsname.Printf("Displacement");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Disvec);
-	
+	dsname.Printf("Contact Force");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ContForce);	
+		
     delete [] Posvec;
     delete [] Velvec;
     delete [] ACCvec;
@@ -250,6 +257,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	delete [] Nb;
 	delete [] ContNb;
 	delete [] Disvec;
+	delete [] ContForce;
 	
    //Closing the file
     H5Fflush(file_id,H5F_SCOPE_GLOBAL);
@@ -366,6 +374,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "     <Attribute Name=\"Displacement\" AttributeType=\"Vector\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Displacement \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"Contact Force\" AttributeType=\"Vector\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/Contact Force \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "   </Grid>\n";

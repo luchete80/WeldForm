@@ -91,15 +91,17 @@ inline void Domain::ContactNbSearch(){
 ////////////////////////////////
 void Domain::CalcContactForces(){
 	
-	#pragma omp parallel for num_threads(Nproc)
-	#ifdef __GNUC__
-	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
-	#else
-	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
-	#endif
-		Particles[i] -> contforce = 0.;
-	 
-		
+	// #pragma omp parallel for num_threads(Nproc)
+	// #ifdef __GNUC__
+	// for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	// #else
+	// for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	// #endif
+	// {
+		// Particles[i] -> contforce = 0.;
+	// }
+	double min_force_ts=1000.;
+// https://stackoverflow.com/questions/10850155/whats-the-difference-between-static-and-dynamic-schedule-in-openmp
 			
 	max_contact_force = 0.;
 	int inside_pairs = 0;
@@ -124,8 +126,8 @@ void Domain::CalcContactForces(){
 				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
 		
 			Vec3_t vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
-			// cout << "Particle P1v: "<<Particles[P1]->v<<endl;
-			// cout << "Particle P2v: "<<Particles[P2]->v<<endl;
+			//cout << "Particle P1v: "<<Particles[P1]->v<<endl;
+			//cout << "Particle P2v: "<<Particles[P2]->v<<endl;
 			//ok, FEM Particles normals can be calculated by two ways, the one used to
 			//calculate SPH ones, and could be given by mesh input
 			//delta_ Is the projection of relative velocity 
@@ -146,6 +148,9 @@ void Domain::CalcContactForces(){
 				//Check for contact in this time step 
 				//Calculate time step for external forces
 				double dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));	//Fraser 3-145
+				Particles[P1] -> contforce = 0.; //RESET
+				// if (dt_fext > deltat)
+					// cout << "Time step size ("<<deltat<<" is larger than max allowable contact forces step ("<<dt_fext<<")"<<endl;
 				if (deltat_cont < std::min(deltat,dt_fext)){
 					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
@@ -189,8 +194,11 @@ void Domain::CalcContactForces(){
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
 						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
+						dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));
+						if (dt_fext < min_force_ts)
+							min_force_ts = dt_fext;
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
-						cout << "normal, contact force "<<Particles[P2]->normal<<", "<<Particles[P1] -> contforce<<endl;
+						//cout << "normal, contact force "<<Particles[P2]->normal<<", "<<Particles[P1] -> contforce<<endl;
 
 						// if ( norm (vr)  != 0.0 ){
 							// //TG DIRECTION
@@ -209,8 +217,13 @@ void Domain::CalcContactForces(){
 		}//Contact Pairs
 	}//Nproc
 	max_contact_force = sqrt (max_contact_force);
-	if (max_contact_force > 0.)
+	if (max_contact_force > 0.){
 		cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
+		//TEMP
+		// if (min_force_ts> 0)
+			// deltat = min_force_ts;
+	}
 }
 
 }; //SPH
