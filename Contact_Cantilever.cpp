@@ -93,7 +93,7 @@ int main(int argc, char **argv) try
 	Fy	= 1000.e10;
 
 	dx = 0.002;
-	h	= dx*1.1; //Very important
+	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
 	double timestep;

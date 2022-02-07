@@ -166,7 +166,7 @@ void Domain::CalcContactForces(){
 					
 					if (inside ) { //Contact point inside element, contact proceeds
 						//Recalculate vr (for large FEM mesh densities)
-						//cout << "inside element"<<endl;
+						cout << "particle "<<P1 <<" inside element"<<endl;
 						
 						//Calculate penetration depth (Fraser 3-49)
 						double delta = (deltat - deltat_cont) * delta_;
@@ -187,10 +187,10 @@ void Domain::CalcContactForces(){
 							// Vec3_t tgdir = tgvr / norm(tgvr);
 						// }
 						omp_set_lock(&Particles[P1]->my_lock);
-						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION
+						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
 						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
-						//cout << "normal contforce "<<Particles[P1] -> contforce<<endl;
+						cout << "normal, contact force "<<Particles[P2]->normal<<", "<<Particles[P1] -> contforce<<endl;
 
 						// if ( norm (vr)  != 0.0 ){
 							// //TG DIRECTION
@@ -209,7 +209,8 @@ void Domain::CalcContactForces(){
 		}//Contact Pairs
 	}//Nproc
 	max_contact_force = sqrt (max_contact_force);
-	//cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+	if (max_contact_force > 0.)
+		cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 }
 
 }; //SPH
