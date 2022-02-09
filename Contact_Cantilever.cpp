@@ -99,7 +99,8 @@ int main(int argc, char **argv) try
 	double timestep;
 	timestep = (0.2*h/(Cs));
 
-	//timestep = 2.5e-6;
+	// timestep = 1.0e-9;
+	//dom.auto_ts = false;
 	//timestep = 5.e-7;
 
 	cout<<"t  = "<<timestep<<endl;
@@ -115,7 +116,7 @@ int main(int argc, char **argv) try
 					Lx , Ly /*+dx*/,  Lz /*+dx*/, 
 					dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h - 9.5e-5;
+	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h - 1.2e-4;
 	cout << "y max "<< ymax << endl;
 	double xmax = dom.Particles[dom.Particles.Size()-1]->x(0);
 	TriMesh mesh;
@@ -140,13 +141,12 @@ int main(int argc, char **argv) try
 	
 	dom.contact = true;	
 	dom.friction = 0.0;
-	dom.PFAC = 1.0;
-	dom.DFAC = 0.2;
+	dom.PFAC = 0.2;
+	dom.DFAC = 0.1;
+	
 	
 	//cout << "Plane z" << *mesh.node[0]<<endl;
 	
-	
-
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
 		for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -177,7 +177,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.00001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

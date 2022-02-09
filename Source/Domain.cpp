@@ -164,6 +164,12 @@ inline void Domain::AdaptiveTimeStep()
 		else
 			deltat		= deltatint;
 	}
+	
+	if (contact){
+		if (min_force_ts < deltat)
+		//cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
+		deltat = min_force_ts;
+	}
 
 	if (deltat<(deltatint/1.0e5))
 		//cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
@@ -1141,7 +1147,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			//Fraser Thesis, Eqn. 3-153
 			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
 		}		
-		cout << "Contact Stiffness" << Particles [0] -> cont_stiff <<endl;
+		cout << "dS, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " << Particles [0] -> cont_stiff <<endl;
+		min_force_ts = deltat;
 	}
 	cout << "Fixed Particles Size: "<<FixedParticles.Size()<<endl;
 	cout << "Initial Cell Number: "<<CellNo[0]<<", " <<CellNo[1]<<", "<< CellNo[2]<<", " <<endl;
@@ -1212,6 +1219,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			MainNeighbourSearch/*_Ext*/();
 			
 			if (contact) {
+				//TODO: CHANGE CONTACT STIFFNESS!
 				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 				CalculateSurface(1);				//After Nb search			
 				ContactNbSearch();
@@ -1310,6 +1318,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				cout << "Max Contact Force: "<<max_contact_force<<endl;
 		}
 		
+		// for (int i=0; i<Particles.Size(); i++){
+			// if (Particles[i]->contforce>0.)
+		
 		if (auto_ts)
 			AdaptiveTimeStep();
 		clock_beg = clock();
@@ -1319,7 +1330,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things
 		if (contact){
-			cout << "checking contact"<<endl;
+			//cout << "checking contact"<<endl;
 			trimesh->UpdatePos (deltat); //Update Node Pos
 			//Update Normals
 			trimesh->UpdatePlaneCoeff();	//If normal does not change..

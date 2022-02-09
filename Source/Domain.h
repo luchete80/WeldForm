@@ -151,7 +151,8 @@ public:
     double					R;		///< Particle Radius in addrandombox
 
 		double					sqrt_h_a;				//Coefficient for determining Time Step based on acceleration (can be defined by user)
-
+		double 					min_force_ts;		//min time step size due to contact forces
+		
     int 					Dimension;    	///< Dimension of the problem
 
     double					MuMax;		///< Max Dynamic viscosity for calculating the timestep

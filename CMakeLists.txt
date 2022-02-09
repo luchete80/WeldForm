@@ -93,7 +93,8 @@ SET(EXES
 	#Elastic
 	#Heat_2D
 	#Traction
-	Traction_Hollomon
+	traction_app
+	#Traction_Hollomon
 	#Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
@@ -120,6 +121,7 @@ SET(EXES
 	#"Source/WeldForm"
 )
 
+add_subdirectory("examples")
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
@@ -129,6 +131,7 @@ FOREACH(var ${EXES})
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 ENDFOREACH(var)
 
+	
     # ADD_EXECUTABLE        (${EXES} "Plate-Yield.cpp")
     # TARGET_LINK_LIBRARIES (${EXES} ${LIBS} blitz)
     # SET_TARGET_PROPERTIES (${EXES} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
