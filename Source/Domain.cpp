@@ -164,6 +164,12 @@ inline void Domain::AdaptiveTimeStep()
 		else
 			deltat		= deltatint;
 	}
+	
+	if (contact){
+		if (min_force_ts < deltat)
+		//cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
+		deltat = min_force_ts;
+	}
 
 	if (deltat<(deltatint/1.0e5))
 		//cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
@@ -1142,6 +1148,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
 		}		
 		cout << "dS, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " << Particles [0] -> cont_stiff <<endl;
+		min_force_ts = deltat;
 	}
 	cout << "Fixed Particles Size: "<<FixedParticles.Size()<<endl;
 	cout << "Initial Cell Number: "<<CellNo[0]<<", " <<CellNo[1]<<", "<< CellNo[2]<<", " <<endl;

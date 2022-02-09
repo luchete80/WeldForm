@@ -100,7 +100,7 @@ void Domain::CalcContactForces(){
 	// {
 		// Particles[i] -> contforce = 0.;
 	// }
-	double min_force_ts=1000.;
+	double min_force_ts_=1000.;
 // https://stackoverflow.com/questions/10850155/whats-the-difference-between-static-and-dynamic-schedule-in-openmp
 			
 	max_contact_force = 0.;
@@ -205,8 +205,12 @@ void Domain::CalcContactForces(){
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
 						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));
-						if (dt_fext < min_force_ts)
-							min_force_ts = dt_fext;
+
+						if (dt_fext < min_force_ts_){
+							min_force_ts_ = dt_fext;
+							if (dt_fext > 0)
+								this -> min_force_ts = min_force_ts_;
+						}
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						//cout << "normal, contact force "<<Particles[P2]->normal<<", "<<Particles[P1] -> contforce<<endl;
 
@@ -226,13 +230,14 @@ void Domain::CalcContactForces(){
 			}//delta_ > 0 : PARTICLES ARE APPROACHING EACH OTHER
 		}//Contact Pairs
 	}//Nproc
+
 	max_contact_force = sqrt (max_contact_force);
 	if (max_contact_force > 0.){
 		cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 		cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP
-		if (min_force_ts> 0)
-			deltat = min_force_ts;
+		// if (min_force_ts> 0)
+			// deltat = min_force_ts;
 	}
 	//Correct time step!
 //	std::min(deltat,dt_fext)

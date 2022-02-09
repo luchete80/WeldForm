@@ -116,7 +116,7 @@ int main(int argc, char **argv) try
 					Lx , Ly /*+dx*/,  Lz /*+dx*/, 
 					dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h - 9.5e-5;
+	double ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + dom.Particles[dom.Particles.Size()-1]->h - 1.2e-4;
 	cout << "y max "<< ymax << endl;
 	double xmax = dom.Particles[dom.Particles.Size()-1]->x(0);
 	TriMesh mesh;
@@ -146,8 +146,6 @@ int main(int argc, char **argv) try
 	
 	//cout << "Plane z" << *mesh.node[0]<<endl;
 	
-	dom.auto_ts = false;
-
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
 		for (size_t a=0; a<dom.Particles.Size(); a++)
