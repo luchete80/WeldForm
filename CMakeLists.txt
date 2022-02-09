@@ -88,11 +88,12 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
 	#Cantilever_comp_contact
-	Contact_Cantilever
+	#Contact_Cantilever
 	#FreeSurface
 	#Elastic
 	#Heat_2D
 	#Traction
+	traction_app
 	#Traction_Hollomon
 	#Traction_JC
 	#ThermalCompression
@@ -120,6 +121,7 @@ SET(EXES
 	#"Source/WeldForm"
 )
 
+add_subdirectory("examples")
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
@@ -129,6 +131,7 @@ FOREACH(var ${EXES})
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 ENDFOREACH(var)
 
+	
     # ADD_EXECUTABLE        (${EXES} "Plate-Yield.cpp")
     # TARGET_LINK_LIBRARIES (${EXES} ${LIBS} blitz)
     # SET_TARGET_PROPERTIES (${EXES} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
