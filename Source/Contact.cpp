@@ -105,12 +105,12 @@ void Domain::CalcContactForces(){
 			
 	max_contact_force = 0.;
 	int inside_pairs = 0;
-	// #pragma omp parallel for schedule (static) num_threads(Nproc)
-	// #ifdef __GNUC__
-	// for (size_t k=0; k<Nproc;k++) 
-	// #else
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t k=0; k<Nproc;k++) 
+	#else
 	for (int k=0; k<Nproc;k++) 
-//	#endif	
+	#endif	
 	{
 		int P1,P2;
 		Vec3_t xij;
@@ -233,8 +233,8 @@ void Domain::CalcContactForces(){
 
 	max_contact_force = sqrt (max_contact_force);
 	if (max_contact_force > 0.){
-		cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
-		cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
+		//cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP
 		// if (min_force_ts> 0)
 			// deltat = min_force_ts;

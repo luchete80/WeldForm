@@ -100,7 +100,7 @@ int main(int argc, char **argv) try
 	timestep = (0.2*h/(Cs));
 
 	// timestep = 1.0e-9;
-	// dom.auto_ts = false;
+	//dom.auto_ts = false;
 	//timestep = 5.e-7;
 
 	cout<<"t  = "<<timestep<<endl;
@@ -141,8 +141,9 @@ int main(int argc, char **argv) try
 	
 	dom.contact = true;	
 	dom.friction = 0.0;
-	dom.PFAC = 1.0;
-	dom.DFAC = 0.0;
+	dom.PFAC = 0.2;
+	dom.DFAC = 0.1;
+	
 	
 	//cout << "Plane z" << *mesh.node[0]<<endl;
 	
