@@ -196,14 +196,19 @@ void Domain::CalcContactForces(){
 						// TANGENTIAL COMPONENNT
 						// Fraser Eqn 3-167
 						// TODO - recalculate vr here too!
-						// Vec3_t tgvr, tgdir;
-						// if ( norm (vr)  != 0.0 ) {
-							// Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
-							// Vec3_t tgdir = tgvr / norm(tgvr);
-						// }
+						Vec3_t tgvr, tgdir;
+						if (friction > 0.) {						
+							if ( norm (vr)  != 0.0 ) {
+								Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
+								Vec3_t tgdir = tgvr / norm(tgvr);
+							}
+						}
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
 						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
+						
+						// if (force2 > (1.e10))
+							// Particles[P1] -> contforce = 1.e5;
 						dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));
 
 						if (dt_fext < min_force_ts_){
@@ -213,13 +218,15 @@ void Domain::CalcContactForces(){
 						}
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						//cout << "normal, contact force "<<Particles[P2]->normal<<", "<<Particles[P1] -> contforce<<endl;
-
-						// if ( norm (vr)  != 0.0 ){
+						
+						if (friction > 0.) {
+							if ( norm (vr)  != 0.0 ){
 							// //TG DIRECTION
-							// Vec3_t tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
-							// Particles[P1] -> a += tgforce / Particles[P1] -> Mass; 
-							// //cout << "tg force "<< tgforce <<endl;
-						// }
+								Vec3_t tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
+								Particles[P1] -> a += tgforce / Particles[P1] -> Mass; 
+								//cout << "tg force "<< tgforce <<endl;
+							}
+						}
 						omp_unset_lock(&Particles[P1]->my_lock);
 						
 						if (force2 > max_contact_force) max_contact_force = force2;

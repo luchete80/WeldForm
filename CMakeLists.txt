@@ -88,12 +88,12 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
 	#Cantilever_comp_contact
-	#Contact_Cantilever
+	Contact_Cantilever
 	#FreeSurface
 	#Elastic
 	#Heat_2D
 	#Traction
-	traction_app
+	#traction_app
 	#Traction_Hollomon
 	#Traction_JC
 	#ThermalCompression
