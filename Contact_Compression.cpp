@@ -136,9 +136,10 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction = 0.0;
+	dom.friction = 0.15;
 	dom.PFAC = 0.2;
-	dom.DFAC = 0.0;
+	dom.DFAC = 0.1;
+	dom.update_contact_surface = false;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
@@ -154,7 +155,7 @@ int main(){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",999);
+	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",999);
 	
 	dom.WriteXDMF("ContactTest");
 }

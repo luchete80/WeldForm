@@ -214,6 +214,7 @@ public:
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;
 	double 	& getTime (){return Time;}		//LUCIANO
+		bool 									update_contact_surface;
 
     Array<std::pair<size_t,size_t> >		Initial;
     Mat3_t I;

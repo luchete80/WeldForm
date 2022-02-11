@@ -199,7 +199,10 @@ void Domain::CalcContactForces(){
 						Vec3_t tgvr, tgdir;
 						if (friction > 0.) {						
 							if ( norm (vr)  != 0.0 ) {
-								Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
+								//TODO: THIS VELOCITY SHOULD BE THE CORRECTED ONE 
+								//Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
+								// Is Fraser thesis is explained better 
+								Vec3_t tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal
 								Vec3_t tgdir = tgvr / norm(tgvr);
 							}
 						}

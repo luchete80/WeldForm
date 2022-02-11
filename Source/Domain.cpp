@@ -117,6 +117,7 @@ inline Domain::Domain ()
 	contact = false;
 	contact_force_factor =1.;
 	friction = 0.0;
+	update_contact_surface = true;
 }
 
 inline Domain::~Domain ()
@@ -1252,16 +1253,17 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				//cout << "performing contact search"<<endl
 				clock_beg = clock();
 				if (contact) {
-					SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-					CalculateSurface(1);				//After Nb search			
-					ContactNbSearch();
-					SaveContNeighbourData();
-					//SaveNeighbourData();	//Again Save Nb data
+					//if (update_contact_surface){
+						SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+						CalculateSurface(1);				//After Nb search			
+						ContactNbSearch();
+						SaveContNeighbourData();
+					//}
 				}//contact				
 				contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			}// ts_i == 0
 			isfirst = false;
-		}
+		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
