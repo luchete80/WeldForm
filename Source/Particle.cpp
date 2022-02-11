@@ -585,6 +585,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 			if (Material_model == HOLLOMON ){
 				//cout << "calculating tangent modulus"<<endl;
 				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
+				Et_m = Et;
 			}
 			//else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
 				// ///////////////// JOHNSON COOK MATERIAL ////////////////////////

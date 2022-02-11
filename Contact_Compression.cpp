@@ -102,7 +102,7 @@ int main(){
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + dom.Particles[dom.Particles.Size()-1]->h-0.3e-5;
 
 	
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),30);
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
 	cout << "Plane z" << *mesh.node[0]<<endl;
 	
 	
@@ -118,6 +118,7 @@ int main(){
 		dom.Particles[a]->Cs		= Cs;
 		dom.Particles[a]->Shepard	= false;
 		dom.Particles[a]->Material	= 2;
+		dom.Particles[a]->Et_m = 0.01 * 68.9e9;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
 		dom.Particles[a]->Alpha		= 1.0;
