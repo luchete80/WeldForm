@@ -227,7 +227,7 @@ void Domain::CalcContactForces(){
 							// //TG DIRECTION
 								Vec3_t tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
 								Particles[P1] -> a += tgforce / Particles[P1] -> Mass; 
-								//cout << "tg force "<< tgforce <<endl;
+								cout << "tg force "<< tgforce <<endl;
 							}
 						}
 						omp_unset_lock(&Particles[P1]->my_lock);

@@ -110,6 +110,9 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	delta_pl_strain = 0.0;
 	
 	element = -1;
+	
+	if (Material_model == BILINEAR )
+		Et = 0.01 * mat->Elastic().E();
 
     set_to_zero(Strainb);
     set_to_zero(Strain);
@@ -564,6 +567,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	double prev_sy;
 	double Et;
 	
+	delta_pl_strain = 0.;
 	// Elastic prediction step (ShearStress_e n+1)
 	if (FirstStep)
 		ShearStressa	= -dt/2.0*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStress;
