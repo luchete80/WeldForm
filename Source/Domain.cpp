@@ -1231,9 +1231,24 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
-				if (m_isNbDataCleared)
+				if (m_isNbDataCleared){
 					MainNeighbourSearch/*_Ext*/();
-			
+					
+					if (contact) {
+						neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+						//cout << "performing contact search"<<endl
+						clock_beg = clock();
+						//if (update_contact_surface){
+							SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+							CalculateSurface(1);				//After Nb search			
+							ContactNbSearch();
+							SaveContNeighbourData();
+						//}
+					}//contact				
+					contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+			}// ts_i == 0				
+				
+				}
 			// cout << "RIG Pairs"<<endl;
 			// for (int p=0;p<Nproc;p++)
 				// cout << RIGPairs[p].size()<<", ";		
@@ -1249,19 +1264,19 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				// cout << ContPairs[p].size()<<", ";		
 				// cout <<endl;					
 			
-			neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-				//cout << "performing contact search"<<endl
-				clock_beg = clock();
-				if (contact) {
-					//if (update_contact_surface){
-						SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-						CalculateSurface(1);				//After Nb search			
-						ContactNbSearch();
-						SaveContNeighbourData();
-					//}
-				}//contact				
-				contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-			}// ts_i == 0
+			// neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+				// //cout << "performing contact search"<<endl
+				// clock_beg = clock();
+				// if (contact) {
+					// //if (update_contact_surface){
+						// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+						// CalculateSurface(1);				//After Nb search			
+						// ContactNbSearch();
+						// SaveContNeighbourData();
+					// //}
+				// }//contact				
+				// contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+			// }// ts_i == 0
 			isfirst = false;
 		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 

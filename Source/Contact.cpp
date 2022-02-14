@@ -185,15 +185,15 @@ void Domain::CalcContactForces(){
 						//Calculate penetration depth (Fraser 3-49)
 						double delta = (deltat - deltat_cont) * delta_;
 						//cout << "delta: "<<delta<<endl;
-						omp_set_lock(&Particles[P1]->my_lock);
-						if (Particles[P1]->delta_pl_strain > 0.) {
-							//cout << "recalc sitffness"<<endl;
-							double dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119;
-							//Particles[P1]-> cont_stiff = Particles[P1]->mat->Elastic().E()*0.01 * dS;
-							Particles[P1]-> cont_stiff = Particles [P1]-> Et_m * dS;
-							//cout << "recalculated: "<< Particles[P1]-> cont_stiff<<endl;
-						}
-						omp_unset_lock(&Particles[P1]->my_lock);
+						// omp_set_lock(&Particles[P1]->my_lock);
+						// if (Particles[P1]->delta_pl_strain > 0.) {
+							// //cout << "recalc sitffness"<<endl;
+							// double dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119;
+							// //Particles[P1]-> cont_stiff = Particles[P1]->mat->Elastic().E()*0.01 * dS;
+							// Particles[P1]-> cont_stiff = Particles [P1]-> Et_m * dS;
+							// //cout << "recalculated: "<< Particles[P1]-> cont_stiff<<endl;
+						// }
+						// omp_unset_lock(&Particles[P1]->my_lock);
 						
 						// DAMPING
 						//Calculate SPH and FEM elements stiffness (series)
