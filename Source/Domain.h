@@ -118,7 +118,7 @@ public:
 	void ClearNbData();	
 	
     void WriteXDMF			(char const * FileKey);					//Save a XDMF file for the visualization
-
+    void WriteCSV				(char const * FileKey);					//Save a XDMF file for the visualization
 
     void InFlowBCLeave	();
     void InFlowBCFresh	();

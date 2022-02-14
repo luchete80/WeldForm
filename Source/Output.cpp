@@ -393,4 +393,33 @@ inline void Domain::WriteXDMF (char const * FileKey)
     of.close();
 }
 
+inline void Domain::WriteCSV(char const * FileKey)
+{
+	//type definition to shorten coding
+	std::ostringstream oss;
+	//Writing in a Log file
+	String fn(FileKey);
+	
+	oss << "X, Y, Z, Sigma_eq, Pl_Strain "<<endl;;
+	
+	//#pragma omp parallel for schedule(static) num_threads(Nproc)
+	// #ifdef __GNUC__
+	// for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	// #else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	//#endif
+	{
+		for (int j=0;j<3;j++)
+			oss << Particles[i]->x(j)<<", ";
+		
+		oss << Particles[i]->Sigma_eq<< ", "<< Particles[i]->pl_strain <<endl;
+	}
+
+	fn = FileKey;
+	fn.append(".csv");	
+	std::ofstream of(fn.CStr(), std::ios::out);
+	of << oss.str();
+	of.close();
+}
+
 }; // namespace SPH

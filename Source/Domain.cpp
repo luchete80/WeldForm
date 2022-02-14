@@ -1289,6 +1289,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				String fn;
 				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
 				WriteXDMF    (fn.CStr());
+				WriteCSV    (fn.CStr());
 
 			}
 			idx_out++;
