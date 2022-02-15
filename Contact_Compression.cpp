@@ -77,7 +77,7 @@ int main(){
 	Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.013;
+	dx = 0.015;
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -99,7 +99,7 @@ int main(){
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + dom.Particles[dom.Particles.Size()-1]->h-0.3e-5;
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.0001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
@@ -140,7 +140,7 @@ int main(){
 	dom.contact = true;
 	dom.friction = 0.15;
 	dom.PFAC = 0.2;
-	dom.DFAC = 0.1;
+	dom.DFAC = 0.0;
 	dom.update_contact_surface = false;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
