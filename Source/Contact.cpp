@@ -182,14 +182,14 @@ void Domain::CalcContactForces(){
 						 // cout << "Particles[P1]->h"<< Particles[P1]->h<<endl;
 						 // cout << "pplane" << pplane<<endl;
 						 // cout << "dot (Particles[P2]->normal,	Particles[P1]->x)" <<dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
-						 // cout << "dt contact: "<<deltat_cont<<endl;
+						 //cout << "dt contact: "<<deltat_cont<<endl;
 				
 						//Recalculate vr (for large FEM mesh densities)
 						//cout << "particle "<<P1 <<" inside element"<<endl;
 						
 						//Calculate penetration depth (Fraser 3-49)
 						double delta = (deltat - deltat_cont) * delta_;
-						cout << "delta: "<<delta<<endl;
+						//cout << "delta: "<<delta<<endl;
 						// omp_set_lock(&Particles[P1]->my_lock);
 						// if (Particles[P1]->delta_pl_strain > 0.) {
 							// //cout << "recalc sitffness"<<endl;
@@ -222,6 +222,7 @@ void Domain::CalcContactForces(){
 						}
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
+						omp_unset_lock(&Particles[P1]->my_lock);
 						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						
 						// if (force2 > (1.e10))
@@ -234,17 +235,18 @@ void Domain::CalcContactForces(){
 								this -> min_force_ts = min_force_ts_;
 						}
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
-						cout << "contforce "<<Particles[P1] -> contforce<<endl;
+						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 						
 						if (friction > 0.) {
 							if ( norm (vr)  != 0.0 ){
 							// //TG DIRECTION
 								Vec3_t tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
+								omp_set_lock(&Particles[P1]->my_lock);
 								Particles[P1] -> a += tgforce / Particles[P1] -> Mass; 
+								omp_unset_lock(&Particles[P1]->my_lock);
 								//cout << "tg force "<< tgforce <<endl;
 							}
 						}
-						omp_unset_lock(&Particles[P1]->my_lock);
 						
 						if   (force2 > max_contact_force ) max_contact_force = force2;
 						else if (force2 < min_contact_force ) min_contact_force = force2;
@@ -259,8 +261,8 @@ void Domain::CalcContactForces(){
 	max_contact_force = sqrt (max_contact_force);
 	min_contact_force = sqrt (min_contact_force);
 	if (max_contact_force > 0.){
-		cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
-		cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
+		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP
 		// if (min_force_ts> 0)
 			// deltat = min_force_ts;
