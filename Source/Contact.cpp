@@ -104,6 +104,7 @@ void Domain::CalcContactForces(){
 // https://stackoverflow.com/questions/10850155/whats-the-difference-between-static-and-dynamic-schedule-in-openmp
 			
 	max_contact_force = 0.;
+	double min_contact_force = 1000.;
 	int inside_pairs = 0;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
@@ -172,16 +173,16 @@ void Domain::CalcContactForces(){
 					
 					if (inside ) { //Contact point inside element, contact proceeds
 			// cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
-						cout << "/////////////////////////////////////////" <<endl;
-						cout << " vr: "<< vr<<endl;
-						cout << "delta_: "<<delta_<<endl;
-						cout << "Particles[P1]->x"<< Particles[P1]->x<<endl;
-						 cout << "Particles[P2]->x"<< Particles[P2]->x<<endl;
-						 cout << "Particles[P2]->n"<< Particles[P2]->normal<<endl;
-						 cout << "Particles[P1]->h"<< Particles[P1]->h<<endl;
-						 cout << "pplane" << pplane<<endl;
-						 cout << "dot (Particles[P2]->normal,	Particles[P1]->x)" <<dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
-						 cout << "dt contact: "<<deltat_cont<<endl;
+						// cout << "/////////////////////////////////////////" <<endl;
+						// cout << " vr: "<< vr<<endl;
+						// cout << "delta_: "<<delta_<<endl;
+						// cout << "Particles[P1]->x"<< Particles[P1]->x<<endl;
+						 // cout << "Particles[P2]->x"<< Particles[P2]->x<<endl;
+						 // cout << "Particles[P2]->n"<< Particles[P2]->normal<<endl;
+						 // cout << "Particles[P1]->h"<< Particles[P1]->h<<endl;
+						 // cout << "pplane" << pplane<<endl;
+						 // cout << "dot (Particles[P2]->normal,	Particles[P1]->x)" <<dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
+						 // cout << "dt contact: "<<deltat_cont<<endl;
 				
 						//Recalculate vr (for large FEM mesh densities)
 						//cout << "particle "<<P1 <<" inside element"<<endl;
@@ -245,7 +246,8 @@ void Domain::CalcContactForces(){
 						}
 						omp_unset_lock(&Particles[P1]->my_lock);
 						
-						if (force2 > max_contact_force) max_contact_force = force2;
+						if   (force2 > max_contact_force ) max_contact_force = force2;
+						else if (force2 < min_contact_force ) min_contact_force = force2;
 						inside_pairs++;
 					}// if inside
 				} //deltat <min
@@ -255,9 +257,10 @@ void Domain::CalcContactForces(){
 	}//Nproc
 
 	max_contact_force = sqrt (max_contact_force);
+	min_contact_force = sqrt (min_contact_force);
 	if (max_contact_force > 0.){
-		cout << "Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
-		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
+		cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP
 		// if (min_force_ts> 0)
 			// deltat = min_force_ts;
