@@ -42,6 +42,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     NSv = 0.0;
     v = v0;
     VXSPH = 0.0;
+    XSPH = 0.0;
     TI		= 0.0;
     TIn		= 4.0;
     TIInitDist  = 0.0;
@@ -162,8 +163,8 @@ inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 		ct = 30;
 		FirstStep = false;
 	}
-	
-	Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;
+	Vec3_t du = dt*v*(1+XSPH) + 0.5*dt*dt*a;
+//Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;	
 	Displacement += du;
 	x += du;
 

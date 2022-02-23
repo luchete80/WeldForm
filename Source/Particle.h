@@ -66,6 +66,7 @@ namespace SPH {
 		Vec3_t	v;		///< Velocity of the particle n+1
 		Vec3_t	NSv;		///< Velocity of the fixed particle for no-slip BC
 		Vec3_t	VXSPH;		///< Mean Velocity of neighbor particles for updating the particle position (XSPH)
+		double XSPH;			///LUCIANO, CONSTANT XSPH FACTOR
 		Vec3_t	a;		///< Acceleration of the particle n
 		
 
