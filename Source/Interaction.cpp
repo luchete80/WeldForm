@@ -166,20 +166,20 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
 
 		// NEW
-		if (!gradKernelCorr) {
+		//if (!gradKernelCorr) {
 		if (GradientType == 0)
 			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
 		else
 			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-		} else {
-				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
-				//Left in vector form and multiply after??
-				for (int i=0;i<2;i++){
-					Vec3_t v;
-					Mult (GKc[i], xij, v);
-					//Mult( v , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
-				}
-		}//Grad Corr
+		// } else {
+				// //Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
+				// //Left in vector form and multiply after??
+				// for (int i=0;i<2;i++){
+					// Vec3_t v;
+					// Mult (GKc[i], xij, v);
+					// //Mult( v , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
+				// }
+		// }//Grad Corr
 		
 		if (Dimension == 2) temp(2) = 0.0;
 		temp1 = dot( vij , GK*xij );
