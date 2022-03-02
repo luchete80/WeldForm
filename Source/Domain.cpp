@@ -1000,7 +1000,8 @@ inline void Domain::CalcGradCorrMatrix () {
 	
 	std::vector < Mat3_t> temp(Particles.Size());
 	Mat3_t m,mt;
-
+	
+	cout << "Applying grad corr"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
@@ -1020,15 +1021,16 @@ inline void Domain::CalcGradCorrMatrix () {
 		
 			Dyad (Vec3_t(GK*xij),xij,m);
 			mt = mj/dj * m;
+			cout << "mt " <<mt<<endl;
 			//omp_set_lock(&P1->my_lock);
 			temp[SMPairs[k][a].first] = temp[SMPairs[k][a].first]  + mt;
 			temp[SMPairs[k][a].second]= temp[SMPairs[k][a].second] - mt;
 		}
 	}//Nproc
-
+	cout << "Inverting"<<endl;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
-		//cout << "temp "<<temp[i]<<endl;
+		cout << "temp "<<temp[i]<<endl;
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
 		Inv(temp[i],m);		
@@ -1194,6 +1196,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search			
 	}
+	
+	if (gradKernelCorr)
+		CalcGradCorrMatrix();	
 	ClearNbData();
 	
 	while (Time<=tf && idx_out<=maxidx) {
@@ -1279,7 +1284,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			// }// ts_i == 0
 			isfirst = false;
 		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
-
+		
+		//NEW, gradient correction
+		if (gradKernelCorr)
+			CalcGradCorrMatrix();		
+			
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
