@@ -121,7 +121,7 @@ int main(int argc, char **argv) try
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
 		forcepart_count = 0;
-		dom.gradKernelCorr = true;
+		dom.gradKernelCorr = false;
 		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
@@ -143,9 +143,12 @@ int main(int argc, char **argv) try
     			dom.Particles[a]->NoSlip=true;			
 				
 				}
-    		if ( z > (L -1.5*h)) {//Changed to only last row
+    		//if ( z > (L -1.5*h)) {//Changed to only last row
+				if ( z > (L -1.5*h) /*&& z < (L -1.5*h+h)*/) {//Changed to only last row
     			dom.Particles[a]->ID=3;
+					dom.Particles[a]->IsFree=false;
 					//dom.Particles[a]->XSPH		= 0.1;	
+					//dom.Particles[a]->NoSlip=true;
 					forcepart_count++;
 				}
     	}

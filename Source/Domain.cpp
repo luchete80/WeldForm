@@ -1027,32 +1027,55 @@ inline void Domain::CalcGradCorrMatrix () {
 			
 			temp[SMPairs[k][a].first]  = temp[SMPairs[k][a].first]  - mt[0];  
 			temp[SMPairs[k][a].second] = temp[SMPairs[k][a].second] - mt[1];
-			//omp_unset_lock(&P1->my_lock);
-			// if (SMPairs[k][a].first ==723){
-				// cout << "mt723"<<temp[SMPairs[k][a].first]<<endl;
-			// }
-			// if (SMPairs[k][a].second ==723 ){
-				// cout << "mt723"<<temp[SMPairs[k][a].second]<<endl;
-			// }
+		}
+	}//Nproc
+
+	for ( size_t k = 0; k < Nproc ; k++) {
+		Particle *P1,*P2;
+		Vec3_t xij;
+		double h,GK;
+		//TODO: DO THE LOCK PARALLEL THING
+		cout << "FSMPairs[k].Size()"<<FSMPairs[k].Size()<<endl;
+		for (size_t a=0; a<FSMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+			P1	= Particles[FSMPairs[k][a].first];
+			P2	= Particles[FSMPairs[k][a].second];
+			xij	= P1->x - P2->x;
+			h	= (P1->h+P2->h)/2.0;
+			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
+			
+			di = P1->Density; mi = P1->Mass;
+			dj = P2->Density; mj = P2->Mass;
+		
+			Dyad (Vec3_t(GK*xij),xij,m);
+			mt[0] = mj/dj * m;
+			mt[1] = mi/di * m;
+			//omp_set_lock(&P1->my_lock);
+			//SIGN IS NEGATIVE (IF POSITIVE, GRADIENT SIGN IS OPPOSITE)
+			
+			temp[FSMPairs[k][a].first]  = temp[FSMPairs[k][a].first]  - mt[0];  
+			temp[FSMPairs[k][a].second] = temp[FSMPairs[k][a].second] - mt[1];
 		}
 	}//Nproc
 	//cout << "Inverting"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
-		//cout << "part "<<i<<endl;
-		// cout << "x: "<<Particles[i]->x<<endl;
-		//cout << "nb: "<<Particles[i]->Nb<<endl;
-		//cout << "temp "<<temp[i]<<endl;
+		cout << "part "<<i<<endl;
+		cout << "x: "<<Particles[i]->x<<endl;
+		cout << "nb: "<<Particles[i]->Nb<<endl;
+		if (!Particles[i]->IsFree) cout << "Fixed"<<endl;
+		cout << "temp "<<temp[i]<<endl;
+		
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
-		Inv(temp[i],m);	
-		// if (Particles[i]->Nb == 56)
-		// 	m = I;
-		// else 
-		// cout << "Nb, m "<<Particles[i]->Nb<<", "<<m<<endl;		
-		Particles[i] ->gradCorrM = m;
-	}
-	
+		if (Particles[i]->IsFree){
+			Inv(temp[i],m);	
+
+			Particles[i] ->gradCorrM = m;
+		} else {
+			Particles[i] ->gradCorrM = I;
+		}
+	}	
 }
 
 inline void Domain::Move (double dt) {
