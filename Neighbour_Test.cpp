@@ -50,10 +50,10 @@ int main(int argc, char **argv) try
 
 	H	= 0.01;
 	L	= 0.03;
-	n	= 15.0;	//ORIGINAL IS 40
+	n	= 10.0;	//ORIGINAL IS 40
 	
 	dx	= H / n;
-	double h	= dx*1.3; //Very important
+	double h	= dx*1.1; //Very important
 
 	dom.GeneralAfter = & UserAcc;
 	dom.DomMax(0) = H;
@@ -62,11 +62,14 @@ int main(int argc, char **argv) try
 
 	ofstream outmesh; // outdata is like cin
 	outmesh.open("outmesh.txt"); // opens the file
-	
-	//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , -H/2.0 ), H , H ,  H  , dx/2.0 ,rho, h, 1 , 0 , false, false );
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 , -H/2.0 , -H/2.0 ), 
-							L + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
-							dx/2.0 ,rho, h, 1 , 0 , false, false );
+
+     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 , -H/2.0 , -H/2.0 ), 
+							H, H,  H , 
+							dx/2.0 ,rho, h, 1 , 0 , false, false );	
+
+     	// dom.AddBoxLength(1 ,Vec3_t ( -L/2.0 , -H/2.0 , -H/2.0 ), 
+							// L + dx/10.0 , H + dx/10.0 ,  H + dx/10.0 , 
+							// dx/2.0 ,rho, h, 1 , 0 , false, false );
      for (int p=0;p < dom.Particles.Size();p++){
 		 
 		 outmesh << p << ", "<<dom.Particles[p]->x[0]<<", "<<dom.Particles[p]->x[1]<< ", " << dom.Particles[p]->x[2] <<endl;
@@ -92,7 +95,7 @@ int main(int argc, char **argv) try
 	clock_t clock_beg;
 	unsigned long steps=0;
 	unsigned int first_step;
-	for (size_t a=0; a< 5 ; a++) {
+	//for (size_t a=0; a< 5 ; a++) {
 		clock_beg=clock();
 		dom.MainNeighbourSearch();
 		double t=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -105,14 +108,14 @@ int main(int argc, char **argv) try
 		dom.CellReset();
 		dom.ListGenerate();
 		steps++;
-	}
+	//}
 		cout << "Average Neighbour search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps)<<endl;
 	
-	dom.CellReset();
-	dom.ListGenerate();
-	dom.MainNeighbourSearch();
-	cout << "hmax" << dom.hmax <<", CellFac: "<<dom.getCellfac()<<", Cell Size: "
-	<<dom.CellSize(0)<<", " <<dom.CellSize(1)<<", "<<dom.CellSize(2)<<endl;
+	// dom.CellReset();
+	// dom.ListGenerate();
+	// dom.MainNeighbourSearch();
+	// cout << "hmax" << dom.hmax <<", CellFac: "<<dom.getCellfac()<<", Cell Size: "
+	// <<dom.CellSize(0)<<", " <<dom.CellSize(1)<<", "<<dom.CellSize(2)<<endl;
 
 	
 	ofstream outdata; // outdata is like cin
@@ -128,13 +131,6 @@ int main(int argc, char **argv) try
 		//cout << "a: " << a << "p1: " << dom.SMPairs[k][a].first << ", p2: "<< dom.SMPairs[k][a].second<<endl;
 			nb[dom.SMPairs[k][a].first ]+=1;
 			nb[dom.SMPairs[k][a].second]+=1;
-			//cout << "neighbour count"<<nb[dom.SMPairs[k][a].first ]<<endl;
-			//outdata << dom.SMPairs[k][a].first<<", " << dom.SMPairs[k][a].second << "( " << k << ", "<< a<<")"<<endl;
-			// if (dom.SMPairs[k][a].first==0){
-				// test.push_back(dom.SMPairs[k][a].second);
-			// } else if (dom.SMPairs[k][a].second==0){
-				// test.push_back(dom.SMPairs[k][a].first);
-			// }
 		}
 	}	
    //outdata.close();

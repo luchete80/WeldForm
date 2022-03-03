@@ -52,8 +52,8 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic_Spline);
-    	dom.Scheme	= 0;
+    	dom.Kernel_Set(Qubic_Spline);
+    	dom.Scheme	= 1;
 //     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
@@ -86,7 +86,7 @@ int main(int argc, char **argv) try
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x;
-			dom.gradKernelCorr = true;
+			 dom.gradKernelCorr = true;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		x = dom.Particles[a]->x(0);

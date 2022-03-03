@@ -1021,22 +1021,32 @@ inline void Domain::CalcGradCorrMatrix () {
 		
 			Dyad (Vec3_t(GK*xij),xij,m);
 			mt = mj/dj * m;
-			//cout << "mt " <<mt<<endl;
+
 			//omp_set_lock(&P1->my_lock);
-			temp[SMPairs[k][a].first] = temp[SMPairs[k][a].first]  + mt;
-			temp[SMPairs[k][a].second]= temp[SMPairs[k][a].second] - mt;
+			//SIGN IS NEGATIVE (IF POSITIVE, GRADIENT SIGN IS OPPOSITE)
+			
+			temp[SMPairs[k][a].first]  = temp[SMPairs[k][a].first]  - mt;  
+			temp[SMPairs[k][a].second] = temp[SMPairs[k][a].second] - mt;
+			//omp_unset_lock(&P1->my_lock);
+			// if (SMPairs[k][a].first ==723){
+				// cout << "mt723"<<temp[SMPairs[k][a].first]<<endl;
+			// }
+			// if (SMPairs[k][a].second ==723 ){
+				// cout << "mt723"<<temp[SMPairs[k][a].second]<<endl;
+			// }
 		}
 	}//Nproc
 	//cout << "Inverting"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
-		cout << "part "<<i<<endl;
-		cout << "x: "<<Particles[i]->x<<endl;
-		cout << "nb: "<<Particles[i]->Nb<<endl;
+		//cout << "part "<<i<<endl;
+		// cout << "x: "<<Particles[i]->x<<endl;
+		//cout << "nb: "<<Particles[i]->Nb<<endl;
 		//cout << "temp "<<temp[i]<<endl;
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
-		Inv(temp[i],m);		
+		Inv(temp[i],m);	
+		//cout << "m "<<m<<endl;		
 		Particles[i] ->gradCorrM = m;
 	}
 	
