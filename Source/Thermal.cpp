@@ -83,16 +83,16 @@ inline void Domain::CalcTempInc () {
 				GKc[0] = P1->gradCorrM;
 				GKc[1] = P2->gradCorrM;
 				
-				if (SMPairs[k][a].first == 723){
-					cout << "Original GK * xij"<<GK * xij<<endl;
-				}
+				// if (SMPairs[k][a].first == 723){
+					// cout << "Original GK * xij"<<GK * xij<<endl;
+				// }
 				//Left in vector form and multiply after??
 				for (int i=0;i<2;i++){
 					Vec3_t v;
 					Mult (GKc[i], GK * xij, v);
-					if (SMPairs[k][a].first == 723)
-						cout << "Corr GK * xij"<<v<<endl;
-					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v )/ (norm(xij)*norm(xij));
+					// if (SMPairs[k][a].first == 723)
+					//cout << "Orig, Corr GK * xij"<<GK * xij<<", "<< v<<endl;
+					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v  )/ (norm(xij)*norm(xij));
 				}				
 			} else {
 				m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));

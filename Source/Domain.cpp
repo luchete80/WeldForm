@@ -999,7 +999,7 @@ inline void Domain::CalcGradCorrMatrix () {
 	double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 	
 	std::vector < Mat3_t> temp(Particles.Size());
-	Mat3_t m,mt;
+	Mat3_t m,mt[2];
 	
 	cout << "Applying grad corr"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
@@ -1020,13 +1020,13 @@ inline void Domain::CalcGradCorrMatrix () {
 			dj = P2->Density; mj = P2->Mass;
 		
 			Dyad (Vec3_t(GK*xij),xij,m);
-			mt = mj/dj * m;
-
+			mt[0] = mj/dj * m;
+			mt[1] = mi/di * m;
 			//omp_set_lock(&P1->my_lock);
 			//SIGN IS NEGATIVE (IF POSITIVE, GRADIENT SIGN IS OPPOSITE)
 			
-			temp[SMPairs[k][a].first]  = temp[SMPairs[k][a].first]  - mt;  
-			temp[SMPairs[k][a].second] = temp[SMPairs[k][a].second] - mt;
+			temp[SMPairs[k][a].first]  = temp[SMPairs[k][a].first]  - mt[0];  
+			temp[SMPairs[k][a].second] = temp[SMPairs[k][a].second] - mt[1];
 			//omp_unset_lock(&P1->my_lock);
 			// if (SMPairs[k][a].first ==723){
 				// cout << "mt723"<<temp[SMPairs[k][a].first]<<endl;
@@ -1046,7 +1046,10 @@ inline void Domain::CalcGradCorrMatrix () {
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
 		Inv(temp[i],m);	
-		//cout << "m "<<m<<endl;		
+		// if (Particles[i]->Nb == 56)
+		// 	m = I;
+		// else 
+		// cout << "Nb, m "<<Particles[i]->Nb<<", "<<m<<endl;		
 		Particles[i] ->gradCorrM = m;
 	}
 	
