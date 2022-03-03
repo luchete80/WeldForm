@@ -217,6 +217,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	}
 	
 	MainNeighbourSearch();
+	SaveNeighbourData();
 	if (gradKernelCorr)
 		CalcGradCorrMatrix();
 	for ( size_t k = 0; k < Nproc ; k++) 

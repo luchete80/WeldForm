@@ -87,7 +87,7 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
-	CompressionForces
+	#CompressionForces
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
@@ -108,7 +108,7 @@ SET(EXES
 	#Plate-Yield_CNS_v2
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
-	#SolidBlock_Heat
+	SolidBlock_Heat
 	#SolidBlock_Heat_CNS
 	#SolidBlock_Heat_conv3faces
 	#SolidBlock_Heat_source
