@@ -1001,12 +1001,13 @@ inline void Domain::CalcGradCorrMatrix () {
 	std::vector < Mat3_t> temp(Particles.Size());
 	Mat3_t m,mt[2];
 	
-	cout << "Applying grad corr"<<endl;
+	//cout << "Applying grad corr"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
 		Vec3_t xij;
 		double h,GK;
+		//cout << "SMPairs[k].Size()"<<SMPairs[k].Size()<<endl;
 		//TODO: DO THE LOCK PARALLEL THING
 		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
@@ -1022,6 +1023,7 @@ inline void Domain::CalcGradCorrMatrix () {
 			Dyad (Vec3_t(GK*xij),xij,m);
 			mt[0] = mj/dj * m;
 			mt[1] = mi/di * m;
+			//cout << "mt"<<mt[0]<<endl;
 			//omp_set_lock(&P1->my_lock);
 			//SIGN IS NEGATIVE (IF POSITIVE, GRADIENT SIGN IS OPPOSITE)
 			
@@ -1035,7 +1037,7 @@ inline void Domain::CalcGradCorrMatrix () {
 		Vec3_t xij;
 		double h,GK;
 		//TODO: DO THE LOCK PARALLEL THING
-		cout << "FSMPairs[k].Size()"<<FSMPairs[k].Size()<<endl;
+		//cout << "FSMPairs[k].Size()"<<FSMPairs[k].Size()<<endl;
 		for (size_t a=0; a<FSMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
 			P1	= Particles[FSMPairs[k][a].first];
@@ -1060,11 +1062,11 @@ inline void Domain::CalcGradCorrMatrix () {
 	//cout << "Inverting"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
-		cout << "part "<<i<<endl;
-		cout << "x: "<<Particles[i]->x<<endl;
-		cout << "nb: "<<Particles[i]->Nb<<endl;
-		if (!Particles[i]->IsFree) cout << "Fixed"<<endl;
-		cout << "temp "<<temp[i]<<endl;
+		// cout << "part "<<i<<endl;
+		// cout << "x: "<<Particles[i]->x<<endl;
+		// cout << "nb: "<<Particles[i]->Nb<<endl;
+		// if (!Particles[i]->IsFree) cout << "Fixed"<<endl;
+		// cout << "temp "<<temp[i]<<endl;
 		
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
@@ -1236,8 +1238,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		CalculateSurface(1);				//After Nb search			
 	}
 	
-	if (gradKernelCorr)
-		CalcGradCorrMatrix();	
+	// if (gradKernelCorr)
+		// CalcGradCorrMatrix();	
 	ClearNbData();
 	
 	while (Time<=tf && idx_out<=maxidx) {
