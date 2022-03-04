@@ -24,16 +24,12 @@
 #define TAU		0.005
 #define VMAX	10.0
 
-int forcepart_count;
 
 
 void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
 
-
-	double acc = 7.906e4/(forcepart_count*domi.Particles[0]->Mass);
-	
 	if (domi.getTime() < TAU ) 
 		vcompress = VMAX/TAU * domi.getTime();
 	else
@@ -50,10 +46,9 @@ void UserAcc(SPH::Domain & domi)
 	{
 		if (domi.Particles[i]->ID == 3)
 		{
-			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->a(2)		= -VMAX/TAU;
-			//domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
 			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
@@ -78,9 +73,8 @@ int main(int argc, char **argv) try
 		dom.Dimension	= 3;
 		dom.Nproc	= 4;
 		dom.Kernel_Set(Qubic_Spline);
-		//dom.Kernel_Set(Hyperbolic_Spline);
 		dom.Scheme	= 1;	//Mod Verlet
-		dom.XSPH	= 0.5; //Very important
+		//dom.XSPH	= 0.1; //Very important
 
 			double dx,h,rho,K,G,Cs,Fy;
 		double R,L,n;
@@ -120,10 +114,7 @@ int main(int argc, char **argv) try
 		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-		
-		forcepart_count = 0;
-		dom.gradKernelCorr = true;
-		
+
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G		= G;
@@ -133,24 +124,20 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		//dom.Particles[a]->Alpha		= 1.0;
+    		dom.Particles[a]->Alpha		= 1.0;
     		//dom.Particles[a]->Beta		= 1.0;
-    		//dom.Particles[a]->TI		= 0.3;
-    		//dom.Particles[a]->TIInitDist	= dx;
+    		dom.Particles[a]->TI		= 0.3;
+    		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
 	    			dom.Particles[a]->IsFree=false;
-    			dom.Particles[a]->NoSlip=true;			
+    			dom.Particles[a]->NoSlip=false;			
 				
 				}
-    		if ( z > (L + L/10 -1.5*h)) {//Changed to only last row
+    		if ( z > L )
     			dom.Particles[a]->ID=3;
-					//dom.Particles[a]->XSPH		= 0.1;
-					forcepart_count++;
-				}
     	}
-			cout << "Contact Force Particles: "<<forcepart_count<<endl;
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;

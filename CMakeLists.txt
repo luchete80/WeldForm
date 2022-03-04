@@ -87,7 +87,8 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
-	CompressionForces
+	#CompressionForces
+	Compression_Free
 	#CompressionForces2
 	#Cantilever_comp_contact
 	#Contact_Cantilever
