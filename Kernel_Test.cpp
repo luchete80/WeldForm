@@ -33,14 +33,64 @@ double MyKernel(size_t const & Dim, size_t const & KT, double const & q, double 
   switch (KT)
   {
     case 0:	// Qubic Spline
-      Dim == 2 ? C = 10.0/(7.0*h*h*M_PI) : C = 1.0/(h*h*h*M_PI);
+      //Dim == 2 ? C = 10.0/(7.0*h*h*M_PI) : C = 1.0/(h*h*h*M_PI);
+      C = 2./(3.*h*M_PI);//DIM 1
 
-      if 		(q<1.0)	return C*(1.0-(3.0/2.0)*q*q+(3.0/4.0)*q*q*q);
+      if 		  (q<1.0)	return C*(1.0-(3.0/2.0)*q*q+(3.0/4.0)*q*q*q);
       else if (q<2.0)	return C*((1.0/4.0)*(2.0-q)*(2.0-q)*(2.0-q));
       else						return 0.0;
       break;
   }
 }
+
+double MyGradKernel(size_t const & Dim, size_t const & KT, double const & q, double const & h)
+{
+  double C;
+
+  switch (KT)
+  {
+    case 0:	// Qubic Spline
+      //Dim ==2 ? C = 10.0/(7.0*h*h*h*M_PI) : C = 1.0/(h*h*h*h*M_PI);
+      C = 2./(3.*h*M_PI);
+      if 		(q==0.0)	return C/h    *(-3.0+(9.0/2.0)*q);
+      else if (q<1.0)		return C/(q*h)*(-3.0*q+(9.0/4.0)*q*q);
+      else if (q<2.0)		return C/(q*h)*((-3.0/4.0)*(2.0-q)*(2.0-q));
+      else							return 0.0;
+      break;
+  }
+}
+  
+inline void MyListGenerate (SPH::Domain *dom)
+{
+	int i, temp=0;
+  cout << "Cell size"<<dom->CellSize(0)<<endl;
+  cout << "dom->BLPF(0)"<<dom->BLPF(0)<<endl; 
+		for (size_t a=0; a<dom->Particles.Size(); a++)
+		{
+			i= (int) (floor((dom->Particles[a]->x(0) - dom->BLPF(0)) / dom->CellSize(0)));
+
+			if (i<0)
+            {
+                    if ((dom->BLPF(0) - dom->Particles[a]->x(0)) <= dom->hmax) i=0;
+                            else std::cout<<"Leaving i<0"<<std::endl;
+            }
+
+			if (i>=dom->CellNo[0])
+			{
+					if ((dom->Particles[a]->x(0) - dom->TRPR(0)) <= dom->hmax) i=dom->CellNo[0]-1;
+							else std::cout<<"Leaving i>=CellNo"<<std::endl;
+			}
+      cout << "cell "<<i<<", part"<<a<<endl;
+			temp = dom->HOC[i][0][0];
+			dom->HOC[i][0][0] = a;
+			dom->Particles[a]->LL = temp;
+			dom->Particles[a]->CC[0] = i;
+			dom->Particles[a]->CC[1] = 0;
+			dom->Particles[a]->CC[2] = 0;
+			if (!dom->Particles[a]->IsFree) dom->FixedParticles.Push(a);
+    }
+}
+
 int main(int argc, char **argv) try
 {
   SPH::Domain	dom;
@@ -48,7 +98,7 @@ int main(int argc, char **argv) try
   int Dimension;
   
   dom.Dimension	= 2; // In fact is one
-  dom.Nproc	= 4;
+  dom.Nproc	= 1;
   dom.Kernel_Set(Qubic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
 
@@ -57,11 +107,11 @@ int main(int argc, char **argv) try
 
 	L	= 1.0;		
   rho	= 1.0;
-  dx = 0.25;
-  h	= dx*1.2; //Very important
+  dx = 0.2;
+  h	= dx*1.1; //Very important
 
-  dom.DomMax(0) = L;
-  dom.DomMin(0) = -L;
+  dom.DomMax(0) = 2.;
+  dom.DomMin(0) = 3.;
   
   Vec3_t p0 = Vec3_t ( 2.0, 0., 0.);
 										
@@ -70,22 +120,49 @@ int main(int argc, char **argv) try
 // inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly, double Lz, 
 									// double r, double Density, double h, int type, int rotation, bool random, bool Fixed)
                   
-  dom.AddBoxLength(1 ,p0, 
-                      L + dx/10.0 , dx ,  dx , 
+  dom.AddBoxLength(1 ,p0 - dx/10, 
+                      L + dx/10.0 , dx ,  0 , 
                       dx/2.0 ,rho, h, 1 , 0 , false, false );
       
-  cout << "Particle count: "<<dom.Particles.Size()<<endl;
+  //cout << "Particle count: "<<dom.Particles.Size()<<endl;
   dom.WriteXDMF("maz");
 
-	dom.CellInitiate();
-	dom.ListGenerate();
-	dom.MainNeighbourSearch();
-   
-  std::vector<double> fx(dom.Particles.Size());
+  for (int i = 0; i<dom.Particles.Size();i++) 
+    cout << "i" << i<< ", x: "<<dom.Particles[i]->x(0)<<endl;
+    
+    
+  // cout << "Cell Init"<<endl;
+	// dom.CellInitiate();
+  // cout << "SMPairs size: "<<dom.SMPairs[0].Size()<<endl;
+  // cout << "Generating list"<<endl;
+  Array<std::pair<size_t,size_t> >           Initial;
+  for(size_t i=0 ; i<dom.Nproc ; i++) 
+		dom.SMPairs.Push(Initial);
+	// MyListGenerate(&dom);
+  // cout << "Searching for Nbs"<<endl;
+	// dom.MainNeighbourSearch();
+  // cout << "Done"<<endl;
+  
+  cout << "Inserting pairs"<<endl;
+
+      
+  dom.SMPairs[0].Push(std::make_pair(0, 1));
+  dom.SMPairs[0].Push(std::make_pair(0, 2));
+  dom.SMPairs[0].Push(std::make_pair(1, 2));
+  dom.SMPairs[0].Push(std::make_pair(1, 3));
+  dom.SMPairs[0].Push(std::make_pair(2, 3));
+  dom.SMPairs[0].Push(std::make_pair(2, 4));  
+  dom.SMPairs[0].Push(std::make_pair(3, 4));
+  
+  cout << "Done"<<endl;
+  
+  std::vector<double>  fx(dom.Particles.Size());
+  std::vector<double> dfx(dom.Particles.Size());
   //Write Kernels
   //A CORRECTIVE SMOOTHED PARTICLE METHOD FOR
   //BOUNDARY VALUE PROBLEMS IN HEAT CONDUCTION
   //Chen 1999
+  cout << "Calculating Kernel..."<<endl;
 	for (int k=0; k<dom.Nproc;k++) {
     double mi,mj;
     double di,dj;
@@ -104,16 +181,33 @@ int main(int argc, char **argv) try
       
       di = P1->Density;
 			dj = P2->Density;	
-      double K	= SPH::Kernel(Dimension, Qubic_Spline, norm(xij)/h, h);
-			fx[i] += P2->x*P2->x;
+      double K	= MyKernel(Dimension, Qubic_Spline, norm(xij)/h, h);
+      double GK = MyGradKernel(Dimension, Qubic_Spline, norm(xij)/h, h);
+      
+      cout <<"Vi"<<mj/dj<<endl;
+      fx[i] += /*mj/dj*/  P2->x(0)*P2->x(0) * K;
+      fx[j] += /*mi/di*/  P1->x(0)*P1->x(0) * K;
+      
+      dfx[i] += 0.25 * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
+      dfx[j] += 0.25 * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
+      
 		} //Nproc //Pairs  
   }
+  cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   
   for (int i = 0; i<dom.Particles.Size();i++) {
-    cout << dom.Particles[i]->x(0)<<", "<<fx[i]<<endl;
+    cout << "Analytical" << dom.Particles[i]->x(0)<<", "<<dom.Particles[i]->x(0)*dom.Particles[i]->x(0)<<endl;
+    cout << dom.Particles[i]->x(0)<<", "<<fx[i]<<endl<<endl;
   }
-
+  
+  cout << "Derivatives"<<endl;
+  for (int i = 0; i<dom.Particles.Size();i++) {
+    double x = dom.Particles[i]->x(0);
+    cout << "Analytical" << dom.Particles[i]->x(0)<<", "<<x*x<<endl;
+    cout << dom.Particles[i]->x(0)<<", "<<dfx[i]<<endl;
+  }
+  
   return 0;
 }
 MECHSYS_CATCH
