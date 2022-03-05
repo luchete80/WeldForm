@@ -259,6 +259,17 @@ Array <Particle*>				Particles; 	///< Array of particles
 };
 
 
+//KERNELS
+// __global__ void calc_dTdt_kernel (Domain*){
+	
+// }
+
+// //Another one, maybe faster???
+// __global__ void calc_dTdt_kernel (double *dTdt){
+	
+// }
+
+
 }; // namespace SPH
 
 #include "Interaction.cpp"
