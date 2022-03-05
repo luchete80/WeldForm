@@ -185,11 +185,11 @@ int main(int argc, char **argv) try
       double GK = MyGradKernel(Dimension, Qubic_Spline, norm(xij)/h, h);
       
       cout <<"Vi"<<mj/dj<<endl;
-      fx[i] += /*mj/dj*/  P2->x(0)*P2->x(0) * K;
-      fx[j] += /*mi/di*/  P1->x(0)*P1->x(0) * K;
+      fx[i] += /*mj/dj*/ dx * P2->x(0)*P2->x(0) * K;
+      fx[j] += /*mi/di*/ dx * P1->x(0)*P1->x(0) * K;
       
-      dfx[i] -= 0.25 * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
-      dfx[j] += 0.25 * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
+      dfx[i] += dx * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
+      dfx[j] += dx * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
       
 		} //Nproc //Pairs  
   }
@@ -198,10 +198,9 @@ int main(int argc, char **argv) try
   
   for (int i = 0; i<dom.Particles.Size();i++) {
     cout << "Analytical" << dom.Particles[i]->x(0)<<", "<<dom.Particles[i]->x(0)*dom.Particles[i]->x(0)<<endl;
-    cout << dom.Particles[i]->x(0)<<", "<<fx[i]<<endl<<endl;
+    cout << dom.Particles[i]->x(0)<<", "<<fx[i]<<endl;
   }
-  
-  cout << "Derivatives"<<endl;
+  cout << endl<< "Derivatives"<<endl;
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     cout << "Analytical" << dom.Particles[i]->x(0)<<", "<<x*x<<endl;
