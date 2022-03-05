@@ -101,11 +101,11 @@ int main(int argc, char **argv) try
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
-   cout << "i, anal, num "<< endl;  
+   cout << "i, x,y, anal, num "<< endl;  
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
-    cout << i<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<endl;
+    cout << i<<", "<<xx<<", "<<y<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<endl;
   }
   // cout << endl<< "Derivatives"<<endl;
   // for (int i = 0; i<dom.Particles.Size();i++) {
