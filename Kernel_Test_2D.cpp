@@ -12,7 +12,7 @@ int main(int argc, char **argv) try
 {
   SPH::Domain	dom;
   
-  int Dimension;
+  int Dimension = 2;
   
   dom.Dimension	= 2; // In fact is one
   dom.Nproc	= 1;
@@ -90,7 +90,7 @@ int main(int argc, char **argv) try
       double K	= SPH::Kernel(Dimension, 0, norm(xij)/h, h);
       double GK = SPH::GradKernel(Dimension, 0, norm(xij)/h, h);
       
-      cout << "r, K: "<<norm(xij)/h<<", "<<K<<endl;
+      cout << "r, K, GK: "<<norm(xij)/h<<", "<<K<<", "<<GK<<endl;
       cout <<"Vi"<<mj/dj<<endl;
       //mj/dj = dx * dx
       in[i] += mj/dj /** (1 + P2->x(0))*(1.+P2->x(1)) */ * K;
