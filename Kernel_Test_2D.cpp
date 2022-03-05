@@ -57,30 +57,13 @@ int main(int argc, char **argv) try
 	dom.MainNeighbourSearch();
   cout << "Done"<<endl;
   
-  // cout << "Inserting pairs"<<endl;
-
- 
-  // Array<std::pair<size_t,size_t> >           Initial;
-  // for(size_t i=0 ; i<dom.Nproc ; i++) 
-		// dom.SMPairs.Push(Initial); 
-  // dom.SMPairs[0].Push(std::make_pair(0, 1));
-  // dom.SMPairs[0].Push(std::make_pair(0, 2));
-  // dom.SMPairs[0].Push(std::make_pair(1, 2));
-  // dom.SMPairs[0].Push(std::make_pair(1, 3));
-  // dom.SMPairs[0].Push(std::make_pair(2, 3));
-  // dom.SMPairs[0].Push(std::make_pair(2, 4));  
-  // dom.SMPairs[0].Push(std::make_pair(3, 4));
-  
   cout << "Done"<<endl;
   
   std::vector<double>  fx(dom.Particles.Size());
   std::vector<double> dfx(dom.Particles.Size());
 
   std::vector<double>  gx(dom.Particles.Size());
-  //Write Kernels
-  //A CORRECTIVE SMOOTHED PARTICLE METHOD FOR
-  //BOUNDARY VALUE PROBLEMS IN HEAT CONDUCTION
-  //Chen 1999
+
   cout << "Calculating Kernel..."<<endl;
 	for (int k=0; k<dom.Nproc;k++) {
     double mi,mj;
@@ -105,7 +88,7 @@ int main(int argc, char **argv) try
       
       //cout <<"Vi"<<mj/dj<<endl;
       fx[i] += /*mj/dj*/ dx * dx * (1 + P2->x(0))*(1.+P2->x(1)) * K;
-      fx[j] += /*mi/di*/ dx * dx * (1 + P1->x(0))*(1.+P1->x(0)) * K;
+      fx[j] += /*mi/di*/ dx * dx * (1 + P1->x(0))*(1.+P1->x(1)) * K;
       
       // gx[i] += /*mj/dj*/ /*dx * */P2->x(0)* K;
       // gx[j] += /*mi/di*/ /*dx * */P1->x(0)* K;
