@@ -95,9 +95,9 @@ int main(int argc, char **argv) try
 {
   SPH::Domain	dom;
   
-  int Dimension;
+  int Dimension = 2;
   
-  dom.Dimension	= 2; // In fact is one
+  dom.Dimension	= Dimension; // In fact is one
   dom.Nproc	= 1;
   dom.Kernel_Set(Qubic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
@@ -187,6 +187,7 @@ int main(int argc, char **argv) try
       double GK = MyGradKernel(Dimension, 0, norm(xij)/h, h);
       
       cout <<"Vi"<<mj/dj<<endl;
+      cout << "r, K"<<norm(xij)/h<<", "<<K<<endl;
       fx[i] += /*mj/dj*/ dx * P2->x(0)*P2->x(0) * K;
       fx[j] += /*mi/di*/ dx * P1->x(0)*P1->x(0) * K;
       

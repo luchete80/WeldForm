@@ -95,8 +95,8 @@ SET(EXES
 	#FreeSurface
 	#Elastic
 	#Heat_2D
-  #Kernel_Test
-  Kernel_Test_2D
+  Kernel_Test
+  #Kernel_Test_2D
 	#Traction
 	#traction_app
 	#Traction_Hollomon
