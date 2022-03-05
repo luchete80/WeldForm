@@ -121,7 +121,6 @@ int main(int argc, char **argv) try
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
-    cout << "Anal f" << dom.Particles[i]->x(0)<<", "<<(1.+x)*(1.+y)<<endl;
     cout << "x, anal, num "<< dom.Particles[i]->x(0)<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<endl;
   }
   // cout << endl<< "Derivatives"<<endl;
