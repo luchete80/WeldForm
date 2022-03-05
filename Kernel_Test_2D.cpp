@@ -103,7 +103,7 @@ int main(int argc, char **argv) try
       double K	= SPH::Kernel(Dimension, 0, norm(xij)/h, h);
       double GK = SPH::GradKernel(Dimension, 0, norm(xij)/h, h);
       
-      cout <<"Vi"<<mj/dj<<endl;
+      //cout <<"Vi"<<mj/dj<<endl;
       fx[i] += /*mj/dj*/ dx * dx * (1 + P2->x(0))*(1.+P2->x(1)) * K;
       fx[j] += /*mi/di*/ dx * dx * (1 + P1->x(0))*(1.+P1->x(0)) * K;
       
@@ -117,11 +117,12 @@ int main(int argc, char **argv) try
   }
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
-  
+
+   cout << "i, anal, num "<< endl;  
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
-    cout << "x, anal, num "<< dom.Particles[i]->x(0)<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<endl;
+    cout << i<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<endl;
   }
   // cout << endl<< "Derivatives"<<endl;
   // for (int i = 0; i<dom.Particles.Size();i++) {
