@@ -188,7 +188,7 @@ int main(int argc, char **argv) try
       fx[i] += /*mj/dj*/  P2->x(0)*P2->x(0) * K;
       fx[j] += /*mi/di*/  P1->x(0)*P1->x(0) * K;
       
-      dfx[i] += 0.25 * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
+      dfx[i] -= 0.25 * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
       dfx[j] += 0.25 * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
       
 		} //Nproc //Pairs  
