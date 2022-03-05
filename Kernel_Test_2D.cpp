@@ -25,10 +25,12 @@ int main(int argc, char **argv) try
 	L	= 1.0;		
   rho	= 1.0;
   dx = 0.1;
-  h	= dx*1.1; //Very important
+  h	= dx*1.0; //Very important
 
   dom.DomMax(0) = L;
   dom.DomMin(0) = 0.;
+  dom.DomMax(1) = L;
+  dom.DomMin(1) = 0.;
   
   Vec3_t p0 = Vec3_t ( 2.0, 0., 0.);
 										
@@ -64,6 +66,7 @@ int main(int argc, char **argv) try
   std::vector<double> dfx(dom.Particles.Size());
 
   std::vector<double>  gx(dom.Particles.Size());
+  std::vector<double>  in(dom.Particles.Size());
 
   cout << "Calculating Kernel..."<<endl;
 	for (int k=0; k<dom.Nproc;k++) {
@@ -87,9 +90,14 @@ int main(int argc, char **argv) try
       double K	= SPH::Kernel(Dimension, 0, norm(xij)/h, h);
       double GK = SPH::GradKernel(Dimension, 0, norm(xij)/h, h);
       
-      //cout <<"Vi"<<mj/dj<<endl;
-      fx[i] += /*mj/dj*/ dx * dx * (1 + P2->x(0))*(1.+P2->x(1)) * K;
-      fx[j] += /*mi/di*/ dx * dx * (1 + P1->x(0))*(1.+P1->x(1)) * K;
+      cout << "r, K: "<<norm(xij)/h<<", "<<K<<endl;
+      cout <<"Vi"<<mj/dj<<endl;
+      //mj/dj = dx * dx
+      in[i] += mj/dj /** (1 + P2->x(0))*(1.+P2->x(1)) */ * K;
+      in[j] += mi/di /** (1 + P1->x(0))*(1.+P1->x(1))*/ * K;
+      
+      fx[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * K;
+      fx[j] += mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * K;
       
       // gx[i] += /*mj/dj*/ /*dx * */P2->x(0)* K;
       // gx[j] += /*mi/di*/ /*dx * */P1->x(0)* K;
@@ -102,11 +110,11 @@ int main(int argc, char **argv) try
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
-   cout << "i, x,y, anal, num, nb, "<< endl;  
+   cout << "i, x,y, anal, num, int, nb, "<< endl;  
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
-    cout << i<<", "<<x<<", "<<y<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<", "<<dom.Particles[i]->Nb<<endl;
+    cout << i<<", "<<x<<", "<<y<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<", "<<in[i]<<dom.Particles[i]->Nb<<endl;
   }
   // cout << endl<< "Derivatives"<<endl;
   // for (int i = 0; i<dom.Particles.Size();i++) {
