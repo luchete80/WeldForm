@@ -158,6 +158,8 @@ int main(int argc, char **argv) try
   
   std::vector<double>  fx(dom.Particles.Size());
   std::vector<double> dfx(dom.Particles.Size());
+
+  std::vector<double>  gx(dom.Particles.Size());
   //Write Kernels
   //A CORRECTIVE SMOOTHED PARTICLE METHOD FOR
   //BOUNDARY VALUE PROBLEMS IN HEAT CONDUCTION
@@ -181,12 +183,15 @@ int main(int argc, char **argv) try
       
       di = P1->Density;
 			dj = P2->Density;	
-      double K	= MyKernel(Dimension, Qubic_Spline, norm(xij)/h, h);
-      double GK = MyGradKernel(Dimension, Qubic_Spline, norm(xij)/h, h);
+      double K	= MyKernel(Dimension, 0, norm(xij)/h, h);
+      double GK = MyGradKernel(Dimension, 0, norm(xij)/h, h);
       
       cout <<"Vi"<<mj/dj<<endl;
       fx[i] += /*mj/dj*/ dx * P2->x(0)*P2->x(0) * K;
       fx[j] += /*mi/di*/ dx * P1->x(0)*P1->x(0) * K;
+      
+      gx[i] += /*mj/dj*/ /*dx * */P2->x(0)* K;
+      gx[j] += /*mi/di*/ /*dx * */P1->x(0)* K;
       
       dfx[i] += dx * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
       dfx[j] += dx * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
@@ -197,8 +202,8 @@ int main(int argc, char **argv) try
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   
   for (int i = 0; i<dom.Particles.Size();i++) {
-    cout << "Analytical" << dom.Particles[i]->x(0)<<", "<<dom.Particles[i]->x(0)*dom.Particles[i]->x(0)<<endl;
-    cout << dom.Particles[i]->x(0)<<", "<<fx[i]<<endl;
+    cout << "Anal f" << dom.Particles[i]->x(0)<<", "<<dom.Particles[i]->x(0)*dom.Particles[i]->x(0)<<endl;
+    cout << "x, f, g"<< dom.Particles[i]->x(0)<<", "<<fx[i]<< ", "<<gx[i]<<endl;
   }
   cout << endl<< "Derivatives"<<endl;
   for (int i = 0; i<dom.Particles.Size();i++) {
