@@ -55,6 +55,7 @@ int main(int argc, char **argv) try
 	dom.ListGenerate();
   cout << "Searching for Nbs"<<endl;
 	dom.MainNeighbourSearch();
+  dom.SaveNeighbourData();
   cout << "Done"<<endl;
   
   cout << "Done"<<endl;
@@ -101,11 +102,11 @@ int main(int argc, char **argv) try
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
-   cout << "i, x,y, anal, num "<< endl;  
+   cout << "i, x,y, anal, num, nb, "<< endl;  
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
-    cout << i<<", "<<xx<<", "<<y<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<endl;
+    cout << i<<", "<<x<<", "<<y<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<", "<<dom.Particles[i]->Nb<<endl;
   }
   // cout << endl<< "Derivatives"<<endl;
   // for (int i = 0; i<dom.Particles.Size();i++) {
