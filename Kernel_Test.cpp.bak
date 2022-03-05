@@ -24,11 +24,30 @@
 using std::cout;
 using std::endl;
 
+#include <vector>
+
+double MyKernel(size_t const & Dim, size_t const & KT, double const & q, double const & h)
+{
+  double C;
+
+  switch (KT)
+  {
+    case 0:	// Qubic Spline
+      Dim == 2 ? C = 10.0/(7.0*h*h*M_PI) : C = 1.0/(h*h*h*M_PI);
+
+      if 		(q<1.0)	return C*(1.0-(3.0/2.0)*q*q+(3.0/4.0)*q*q*q);
+      else if (q<2.0)	return C*((1.0/4.0)*(2.0-q)*(2.0-q)*(2.0-q));
+      else						return 0.0;
+      break;
+  }
+  
 int main(int argc, char **argv) try
 {
   SPH::Domain	dom;
-
-  dom.Dimension	= 3;
+  
+  int Dimension;
+  
+  dom.Dimension	= 2; // In fact is one
   dom.Nproc	= 4;
   dom.Kernel_Set(Qubic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
@@ -57,29 +76,43 @@ int main(int argc, char **argv) try
       
   cout << "Particle count: "<<dom.Particles.Size()<<endl;
   dom.WriteXDMF("maz");
-  
+
+	dom.CellInitiate();
+	dom.ListGenerate();
+	dom.MainNeighbourSearch();
+   
+  std::vector<double> fx(dom.Particles.Size());
   //Write Kernels
   //A CORRECTIVE SMOOTHED PARTICLE METHOD FOR
   //BOUNDARY VALUE PROBLEMS IN HEAT CONDUCTION
   //Chen 1999
 	for (int k=0; k<dom.Nproc;k++) {
-	double mi,mj;
-	Particle *P1,*P2;
-	Vec3_t xij;
-		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+    double mi,mj;
+    double di,dj;
+    SPH::Particle *P1,*P2;
+    Vec3_t xij;
+		for (size_t a=0; a<dom.SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
-			P1	= Particles[SMPairs[k][a].first];
-			P2	= Particles[SMPairs[k][a].second];
+      int i = dom.SMPairs[k][a].first;
+      int j = dom.SMPairs[k][a].second;
+			P1	= dom.Particles[i];
+			P2	= dom.Particles[j];
 			xij	= P1->x - P2->x;
 						
 			mi = P1->Mass;
 			mj = P2->Mass;	
-			//Eqn 3-112 Fraser Thesis
-			P1->normal += mj * xij; 
-			P2->normal -= mi * xij;					
+      
+      di = P1->Density;
+			dj = P2->Density;	
+      double K	= SPH::Kernel(Dimension, Qubic_Spline, norm(xij)/h, h);
+			fx[i] += P2->x*P2->x;
 		} //Nproc //Pairs  
   }
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
+  
+  for (int i = 0; i<dom.Particles.Size();i++) {
+    cout << dom.Particles[i]->x(0)<<", "<<fx[i]<<endl;
+  }
 
   return 0;
 }
