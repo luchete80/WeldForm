@@ -91,8 +91,13 @@ inline void Domain::CalcTempInc () {
 					Vec3_t v;
 					Mult (GKc[i], GK * xij, v);
 					// if (SMPairs[k][a].first == 723)
-					//cout << "Orig, Corr GK * xij"<<GK * xij<<", "<< v<<endl;
+					cout << "Orig, Corr GK * xij, Nb"<<GK * xij<<", "<< v;
+					if (i==0)
+					cout << P1->Nb<<endl;
+					else
+					cout << P2->Nb<<endl;
 					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v  )/ (norm(xij)*norm(xij));
+
 				}				
 			} else {
 				m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));

@@ -34,7 +34,7 @@ double MyKernel(size_t const & Dim, size_t const & KT, double const & q, double 
   {
     case 0:	// Qubic Spline
       //Dim == 2 ? C = 10.0/(7.0*h*h*M_PI) : C = 1.0/(h*h*h*M_PI);
-      C = 2./(3.*h*M_PI);//DIM 1
+      C = 2./(3.*h);//DIM 1
 
       if 		  (q<1.0)	return C*(1.0-(3.0/2.0)*q*q+(3.0/4.0)*q*q*q);
       else if (q<2.0)	return C*((1.0/4.0)*(2.0-q)*(2.0-q)*(2.0-q));
@@ -51,7 +51,7 @@ double MyGradKernel(size_t const & Dim, size_t const & KT, double const & q, dou
   {
     case 0:	// Qubic Spline
       //Dim ==2 ? C = 10.0/(7.0*h*h*h*M_PI) : C = 1.0/(h*h*h*h*M_PI);
-      C = 2./(3.*h*M_PI);
+      C = 2./(3.*h);
       if 		(q==0.0)	return C/h    *(-3.0+(9.0/2.0)*q);
       else if (q<1.0)		return C/(q*h)*(-3.0*q+(9.0/4.0)*q*q);
       else if (q<2.0)		return C/(q*h)*((-3.0/4.0)*(2.0-q)*(2.0-q));
@@ -105,11 +105,12 @@ int main(int argc, char **argv) try
 	double dx,h,rho;
 	double L;
 
+	int n =5;
 	L	= 1.0;		
   rho	= 1.0;
-  dx = 0.2;
-  h	= dx*1.1; //Very important
-
+  dx = L/n;
+  h	= dx*1.; //Very important
+	
   dom.DomMax(0) = 2.;
   dom.DomMin(0) = 3.;
   
@@ -145,14 +146,23 @@ int main(int argc, char **argv) try
   
   cout << "Inserting pairs"<<endl;
 
-      
   dom.SMPairs[0].Push(std::make_pair(0, 1));
-  dom.SMPairs[0].Push(std::make_pair(0, 2));
-  dom.SMPairs[0].Push(std::make_pair(1, 2));
-  dom.SMPairs[0].Push(std::make_pair(1, 3));
-  dom.SMPairs[0].Push(std::make_pair(2, 3));
-  dom.SMPairs[0].Push(std::make_pair(2, 4));  
-  dom.SMPairs[0].Push(std::make_pair(3, 4));
+	for (int i=2;i<n-2;i++) {
+		dom.SMPairs[0].Push(std::make_pair(i-1, i));
+		dom.SMPairs[0].Push(std::make_pair(i-2, i));
+	}
+  dom.SMPairs[0].Push(std::make_pair(n-2, n-1));
+	
+	std::vector <int> nb(n);
+	
+	//Case of n=5
+  // dom.SMPairs[0].Push(std::make_pair(0, 1));
+  // dom.SMPairs[0].Push(std::make_pair(0, 2));
+  // dom.SMPairs[0].Push(std::make_pair(1, 2));
+  // dom.SMPairs[0].Push(std::make_pair(1, 3));
+  // dom.SMPairs[0].Push(std::make_pair(2, 3));
+  // dom.SMPairs[0].Push(std::make_pair(2, 4));  
+  // dom.SMPairs[0].Push(std::make_pair(3, 4));
   
   cout << "Done"<<endl;
   
@@ -164,6 +174,7 @@ int main(int argc, char **argv) try
   //A CORRECTIVE SMOOTHED PARTICLE METHOD FOR
   //BOUNDARY VALUE PROBLEMS IN HEAT CONDUCTION
   //Chen 1999
+
   cout << "Calculating Kernel..."<<endl;
 	for (int k=0; k<dom.Nproc;k++) {
     double mi,mj;
@@ -188,15 +199,17 @@ int main(int argc, char **argv) try
       
       cout <<"Vi"<<mj/dj<<endl;
       cout << "r, K"<<norm(xij)/h<<", "<<K<<endl;
-      fx[i] += /*mj/dj*/ dx * P2->x(0)*P2->x(0) * K;
-      fx[j] += /*mi/di*/ dx * P1->x(0)*P1->x(0) * K;
+      fx[i] += /*mj/dj */dx * P2->x(0)*P2->x(0) * K;
+      fx[j] += /*mi/di */dx * P1->x(0)*P1->x(0) * K;
       
       gx[i] += /*mj/dj*/ /*dx * */P2->x(0)* K;
       gx[j] += /*mi/di*/ /*dx * */P1->x(0)* K;
       
       dfx[i] += dx * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
-      dfx[j] += dx * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
-      
+      dfx[j] -= dx * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
+			
+			nb[i]++;
+			nb[j]++;      
 		} //Nproc //Pairs  
   }
   cout << "Done."<<endl;
@@ -204,7 +217,7 @@ int main(int argc, char **argv) try
   
   for (int i = 0; i<dom.Particles.Size();i++) {
     cout << "Anal f" << dom.Particles[i]->x(0)<<", "<<dom.Particles[i]->x(0)*dom.Particles[i]->x(0)<<endl;
-    cout << "x, f, g"<< dom.Particles[i]->x(0)<<", "<<fx[i]<< ", "<<gx[i]<<endl;
+    cout << "x, f, g, nb"<< dom.Particles[i]->x(0)<<", "<<fx[i]<< ", "<<gx[i]<<", "<<nb[i]<<endl;
   }
   cout << endl<< "Derivatives"<<endl;
   for (int i = 0; i<dom.Particles.Size();i++) {
