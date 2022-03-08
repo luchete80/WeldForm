@@ -147,11 +147,11 @@ int main(int argc, char **argv) try
   cout << "Inserting pairs"<<endl;
 
   dom.SMPairs[0].Push(std::make_pair(0, 1));
-	for (int i=2;i<n-2;i++) {
+	for (int i=2;i<n;i++) {
 		dom.SMPairs[0].Push(std::make_pair(i-1, i));
 		dom.SMPairs[0].Push(std::make_pair(i-2, i));
 	}
-  dom.SMPairs[0].Push(std::make_pair(n-2, n-1));
+
 	
 	std::vector <int> nb(n);
 	
@@ -212,6 +212,10 @@ int main(int argc, char **argv) try
 			nb[j]++;      
 		} //Nproc //Pairs  
   }
+	for (int i = 0; i<dom.Particles.Size();i++) {
+      double K	= MyKernel(Dimension, 0, 0, h);
+		 fx[i] += /*mj/dj */dx * dom.Particles[i]->x(0)*dom.Particles[i]->x(0) * K;
+	}
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   
