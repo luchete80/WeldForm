@@ -183,7 +183,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		
 		if (Dimension == 2) temp(2) = 0.0;
 		temp1 = dot( vij , GK*xij );
-
+		
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
 			P1->a		+= mj * temp;

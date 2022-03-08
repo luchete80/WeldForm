@@ -992,6 +992,10 @@ inline void Domain::LastComputeAcceleration ()
 				}
 			}
 		}
+		for (int i=0; i<Particles.Size(); i++) {
+			if (i==1140)
+			cout << "Particle 1140, Time "<<Time << "Accel "<<Particles[i]->a<<endl;
+		}
 }
 
 //New, for Bonet gradient correction
@@ -1408,6 +1412,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
+
+		for (int i=0;i<Particles.Size();i++){
+			//cout << "Particle " << i << ", "<<"Strain Rate "<<Particles[i]->StrainRate<<endl;
+			//cout << "Particle " << i << ", "<<"Vel "<<Particles[i]->v<<endl;
+			cout << "Particle " << i << ", ID "<< Particles[i]->ID<<", Acc "<<Particles[i]->a<<endl;
+			//cout << "Sigma " <<Particles[i]->Sigma<<endl;
+			//cout << "Vel"<<Particles[i]->v<<endl;
+		}
 		
 		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
 			if ( ts_i == (ts_nb_inc - 1) ){

@@ -30,10 +30,11 @@ void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
 
-	if (domi.getTime() < TAU ) 
-		vcompress = VMAX/TAU * domi.getTime();
-	else
-		vcompress = VMAX;
+	// if (domi.getTime() < TAU ) 
+		// vcompress = VMAX/TAU * domi.getTime();
+	// else
+		// vcompress = VMAX;
+	vcompress = 1.;
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -89,7 +90,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.015;
+		dx = 0.03;
     h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
@@ -124,7 +125,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 1.0;
+    		dom.Particles[a]->Alpha		= 0.0;
     		//dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
@@ -143,7 +144,7 @@ int main(int argc, char **argv) try
 		dom.BC.InOutFlow = 0;
 
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		dom.Solve(/*tf*//*0.0105*/2.*timestep+1e-8,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }

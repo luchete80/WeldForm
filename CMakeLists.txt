@@ -88,14 +88,14 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
 	#CompressionForces
-	#Compression_Free
+	Compression_Free
 	#CompressionForces2
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
 	#Elastic
 	#Heat_2D
-  Kernel_Test
+  #Kernel_Test
   #Kernel_Test_2D
 	#Traction
 	#traction_app
