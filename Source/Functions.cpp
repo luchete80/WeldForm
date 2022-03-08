@@ -203,6 +203,7 @@ namespace SPH {
 		}
 	}
 
+#include<stdio.h>
 	inline double EOS(size_t const & EQ, double const & Cs0, double const & P00, double const & Density, double const & Density0)
 	{
 		switch (EQ)

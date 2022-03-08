@@ -955,13 +955,14 @@ inline void Domain::PrimaryComputeAcceleration () {
 
 inline void Domain::LastComputeAcceleration ()
 {
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for (int k=0; k<Nproc;k++) {
 		for (size_t i=0; i<SMPairs[k].Size();i++)
-			CalcForce2233(Particles[SMPairs[k][i].first],Particles[SMPairs[k][i].second]);
+			//CalcForce2233(Particles[SMPairs[k][i].first],Particles[SMPairs[k][i].second]);
+		CalcForce2233(SMPairs[k][i].first,SMPairs[k][i].second);
 
 		for (int i=0; i<FSMPairs[k].Size();i++)
-			CalcForce2233(Particles[FSMPairs[k][i].first],Particles[FSMPairs[k][i].second]);
+			CalcForce2233(FSMPairs[k][i].first,FSMPairs[k][i].second);
 	}
 
 	//LUCIANO: THIS SHOULD BE PERFORMED OUTSIDE
@@ -992,10 +993,10 @@ inline void Domain::LastComputeAcceleration ()
 				}
 			}
 		}
-		for (int i=0; i<Particles.Size(); i++) {
-			if (i==1140)
-			cout << "Particle 1140, Time "<<Time << "Accel "<<Particles[i]->a<<endl;
-		}
+		// for (int i=0; i<Particles.Size(); i++) {
+			// if (i==1140)
+			// cout << "Particle 1140, Time "<<Time << "Accel "<<Particles[i]->a<<endl;
+		// }
 }
 
 //New, for Bonet gradient correction
@@ -1416,10 +1417,16 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		for (int i=0;i<Particles.Size();i++){
 			//cout << "Particle " << i << ", "<<"Strain Rate "<<Particles[i]->StrainRate<<endl;
 			//cout << "Particle " << i << ", "<<"Vel "<<Particles[i]->v<<endl;
-			cout << "Particle " << i << ", ID "<< Particles[i]->ID<<", Acc "<<Particles[i]->a<<endl;
-			//cout << "Sigma " <<Particles[i]->Sigma<<endl;
+			//cout << "Particle " << i << ", ID "<< Particles[i]->ID<<", Acc "<<Particles[i]->a<<endl;
+			if (i==1250){
+			cout << "Particle 1250 Pressure " <<Particles[i]->Pressure<<endl;
+			cout << "Particle 1250 ShearStress " <<Particles[i]->ShearStress<<endl;
+			cout << "Particle 1250 Sigma " <<Particles[i]->Sigma<<endl;
+			cout << "Particle 1250 StrRate " <<Particles[i]->StrainRate<<endl;
+			}
 			//cout << "Vel"<<Particles[i]->v<<endl;
 		}
+		//cout <<"---Time"<<Time<<endl;
 		
 		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
 			if ( ts_i == (ts_nb_inc - 1) ){
@@ -1432,7 +1439,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
 		}
 		
-	
+		//
+		cout << "------------------------ END STEP---------------------------"<<endl;
 	}
 	
 

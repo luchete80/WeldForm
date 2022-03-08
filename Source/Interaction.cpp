@@ -22,8 +22,12 @@
 
 namespace SPH {
 	
-inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
+inline void Domain::CalcForce2233(int i, int j)
 {
+	Particle * P1, * P2;
+	P1 = Particles[i];
+	P2 = Particles[j];
+	
 	double h	= (P1->h+P2->h)/2;
 	Vec3_t xij	= P1->x - P2->x;
 
@@ -122,6 +126,9 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			
 		}
 
+		if (i==1250 || j==1250)
+			printf("Time, i,j,vab: %.4e %d %d %f %f %f\n",Time, i,j,vab(0),vab(1),vab(2));
+		
 		// Calculation strain rate tensor
 		StrainRate(0,0) = 2.0*vab(0)*xij(0);
 		StrainRate(0,1) = vab(0)*xij(1)+vab(1)*xij(0);
@@ -133,7 +140,9 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		StrainRate(2,1) = StrainRate(1,2);
 		StrainRate(2,2) = 2.0*vab(2)*xij(2);
 		StrainRate	= -0.5 * GK * StrainRate;
-
+		
+		if (i==1250 || j==1250)
+			cout << "Strain Rate "<<StrainRate<<endl;
 		// Calculation rotation rate tensor
 		RotationRate(0,1) = vab(0)*xij(1)-vab(1)*xij(0);
 		RotationRate(0,2) = vab(0)*xij(2)-vab(2)*xij(0);
@@ -164,7 +173,9 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			// Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
 		// else
 			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-
+		
+		if (i==1250 || j ==1250)
+			cout << "Particle 1250, Time "<< Time<<", i, j ,Sigmai"<<endl<<i<<"; "<<endl<<j<<", "<<Sigmai<< ", "<<Sigmaj<<endl;
 		// NEW
 		//if (!gradKernelCorr) {
 		if (GradientType == 0)

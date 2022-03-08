@@ -90,7 +90,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.03;
+		dx = 0.030;
     h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
@@ -144,7 +144,8 @@ int main(int argc, char **argv) try
 		dom.BC.InOutFlow = 0;
 
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*//*0.0105*/2.*timestep+1e-8,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		dom.Solve(/*tf*//*0.0105*/2.*timestep+1e-8,/*dt*/timestep,/*dtOut*/timestep,"test_gpu",999);
+		//dom.Solve(0.002,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }

@@ -431,7 +431,7 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	
 	Displacement += dt*va;
 
-    Mat2Leapfrog(dt);
+  Mat2Leapfrog(dt);
 	if (FirstStep) FirstStep = false;
 
 }
