@@ -51,7 +51,7 @@ double MyGradKernel(size_t const & Dim, size_t const & KT, double const & q, dou
   {
     case 0:	// Qubic Spline
       //Dim ==2 ? C = 10.0/(7.0*h*h*h*M_PI) : C = 1.0/(h*h*h*h*M_PI);
-      C = 2./(3.*h);
+      C = 2./(3.*h*h);
       if 		(q==0.0)	return C/h    *(-3.0+(9.0/2.0)*q);
       else if (q<1.0)		return C/(q*h)*(-3.0*q+(9.0/4.0)*q*q);
       else if (q<2.0)		return C/(q*h)*((-3.0/4.0)*(2.0-q)*(2.0-q));
@@ -205,8 +205,8 @@ int main(int argc, char **argv) try
       gx[i] += /*mj/dj*/ /*dx * */P2->x(0)* K;
       gx[j] += /*mi/di*/ /*dx * */P1->x(0)* K;
       
-      dfx[i] += dx * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
-      dfx[j] -= dx * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
+      dfx[i] -= dx * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
+      dfx[j] += dx * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
 			
 			nb[i]++;
 			nb[j]++;      
@@ -215,9 +215,9 @@ int main(int argc, char **argv) try
 	for (int i = 0; i<dom.Particles.Size();i++) {
 		double x = dom.Particles[i]->x(0);
 		double K	= MyKernel(Dimension, 0, 0, h);
-		double GK = MyGradKernel(Dimension, 0, norm(xij)/h, h);
+		
 		fx[i] += /*mj/dj */dx * x*x * K;
-		dx[i] += /*mj/dj */dx * x*x*x/3.0 * K;
+
 	}
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
