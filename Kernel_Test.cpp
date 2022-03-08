@@ -213,8 +213,11 @@ int main(int argc, char **argv) try
 		} //Nproc //Pairs  
   }
 	for (int i = 0; i<dom.Particles.Size();i++) {
-      double K	= MyKernel(Dimension, 0, 0, h);
-		 fx[i] += /*mj/dj */dx * dom.Particles[i]->x(0)*dom.Particles[i]->x(0) * K;
+		double x = dom.Particles[i]->x(0);
+		double K	= MyKernel(Dimension, 0, 0, h);
+		double GK = MyGradKernel(Dimension, 0, norm(xij)/h, h);
+		fx[i] += /*mj/dj */dx * x*x * K;
+		dx[i] += /*mj/dj */dx * x*x*x/3.0 * K;
 	}
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
