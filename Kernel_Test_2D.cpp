@@ -25,7 +25,7 @@ int main(int argc, char **argv) try
 	L	= 1.0;		
   rho	= 1.0;
   dx = 0.1;
-  h	= dx*1.0; //Very important
+  h	= dx*1.2; //Very important
 
   dom.DomMax(0) = L;
   dom.DomMin(0) = 0.;
@@ -102,11 +102,21 @@ int main(int argc, char **argv) try
       // gx[i] += /*mj/dj*/ /*dx * */P2->x(0)* K;
       // gx[j] += /*mi/di*/ /*dx * */P1->x(0)* K;
       
-      // dfx[i] += dx * P2->x(0)*P2->x(0)*P2->x(0)/3 * GK * xij(0);
-      // dfx[j] += dx * P1->x(0)*P1->x(0)*P1->x(0)/3 * GK * xij(0);
+      dfx[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK * xij(0);
+      dfx[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK * xij(0);
       
 		} //Nproc //Pairs  
   }
+
+	for (int i = 0; i<dom.Particles.Size();i++) {
+		double x = dom.Particles[i]->x(0);
+		double y = dom.Particles[i]->x(1);
+		double K	= SPH::Kernel(Dimension, 0, 0, h);
+		
+		fx[i] += /*mj/dj */dx * dx * (1.+x)*(1.+y) * K;
+
+	}
+	
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
@@ -116,6 +126,14 @@ int main(int argc, char **argv) try
     double y = dom.Particles[i]->x(1);
     cout << i<<", "<<x<<", "<<y<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<", "<<in[i]<<dom.Particles[i]->Nb<<endl;
   }
+
+ cout << endl<< "i, x,y, grad anal, grad num, , nb, "<< endl;  
+  for (int i = 0; i<dom.Particles.Size();i++) {
+    double x = dom.Particles[i]->x(0);
+    double y = dom.Particles[i]->x(1);
+    cout << i<<", "<<x<<", "<<y<<", "<<(1.+y)<<", "<<dfx[i]<<", "<<dom.Particles[i]->Nb<<endl;
+  }
+	
   // cout << endl<< "Derivatives"<<endl;
   // for (int i = 0; i<dom.Particles.Size();i++) {
     // double x = dom.Particles[i]->x(0);
