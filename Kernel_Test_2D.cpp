@@ -66,6 +66,8 @@ int main(int argc, char **argv) try
   std::vector<double> dfx(dom.Particles.Size());
 
   std::vector<double> dfx_c(dom.Particles.Size());
+
+  std::vector< Mat3_t > test(dom.Particles.Size());
 	
   std::vector<double>  gx(dom.Particles.Size());
   std::vector<double>  in(dom.Particles.Size());
@@ -116,6 +118,11 @@ int main(int argc, char **argv) try
 
       dfx_c[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK_cj(0);
       dfx_c[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK_ci(0);
+			
+			Mat3_t t;
+			Dyad (xij, Vec3_t(GK*xij),t);
+			test [i] = test[i] - mj/dj * t;
+			test [j] = test[i] + mi/di * t;
       
 		} //Nproc //Pairs  
   }
@@ -145,6 +152,10 @@ int main(int argc, char **argv) try
     double y = dom.Particles[i]->x(1);
     cout << i<<", "<<x<<", "<<y<<", "<<(1.+y)<<", "<<dfx[i]<<", "<<dfx_c[i]<<", "<<dom.Particles[i]->Nb<<endl;
   }
+	
+	for (int i = 0; i<dom.Particles.Size();i++) {
+		cout << test[i]<<endl;
+	}
 	
   // cout << endl<< "Derivatives"<<endl;
   // for (int i = 0; i<dom.Particles.Size();i++) {
