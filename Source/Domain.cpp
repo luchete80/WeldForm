@@ -1031,7 +1031,7 @@ inline void Domain::CalcGradCorrMatrix () {
 			temp[SMPairs[k][a].second] = temp[SMPairs[k][a].second] - mt[1];
 		}
 	}//Nproc
-
+	cout << "Fixed Pairs"<<endl;
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
 		Vec3_t xij;
@@ -1061,13 +1061,15 @@ inline void Domain::CalcGradCorrMatrix () {
 	}//Nproc
 	//cout << "Inverting"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+	//cout << "Inverting"<<endl;
 	for (int i=0; i<Particles.Size(); i++){
 		// cout << "part "<<i<<endl;
 		// cout << "x: "<<Particles[i]->x<<endl;
 		// cout << "nb: "<<Particles[i]->Nb<<endl;
 		// if (!Particles[i]->IsFree) cout << "Fixed"<<endl;
 		// cout << "temp "<<temp[i]<<endl;
-		
+		if (Dimension == 2)
+			temp[i](2,2) = 1;
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
 		if (Particles[i]->IsFree){

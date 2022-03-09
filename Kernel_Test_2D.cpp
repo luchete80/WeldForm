@@ -65,8 +65,13 @@ int main(int argc, char **argv) try
   std::vector<double>  fx(dom.Particles.Size());
   std::vector<double> dfx(dom.Particles.Size());
 
+  std::vector<double> dfx_c(dom.Particles.Size());
+	
   std::vector<double>  gx(dom.Particles.Size());
   std::vector<double>  in(dom.Particles.Size());
+
+ cout << "Calculating Corrected Kernel Gradient..."<<endl;	
+	dom.CalcGradCorrMatrix();
 
   cout << "Calculating Kernel..."<<endl;
 	for (int k=0; k<dom.Nproc;k++) {
@@ -104,6 +109,13 @@ int main(int argc, char **argv) try
       
       dfx[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK * xij(0);
       dfx[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK * xij(0);
+			
+			Vec3_t GK_ci, GK_cj; 
+			Mult(xij, GK * dom.Particles[i]->gradCorrM,GK_ci);
+			Mult(xij, GK * dom.Particles[j]->gradCorrM,GK_cj);	
+
+      dfx_c[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK_cj(0);
+      dfx_c[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK_ci(0);
       
 		} //Nproc //Pairs  
   }
@@ -127,11 +139,11 @@ int main(int argc, char **argv) try
     cout << i<<", "<<x<<", "<<y<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<", "<<in[i]<<dom.Particles[i]->Nb<<endl;
   }
 
- cout << endl<< "i, x,y, grad anal, grad num, , nb, "<< endl;  
+ cout << endl<< "i, x,y, grad anal, grad num, grad corr num, nb, "<< endl;  
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
-    cout << i<<", "<<x<<", "<<y<<", "<<(1.+y)<<", "<<dfx[i]<<", "<<dom.Particles[i]->Nb<<endl;
+    cout << i<<", "<<x<<", "<<y<<", "<<(1.+y)<<", "<<dfx[i]<<", "<<dfx_c[i]<<", "<<dom.Particles[i]->Nb<<endl;
   }
 	
   // cout << endl<< "Derivatives"<<endl;
