@@ -63,9 +63,9 @@ int main(int argc, char **argv) try
   cout << "Done"<<endl;
   
   std::vector<double>  fx(dom.Particles.Size());
-  std::vector<double> dfx(dom.Particles.Size());
+  std::vector<Vec3_t> dfx(dom.Particles.Size());
 
-  std::vector<double> dfx_c(dom.Particles.Size());
+  std::vector<Vec3_t> dfx_c(dom.Particles.Size());
 
   std::vector< Mat3_t > test(dom.Particles.Size());
 	
@@ -109,15 +109,17 @@ int main(int argc, char **argv) try
       // gx[i] += /*mj/dj*/ /*dx * */P2->x(0)* K;
       // gx[j] += /*mi/di*/ /*dx * */P1->x(0)* K;
       
-      dfx[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK * xij(0);
-      dfx[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK * xij(0);
+      dfx[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK * xij;
+      dfx[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK * xij;
 			
 			Vec3_t GK_ci, GK_cj; 
+
 			Mult(xij, GK * dom.Particles[i]->gradCorrM,GK_ci);
 			Mult(xij, GK * dom.Particles[j]->gradCorrM,GK_cj);	
+			//cout << "x1,x2,
 
-      dfx_c[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK_cj(0);
-      dfx_c[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK_ci(0);
+      dfx_c[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK_cj;
+      dfx_c[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK_ci;
 			
 			Mat3_t t;
 			Dyad (xij, Vec3_t(GK*xij),t);
@@ -150,12 +152,17 @@ int main(int argc, char **argv) try
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
-    cout << i<<", "<<x<<", "<<y<<", "<<(1.+y)<<", "<<dfx[i]<<", "<<dfx_c[i]<<", "<<dom.Particles[i]->Nb<<endl;
+		
+		double GK = (1.+y)* SPH::GradKernel(Dimension, 0, 0., h);
+		Vec3_t GK_c; 
+		Mult(dom.Particles[i]->gradCorrM,dfx[i],GK_c);
+			
+    cout << i<<", "<<x<<", "<<y<<", "<<(1.+y)<<", "<<dfx[i](0)<<", "<<GK_c(0)<<", "<<dfx_c[i](0)<<", "<<dom.Particles[i]->Nb<<endl;
   }
 	
-	for (int i = 0; i<dom.Particles.Size();i++) {
-		cout << test[i]<<endl;
-	}
+	// for (int i = 0; i<dom.Particles.Size();i++) {
+		// cout << test[i]<<endl;
+	// }
 	
   // cout << endl<< "Derivatives"<<endl;
   // for (int i = 0; i<dom.Particles.Size();i++) {

@@ -1064,10 +1064,10 @@ inline void Domain::CalcGradCorrMatrix () {
 	//cout << "Inverting"<<endl;
 	for (int i=0; i<Particles.Size(); i++){
 		// cout << "part "<<i<<endl;
-		// cout << "x: "<<Particles[i]->x<<endl;
+		cout << "x: "<<Particles[i]->x<<endl;
 		// cout << "nb: "<<Particles[i]->Nb<<endl;
 		// if (!Particles[i]->IsFree) cout << "Fixed"<<endl;
-		// cout << "temp "<<temp[i]<<endl;
+		cout << "temp "<<temp[i]<<endl;
 		if (Dimension == 2)
 			temp[i](2,2) = 1;
 		/** Inverse.*/
