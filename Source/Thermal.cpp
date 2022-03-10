@@ -97,7 +97,6 @@ inline void Domain::CalcTempInc () {
 					else
 					cout << P2->Nb<<endl;
 					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v  )/ (norm(xij)*norm(xij));
-
 				}				
 			} else {
 				m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
@@ -108,6 +107,12 @@ inline void Domain::CalcTempInc () {
 			temp [SMPairs[k][a].second] -= mc[1];
 		}
 	}//Nproc
+	//Another test
+	// for (int i=0; i<Particles.Size(); i++){
+		// //double GK = temp[i] * GradKernel(Dimension, 0, 0., h);
+		// Vec3_t GK_c; 
+		// Mult(dom.Particles[i]->gradCorrM,temp[i],GK_c);
+	// }
 	
 	//TODO: MULTIPLY CORRECTED GRADIENT HERE AFTER ALL SUM 
 		//temp [i];

@@ -118,8 +118,9 @@ int main(int argc, char **argv) try
 			Mult(xij, GK * dom.Particles[j]->gradCorrM,GK_cj);	
 			//cout << "x1,x2,
 
-      dfx_c[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK_cj;
-      dfx_c[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK_ci;
+			//This is like gradf_i = COrr x gradf
+      dfx_c[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK_ci; //If cj fails if ci is like applying 
+      dfx_c[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK_cj;
 			
 			Mat3_t t;
 			Dyad (xij, Vec3_t(GK*xij),t);
