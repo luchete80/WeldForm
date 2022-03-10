@@ -1101,6 +1101,7 @@ inline void Domain::Move (double dt) {
 					}
 				}
 			}
+		//cout << "Before move"<<Particles[i]->ShearStressA;
 		Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
 		}
 }
@@ -1419,7 +1420,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			//cout << "Particle " << i << ", "<<"Vel "<<Particles[i]->v<<endl;
 			//cout << "Particle " << i << ", ID "<< Particles[i]->ID<<", Acc "<<Particles[i]->a<<endl;
 			if (i==1250){
+			cout << "Particle 1250 Acc " << Particles[i]->a <<endl;
+			cout << "Particle 1250 Disp " << Particles[i]->Displacement <<endl;
 			cout << "Particle 1250 Pressure " <<Particles[i]->Pressure<<endl;
+			cout << "Particle 1250 ShearStress a " <<Particles[i]->ShearStressa<<endl;
 			cout << "Particle 1250 ShearStress " <<Particles[i]->ShearStress<<endl;
 			cout << "Particle 1250 Sigma " <<Particles[i]->Sigma<<endl;
 			cout << "Particle 1250 StrRate " <<Particles[i]->StrainRate<<endl;

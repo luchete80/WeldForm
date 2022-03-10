@@ -126,8 +126,8 @@ inline void Domain::CalcForce2233(int i, int j)
 			
 		}
 
-		if (i==1250 || j==1250)
-			printf("Time, i,j,vab: %.4e %d %d %f %f %f\n",Time, i,j,vab(0),vab(1),vab(2));
+		// if (i==1250 )
+			// printf("Time, i,j,vab: %.4e %d %d %f %f %f\n",Time, i,j,vab(0),vab(1),vab(2));
 		
 		// Calculation strain rate tensor
 		StrainRate(0,0) = 2.0*vab(0)*xij(0);
@@ -141,8 +141,8 @@ inline void Domain::CalcForce2233(int i, int j)
 		StrainRate(2,2) = 2.0*vab(2)*xij(2);
 		StrainRate	= -0.5 * GK * StrainRate;
 		
-		if (i==1250 || j==1250)
-			cout << "Strain Rate "<<StrainRate<<endl;
+		// if (i==1250||j==1250)
+			// cout << "Time i,j, Strain Rate:  "<<Time<<", "<<i<<", "<<j<<", "<<StrainRate<<endl;
 		// Calculation rotation rate tensor
 		RotationRate(0,1) = vab(0)*xij(1)-vab(1)*xij(0);
 		RotationRate(0,2) = vab(0)*xij(2)-vab(2)*xij(0);
@@ -175,13 +175,16 @@ inline void Domain::CalcForce2233(int i, int j)
 			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
 		
 		if (i==1250 || j ==1250)
-			cout << "Particle 1250, Time "<< Time<<", i, j ,Sigmai"<<endl<<i<<"; "<<endl<<j<<", "<<Sigmai<< ", "<<Sigmaj<<endl;
+			cout << "Particle i <<" <<i<< " j, Time "<< j<< Time <<" Sigmai Sigma j"<<endl<<Sigmai<< ", "<<Sigmaj<<endl;
 		// NEW
 		//if (!gradKernelCorr) {
+		Mat3_t test = 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj;
 		if (GradientType == 0)
 			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
 		else
 			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
+		if (i==1250 || j ==1250)
+			cout <<"i "<<i<<", j "<<j<<"1/di2 Sigmai + 1/dj2Sigmai GK*xij \n"<<temp<<", "<<xij<<endl;
 		// } else {
 				// //Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				// //Left in vector form and multiply after??
@@ -204,6 +207,8 @@ inline void Domain::CalcForce2233(int i, int j)
 				float mj_dj= mj/dj;
 				P1->ZWab	+= mj_dj* K;
 				P1->StrainRate	 = P1->StrainRate + mj_dj*StrainRate;
+				// if (i==1250)
+					// cout << "Strain Rate i SUM:  "<<i<<", "<<P1->StrainRate<<endl;
 				P1->RotationRate = P1->RotationRate + mj_dj*RotationRate;
 			}
 			else
@@ -223,7 +228,8 @@ inline void Domain::CalcForce2233(int i, int j)
 				P2->ZWab	+= mi_di* K;
 				P2->StrainRate	 = P2->StrainRate + mi_di*StrainRate;
 				P2->RotationRate = P2->RotationRate + mi_di*RotationRate;
-
+				// if (j==1250)
+					// cout << "Strain Rate j SUM:  "<<j<<", "<<P2->StrainRate<<endl;
 			}
 			else
 				P2->ZWab	= 1.0;
