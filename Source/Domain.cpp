@@ -500,7 +500,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	numpartxy = calcHalfPartCount(r, Rxy, 1);
 	
 	//// GHOST THING
-	int ghost_inc = 0;
+	double ghost_inc = 0;
 	int ghost_rows = 3; 
 	if (ghost ) ghost_inc = 2*r*ghost_rows;
 	int first_nonghost_id[ghost_rows]; //First nonghost particle, from near plane 
@@ -541,7 +541,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 				xy_ghost_part_count[ghost_row] 	= numypart;
 				cout << "first_nonghost_id, particle: " << k << ", id part "<< id_part << endl;
 			}
-			if ( k > last_nonghostrow) {
+			if ( k > last_nonghostrow - 1) {
 				ghost_row++;
 				first_ghost_id [ghost_row - ghost_rows]= id_part;
 				cout << "first_ghost_id, particle: " << k << ", id part "<< id_part << endl;
@@ -574,7 +574,15 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 			for (int grow=0; grow<ghost_rows;grow++){
 				int pid  = first_nonghost_id[ghost_rows-1 - grow]; //non ghost particle, reverse order
 				int gpid = first_ghost_id [grow];
-				for (int p=0;p<xy_ghost_part_count[grow];p++){
+				int last_gpid;
+				if (grow<2)
+					last_gpid = first_ghost_id [grow+1];
+				else 
+					last_gpid = Particles.Size() - 1;
+				int part_count = last_gpid - gpid + 1;
+				cout << "part count "<<part_count<<endl;
+				for (int p=0;p<part_count;p++){
+					cout << "Pair inserted: "<<pid<<", "<<gpid<<endl;
 					GhostPairs.Push(std::make_pair(pid,gpid));
 					pid++;gpid++;
 				}
@@ -611,6 +619,18 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 
 	R = r;
 }
+
+inline void Domain::MoveGhost(){
+	for (int gp=0; gp<GhostPairs.Size(); gp++){
+		int  i = GhostPairs[gp].first;
+		int gi = GhostPairs[gp].second;
+		//See normal direction
+		Particles[gi]-> v[0]  = Particles[i]-> v[0];
+		Particles[gi]-> va[0] = Particles[i]-> va[0];
+		Particles[gi]-> vb[0] = Particles[i]-> vb[0];
+	}
+}
+
 
 inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,

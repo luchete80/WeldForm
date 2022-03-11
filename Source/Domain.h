@@ -133,6 +133,8 @@ public:
 	inline void CalcConvHeat ();
 	inline void CalcPlasticWorkHeat();
 	inline void CalcGradCorrMatrix();	//BONET GRADIENT CORRECTION
+	
+	inline void MoveGhost();
 
 	
 	

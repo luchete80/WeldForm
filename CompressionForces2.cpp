@@ -146,7 +146,7 @@ int main(int argc, char **argv) try
     		//if ( z > (L -1.5*h)) {//Changed to only last row
 				if ( z > (L -1.5*h) /*&& z < (L -1.5*h+h)*/) {//Changed to only last row
     			dom.Particles[a]->ID=3;
-					dom.Particles[a]->IsFree=false;
+					//dom.Particles[a]->IsFree=false;
 					//dom.Particles[a]->XSPH		= 0.1;	
 					//dom.Particles[a]->NoSlip=true;
 					forcepart_count++;
