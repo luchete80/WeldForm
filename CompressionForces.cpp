@@ -1,3 +1,4 @@
+
 /***********************************************************************************
 * PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
 *             and soils) using Smoothed Particle Hydrodynamics method              *   
@@ -21,19 +22,23 @@
 #include "Domain.h"
 
 #define TAU		0.005
-#define VMAX	1.0
+#define VMAX	10.0
 
+int forcepart_count;
 
 
 void UserAcc(SPH::Domain & domi)
 {
-	double vtraction;
+	double vcompress;
 
-	if (domi.getTime() < TAU ) 
-		vtraction = VMAX/TAU * domi.getTime();
-	else
-		vtraction = VMAX;
+
+	double acc = 7.906e4/(forcepart_count*domi.Particles[0]->Mass);
 	
+	if (domi.getTime() < TAU ) 
+		vcompress = VMAX/TAU * domi.getTime();
+	else
+		vcompress = VMAX;
+	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
 	#ifdef __GNUC__
@@ -45,10 +50,11 @@ void UserAcc(SPH::Domain & domi)
 	{
 		if (domi.Particles[i]->ID == 3)
 		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vtraction);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vtraction);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vtraction);
+			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a(2)		= -VMAX/TAU;
+			//domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -56,7 +62,7 @@ void UserAcc(SPH::Domain & domi)
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
 			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
 }
@@ -67,45 +73,36 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
-      SPH::Domain	dom;
+		 SPH::Domain	dom;
 
-      dom.Dimension	= 3;
-      dom.Nproc	= 4;
-    	dom.Kernel_Set(Qubic_Spline);
-    	dom.Scheme	= 1;	//Mod Verlet
-			//dom.XSPH	= 0.5; //Very important
+		dom.Dimension	= 3;
+		dom.Nproc	= 4;
+		dom.Kernel_Set(Qubic_Spline);
+		//dom.Kernel_Set(Hyperbolic_Spline);
+		dom.Scheme	= 1;	//Mod Verlet
+		dom.XSPH	= 0.5; //Very important
 
-        double dx,h,rho,K,G,Cs,Fy;
-    	double R,L,n;
-		double Lz_side,Lz_neckmin,Lz_necktot,Rxy_center;
+			double dx,h,rho,K,G,Cs,Fy;
+		double R,L,n;
+
+		R	= 0.15;
+		L	= 0.56;
+		n	= 30.0;		//in length, radius is same distance
 		
-    	R	= 0.075;
-
-		Lz_side =0.2;
-		Lz_neckmin = 0.050;
-		Lz_necktot = 0.100;
-		Rxy_center = 0.050;
-		L = 2. * Lz_side + Lz_necktot;
-		
-		double E  = 210.e9;
-		double nu = 0.3;
-		
-    	rho	= 7850.0;
-		K= E / ( 3.*(1.-2*nu) );
-		G= E / (2.* (1.+nu));
-		Fy	= 350.e6;
-
-
-		dx = 0.0085;
+		rho	= 2700.0;
+		K	= 6.7549e10;
+		G	= 2.5902e10;
+		Fy	= 300.e6;
+    	//dx	= L / (n-1);
+		//dx = L/(n-1);
+		dx = 0.015;
     h	= dx*1.2; //Very important
-
         Cs	= sqrt(K/rho);
 
         double timestep;
-        //timestep = (0.2*h/(Cs));
+        timestep = (0.2*h/(Cs));
 		
 		//timestep = 2.5e-6;
-		timestep = 5.e-7;
 
         cout<<"t  = "<<timestep<<endl;
         cout<<"Cs = "<<Cs<<endl;
@@ -119,14 +116,14 @@ int main(int argc, char **argv) try
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
-		//dom.auto_ts = false;
-		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/5.), R, Lz_side + Lz_side/5.,
-											Lz_neckmin,Lz_necktot,Rxy_center,
-											dx/2., rho, h, false);
-
-
+										
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-
+		
+		forcepart_count = 0;
+		dom.gradKernelCorr = false;
+		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G		= G;
@@ -136,23 +133,31 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 1.0; 
-    		dom.Particles[a]->TI			= 0.3;
-    		dom.Particles[a]->TIInitDist	= dx;
+    		dom.Particles[a]->Alpha		= 1.0;
+    		//dom.Particles[a]->Beta		= 1.0;
+    		//dom.Particles[a]->TI		= 0.3;
+    		//dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-    			dom.Particles[a]->IsFree=false;
-    			dom.Particles[a]->NoSlip=true;    		
+	    			dom.Particles[a]->IsFree=false;
+    			dom.Particles[a]->NoSlip=true;			
+				
 				}
-				if ( z > L )
+    		if ( z > (L + L/10 -1.5*h)) {//Changed to only last row
     			dom.Particles[a]->ID=3;
+					//dom.Particles[a]->XSPH		= 0.1;
+					forcepart_count++;
+				}
     	}
+			cout << "Contact Force Particles: "<<forcepart_count<<endl;
 		dom.WriteXDMF("maz");
-//		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
+		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
+		dom.BC.InOutFlow = 0;
 
-
-    	dom.Solve(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-        return 0;
+    //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    
+		return 0;
 }
 MECHSYS_CATCH

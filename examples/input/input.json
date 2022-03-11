@@ -1,41 +1,18 @@
 {
 "Configuration":
 {
-	"pause": true,
-	"sim2D": false, 
-	"timeStepSize": 5.0e-5,
-	"particleRadius": 0.005, 
-	"hFactor": 1.1,
-	"simulationMethod": 4,
-	"gravitation": [0.0,-9.81,0], 
-	"cflMethod": 0, 
-	"cflFactor": 0.2,
-	"cflMaxTimeStepSize": 0.005,
-	"integrationMethod": 0,
-	"nbsearchFrec": 0,
-	"tiFactor": 0.3,
-	"tiInitDistance": 0.01,
-	"maxIterations": 100,
-	"maxError": 0.01,
-	"maxIterationsV": 100,
-	"maxErrorV": 0.1
+	"particleRadius": 0.0085, 
+	"hFactor": 1.2
 }
 ,
 "Material": 
 {
 	"id": "Solid",
+	"type": Hollomon, 
 	"density0": 2700.0, 
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.33,
-	"yieldStress0": 3.0E6,
-	"surfaceTension": 0.2,
-	"surfaceTensionMethod": 0,		
-	"viscosity": 0.01,
-	"viscosityMethod": 1, 
-	"vorticityMethod": 1, 
-	"vorticity": 0.15, 
-	"viscosityOmega": 0.05,
-	"inertiaInverse": 0.5
+	"yieldStress0": 3.0E6
 },
 
 "DomainBlock": 

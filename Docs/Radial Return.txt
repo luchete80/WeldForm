@@ -1,0 +1,36 @@
+
+
+Case Bilinear/Multilinear material (Et prescribed, hence Ep)
+----------------------------------
+BILINEAR: Et = 0 
+dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+pl_strain += dep;
+delta_pl_strain = dep;
+if (Material_model == BILINEAR)
+	Sigmay += dep*Ep;									FRASER EQN 3-52
+
+
+
+Case yield_stress calculated from values
+--------------------------------------
+
+Here 
+
+
+
+[6] Brannon RM. Functional and Structured Tensor Analysis for Engineers. New Mexico:
+University of New Mexico; 2013.
+[7] Bonet J, Wood RD. Nonlinear Continuum Mechanics for Finite Element Analysis.
+Cambridge, UK: Cambridge University Press; 1997.
+
+[196] Pinsky PM, Ortiz M, Pister KS. Numerical integration of rate constitutive equations in
+finite deformation analysis. Computer Methods in Applied Mechanics and Engineering.
+1983;40:137-58.
+
+[198] Anandarajah A, SpringerLink (Service en ligne). Computational Methods in Elasticity
+and Plasticity [ressource électronique] : Solids and Porous Media. First. ed. New York, NY:
+Springer Science+Business Media, LLC; 2010.
+
+[202] Zaera R, Fernandez-Saez J. An implicit consistent algorithm for the integration of
+thermoviscoplastic consitutive equations in adiabatic conditions and finite deformations.
+International Journal of Solids and Structures. 2006;43:1594-612.

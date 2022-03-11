@@ -87,14 +87,21 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
+	CompressionForces
+	#Compression_Free
+	#CompressionForces2
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
 	#Elastic
 	#Heat_2D
+  #Kernel_Test
+  #Kernel_Test_2D
 	#Traction
+	#traction_app
+	#Traction_Hollomon
 	#Traction_JC
-	ThermalCompression
+	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D
 	#Plate-Yield
@@ -113,11 +120,13 @@ SET(EXES
 	#SolidBlock_Heat_source2
 	#SolidBlock_Heat_source2_boundpart
 	#Thermal_Expansion_2
+	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
 	#"Source/WeldForm"
 )
 
+add_subdirectory("examples")
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
@@ -127,6 +136,7 @@ FOREACH(var ${EXES})
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 ENDFOREACH(var)
 
+	
     # ADD_EXECUTABLE        (${EXES} "Plate-Yield.cpp")
     # TARGET_LINK_LIBRARIES (${EXES} ${LIBS} blitz)
     # SET_TARGET_PROPERTIES (${EXES} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")

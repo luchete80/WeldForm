@@ -99,10 +99,10 @@ int main(){
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + dom.Particles[dom.Particles.Size()-1]->h;
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),30);
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
 	cout << "Plane z" << *mesh.node[0]<<endl;
 	
 	
@@ -118,6 +118,8 @@ int main(){
 		dom.Particles[a]->Cs		= Cs;
 		dom.Particles[a]->Shepard	= false;
 		dom.Particles[a]->Material	= 2;
+		//dom.Particles[a]->Et_m = 0.01 * 68.9e9;	//In bilinear this is calculate once, TODO: Change to material definition
+		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
 		dom.Particles[a]->Alpha		= 1.0;
@@ -137,8 +139,9 @@ int main(){
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction = 0.0;
-	dom.PFAC = 0.5;
+	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
+	dom.update_contact_surface = false;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
@@ -154,7 +157,7 @@ int main(){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",999);
+	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

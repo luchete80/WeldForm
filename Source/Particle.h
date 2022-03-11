@@ -31,7 +31,9 @@
 #define TH_BC_CONDUCTION	2
 
 #define BILINEAR				0
-#define JOHNSON_COOK		1
+#define HOLLOMON				1 //POWER LAW
+#define JOHNSON_COOK		2
+
 
 namespace SPH {
 
@@ -64,6 +66,7 @@ namespace SPH {
 		Vec3_t	v;		///< Velocity of the particle n+1
 		Vec3_t	NSv;		///< Velocity of the fixed particle for no-slip BC
 		Vec3_t	VXSPH;		///< Mean Velocity of neighbor particles for updating the particle position (XSPH)
+		double XSPH;			///LUCIANO, CONSTANT XSPH FACTOR
 		Vec3_t	a;		///< Acceleration of the particle n
 		
 
@@ -131,6 +134,7 @@ namespace SPH {
 		size_t	Fail;		///< Failure criteria
 		
 		double 	Ep;		//TODO: Move To Material
+		double 	Et_m;	//This not make sens to be a material member since is instantaneous 
 
 		double	V;		///< Volume of a particle
 
@@ -166,6 +170,7 @@ namespace SPH {
 		
 		
 		// JOHNSON COOK_PARAMS
+		double eff_strain_rate;		//Useful only for this kind of material
 			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);

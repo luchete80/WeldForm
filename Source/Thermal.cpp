@@ -80,14 +80,23 @@ inline void Domain::CalcTempInc () {
 			double m, mc[2];
 			if (gradKernelCorr){
 				Mat3_t GKc[2];
-				GKc[0] = GK * P1->gradCorrM;
-				GKc[1] = GK * P2->gradCorrM;
+				GKc[0] = P1->gradCorrM;
+				GKc[1] = P2->gradCorrM;
 				
+				// if (SMPairs[k][a].first == 723){
+					// cout << "Original GK * xij"<<GK * xij<<endl;
+				// }
 				//Left in vector form and multiply after??
 				for (int i=0;i<2;i++){
 					Vec3_t v;
-					Mult (GKc[i], xij, v);
-					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v )/ (norm(xij)*norm(xij));
+					Mult (GKc[i], GK * xij, v);
+					// if (SMPairs[k][a].first == 723)
+					cout << "Orig, Corr GK * xij, Nb"<<GK * xij<<", "<< v;
+					if (i==0)
+					cout << P1->Nb<<endl;
+					else
+					cout << P2->Nb<<endl;
+					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v  )/ (norm(xij)*norm(xij));
 				}				
 			} else {
 				m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
@@ -98,6 +107,12 @@ inline void Domain::CalcTempInc () {
 			temp [SMPairs[k][a].second] -= mc[1];
 		}
 	}//Nproc
+	//Another test
+	// for (int i=0; i<Particles.Size(); i++){
+		// //double GK = temp[i] * GradKernel(Dimension, 0, 0., h);
+		// Vec3_t GK_c; 
+		// Mult(dom.Particles[i]->gradCorrM,temp[i],GK_c);
+	// }
 	
 	//TODO: MULTIPLY CORRECTED GRADIENT HERE AFTER ALL SUM 
 		//temp [i];
@@ -217,34 +232,20 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	}
 	
 	MainNeighbourSearch();
+	SaveNeighbourData();
+	cout << "Avg Nb Count: "<<AvgNeighbourCount()<<endl;
+	
+				String fn;
+				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+				WriteXDMF    (fn.CStr());
 	if (gradKernelCorr)
 		CalcGradCorrMatrix();
 	for ( size_t k = 0; k < Nproc ; k++) 
 		cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
-	std::vector <int> nb(Particles.Size());
-	std::vector <int> nbcount(Particles.Size());
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for ( int k = 0; k < Nproc ; k++) {
-		for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-			nb[SMPairs[k][a].first ]+=1;
-			nb[SMPairs[k][a].second]+=1;
-		}
-	}	
-	for (int p=0;p<Particles.Size();p++){
-		Particles[p]->Nb=nb[p];
-	}
-
-	unsigned long avg=0;
-	for (int i=0;i<nb.size();i++) {
-		avg+=nb[i];
-	}
-	avg/=nb.size();
-	cout << "Avg Neigbour : "<<avg<<endl;
 	
 	CalcConvHeat();
-	CalcTempInc();
-	
+	CalcTempInc();	
 	while (Time<tf && idx_out<=maxidx) {
 
 		auto start_task = std::chrono::system_clock::now();
@@ -346,21 +347,7 @@ inline void Domain::ThermalSolve_wo_init (double tf, double dt, double dtOut, ch
 		WriteXDMF    (fn.CStr());
 		std::cout << "\nInitial Condition has been generated\n" << std::endl;
 	}
-	
-	//MainNeighbourSearch();
-	std::vector <int> nb(Particles.Size());
-	std::vector <int> nbcount(Particles.Size());
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
-	for ( int k = 0; k < Nproc ; k++) {
-		for (int a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
-			nb[SMPairs[k][a].first ]+=1;
-			nb[SMPairs[k][a].second]+=1;
-		}
-	}	
-	for (int p=0;p<Particles.Size();p++){
-		Particles[p]->Nb=nb[p];
-	}
-	
+
 		
 	while (Time<tf && idx_out<=maxidx) {
 

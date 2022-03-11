@@ -118,7 +118,7 @@ public:
 	void ClearNbData();	
 	
     void WriteXDMF			(char const * FileKey);					//Save a XDMF file for the visualization
-
+    void WriteCSV				(char const * FileKey);					//Save a XDMF file for the visualization
 
     void InFlowBCLeave	();
     void InFlowBCFresh	();
@@ -147,11 +147,13 @@ public:
 	
 	/////////////// MEMBERS //
     // Data
-    Array <Particle*>				Particles; 	///< Array of particles
+//    std::vector< *Particle >				Particles; 	///< Array of particles
+Array <Particle*>				Particles; 	///< Array of particles
     double					R;		///< Particle Radius in addrandombox
 
 		double					sqrt_h_a;				//Coefficient for determining Time Step based on acceleration (can be defined by user)
-
+		double 					min_force_ts;		//min time step size due to contact forces
+		
     int 					Dimension;    	///< Dimension of the problem
 
     double					MuMax;		///< Max Dynamic viscosity for calculating the timestep
@@ -213,6 +215,7 @@ public:
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;
 	double 	& getTime (){return Time;}		//LUCIANO
+		bool 									update_contact_surface;
 
     Array<std::pair<size_t,size_t> >		Initial;
     Mat3_t I;
@@ -254,6 +257,7 @@ public:
 		void AllocateNbPair(const int &temp1, const int &temp2, const int &T);
 
 };
+
 
 }; // namespace SPH
 

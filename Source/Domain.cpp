@@ -117,6 +117,7 @@ inline Domain::Domain ()
 	contact = false;
 	contact_force_factor =1.;
 	friction = 0.0;
+	update_contact_surface = true;
 }
 
 inline Domain::~Domain ()
@@ -163,6 +164,12 @@ inline void Domain::AdaptiveTimeStep()
 			deltat		= 2.0*deltat*deltatint/(deltat+deltatint);
 		else
 			deltat		= deltatint;
+	}
+	
+	if (contact){
+		if (min_force_ts < deltat)
+		//cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
+		deltat = min_force_ts;
 	}
 
 	if (deltat<(deltatint/1.0e5))
@@ -745,7 +752,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	cout << "Surface particles" << surf_part<<endl;
+	cout << "Surface particles: " << surf_part<<endl;
 }
 
 
@@ -992,13 +999,15 @@ inline void Domain::CalcGradCorrMatrix () {
 	double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 	
 	std::vector < Mat3_t> temp(Particles.Size());
-	Mat3_t m,mt;
-
+	Mat3_t m,mt[2];
+	
+	//cout << "Applying grad corr"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
 		Vec3_t xij;
 		double h,GK;
+		//cout << "SMPairs[k].Size()"<<SMPairs[k].Size()<<endl;
 		//TODO: DO THE LOCK PARALLEL THING
 		for (size_t a=0; a<SMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
@@ -1012,22 +1021,65 @@ inline void Domain::CalcGradCorrMatrix () {
 			dj = P2->Density; mj = P2->Mass;
 		
 			Dyad (Vec3_t(GK*xij),xij,m);
-			mt = mj/dj * m;
+			mt[0] = mj/dj * m;
+			mt[1] = mi/di * m;
+			//cout << "mt"<<mt[0]<<endl;
 			//omp_set_lock(&P1->my_lock);
-			temp[SMPairs[k][a].first] = temp[SMPairs[k][a].first]  + mt;
-			temp[SMPairs[k][a].second]= temp[SMPairs[k][a].second] - mt;
+			//SIGN IS NEGATIVE (IF POSITIVE, GRADIENT SIGN IS OPPOSITE)
+			
+			temp[SMPairs[k][a].first]  = temp[SMPairs[k][a].first]  - mt[0];  
+			temp[SMPairs[k][a].second] = temp[SMPairs[k][a].second] - mt[1];
 		}
 	}//Nproc
-
-	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+	cout << "Fixed Pairs"<<endl;
+	for ( size_t k = 0; k < Nproc ; k++) {
+		Particle *P1,*P2;
+		Vec3_t xij;
+		double h,GK;
+		//TODO: DO THE LOCK PARALLEL THING
+		//cout << "FSMPairs[k].Size()"<<FSMPairs[k].Size()<<endl;
+		for (size_t a=0; a<FSMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
+			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+			P1	= Particles[FSMPairs[k][a].first];
+			P2	= Particles[FSMPairs[k][a].second];
+			xij	= P1->x - P2->x;
+			h	= (P1->h+P2->h)/2.0;
+			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
+			
+			di = P1->Density; mi = P1->Mass;
+			dj = P2->Density; mj = P2->Mass;
+		
+			Dyad (Vec3_t(GK*xij),xij,m);
+			mt[0] = mj/dj * m;
+			mt[1] = mi/di * m;
+			//omp_set_lock(&P1->my_lock);
+			//SIGN IS NEGATIVE (IF POSITIVE, GRADIENT SIGN IS OPPOSITE)
+			
+			temp[FSMPairs[k][a].first]  = temp[FSMPairs[k][a].first]  - mt[0];  
+			temp[FSMPairs[k][a].second] = temp[FSMPairs[k][a].second] - mt[1];
+		}
+	}//Nproc
+	//cout << "Inverting"<<endl;
+	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+	//cout << "Inverting"<<endl;
 	for (int i=0; i<Particles.Size(); i++){
+		// cout << "part "<<i<<endl;
+		//cout << "x: "<<Particles[i]->x<<endl;
+		// cout << "nb: "<<Particles[i]->Nb<<endl;
+		// if (!Particles[i]->IsFree) cout << "Fixed"<<endl;
 		//cout << "temp "<<temp[i]<<endl;
+		if (Dimension == 2)
+			temp[i](2,2) = 1;
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
-		Inv(temp[i],m);		
-		Particles[i] ->gradCorrM = m;
-	}
-	
+		if (Particles[i]->IsFree){
+			Inv(temp[i],m);	
+
+			Particles[i] ->gradCorrM = m;
+		} else {
+			Particles[i] ->gradCorrM = I;
+		}
+	}	
 }
 
 inline void Domain::Move (double dt) {
@@ -1141,7 +1193,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			//Fraser Thesis, Eqn. 3-153
 			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
 		}		
-		cout << "Contact Stiffness" << Particles [0] -> cont_stiff <<endl;
+		cout << "dS, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " << Particles [0] -> cont_stiff <<endl;
+		min_force_ts = deltat;
 	}
 	cout << "Fixed Particles Size: "<<FixedParticles.Size()<<endl;
 	cout << "Initial Cell Number: "<<CellNo[0]<<", " <<CellNo[1]<<", "<< CellNo[2]<<", " <<endl;
@@ -1186,6 +1239,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search			
 	}
+	
+	// if (gradKernelCorr)
+		// CalcGradCorrMatrix();	
 	ClearNbData();
 	
 	while (Time<=tf && idx_out<=maxidx) {
@@ -1212,6 +1268,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			MainNeighbourSearch/*_Ext*/();
 			
 			if (contact) {
+				//TODO: CHANGE CONTACT STIFFNESS!
 				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 				CalculateSurface(1);				//After Nb search			
 				ContactNbSearch();
@@ -1222,13 +1279,28 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
-				if (m_isNbDataCleared)
+				if (m_isNbDataCleared){
 					MainNeighbourSearch/*_Ext*/();
-			
-			cout << "RIG Pairs"<<endl;
-			for (int p=0;p<Nproc;p++)
-				cout << RIGPairs[p].size()<<", ";		
-				cout <<endl;
+					
+					if (contact) {
+						neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+						//cout << "performing contact search"<<endl
+						clock_beg = clock();
+						//if (update_contact_surface){
+							SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+							CalculateSurface(1);				//After Nb search			
+							ContactNbSearch();
+							SaveContNeighbourData();
+						//}
+					}//contact				
+					contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+			}// ts_i == 0				
+				
+				}
+			// cout << "RIG Pairs"<<endl;
+			// for (int p=0;p<Nproc;p++)
+				// cout << RIGPairs[p].size()<<", ";		
+				// cout <<endl;
 
 			// cout << "SM Pairs"<<endl;
 			// for (int p=0;p<Nproc;p++)
@@ -1240,21 +1312,26 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				// cout << ContPairs[p].size()<<", ";		
 				// cout <<endl;					
 			
-			neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-				//cout << "performing contact search"<<endl
-				clock_beg = clock();
-				if (contact) {
-					SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-					CalculateSurface(1);				//After Nb search			
-					ContactNbSearch();
-					SaveContNeighbourData();
-					//SaveNeighbourData();	//Again Save Nb data
-				}//contact				
-				contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-			}// ts_i == 0
+			// neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+				// //cout << "performing contact search"<<endl
+				// clock_beg = clock();
+				// if (contact) {
+					// //if (update_contact_surface){
+						// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+						// CalculateSurface(1);				//After Nb search			
+						// ContactNbSearch();
+						// SaveContNeighbourData();
+					// //}
+				// }//contact				
+				// contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+			// }// ts_i == 0
 			isfirst = false;
-		}
-
+		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+		
+		//NEW, gradient correction
+		if (gradKernelCorr)
+			CalcGradCorrMatrix();		
+			
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
@@ -1279,6 +1356,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				String fn;
 				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
 				WriteXDMF    (fn.CStr());
+				//fn.Printf    ("%s_%.5f", TheFileKey, Time);
+				WriteCSV    (fn.CStr());
 
 			}
 			idx_out++;
@@ -1310,15 +1389,19 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				cout << "Max Contact Force: "<<max_contact_force<<endl;
 		}
 		
+		// for (int i=0; i<Particles.Size(); i++){
+			// if (Particles[i]->contforce>0.)
+		
 		if (auto_ts)
 			AdaptiveTimeStep();
 		clock_beg = clock();
+
 		Move(deltat);
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		
 		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things
 		if (contact){
+			//cout << "checking contact"<<endl;
 			trimesh->UpdatePos (deltat); //Update Node Pos
 			//Update Normals
 			trimesh->UpdatePlaneCoeff();	//If normal does not change..

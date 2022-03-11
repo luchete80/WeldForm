@@ -74,27 +74,32 @@ int main(int argc, char **argv) try
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 1;	//Mod Verlet
 			//dom.XSPH	= 0.5; //Very important
+			
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
 		double Lz_side,Lz_neckmin,Lz_necktot,Rxy_center;
 		
-    	R	= 0.075;
+	R	= 0.075;
 
-		Lz_side =0.2;
-		Lz_neckmin = 0.050;
-		Lz_necktot = 0.100;
-		Rxy_center = 0.050;
-		L = 2. * Lz_side + Lz_necktot;
-		
-		double E  = 210.e9;
-		double nu = 0.3;
-		
-    	rho	= 7850.0;
-		K= E / ( 3.*(1.-2*nu) );
-		G= E / (2.* (1.+nu));
-		Fy	= 350.e6;
+	Lz_side =0.2;
+	Lz_neckmin = 0.050;
+	Lz_necktot = 0.100;
+	Rxy_center = 0.050;
+	L = 2. * Lz_side + Lz_necktot;
 
+	double E  = 210.e9;
+	double nu = 0.3;
+
+	rho	= 7850.0;
+	K= E / ( 3.*(1.-2*nu) );
+	G= E / (2.* (1.+nu));
+	Fy	= 350.e6;
+	
+	Elastic_ el(E,nu);
+	//Hollomon(const double eps0_, const double &k_, const double &m_):
+	Hollomon mat(el,Fy/E,1220.e6,0.195);
+			
 
 		dx = 0.0085;
     h	= dx*1.2; //Very important
@@ -129,7 +134,11 @@ int main(int argc, char **argv) try
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		dom.Particles[a]->G		= G;
+				
+				dom.Particles[a]-> Material_model = HOLLOMON;
+				dom.Particles[a]->mat = &mat;
+				
+				dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
@@ -152,7 +161,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

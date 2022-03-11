@@ -42,6 +42,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     NSv = 0.0;
     v = v0;
     VXSPH = 0.0;
+    XSPH = 0.0;
     TI		= 0.0;
     TIn		= 4.0;
     TIInitDist  = 0.0;
@@ -162,8 +163,8 @@ inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 		ct = 30;
 		FirstStep = false;
 	}
-	
-	Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;
+	Vec3_t du = dt*v*(1+XSPH) + 0.5*dt*dt*a;
+//Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;	
 	Displacement += du;
 	x += du;
 
@@ -470,6 +471,87 @@ inline void Particle::CalculateEquivalentStress () {
 	Sigma_eq = sqrt(3.0*J2);	
 }
 
+// ORIGINAL LEAPFROG! 
+// DELETE WHEN DONE
+// inline void Particle::Mat2Leapfrog(double dt) {
+	
+	// Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
+
+	// // Jaumann rate terms
+	// Mat3_t RotationRateT,SRT,RS;
+	// Trans(RotationRate,RotationRateT);
+	// Mult(ShearStress,RotationRateT,SRT);
+	// Mult(RotationRate,ShearStress,RS);
+	// double dep =0.;
+	
+	// // Elastic prediction step (ShearStress_e n+1)
+	// if (FirstStep)
+		// ShearStressa	= -dt/2.0*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStress;
+	// ShearStressb	= ShearStressa;
+	// ShearStressa	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressa;
+
+	// if (Fail == 1) {
+		// double J2	= 0.5*(ShearStressa(0,0)*ShearStressa(0,0) + 2.0*ShearStressa(0,1)*ShearStressa(1,0) +
+						// 2.0*ShearStressa(0,2)*ShearStressa(2,0) + ShearStressa(1,1)*ShearStressa(1,1) +
+						// 2.0*ShearStressa(1,2)*ShearStressa(2,1) + ShearStressa(2,2)*ShearStressa(2,2));
+		// //Scale back, Fraser Eqn 3-53
+		// ShearStressa= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStressa;
+		// //In case of Flow Stress Model, Initial sigma_y should be calculated
+		// double sig_trial = sqrt(3.0*J2);
+		// if ( sig_trial > Sigmay) {
+			// //Common for both methods
+			// dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			// pl_strain += dep;
+			// delta_pl_strain = dep;
+			// if (Material_model == BILINEAR){
+				// Sigmay += dep*Ep;
+			// } else if (Material_model == JOHNSON_COOK){
+				// ///////////////// JOHNSON COOK MATERIAL ////////////////////////
+				// //HERE, ET IS CALCULATED (NOT GIVEN), AND Flow stress is not incremented but calculated from expression
+				// //TODO: Calculate depdt this once (also in thermal expansion)
+				// Mat3_t depdt = 1./dt*Strain_pl_incr;	//Like in CalcPlasticWorkHeat
+
+				// double eff_strain_rate = sqrt ( 3.0 * 0.5*(depdt(0,0)*depdt(0,0) + 2.0*depdt(0,1)*depdt(1,0) +
+																			// 2.0*depdt(0,2)*depdt(2,0) + depdt(1,1)*depdt(1,1) +
+																			// 2.0*depdt(1,2)*depdt(2,1) + depdt(2,2)*depdt(2,2))
+																			// );
+				
+				// double prev_sy = Sigmay;			
+				// Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
+				// double Et = ( Sigmay - prev_sy)/dep;			//Fraser 3-54
+				// Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+			// }	
+		// }//sig_trial > Sigmay
+	// } //If fail
+	// ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);
+	
+	// Sigma = -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
+	// // dlambda = 3/2 dep /sigmay
+	// if ( dep > 0.0 ) {
+		// double f = dep/Sigmay;
+		// Strain_pl_incr (0,0) = f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
+		// Strain_pl_incr (1,1) = f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
+		// Strain_pl_incr (2,2) = f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+		// Strain_pl_incr (0,1) = Strain_pl_incr (1,0) = 1.5*f*(Sigma(0,1));
+		// Strain_pl_incr (0,2) = Strain_pl_incr (2,0) = 1.5*f*(Sigma(0,2));
+		// Strain_pl_incr (1,2) = Strain_pl_incr (2,1) = 1.5*f*(Sigma(1,2));
+		
+		// Strain_pl = Strain_pl + Strain_pl_incr;
+	// }	
+
+	// if (FirstStep)
+		// Straina	= -dt/2.0*StrainRate + Strain;
+	// Strainb	= Straina;
+	// Straina	= dt*StrainRate + Straina;
+	// Strain	= 1.0/2.0*(Straina+Strainb);
+
+
+	// if (Fail > 1){
+		// std::cout<<"Undefined failure criteria for solids"<<std::endl;
+		// abort();
+	// }
+// }
+
 inline void Particle::Mat2Leapfrog(double dt) {
 	
 	Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
@@ -480,6 +562,8 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	Mult(ShearStress,RotationRateT,SRT);
 	Mult(RotationRate,ShearStress,RS);
 	double dep =0.;
+	double prev_sy;
+	double Et;
 	
 	// Elastic prediction step (ShearStress_e n+1)
 	if (FirstStep)
@@ -495,29 +579,36 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		ShearStressa= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStressa;
 		//In case of Flow Stress Model, Initial sigma_y should be calculated
 		double sig_trial = sqrt(3.0*J2);
+		
 		if ( sig_trial > Sigmay) {
+			//TODO: USE Same CalcYieldStress function with no arguments and update material "current state" before??
+			//Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
+			if (Material_model == HOLLOMON ){
+				//cout << "calculating tangent modulus"<<endl;
+				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
+				Et_m = Et;
+			}
+			//else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
+				// ///////////////// JOHNSON COOK MATERIAL ////////////////////////
+				// //HERE, ET IS CALCULATED (NOT GIVEN), AND Flow stress is not incremented but calculated from expression
+				// //TODO: Calculate depdt this once (also in thermal expansion)
+				// Mat3_t depdt = 1./dt*Strain_pl_incr;	//Like in CalcPlasticWorkHeat
+			
+				// //equivalent strain rate 
+				// eff_strain_rate = sqrt ( 3.0 * 0.5*(depdt(0,0)*depdt(0,0) + 2.0*depdt(0,1)*depdt(1,0) +
+																			// 2.0*depdt(0,2)*depdt(2,0) + depdt(1,1)*depdt(1,1) +
+																			// 2.0*depdt(1,2)*depdt(2,1) + depdt(2,2)*depdt(2,2))
+																			// );
+				// //Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
+
+			if (Material_model > BILINEAR ) {//Else Ep = 0
+				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+			}
 			//Common for both methods
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			pl_strain += dep;
-			delta_pl_strain = dep;
-			if (Material_model == BILINEAR){
-				Sigmay += dep*Ep;
-			} else if (Material_model == JOHNSON_COOK){
-				///////////////// JOHNSON COOK MATERIAL ////////////////////////
-				//HERE, ET IS CALCULATED (NOT GIVEN), AND Flow stress is not incremented but calculated from expression
-				//TODO: Calculate depdt this once (also in thermal expansion)
-				Mat3_t depdt = 1./dt*Strain_pl_incr;	//Like in CalcPlasticWorkHeat
-
-				double eff_strain_rate = sqrt ( 3.0 * 0.5*(depdt(0,0)*depdt(0,0) + 2.0*depdt(0,1)*depdt(1,0) +
-																			2.0*depdt(0,2)*depdt(2,0) + depdt(1,1)*depdt(1,1) +
-																			2.0*depdt(1,2)*depdt(2,1) + depdt(2,2)*depdt(2,2))
-																			);
-				
-				double prev_sy = Sigmay;			
-				Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
-				double Et = ( Sigmay - prev_sy)/dep;			//Fraser 3-54
-				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
-			}	
+			delta_pl_strain = dep; // For heating work calculation
+			Sigmay += dep*Ep;
 		}//sig_trial > Sigmay
 	} //If fail
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);
@@ -548,7 +639,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	Straina	= dt*StrainRate + Straina;
 	Strain	= 1.0/2.0*(Straina+Strainb);
 
-
+	
 	if (Fail > 1){
 		std::cout<<"Undefined failure criteria for solids"<<std::endl;
 		abort();
