@@ -603,6 +603,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		//double Mass = Vol * Density / (Particles.Size()-PrePS);
 		double Mass = Vol * Density /Particles.Size();
 		
+		cout << "Total Particle count: " << Particles.Size() <<endl;
 		cout << "Particle mass: " << Mass <<endl;
 
 		#pragma omp parallel for num_threads(Nproc)
@@ -812,7 +813,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	cout << "Surface particles: " << surf_part<<endl;
+	//cout << "Surface particles: " << surf_part<<endl;
 }
 
 
