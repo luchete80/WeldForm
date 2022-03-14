@@ -400,7 +400,7 @@ inline void Domain::WriteCSV(char const * FileKey)
 	//Writing in a Log file
 	String fn(FileKey);
 	
-	oss << "X, Y, Z, Sigma_eq, Pl_Strain "<<endl;;
+	oss << "X, Y, Z, Vx, Vy, Vz, Ax, Ay, Az, Sigma_eq, Pl_Strain "<<endl;;
 	
 	//#pragma omp parallel for schedule(static) num_threads(Nproc)
 	// #ifdef __GNUC__
@@ -411,6 +411,12 @@ inline void Domain::WriteCSV(char const * FileKey)
 	{
 		for (int j=0;j<3;j++)
 			oss << Particles[i]->x(j)<<", ";
+
+		for (int j=0;j<3;j++)
+			oss << Particles[i]->v(j)<<", ";
+
+		for (int j=0;j<3;j++)
+			oss << Particles[i]->a(j)<<", ";
 		
 		Particles[i]->CalculateEquivalentStress();		//If XML output is active this is calculated twice
 		oss << Particles[i]->Sigma_eq<< ", "<< Particles[i]->pl_strain <<endl;

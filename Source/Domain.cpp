@@ -1102,8 +1102,18 @@ inline void Domain::Move (double dt) {
 				}
 			}
 		//cout << "Before move"<<Particles[i]->ShearStressA;
-		Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
+		if (i ==1250){
+			cout << "(PresEq, Cs, P0,Density, RefDensity"<<endl;
+			cout <<Particles[i]->PresEq<<", "<<Particles[i]->Cs<<", "<<Particles[i]->P0<<", "<<Particles[i]->Density<<", "<<Particles[i]->RefDensity<<endl;
 		}
+			
+			Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
+			if (i ==1250){
+			cout << "AFTER MOVE(PresEq, Cs, P0,Density, RefDensity"<<endl;
+			cout <<Particles[i]->PresEq<<", "<<Particles[i]->Cs<<", "<<Particles[i]->P0<<", "<<Particles[i]->Density<<", "<<Particles[i]->RefDensity<<endl;
+			}
+		}
+
 }
 
 inline void Domain::WholeVelocity() {
@@ -1421,6 +1431,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			//cout << "Particle " << i << ", ID "<< Particles[i]->ID<<", Acc "<<Particles[i]->a<<endl;
 			if (i==1250){
 			cout << "Particle 1250 Acc " << Particles[i]->a <<endl;
+			cout << "Particle 1250 dDensity" << Particles[i]->dDensity <<endl;			
 			cout << "Particle 1250 Disp " << Particles[i]->Displacement <<endl;
 			cout << "Particle 1250 Pressure " <<Particles[i]->Pressure<<endl;
 			cout << "Particle 1250 ShearStress a " <<Particles[i]->ShearStressa<<endl;

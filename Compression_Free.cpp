@@ -115,7 +115,7 @@ int main(int argc, char **argv) try
 		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-
+		dom.auto_ts = false;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G		= G;
@@ -127,7 +127,8 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Sigmay	= Fy;
     		dom.Particles[a]->Alpha		= 0.0;
     		//dom.Particles[a]->Beta		= 1.0;
-    		dom.Particles[a]->TI		= 0.3;
+    		dom.Particles[a]->TI		= 0.0;
+//    		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
@@ -144,8 +145,8 @@ int main(int argc, char **argv) try
 		dom.BC.InOutFlow = 0;
 
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*//*0.0105*/2.*timestep+1e-8,/*dt*/timestep,/*dtOut*/timestep,"test_gpu",999);
-		//dom.Solve(0.002,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		//dom.Solve(/*tf*//*0.0105*/4.*timestep+1e-8,/*dt*/timestep,/*dtOut*/timestep,"test_gpu",999);
+		dom.Solve(0.001,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }
