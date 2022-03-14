@@ -174,8 +174,8 @@ inline void Domain::CalcForce2233(int i, int j)
 		// else
 			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
 		
-		if (i==1250 || j ==1250)
-			cout << "Particle i <<" <<i<< " j, Time "<< j<< Time <<" Sigmai Sigma j"<<endl<<Sigmai<< ", "<<Sigmaj<<endl;
+		// if (i==1250 || j ==1250)
+			// cout << "Particle i <<" <<i<< " j, Time "<< j<< Time <<" Sigmai Sigma j"<<endl<<Sigmai<< ", "<<Sigmaj<<endl;
 		// NEW
 		//if (!gradKernelCorr) {
 		Mat3_t test = 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj;
@@ -183,8 +183,8 @@ inline void Domain::CalcForce2233(int i, int j)
 			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
 		else
 			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-		if (i==1250 || j ==1250)
-			cout <<"i "<<i<<", j "<<j<<"1/di2 Sigmai + 1/dj2Sigmai GK*xij \n"<<temp<<", "<<xij<<endl;
+		// if (i==1250 || j ==1250)
+			// cout <<"i "<<i<<", j "<<j<<"1/di2 Sigmai + 1/dj2Sigmai GK*xij \n"<<temp<<", "<<xij<<endl;
 		// } else {
 				// //Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				// //Left in vector form and multiply after??
