@@ -96,14 +96,14 @@ SET(EXES
 	#FreeSurface
 	#Elastic
 	#Heat_2D
-	Impact_Contact
+	#Impact_Contact
 	#Impact_Zhang2017
   #Kernel_Test
   #Kernel_Test_2D
 	#Traction
 	#traction_app
 	#Traction_Hollomon
-	#Traction_JC
+	Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D
