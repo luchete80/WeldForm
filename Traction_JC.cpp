@@ -74,8 +74,21 @@ int main(int argc, char **argv) try
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 1;	//Mod Verlet
 			//dom.XSPH	= 0.5; //Very important
-			
-			JohnsonCook mat;
+      double A,B,C,n_,m,T_m,T_t,eps_0;
+      A = 175.; B = 380.0; C = 0.0015;
+      m = 1.0;  n_ = 0.34; eps_0 = 1.0;
+      T_m = 775.; T_t = 273.;
+      
+//Material A (MPa) B (MPa) C      n     m   Troom (K) Tmelt (K)
+//Aluminum 175      380    0.0015 0.34 1.00 273       775			
+//JohnsonCook(const double &a, const double &b, const double &c, const double &eps_0):
+	// JohnsonCook(const double &a, const double &b, const double &c, 
+              // const double &m_, const double &n_, const double &eps_0_, 
+              // const double &T_m_, const double &T_t_)
+			// JohnsonCook mat(A,B,C,
+                      // m,n_,eps_0,
+                      // T_m, T_t);
+                      
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
@@ -91,7 +104,10 @@ int main(int argc, char **argv) try
 		
 		double E  = 210.e9;
 		double nu = 0.3;
-		
+
+      Elastic_ el(E,nu);              
+      Hollomon mat(el,Fy/E,1220.e6,0.195);
+      
     	rho	= 7850.0;
 		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
@@ -133,7 +149,8 @@ int main(int argc, char **argv) try
     	{
 				
 				dom.Particles[a]-> Material_model = JOHNSON_COOK;
-				dom.Particles[a]-> T = 100.0;
+				dom.Particles[a]-> Material_model = HOLLOMON;
+        dom.Particles[a]-> T = 273.;
 				dom.Particles[a]->k_T			=	150.;
 				dom.Particles[a]->cp_T			=	960.; 
 				
@@ -160,7 +177,8 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.ThermalStructSolve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	//dom.ThermalStructSolve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+      dom.Solve(/*tf*/0.00105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH

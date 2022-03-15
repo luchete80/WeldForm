@@ -579,8 +579,10 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		ShearStressa= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStressa;
 		//In case of Flow Stress Model, Initial sigma_y should be calculated
 		double sig_trial = sqrt(3.0*J2);
-		
+		//cout << "Sigmay "<<Sigmay<<endl;
+    
 		if ( sig_trial > Sigmay) {
+      cout << "Plastic"<<endl;
 			//TODO: USE Same CalcYieldStress function with no arguments and update material "current state" before??
 			//Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
 			if (Material_model == HOLLOMON ){
@@ -595,14 +597,18 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				// Mat3_t depdt = 1./dt*Strain_pl_incr;	//Like in CalcPlasticWorkHeat
 			
 				// //equivalent strain rate 
-				// eff_strain_rate = sqrt ( 3.0 * 0.5*(depdt(0,0)*depdt(0,0) + 2.0*depdt(0,1)*depdt(1,0) +
-																			// 2.0*depdt(0,2)*depdt(2,0) + depdt(1,1)*depdt(1,1) +
-																			// 2.0*depdt(1,2)*depdt(2,1) + depdt(2,2)*depdt(2,2))
-																			// );
+				eff_strain_rate = sqrt ( 3.0 * 0.5*(StrainRate(0,0)*StrainRate(0,0) + 2.0*StrainRate(0,1)*StrainRate(1,0) +
+																			2.0*StrainRate(0,2)*StrainRate(2,0) + StrainRate(1,1)*StrainRate(1,1) +
+																			2.0*StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,2)*StrainRate(2,2))
+																			);
+        cout << "Calculating Et for sig_trial"<<sig_trial<<", sigmay "<<Sigmay<<", pl_strain "<<pl_strain<< ", strain rate eff "<<eff_strain_rate<<
+        ", T"<<T<<endl;
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
+        cout << "Et: "<<Et<<endl;
 			}
 			if (Material_model > BILINEAR ) {//Else Ep = 0
 				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+        //cout << "Material Ep "<<Ep<<endl;
 			}
 			//Common for both methods
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0

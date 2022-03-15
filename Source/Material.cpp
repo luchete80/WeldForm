@@ -9,12 +9,17 @@ inline double JohnsonCook::CalcYieldStress(const double &strain, const double &s
 	return sy;
 }	
 
+#include<iostream>
+using namespace std;
 inline double JohnsonCook::CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp)	{
-	double sy;
-	double T_h = (temp - T_t) / (T_m - T_t);
-	//double sy = (A+B*pow(strain, n))*(1.0 + C * log (strain_rate/ eps_0) ) * (1.0 - pow(T_h,m));
-  double Et;
-	Et = n * B * pow(strain,n-1.)*(1.0 + C*log(strain_rate/ eps_0)) * (1.0-pow (T_h,m));
+	double sy, T_h;
+  cout << "n, B, C, eps_0, T_t, m"<<n<<", "<<B<<", "<<C<<"eps0, "<<eps_0<<", "<<", "<<T_t<<", "<<m<<endl;
+	 // T_h = (temp - T_t) / (T_m - T_t);
+	
+  //double sy = (A+B*pow(strain, n))*(1.0 + C * log (strain_rate/ eps_0) ) * (1.0 - pow(T_h,m));
+  double Et =0.;
+
+	//Et = n * B * pow(strain,n-1.)*(1.0 + C*log(strain_rate/ eps_0)) * (1.0-pow (T_h,m));
 	return Et;
 }	
 

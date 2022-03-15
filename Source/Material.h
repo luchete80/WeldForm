@@ -29,6 +29,7 @@ class Material_{
 	virtual inline double CalcYieldStress();
 	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){}
 	const Elastic_& Elastic()const{return elastic_m;}
+  //~Material_();
 };
 
 class _Plastic{
@@ -51,11 +52,16 @@ public Material_{
 	//You provide the values of A, B, n, m, 
 	//θmelt, and  θ_transition
 	//as part of the metal plasticity material definition.
-	JohnsonCook(const double &a, const double &b, const double &c, const double &eps_0):
-	A(a),B(b),C(c){}
+	JohnsonCook(const double &a, const double &b, const double &c, 
+              const double &m_, const double &n_, const double &eps_0_, 
+              const double &T_m_, const double &T_t_):
+	A(a),B(b),C(c),
+  m(m_),n(n_),eps_0(eps_0_),T_m(T_m_),T_t(T_t_)
+  {}
 	inline double CalcYieldStress(){}	
 	inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp);	
 	inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp);
+  //~JohnsonCook(){}
 };
 
 class Hollomon:
