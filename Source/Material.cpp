@@ -19,7 +19,7 @@ inline double JohnsonCook::CalcTangentModulus(const double &strain, const double
   //double sy = (A+B*pow(strain, n))*(1.0 + C * log (strain_rate/ eps_0) ) * (1.0 - pow(T_h,m));
   double Et =0.;
 
-	//Et = n * B * pow(strain,n-1.)*(1.0 + C*log(strain_rate/ eps_0)) * (1.0-pow (T_h,m));
+	Et = n * B * pow(strain,n-1.)*(1.0 + C*log(strain_rate/ eps_0)) * (1.0-pow (T_h,m));
 	return Et;
 }	
 

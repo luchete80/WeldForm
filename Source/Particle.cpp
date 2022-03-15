@@ -601,10 +601,10 @@ inline void Particle::Mat2Leapfrog(double dt) {
 																			2.0*StrainRate(0,2)*StrainRate(2,0) + StrainRate(1,1)*StrainRate(1,1) +
 																			2.0*StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,2)*StrainRate(2,2))
 																			);
-        cout << "Calculating Et for sig_trial"<<sig_trial<<", sigmay "<<Sigmay<<", pl_strain "<<pl_strain<< ", strain rate eff "<<eff_strain_rate<<
-        ", T"<<T<<endl;
+        // cout << "Calculating Et for sig_trial"<<sig_trial<<", sigmay "<<Sigmay<<", pl_strain "<<pl_strain<< ", strain rate eff "<<eff_strain_rate<<
+        // ", T"<<T<<endl;
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
-        cout << "Et: "<<Et<<endl;
+        //cout << "Et: "<<Et<<endl;
 			}
 			if (Material_model > BILINEAR ) {//Else Ep = 0
 				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);

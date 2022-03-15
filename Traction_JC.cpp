@@ -1,22 +1,22 @@
-/***********************************************************************************
-* PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
-*             and soils) using Smoothed Particle Hydrodynamics method              *   
-* Copyright (C) 2013 Maziar Gholami Korzani and Sergio Galindo-Torres              *
-*                                                                                  *
-* This file is part of PersianSPH                                                  *
-*                                                                                  *
-* This is free software; you can redistribute it and/or modify it under the        *
-* terms of the GNU General Public License as published by the Free Software        *
-* Foundation; either version 3 of the License, or (at your option) any later       *
-* version.                                                                         *
-*                                                                                  *
-* This program is distributed in the hope that it will be useful, but WITHOUT ANY  *
-* WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A  *
-* PARTICULAR PURPOSE. See the GNU General Public License for more details.         *
-*                                                                                  *
-* You should have received a copy of the GNU General Public License along with     *
-* PersianSPH; if not, see <http://www.gnu.org/licenses/>                           *
-************************************************************************************/
+// // **********************************************************************************
+// // * PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
+// // *             and soils) using Smoothed Particle Hydrodynamics method              *   
+// // * Copyright (C) 2013 Maziar Gholami Korzani and Sergio Galindo-Torres              *
+// // *                                                                                  *
+// // * This file is part of PersianSPH                                                  *
+// // *                                                                                  *
+// // * This is free software; you can redistribute it and/or modify it under the        *
+// // * terms of the GNU General Public License as published by the Free Software        *
+// // * Foundation; either version 3 of the License, or (at your option) any later       *
+// // * version.                                                                         *
+// // *                                                                                  *
+// // * This program is distributed in the hope that it will be useful, but WITHOUT ANY  *
+// // * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A  *
+// // * PARTICULAR PURPOSE. See the GNU General Public License for more details.         *
+// // *                                                                                  *
+// // * You should have received a copy of the GNU General Public License along with     *
+// // * PersianSPH; if not, see <http://www.gnu.org/licenses/>                           *
+// // ************************************************************************************/
 
 #include "Domain.h"
 
@@ -74,20 +74,6 @@ int main(int argc, char **argv) try
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 1;	//Mod Verlet
 			//dom.XSPH	= 0.5; //Very important
-      double A,B,C,n_,m,T_m,T_t,eps_0;
-      A = 175.; B = 380.0; C = 0.0015;
-      m = 1.0;  n_ = 0.34; eps_0 = 1.0;
-      T_m = 775.; T_t = 273.;
-      
-//Material A (MPa) B (MPa) C      n     m   Troom (K) Tmelt (K)
-//Aluminum 175      380    0.0015 0.34 1.00 273       775			
-//JohnsonCook(const double &a, const double &b, const double &c, const double &eps_0):
-	// JohnsonCook(const double &a, const double &b, const double &c, 
-              // const double &m_, const double &n_, const double &eps_0_, 
-              // const double &T_m_, const double &T_t_)
-			// JohnsonCook mat(A,B,C,
-                      // m,n_,eps_0,
-                      // T_m, T_t);
                       
 
         double dx,h,rho,K,G,Cs,Fy;
@@ -106,15 +92,30 @@ int main(int argc, char **argv) try
 		double nu = 0.3;
 
       Elastic_ el(E,nu);              
-      Hollomon mat(el,Fy/E,1220.e6,0.195);
+      //Hollomon mat(el,Fy/E,1220.e6,0.195);
+
+      double A,B,C,n_,m,T_m,T_t,eps_0;
+      A = 175.; B = 380.0; C = 0.0015;
+      m = 1.0;  n_ = 0.34; eps_0 = 1.0;
+      T_m = 775.; T_t = 273.;
       
+//Material A (MPa) B (MPa) C      n     m   Troom (K) Tmelt (K)
+//Aluminum 175      380    0.0015 0.34 1.00 273       775			
+//JohnsonCook(const double &a, const double &b, const double &c, const double &eps_0):
+	// JohnsonCook(const double &a, const double &b, const double &c, 
+              // const double &m_, const double &n_, const double &eps_0_, 
+              // const double &T_m_, const double &T_t_)
+			JohnsonCook mat(el, A,B,C,
+                      m,n_,eps_0,
+                      T_m, T_t);
+                      
     	rho	= 7850.0;
 		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
 		Fy	= 350.e6;
 
 
-		dx = 0.010;
+		dx = 0.030;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -148,7 +149,7 @@ int main(int argc, char **argv) try
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				
-				dom.Particles[a]-> Material_model = JOHNSON_COOK;
+				//dom.Particles[a]-> Material_model = JOHNSON_COOK;
 				dom.Particles[a]-> Material_model = HOLLOMON;
         dom.Particles[a]-> T = 273.;
 				dom.Particles[a]->k_T			=	150.;
@@ -177,8 +178,8 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	//dom.ThermalStructSolve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-      dom.Solve(/*tf*/0.00105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	//dom.ThermalStructSolve(/*tf0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+      dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH
