@@ -588,7 +588,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
 				Et_m = Et;
 			}
-			//else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
+			else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
 				// ///////////////// JOHNSON COOK MATERIAL ////////////////////////
 				// //HERE, ET IS CALCULATED (NOT GIVEN), AND Flow stress is not incremented but calculated from expression
 				// //TODO: Calculate depdt this once (also in thermal expansion)
@@ -599,8 +599,8 @@ inline void Particle::Mat2Leapfrog(double dt) {
 																			// 2.0*depdt(0,2)*depdt(2,0) + depdt(1,1)*depdt(1,1) +
 																			// 2.0*depdt(1,2)*depdt(2,1) + depdt(2,2)*depdt(2,2))
 																			// );
-				// //Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
-
+				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
+			}
 			if (Material_model > BILINEAR ) {//Else Ep = 0
 				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
 			}
