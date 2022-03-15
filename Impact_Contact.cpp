@@ -80,11 +80,14 @@ int main(){
 	nu = 0.35;
 	K = E / ( 3.*(1.-2*nu) );
 	G = E / (2.* (1.+nu));
-
-	Elastic_ el(E,nu);
+	
+	double Et = 0.1*E;
+	//Elastic_ el(E,nu);
 	//Hollomon(const double eps0_, const double &k_, const double &m_):
 	//Hollomon mat(el,Fy/E,1220.e6,0.195);
-	
+
+	double Ep =  E*Et/(E-Et);
+		
 	Fy	= 400.e6;
 	dx	= L / (n-1);
 	//dx = 0.001;
@@ -124,6 +127,7 @@ int main(){
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		//dom.Particles[a]->mat = &mat;	//For  Hollomon
+		dom.Particles[a]->Ep		= Ep;
 		dom.Particles[a]->G		= G;
 		dom.Particles[a]->PresEq	= 0;
 		dom.Particles[a]->Cs		= Cs;
