@@ -93,8 +93,8 @@ int main(){
 	Elastic_ el(E,nu);
 	//Hollomon(const double eps0_, const double &k_, const double &m_):
 	//Hollomon mat(el,Fy/E,1220.e6,0.195);
-	
-	JohnsonCook mat(175.0,380.0, 0.0015, const double &eps_0):
+	double eps_0 = 1.0;
+	JohnsonCook mat(175.0,380.0, 0.0015, eps_0);
 	
 	Fy	= 400.e6;
 	dx	= L / (n-1);
@@ -132,9 +132,15 @@ int main(){
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
 	
+	double T_h = 0.;	//Homologous or room temp
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
-		dom.Particles[a]->mat = &mat;	//For  Hollomon
+		//dom.Particles[a]->T = 0.;
+		dom.Particles[a]-> Material_model = JOHNSON_COOK;
+		//Need to calculate Initial Yield Stress
+		//CalcYieldStress(const double &strain, const double &strain_rate, const double &temp)
+		dom.Particles[a]->Sigmay = dom.Particles[a]->mat->CalcYieldStress(0.,0., T_h);	//For  Hollomon
+
 		dom.Particles[a]->G		= G;
 		dom.Particles[a]->PresEq	= 0;
 		dom.Particles[a]->Cs		= Cs;
@@ -143,7 +149,7 @@ int main(){
 		//dom.Particles[a]->Et_m = 0.01 * 68.9e9;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
-		dom.Particles[a]->Sigmay	= Fy;
+		//dom.Particles[a]->Sigmay	= Fy;
 		dom.Particles[a]->Alpha		= 1.0;
 		//dom.Particles[a]->Beta		= 1.0;
 		dom.Particles[a]->TI		= 0.3;
@@ -179,7 +185,9 @@ int main(){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-	dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
+	//dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
+	dom.Solve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
+	//dom.ThermalStructSolve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
 	
 	dom.WriteXDMF("ContactTest");
 }

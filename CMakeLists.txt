@@ -96,7 +96,8 @@ SET(EXES
 	#FreeSurface
 	#Elastic
 	#Heat_2D
-	Impact_Contact
+	#Impact_Contact
+	Impact_Zhang2017
   #Kernel_Test
   #Kernel_Test_2D
 	#Traction
