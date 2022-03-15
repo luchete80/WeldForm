@@ -602,21 +602,21 @@ inline void Particle::Mat2Leapfrog(double dt) {
 																			2.0*StrainRate(0,2)*StrainRate(2,0) + StrainRate(1,1)*StrainRate(1,1) +
 																			2.0*StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,2)*StrainRate(2,2))
 																			);
-        // cout << "Calculating Et for sig_trial"<<sig_trial<<", sigmay "<<Sigmay<<", pl_strain "<<pl_strain<< ", strain rate eff "<<eff_strain_rate<<
-        // ", T"<<T<<endl;
+
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
-        cout << "Et: "<<Et<<endl;
+        cout << "Et "<<Et<<endl;
 			}
 			if (Material_model > BILINEAR ) {//Else Ep = 0
-      cout << "Calculating Ep"<<endl;
+        //cout << "Calculating Ep"<<endl;
 				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
-        //cout << "Material Ep "<<Ep<<endl;
+        cout << "Material Ep "<<Ep<<endl;
 			}
 			//Common for both methods
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			pl_strain += dep;
 			delta_pl_strain = dep; // For heating work calculation
 			Sigmay += dep*Ep;
+      cout << "delta_pl_strain sigmay"<<delta_pl_strain<<", "<<Sigmay<<endl;
 		}//sig_trial > Sigmay
 	} //If fail
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);

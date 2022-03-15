@@ -115,7 +115,7 @@ int main(int argc, char **argv) try
 		Fy	= 350.e6;
 
 
-		dx = 0.030;
+		dx = 0.020;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
