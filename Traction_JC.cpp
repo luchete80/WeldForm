@@ -149,8 +149,9 @@ int main(int argc, char **argv) try
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				
-				//dom.Particles[a]-> Material_model = JOHNSON_COOK;
-				dom.Particles[a]-> Material_model = HOLLOMON;
+				dom.Particles[a]-> Material_model = JOHNSON_COOK;
+				dom.Particles[a]->mat = &mat;
+        
         dom.Particles[a]-> T = 273.;
 				dom.Particles[a]->k_T			=	150.;
 				dom.Particles[a]->cp_T			=	960.; 
