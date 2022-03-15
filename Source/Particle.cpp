@@ -582,7 +582,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		//cout << "Sigmay "<<Sigmay<<endl;
     
 		if ( sig_trial > Sigmay) {
-      cout << "Plastic"<<endl;
+      //cout << "Plastic"<<endl;
 			//TODO: USE Same CalcYieldStress function with no arguments and update material "current state" before??
 			//Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
 			if (Material_model == HOLLOMON ){
@@ -604,19 +604,19 @@ inline void Particle::Mat2Leapfrog(double dt) {
 																			);
 
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
-        cout << "Et "<<Et<<endl;
+        //cout << "Et "<<Et<<endl;
 			}
 			if (Material_model > BILINEAR ) {//Else Ep = 0
         //cout << "Calculating Ep"<<endl;
 				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
-        cout << "Material Ep "<<Ep<<endl;
+        //cout << "Material Ep "<<Ep<<endl;
 			}
 			//Common for both methods
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			pl_strain += dep;
 			delta_pl_strain = dep; // For heating work calculation
 			Sigmay += dep*Ep;
-      cout << "delta_pl_strain sigmay"<<delta_pl_strain<<", "<<Sigmay<<endl;
+      //cout << "delta_pl_strain sigmay"<<delta_pl_strain<<", "<<Sigmay<<endl;
 		}//sig_trial > Sigmay
 	} //If fail
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);

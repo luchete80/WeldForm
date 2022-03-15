@@ -180,7 +180,7 @@ int main(int argc, char **argv) try
 
 
     	//dom.ThermalStructSolve(/*tf0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-      dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+      dom.Solve(/*tf*/0.00305,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH
