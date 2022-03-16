@@ -145,6 +145,8 @@ namespace SPH {
 		double	SumKernel;	///< Summation of the kernel value for neighbour particles
 		bool	FirstStep;	///< to initialize the integration scheme
 		bool	ThermalFirstStep;	///< to initialize the integration scheme
+		bool 	print_history; 		//TODO: CREATE AN ENUM TO VARIABLES
+		
 		
 		//LUCIANO: THERMAL PROPERTIES
 		double T,k_T,cp_T,dTdt;			// Temperature, avoid permeability	

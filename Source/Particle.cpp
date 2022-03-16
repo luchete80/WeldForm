@@ -111,6 +111,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	delta_pl_strain = 0.0;
 	
 	element = -1;
+	
+	print_history = false;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);

@@ -670,18 +670,20 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 	double z3 = V(2) + Lz_side + z_radiusreduction + Lz_neckmin - r;
 	double z4 = V(2) + Lz_side + Lz_necktot - r;
 	
+	int part = 0;
     if (Dimension==3) {
     	//Cubic packing
 		double zp;
 		size_t k=0;
 		zp = V(2);
-
+		bool center;
 		while (zp <= ( V(2) + Lz - r )) {
+			center = false;
 			if 		( zp <= z1 || zp >  z4)		R = Rxy;
-			else if ( zp > 	z1 && zp <= z2 )	R = Rxy - (zp - z1) * tan;
-			else if ( zp >= z2 && zp < z3 )		R = Rxy_center;
+			else if ( zp > 	z1 && zp <= z2 )	R = Rxy - (zp - z1) * tan; 
+			else if ( zp >= z2 && zp < z3 )		{R = Rxy_center; center = true;}
 			else if ( zp >= z3 && zp < z4 )		R = Rxy_center + (zp - z3) * tan;
-							
+			
 			
 			numpartxy = calcHalfPartCount(r, R, 1);
 			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
@@ -697,8 +699,12 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 				xp = V(0) - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
 				for (i=0; i<2*numxpart;i++) {
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					//	else    
+					//	else   
+				if (center){
+					cout << "Particle "<<part<<", "<< Vec3_t(xp,yp,zp) <<endl;
+				}						
 					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					part++;
 					xp += 2.*r;
 				}
 				yp += 2.*r;
@@ -1448,6 +1454,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			
 			if (contact)
 				cout << "Max Contact Force: "<<max_contact_force<<endl;
+			
+			for (int p=0;p<Particles.Size();p++){
+				if (Particles[p]->print_history)
+					cout << Particles[p]->pl_strain<<", "<<  Particles[p]->Sigmay <<endl;
+			}
 		}
 		
 		// for (int i=0; i<Particles.Size(); i++){

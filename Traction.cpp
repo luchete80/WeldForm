@@ -126,7 +126,9 @@ int main(int argc, char **argv) try
 
 
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-
+		
+		dom.Particles[6106]->print_history = true;
+		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G		= G;
@@ -155,4 +157,18 @@ int main(int argc, char **argv) try
     	dom.Solve(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
+
+// // IF dx = 0.0085 (about 12k particles)
+
+// // Particle 6106, 3 [   -0.00425  -0.00425   0.23925 ]
+// // Particle 6107, 3 [    0.00425  -0.00425   0.23925 ]
+// // Particle 6116, 3 [   -0.00425   0.00425   0.23925 ]
+// // Particle 6117, 3 [    0.00425   0.00425   0.23925 ]
+
+// // Particle 6194, 3 [   -0.00425  -0.00425   0.24775 ]
+// // Particle 6195, 3 [    0.00425  -0.00425   0.24775 ]
+// // Particle 6204, 3 [   -0.00425   0.00425   0.24775 ]
+// // Particle 6205, 3 [    0.00425   0.00425   0.24775 ]
+
+
 MECHSYS_CATCH
