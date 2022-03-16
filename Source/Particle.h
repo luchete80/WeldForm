@@ -88,6 +88,7 @@ namespace SPH {
 		Mat3_t	RotationRate;	///< Global rotation tensor n
 		double	ShearRate;	///< Global shear rate for fluids
 		double	SBar;		///< shear component for LES
+    double  eff_strain_rate;
 
 		Mat3_t	ShearStress;	///< Deviatoric shear stress tensor (deviatoric part of the Cauchy stress tensor) n+1
 		Mat3_t	ShearStressa;	///< Deviatoric shear stress tensor (deviatoric part of the Cauchy stress tensor) n+1/2 (Leapfrog)
@@ -171,8 +172,6 @@ namespace SPH {
 		int element;				// Element index (if comes from FEM)
 		
 		
-		// JOHNSON COOK_PARAMS
-		double eff_strain_rate;		//Useful only for this kind of material
 			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);

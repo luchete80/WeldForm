@@ -33,6 +33,8 @@ void UserAcc(SPH::Domain & domi)
 		vtraction = VMAX/TAU * domi.getTime();
 	else
 		vtraction = VMAX;
+  
+  vtraction = 0.1; //DIviding by Lo of Traction probe gives str_rate=1.
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -139,7 +141,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 		//dom.auto_ts = false;
-		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/10.), R, Lz_side + Lz_side/10.,
+		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/5.), R, Lz_side + Lz_side/5.,
 											Lz_neckmin,Lz_necktot,Rxy_center,
 											dx/2., rho, h, false);
 

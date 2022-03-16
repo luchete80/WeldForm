@@ -113,6 +113,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	element = -1;
 	
 	print_history = false;
+  eff_strain_rate = 0.;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);
@@ -572,13 +573,19 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		ShearStressa	= -dt/2.0*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStress;
 	ShearStressb	= ShearStressa;
 	ShearStressa	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressa;
-
+  
+  // eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
+                                // (StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
+                                // (StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
+                          // 3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
+                        // );	
+                        
 				// eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
 																				// (StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
 																				// (StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
 																	// 3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
 																// );
-				// cout << "eff strain rate 1: "<<eff_strain_rate<<endl;
+				
 				// //Live vm sqrt()
 				// //expanding previous
 				// //https://es.wikipedia.org/wiki/Tensi%C3%B3n_de_Von_Mises
@@ -626,11 +633,11 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				// //equivalent strain rate 
 				//
 				//grouping https://en.wikipedia.org/wiki/Von_Mises_yield_criterion
-				eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
-																				(StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
-																				(StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
-																	3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
-																);																	
+				// eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
+																				// (StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
+																				// (StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
+																	// 3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
+																// );																	
 				//Difference between these are 1.5
 				// //from deviatoric
 				// //https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.950.3326&rep=rep1&type=pdf
