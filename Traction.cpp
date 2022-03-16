@@ -88,6 +88,10 @@ int main(int argc, char **argv) try
 		L = 2. * Lz_side + Lz_necktot;
 		
 		double E  = 210.e9;
+		double Et = 0.1 * E;
+		
+		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
+				
 		double nu = 0.3;
 		
     	rho	= 7850.0;
@@ -131,9 +135,10 @@ int main(int argc, char **argv) try
 		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		dom.Particles[a]->G		= G;
+				//dom.Particles[a]->Ep 			= Ep;//HARDENING
+    		dom.Particles[a]->G				= G;
     		dom.Particles[a]->PresEq	= 0;
-    		dom.Particles[a]->Cs		= Cs;
+    		dom.Particles[a]->Cs			= Cs;
     		dom.Particles[a]->Shepard	= false;
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;

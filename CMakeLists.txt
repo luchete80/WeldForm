@@ -86,7 +86,7 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	Contact_Compression
+	#Contact_Compression
 	#CompressionForces
 	#CompressionForces_Ghost
 	#Compression_Free
@@ -100,7 +100,7 @@ SET(EXES
 	#Impact_Zhang2017
   #Kernel_Test
   #Kernel_Test_2D
-	#Traction
+	Traction
 	#traction_app
 	#Traction_Hollomon
 	#Traction_JC
