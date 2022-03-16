@@ -100,10 +100,10 @@ SET(EXES
 	#Impact_Zhang2017
   #Kernel_Test
   #Kernel_Test_2D
-	Traction
+	#Traction
 	#traction_app
 	#Traction_Hollomon
-	#Traction_JC
+	Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D

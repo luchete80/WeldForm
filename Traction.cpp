@@ -99,8 +99,8 @@ int main(int argc, char **argv) try
 		G= E / (2.* (1.+nu));
 		Fy	= 350.e6;
 
-
-		dx = 0.0085;
+		//dx = 0.0085;
+		dx = 0.010;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -131,11 +131,14 @@ int main(int argc, char **argv) try
 
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
-		dom.Particles[6777]->print_history = true;
-		
+		//dom.Particles[6777]->print_history = true;
+		dom.Particles[4081]->print_history = true; //If dx=10mm
+		dom.Particles[4081]->ID = 4;
+		//dom.Particles[2421]->print_history = true;	//Particle 2421, 3 [     -0.006    -0.006     0.242 ]		
+		cout << "Ep: " <<Ep<<endl;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-				//dom.Particles[a]->Ep 			= Ep;//HARDENING
+				dom.Particles[a]->Ep 			= Ep;//HARDENING
     		dom.Particles[a]->G				= G;
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs			= Cs;

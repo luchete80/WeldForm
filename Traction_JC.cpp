@@ -115,7 +115,7 @@ int main(int argc, char **argv) try
 		Fy	= 350.e6;
 
 
-		dx = 0.0085;
+		dx = 0.012;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -145,12 +145,21 @@ int main(int argc, char **argv) try
 
 
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-
+		
+		//Center particle id
+		//4081 if dx=10mm
+		//2421 if dx=12mm
+		int id=2421; 
+		//dom.Particles[6777]->print_history = true;
+		dom.Particles[id]->print_history = true; //If dx=10mm
+		dom.Particles[id]->ID = 4;
+		//dom.Particles[2421]->print_history = true;	//Particle 2421, 3 [     -0.006    -0.006     0.242 ]		
+		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				
-				dom.Particles[a]-> Material_model = JOHNSON_COOK;
-				dom.Particles[a]->mat = &mat;
+				  dom.Particles[a]-> Material_model = JOHNSON_COOK;
+				 dom.Particles[a]->mat = &mat;
         
         dom.Particles[a]-> T = 273.;
 				dom.Particles[a]->k_T			=	150.;

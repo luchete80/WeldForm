@@ -573,6 +573,30 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	ShearStressb	= ShearStressa;
 	ShearStressa	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressa;
 
+				// eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
+																				// (StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
+																				// (StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
+																	// 3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
+																// );
+				// cout << "eff strain rate 1: "<<eff_strain_rate<<endl;
+				// //Live vm sqrt()
+				// //expanding previous
+				// //https://es.wikipedia.org/wiki/Tensi%C3%B3n_de_Von_Mises
+				// eff_strain_rate = sqrt ( 	StrainRate(0,0)*StrainRate(0,0) + StrainRate(1,1)*StrainRate(1,1) + StrainRate(2,2)*StrainRate(2,2) - 
+																	// ( StrainRate(0,0)*StrainRate(1,1) + StrainRate(1,1)*StrainRate(2,2) + StrainRate(2,2)*StrainRate(0,0)) +
+																	// 3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
+																// );
+				// cout << "eff strain rate 2: "<<eff_strain_rate<<endl;																			
+				// //from deviatoric
+				// //https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.950.3326&rep=rep1&type=pdf
+				// double em = 1./3.*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2));
+				// eff_strain_rate = sqrt ( 2./3.*( 	(StrainRate(0,0) - em )*( StrainRate(0,0) - em ) + 
+																					// (StrainRate(1,1) - em )*( StrainRate(1,1) - em ) +
+																					// (StrainRate(2,2) - em )*( StrainRate(2,2) - em ) +
+																		// 2.0	* (StrainRate(0,1)*StrainRate(1,2)*StrainRate(0,2))
+																// ));
+				// cout << "eff strain rate 3: "<<eff_strain_rate<<endl;	
+	
 	if (Fail == 1) {
 		double J2	= 0.5*(ShearStressa(0,0)*ShearStressa(0,0) + 2.0*ShearStressa(0,1)*ShearStressa(1,0) +
 						2.0*ShearStressa(0,2)*ShearStressa(2,0) + ShearStressa(1,1)*ShearStressa(1,1) +
@@ -600,11 +624,24 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				// Mat3_t depdt = 1./dt*Strain_pl_incr;	//Like in CalcPlasticWorkHeat
 			
 				// //equivalent strain rate 
-				eff_strain_rate = sqrt ( 3.0 * 0.5*(StrainRate(0,0)*StrainRate(0,0) + 2.0*StrainRate(0,1)*StrainRate(1,0) +
-																			2.0*StrainRate(0,2)*StrainRate(2,0) + StrainRate(1,1)*StrainRate(1,1) +
-																			2.0*StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,2)*StrainRate(2,2))
-																			);
-
+				//
+				//grouping https://en.wikipedia.org/wiki/Von_Mises_yield_criterion
+				eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
+																				(StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
+																				(StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
+																	3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
+																);																	
+				//Difference between these are 1.5
+				// //from deviatoric
+				// //https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.950.3326&rep=rep1&type=pdf
+				// double em = 1./3.*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2));
+				// eff_strain_rate = sqrt ( 2./3.*( 	(StrainRate(0,0) - em )*( StrainRate(0,0) - em ) + 
+																					// (StrainRate(1,1) - em )*( StrainRate(1,1) - em ) +
+																					// (StrainRate(2,2) - em )*( StrainRate(2,2) - em ) +
+																		// 2.0	* (StrainRate(0,1)*StrainRate(1,2)*StrainRate(0,2))
+																// ));
+				// cout << "eff strain rate 3: "<<eff_strain_rate<<endl;			
+				
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
         //cout << "Et "<<Et<<endl;
 			}
