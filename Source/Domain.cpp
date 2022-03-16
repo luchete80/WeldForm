@@ -118,6 +118,7 @@ inline Domain::Domain ()
 	contact_force_factor =1.;
 	friction = 0.0;
 	update_contact_surface = true;
+	ts_nb_inc = 5;
 }
 
 inline Domain::~Domain ()
@@ -1293,7 +1294,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	unsigned long steps=0;
 	unsigned int first_step;
 	
-	int ts_nb_inc=5;	// Always > 0
 	int ts_i=0;
 
 	bool isfirst = true;

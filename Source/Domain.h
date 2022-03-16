@@ -146,6 +146,7 @@ public:
 	void CalcContactForces();
 	double contact_force_factor;
 	double friction;
+	int ts_nb_inc;
 	
 	/////////////// MEMBERS //
     // Data

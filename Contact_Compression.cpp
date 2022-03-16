@@ -111,6 +111,8 @@ int main(){
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
 	
+	dom.ts_nb_inc = 1;
+	
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;

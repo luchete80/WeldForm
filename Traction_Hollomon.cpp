@@ -132,8 +132,9 @@ int main(int argc, char **argv) try
 
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
-		dom.Particles[6106]->print_history = true;
-				
+		dom.Particles[6777]->print_history = true;
+		//dom.Particles[6777]->ID = 1;
+		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				
