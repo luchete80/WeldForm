@@ -94,7 +94,7 @@ int main(int argc, char **argv) try
 		double nu = 0.3;
 
       Elastic_ el(E,nu);              
-      //Hollomon mat(el,Fy/E,1220.e6,0.195);
+
 
       double A,B,C,n_,m,T_m,T_t,eps_0;
       A = 175.; B = 380.0; C = 0.0015;
@@ -156,16 +156,16 @@ int main(int argc, char **argv) try
 		dom.Particles[id]->print_history = true; //If dx=10mm
 		dom.Particles[id]->ID = 4;
 		//dom.Particles[2421]->print_history = true;	//Particle 2421, 3 [     -0.006    -0.006     0.242 ]		
-		
+		cout << "Initial Yield Stress: "<<Fy<<endl;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				
-				  dom.Particles[a]-> Material_model = JOHNSON_COOK;
-				 dom.Particles[a]->mat = &mat;
+				dom.Particles[a]-> Material_model = JOHNSON_COOK;
+			 dom.Particles[a]->mat = &mat;
         
         dom.Particles[a]-> T = 273.;
-				dom.Particles[a]->k_T			=	150.;
-				dom.Particles[a]->cp_T			=	960.; 
+				// dom.Particles[a]->k_T			=	150.;
+				// dom.Particles[a]->cp_T			=	960.; 
 				
 				dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;
@@ -173,7 +173,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Shepard	= false;
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
-    		dom.Particles[a]->Sigmay	= Fy;
+    		//dom.Particles[a]->Sigmay	= Fy;
     		dom.Particles[a]->Alpha		= 1.0; 
     		dom.Particles[a]->TI			= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;

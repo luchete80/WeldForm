@@ -27,6 +27,7 @@ class Material_{
 	virtual inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp){};
 	virtual inline double CalcTangentModulus(const double &strain){};
 	virtual inline double CalcYieldStress();
+	virtual inline double CalcYieldStress(const double &strain);
 	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){}
 	const Elastic_& Elastic()const{return elastic_m;}
   //~Material_();

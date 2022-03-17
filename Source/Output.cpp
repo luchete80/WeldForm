@@ -103,7 +103,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	int   * ContNb			= new int  [  Particles.Size()];	//LUCIANO
     float * Disvec	= new float[3*Particles.Size()];		//LUCIANO
 		float * ContForce	= new float[3*Particles.Size()];		//LUCIANO
-		float * eff_strain_rate	= new float[ Particles.Size()];		//LUCIANO
+		float * eff_str_rate	= new float[ Particles.Size()];		//LUCIANO
 		
 	double P1,P2,P3;
 
@@ -157,11 +157,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Strain_pl  [6*i+3] = float(Particles[i]->Strain_pl(0,1));
         Strain_pl  [6*i+4] = float(Particles[i]->Strain_pl(1,2));
         Strain_pl  [6*i+5] = float(Particles[i]->Strain_pl(0,2));
-		Sigma_eq[i    ] 	= float(Particles[i]->Sigma_eq);
-		Temp	[i    ] 		= float(Particles[i]->T);
-		Pl_Strain	[i] 		= float(Particles[i]->pl_strain);
-		Nb		[i    ] 		= int(Particles[i]->Nb); //All neighbours
-		ContNb		[i    ] = int(Particles[i]->ContNb); //Contact Neighbours
+				Sigma_eq[i    ] 	= float(Particles[i]->Sigma_eq);
+				Temp	[i    ] 		= float(Particles[i]->T);
+				Pl_Strain	[i] 		= float(Particles[i]->pl_strain);
+				Nb		[i    ] 		= int(Particles[i]->Nb); //All neighbours
+				ContNb		[i    ] = int(Particles[i]->ContNb); //Contact Neighbours
 		
         Disvec  [3*i  ] = float(Particles[i]->Displacement(0));
         Disvec  [3*i+1] = float(Particles[i]->Displacement(1));
@@ -171,7 +171,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
         ContForce  [3*i+1] = float(Particles[i]->contforce(1));
         ContForce  [3*i+2] = float(Particles[i]->contforce(2));		
         
-        eff_strain_rate [i] = float(Particles[i]->T);
+        eff_str_rate [i] = float(Particles[i]->eff_strain_rate);
 				
 	UserOutput(Particles[i],P1,P2,P3);
         Prop1	[i    ] = float(P1);
@@ -237,6 +237,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Disvec);
 	dsname.Printf("Contact Force");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ContForce);	
+	dsname.Printf("Eff Strain Rate");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,eff_str_rate);	
 		
     delete [] Posvec;
     delete [] Velvec;
@@ -261,6 +263,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	delete [] ContNb;
 	delete [] Disvec;
 	delete [] ContForce;
+	delete [] eff_str_rate;
 	
    //Closing the file
     H5Fflush(file_id,H5F_SCOPE_GLOBAL);
@@ -382,6 +385,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "     <Attribute Name=\"Contact Force\" AttributeType=\"Vector\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Contact Force \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"Eff Strain Rate\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/Eff Strain Rate \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "   </Grid>\n";
