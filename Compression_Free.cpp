@@ -57,7 +57,7 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -90,13 +90,13 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.008;
+		dx = 0.030;
     h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
         timestep = (0.2*h/(Cs));
-				timestep = 1.0e-7;
+				//timestep = 1.0e-7;
 		
 		//timestep = 2.5e-6;
 
@@ -146,8 +146,8 @@ int main(int argc, char **argv) try
 		dom.BC.InOutFlow = 0;
 
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		//dom.Solve(/*tf*//*0.0105*/4.*timestep+1e-8,/*dt*/timestep,/*dtOut*/timestep,"test_gpu",999);
-		dom.Solve(0.00101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		dom.Solve(/*tf*//*0.0105*/4.*timestep+1e-8,/*dt*/timestep,/*dtOut*/timestep,"test_gpu",999);
+		//dom.Solve(0.00101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }

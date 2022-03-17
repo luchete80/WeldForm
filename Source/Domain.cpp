@@ -1429,16 +1429,16 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			//cout << "Particle " << i << ", "<<"Strain Rate "<<Particles[i]->StrainRate<<endl;
 			//cout << "Particle " << i << ", "<<"Vel "<<Particles[i]->v<<endl;
 			//cout << "Particle " << i << ", ID "<< Particles[i]->ID<<", Acc "<<Particles[i]->a<<endl;
-			// if (i==1250){
-			// cout << "Particle 1250 Acc " << Particles[i]->a <<endl;
-			// cout << "Particle 1250 dDensity" << Particles[i]->dDensity <<endl;			
-			// cout << "Particle 1250 Disp " << Particles[i]->Displacement <<endl;
-			// cout << "Particle 1250 Pressure " <<Particles[i]->Pressure<<endl;
-			// cout << "Particle 1250 ShearStress a " <<Particles[i]->ShearStressa<<endl;
-			// cout << "Particle 1250 ShearStress " <<Particles[i]->ShearStress<<endl;
-			// cout << "Particle 1250 Sigma " <<Particles[i]->Sigma<<endl;
-			// cout << "Particle 1250 StrRate " <<Particles[i]->StrainRate<<endl;
-			// }
+			if (i==1250){
+			cout << "Particle 1250 Acc " << Particles[i]->a <<endl;
+			cout << "Particle 1250 dDensity" << Particles[i]->dDensity <<endl;			
+			cout << "Particle 1250 Disp " << Particles[i]->Displacement <<endl;
+			cout << "Particle 1250 Pressure " <<Particles[i]->Pressure<<endl;
+			cout << "Particle 1250 ShearStress a " <<Particles[i]->ShearStressa<<endl;
+			cout << "Particle 1250 ShearStress " <<Particles[i]->ShearStress<<endl;
+			cout << "Particle 1250 Sigma " <<Particles[i]->Sigma<<endl;
+			cout << "Particle 1250 StrRate " <<Particles[i]->StrainRate<<endl;
+			}
 			//cout << "Vel"<<Particles[i]->v<<endl;
 		}
 		//cout <<"---Time"<<Time<<endl;
