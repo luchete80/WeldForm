@@ -103,6 +103,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	int   * ContNb			= new int  [  Particles.Size()];	//LUCIANO
     float * Disvec	= new float[3*Particles.Size()];		//LUCIANO
 		float * ContForce	= new float[3*Particles.Size()];		//LUCIANO
+		float * eff_strain_rate	= new float[ Particles.Size()];		//LUCIANO
 		
 	double P1,P2,P3;
 
@@ -169,6 +170,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
         ContForce  [3*i  ] = float(Particles[i]->contforce(0));
         ContForce  [3*i+1] = float(Particles[i]->contforce(1));
         ContForce  [3*i+2] = float(Particles[i]->contforce(2));		
+        
+        eff_strain_rate [i] = float(Particles[i]->T);
 				
 	UserOutput(Particles[i],P1,P2,P3);
         Prop1	[i    ] = float(P1);

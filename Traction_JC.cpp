@@ -33,6 +33,8 @@ void UserAcc(SPH::Domain & domi)
 		vtraction = VMAX/TAU * domi.getTime();
 	else
 		vtraction = VMAX;
+  
+  vtraction = 0.1; //DIviding by Lo of Traction probe gives str_rate=1.
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
