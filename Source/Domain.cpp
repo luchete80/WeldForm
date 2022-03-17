@@ -1463,7 +1463,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			
 			for (int p=0;p<Particles.Size();p++){
 				if (Particles[p]->print_history)
-					cout << Particles[p]->pl_strain<<", "<<", "<< Particles[p]->Sigma(2,2)<<", "  <<  Particles[p]->Sigmay <<endl;
+					cout << Particles[p]->pl_strain<<", "<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
 			}
 		}
 		
