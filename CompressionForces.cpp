@@ -51,10 +51,10 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			//domi.Particles[i]->a(2)		= -VMAX/TAU;
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->a(2)		= -VMAX/TAU;
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -95,7 +95,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.015;
+		dx = 0.025;
     h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
@@ -122,8 +122,8 @@ int main(int argc, char **argv) try
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
 		forcepart_count = 0;
-		dom.gradKernelCorr = true;
-		dom.ts_nb_inc = 1;		
+		//dom.gradKernelCorr = true;
+		//dom.ts_nb_inc = 1;		
 		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{

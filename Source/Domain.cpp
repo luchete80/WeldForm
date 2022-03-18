@@ -1314,9 +1314,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		CalculateSurface(1);				//After Nb search			
 	}
 	
-	// TO MODIFY
-	if (gradKernelCorr)
-		CalcGradCorrMatrix();	
+	// // TO MODIFY
+	// if (gradKernelCorr)
+		// CalcGradCorrMatrix();	
 	
 	ClearNbData();
 	
@@ -1405,8 +1405,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 		
 		//NEW, gradient correction
-		// if (gradKernelCorr)
-			// CalcGradCorrMatrix();		
+		if (isfirst && gradKernelCorr)
+			CalcGradCorrMatrix();		
 			
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);

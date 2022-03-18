@@ -140,7 +140,7 @@ int main(){
 	//Contact Penalty and Damping Factors
 	dom.ts_nb_inc = 5;
 	dom.contact = true;
-	dom.gradKernelCorr = true;
+	//dom.gradKernelCorr = true;
 	//dom.friction = 0.15;
 	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
