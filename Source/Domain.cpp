@@ -168,9 +168,10 @@ inline void Domain::AdaptiveTimeStep()
 	}
 	
 	if (contact){
-		if (min_force_ts < deltat)
-		//cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
-		deltat = min_force_ts;
+		if (min_force_ts < deltat){
+			cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
+			deltat = min_force_ts;
+		}
 	}
 
 	if (deltat<(deltatint/1.0e5))
