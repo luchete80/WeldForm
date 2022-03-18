@@ -77,7 +77,7 @@ int main(){
 	Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.015;
+	dx = 0.025;
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -111,8 +111,7 @@ int main(){
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
 	
-	dom.ts_nb_inc = 1;
-	
+
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -139,9 +138,11 @@ int main(){
 			// dom.Particles[a]->ID=3;
 	}
 	//Contact Penalty and Damping Factors
+	dom.ts_nb_inc = 5;
 	dom.contact = true;
-	dom.friction = 0.15;
-	dom.PFAC = 0.4;
+	dom.gradKernelCorr = true;
+	//dom.friction = 0.15;
+	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 	
