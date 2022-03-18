@@ -127,12 +127,12 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 
 }
 
-inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin, size_t Scheme, Mat3_t I)
+inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin, size_t Scheme, Mat3_t I, int i)
 {
 	if (Scheme == 0)
 		Move_MVerlet(I, dt);
 	else if (Scheme == 1)
-		Move_Leapfrog(I, dt);
+		Move_Leapfrog(I, dt,i);
 	else if (Scheme == 2)
 		Move_Verlet(I, dt);
 	else if (Scheme == 3)
@@ -415,7 +415,7 @@ inline void Particle::Move_Euler (Mat3_t I, double dt) {
 }
 
 
-inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
+inline void Particle::Move_Leapfrog(Mat3_t I, double dt, int i)
 {
 	if (FirstStep) {
 		Densitya = Density - dt/2.0*dDensity;
@@ -424,6 +424,10 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	Densityb = Densitya;
 	Densitya += dt*dDensity;
 	Density = (Densitya+Densityb)/2.0;
+	if (i==1250){
+			cout << "Density rho rhoa rhob"<< Density<<", "<< Densitya<<", "<< Densityb<<endl;
+	}
+
 	vb = va;
 	va += dt*a;
 	v = (va + vb)/2.0;

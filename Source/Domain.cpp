@@ -1101,17 +1101,17 @@ inline void Domain::Move (double dt) {
 					}
 				}
 			}
-		//cout << "Before move"<<Particles[i]->ShearStressA;
-		// if (i ==1250){
-			// cout << "(PresEq, Cs, P0,Density, RefDensity"<<endl;
-			// cout <<Particles[i]->PresEq<<", "<<Particles[i]->Cs<<", "<<Particles[i]->P0<<", "<<Particles[i]->Density<<", "<<Particles[i]->RefDensity<<endl;
-		// }
+		
+		if (i ==1250){
+			cout << "(PresEq, Cs, P0,Density, RefDensity"<<endl;
+			cout <<Particles[i]->PresEq<<", "<<Particles[i]->Cs<<", "<<Particles[i]->P0<<", "<<Particles[i]->Density<<", "<<Particles[i]->RefDensity<<endl;
+		}
 			
-			Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
-			// if (i ==1250){
-			// cout << "AFTER MOVE(PresEq, Cs, P0,Density, RefDensity"<<endl;
-			// cout <<Particles[i]->PresEq<<", "<<Particles[i]->Cs<<", "<<Particles[i]->P0<<", "<<Particles[i]->Density<<", "<<Particles[i]->RefDensity<<endl;
-			// }
+			Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I, i);
+			if (i ==1250){
+			cout << "AFTER MOVE(PresEq, Cs, P0,Density, RefDensity"<<endl;
+			cout <<Particles[i]->PresEq<<", "<<Particles[i]->Cs<<", "<<Particles[i]->P0<<", "<<Particles[i]->Density<<", "<<Particles[i]->RefDensity<<endl;
+			}
 		}
 
 }
@@ -1411,6 +1411,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		clock_beg = clock();
 
 		Move(deltat);
+		cout << "Density particle 1250"<<Particles[1250]->Density<<endl;
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things

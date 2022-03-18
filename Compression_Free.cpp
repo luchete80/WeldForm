@@ -116,7 +116,7 @@ int main(int argc, char **argv) try
 		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-		dom.auto_ts = false;
+		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G		= G;
@@ -145,9 +145,9 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
-    //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		 dom.Solve(/*tf*//*0.0105*/4.*timestep+1e-8,/*dt*/timestep,/*dtOut*/timestep,"test_gpu",999);
-		//dom.Solve(0.000101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		dom.auto_ts = true;
+		//dom.Solve(/*tf*//*0.0105*/50.*timestep+1e-8,/*dt*/timestep,/*dtOut*/timestep,"test_gpu",999);
+		dom.Solve(0.000101,/*dt*/timestep,/*dtOut*/0.00001,"test06",999);
     
 		return 0;
 }
