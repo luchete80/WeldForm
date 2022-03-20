@@ -78,8 +78,8 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		double x = dom.Particles[i]->x(0);
 		double y = dom.Particles[i]->x(1);
 
-		vx[i](0) += (y-0.5)*(y-0.5);
-
+		vx[i](0) += (y-0.5)*(y-0.5) + x;
+		vx[i](1) += x;
 	}
 
  cout << "Calculating Corrected Kernel Gradient..."<<endl;	
