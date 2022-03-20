@@ -62,7 +62,7 @@ int main(int argc, char **argv) try
   
   cout << "Done"<<endl;
   
-  std::vector<double>  vx(dom.Particles.Size());
+  std::vector<Vec3_t>  v(dom.Particles.Size());
   std::vector<Vec3_t> dfx(dom.Particles.Size());
 
   std::vector<Vec3_t> dfx_c(dom.Particles.Size());
@@ -71,6 +71,16 @@ int main(int argc, char **argv) try
 	
   std::vector<double>  gx(dom.Particles.Size());
 
+///////////////////////////////////////
+///// DEFINING VELOCITY FIELD:
+
+for (int i = 0; i<dom.Particles.Size();i++) {
+		double x = dom.Particles[i]->x(0);
+		double y = dom.Particles[i]->x(1);
+
+		vx[i](0) += (y-0.5)*(y-0.5);
+
+	}
 
  cout << "Calculating Corrected Kernel Gradient..."<<endl;	
 	dom.CalcGradCorrMatrix();
@@ -97,7 +107,6 @@ int main(int argc, char **argv) try
       double K	= SPH::Kernel(Dimension, 0, norm(xij)/h, h);
       double GK = SPH::GradKernel(Dimension, 0, norm(xij)/h, h);     
       
-      Vec3_t vx = 
       
       cout << "r, K, GK: "<<norm(xij)/h<<", "<<K<<", "<<GK<<endl;
       cout <<"Vi"<<mj/dj<<endl;
