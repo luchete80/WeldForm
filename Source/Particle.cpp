@@ -624,7 +624,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		}
 			
 		if ( sig_trial > Sigmay) {
-      cout << "Plastic"<<endl;
+      //cout << "Plastic"<<endl;
 			//TODO: USE Same CalcYieldStress function with no arguments and update material "current state" before??
 			//Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
 			if (Material_model == HOLLOMON ){
@@ -659,7 +659,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				//cout << "eff strain rate: "<<eff_strain_rate<<endl;			
 				
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
-        cout << "plstrain, eff_strain_rate, Et, yield "<<pl_strain<<", "<<eff_strain_rate<<","<<Et<<", " <<Sigmay<<endl;
+        //cout << "plstrain, eff_strain_rate, Et, yield "<<pl_strain<<", "<<eff_strain_rate<<","<<Et<<", " <<Sigmay<<endl;
 			}
 			if (Material_model > BILINEAR ) {//Else Ep = 0
         //cout << "Calculating Ep"<<endl;

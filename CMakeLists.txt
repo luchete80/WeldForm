@@ -82,7 +82,7 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-	Cantilever
+	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
@@ -103,7 +103,7 @@ SET(EXES
 	#Traction
 	#traction_app
 	#Traction_Hollomon
-	#Traction_JC
+	Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D
