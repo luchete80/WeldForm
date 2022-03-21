@@ -134,7 +134,7 @@ namespace SPH {
 		double	Sigmay;		///< Tensile yield stress
 		size_t	Fail;		///< Failure criteria
 		
-		double 	Ep;		//TODO: Move To Material
+		double 	Ep, Et;		//TODO: Move To Material
 		double 	Et_m;	//This not make sens to be a material member since is instantaneous 
 
 		double	V;		///< Volume of a particle

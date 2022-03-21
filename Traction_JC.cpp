@@ -34,6 +34,8 @@ void UserAcc(SPH::Domain & domi)
 	else
 		vtraction = VMAX;
 	
+  vtraction = 1.0;
+  
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
   
 	#ifdef __GNUC__
@@ -146,6 +148,7 @@ int main(int argc, char **argv) try
 		
 		//dom.Particles[6777]->print_history = true;
 		dom.Particles[4081]->print_history = true;
+		//dom.Particles[2421]->print_history = true;
 		//dom.Particles[6777]->ID = 1;
 		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -156,13 +159,13 @@ int main(int argc, char **argv) try
 				
 				dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;
-        dom.Particles[a]->T		= 300;
+        dom.Particles[a]->T		= 273;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		//If let this to move function at the begining it fails
-        dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,300.);
+        dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);
         cout << "Sigmay"<<dom.Particles[a]->Sigmay<<endl;
     		dom.Particles[a]->Alpha		= 1.0; 
     		dom.Particles[a]->TI			= 0.3;

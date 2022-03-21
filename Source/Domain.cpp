@@ -1169,10 +1169,10 @@ inline void Domain::Move (double dt) {
 			}
 			//cout << "Particle: "<<i<<endl;
 			Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
-    // if (i==2421){
-      // if (Particles[i]->eff_strain_rate>0)
-				// cout << "eff strain rate : "<<Particles[i]->eff_strain_rate<<", Ep: "<<Particles[i]->Ep<<endl;
-		// }
+      if (i==624){
+        if (Particles[i]->eff_strain_rate>0)
+          cout << "eff strain rate : "<<Particles[i]->eff_strain_rate<<", Et: "<<Particles[i]->Et<<endl;
+      }
 		}
 }
 
