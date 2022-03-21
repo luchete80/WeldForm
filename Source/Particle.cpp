@@ -599,7 +599,10 @@ inline void Particle::Mat2Leapfrog(double dt) {
 																		// 2.0	* (StrainRate(0,1)*StrainRate(1,2)*StrainRate(0,2))
 																// ));
 				// cout << "eff strain rate 3: "<<eff_strain_rate<<endl;	
-	
+
+		if (Material_model == JOHNSON_COOK ){
+			Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
+		}			
 	if (Fail == 1) {
 		double J2	= 0.5*(ShearStressa(0,0)*ShearStressa(0,0) + 2.0*ShearStressa(0,1)*ShearStressa(1,0) +
 						2.0*ShearStressa(0,2)*ShearStressa(2,0) + ShearStressa(1,1)*ShearStressa(1,1) +
@@ -614,11 +617,11 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		if (Material_model == BILINEAR ){
 			//Sigmay = Fy0 + pl_strain*Et
 		}
-		else if (Material_model == JOHNSON_COOK ){
-			Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
-			// cout << "Yield Stress: "<< Sigmay << ", plstrain"<<pl_strain<<", eff_str_rate"<<eff_strain_rate<<endl;
-			// cout << "StrainRate"<<StrainRate<<endl;
-		}
+		// else if (Material_model == JOHNSON_COOK ){
+			// Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
+			// // cout << "Yield Stress: "<< Sigmay << ", plstrain"<<pl_strain<<", eff_str_rate"<<eff_strain_rate<<endl;
+			// // cout << "StrainRate"<<StrainRate<<endl;
+		// }
 		else if (Material_model == HOLLOMON ){
 			Sigmay = mat->CalcYieldStress(pl_strain); 
 		}
@@ -660,20 +663,26 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
         //cout << "plstrain, eff_strain_rate, Et, yield "<<pl_strain<<", "<<eff_strain_rate<<","<<Et<<", " <<Sigmay<<endl;
+				
+				if (Et<0)
+					cout << "ATTENTION ET<0 "<<Et<<endl;
 			}
 			if (Material_model > BILINEAR ) {//Else Ep = 0
         //cout << "Calculating Ep"<<endl;
 				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
-        //cout << "Material Ep "<<Ep<<endl;
+				if (Ep < 0)
+					cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
 			}
 			//Common for both methods
+			if (Ep>0) {
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
-			//cout << "dep: "<<dep<<endl;
+			cout << "dep: "<<dep<<endl;
 			pl_strain += dep;
 			delta_pl_strain = dep; // For heating work calculation
 			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
 			if (Material_model == BILINEAR )
 				Sigmay += dep*Ep;
+			}
       //cout << "delta_pl_strain sigmay"<<delta_pl_strain<<", "<<Sigmay<<endl;
 		}//sig_trial > Sigmay
 	} //If fail
