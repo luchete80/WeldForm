@@ -68,6 +68,7 @@ int main(int argc, char **argv) try
   std::vector<Vec3_t> dfx_c(dom.Particles.Size());
 
   std::vector< Mat3_t > grad_vx(dom.Particles.Size());
+  std::vector< Mat3_t > grad_vx_c(dom.Particles.Size());
 	
   std::vector<double>  gx(dom.Particles.Size());
   
@@ -115,10 +116,12 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 
       //grad va = Sum b (vb-va) X gradWb(xa)
       //Bonet et. al 1999 eqn (43)
-      vij = 
+      vij = vx[j] - vx[i];
+      Mat3_t t;
+			Dyad (vij, Vec3_t(GK*xij),t);
       
-      dfx[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK * xij;
-      dfx[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK * xij;
+      grad_vx[i] += mj/dj * t
+      grad_vx[j] -= mi/di * t;
 			
 			Vec3_t GK_ci, GK_cj; 
 
