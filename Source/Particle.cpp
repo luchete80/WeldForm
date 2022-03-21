@@ -574,7 +574,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	ShearStressb	= ShearStressa;
 	ShearStressa	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressa;
   
-
+	//cout << "StrainRate"<<StrainRate<<endl;
                         
 	eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
 																	(StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
