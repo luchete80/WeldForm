@@ -673,8 +673,9 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				if (Ep < 0)
 					cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
 			}
+			if (Ep<0) Ep = 0.9*mat->Elastic().E();
 			//Common for both methods
-			if (Ep>0) {
+			//if (Ep>0) {
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			cout << "dep: "<<dep<<endl;
 			pl_strain += dep;
@@ -682,7 +683,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
 			if (Material_model == BILINEAR )
 				Sigmay += dep*Ep;
-			}
+			//}
       //cout << "delta_pl_strain sigmay"<<delta_pl_strain<<", "<<Sigmay<<endl;
 		}//sig_trial > Sigmay
 	} //If fail
