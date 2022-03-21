@@ -664,20 +664,20 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
         //cout << "plstrain, eff_strain_rate, Et, yield "<<pl_strain<<", "<<eff_strain_rate<<","<<Et<<", " <<Sigmay<<endl;
 				
-				if (Et<0)
-					cout << "ATTENTION ET<0 "<<Et<<endl;
+				// if (Et<0)
+					// cout << "ATTENTION ET<0 "<<Et<<endl;
 			}
 			if (Material_model > BILINEAR ) {//Else Ep = 0
         //cout << "Calculating Ep"<<endl;
 				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
-				if (Ep < 0)
-					cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
+				// if (Ep < 0)
+					// cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
 			}
 			if (Ep<0) Ep = 0.9*mat->Elastic().E();
 			//Common for both methods
 			//if (Ep>0) {
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
-			cout << "dep: "<<dep<<endl;
+			//cout << "dep: "<<dep<<endl;
 			pl_strain += dep;
 			delta_pl_strain = dep; // For heating work calculation
 			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate

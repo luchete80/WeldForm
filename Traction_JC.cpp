@@ -106,6 +106,13 @@ int main(int argc, char **argv) try
       m = 1.0;  n_ = 0.34; eps_0 = 1.0;
       T_m = 775.; T_t = 273.;
 			
+	// 𝐴
+// 𝐽𝐶 276.0 MPa
+// 𝐵
+// 𝐽𝐶 255.0 MPa
+// 𝑛𝐽𝐶 0.3 -
+// 𝑚𝐽𝐶 1.0
+			
 	//Hollomon(const double eps0_, const double &k_, const double &m_):
 	//Hollomon mat(el,Fy/E,1220.e6,0.195);
 	JohnsonCook mat(el, A,B,C,

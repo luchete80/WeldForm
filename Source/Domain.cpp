@@ -1159,7 +1159,7 @@ inline void Domain::CalcGradCorrMatrix () {
 }
 
 inline void Domain::Move (double dt) {
-	cout << "BEGIN MOVE Time " << Time << "------------------------------"<<endl;
+	//cout << "BEGIN MOVE Time " << Time << "------------------------------"<<endl;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for (int i=0; i<Particles.Size(); i++)
 		if (Particles[i]->IsFree) {
@@ -1177,10 +1177,10 @@ inline void Domain::Move (double dt) {
 			}
 			//cout << "Particle: "<<i<<endl;
 			Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
-      if (i==624){
-        if (Particles[i]->eff_strain_rate>0)
-          cout << "particle 624, eff strain rate : "<<Particles[i]->eff_strain_rate<<", Et: "<<Particles[i]->Et<<"sigmaeq"<< Particles[i]->Sigma_eq<<", yield"<<Particles[i]->Sigmay<<endl;
-      }
+      // if (i==624){
+        // if (Particles[i]->eff_strain_rate>0)
+          // cout << "particle 624, eff strain rate : "<<Particles[i]->eff_strain_rate<<", Et: "<<Particles[i]->Et<<"sigmaeq"<< Particles[i]->Sigma_eq<<", yield"<<Particles[i]->Sigmay<<endl;
+      // }
 		}
 }
 
