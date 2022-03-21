@@ -1151,8 +1151,8 @@ inline void Domain::CalcGradCorrMatrix () {
 }
 
 inline void Domain::Move (double dt) {
-	cout << "BEGIN MOVE Time " << Time << "------------------------------"<<endl;
-	//#pragma omp parallel for schedule (static) num_threads(Nproc)
+	//cout << "BEGIN MOVE Time " << Time << "------------------------------"<<endl;
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for (int i=0; i<Particles.Size(); i++)
 		if (Particles[i]->IsFree) {
 			if (Particles[i]->InOut>0) {
