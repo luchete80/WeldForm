@@ -60,6 +60,7 @@ public Material_{
   m(m_),n(n_),eps_0(eps_0_),T_m(T_m_),T_t(T_t_)
   {}
 	inline double CalcYieldStress(){}	
+	inline double CalcYieldStress(const double &strain){}	
 	inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp);	
 	inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp);
   //~JohnsonCook(){}
