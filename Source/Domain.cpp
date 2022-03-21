@@ -1171,7 +1171,7 @@ inline void Domain::Move (double dt) {
 			Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
       if (i==624){
         if (Particles[i]->eff_strain_rate>0)
-          cout << "eff strain rate : "<<Particles[i]->eff_strain_rate<<", Et: "<<Particles[i]->Et<<endl;
+          cout << "particle 624, eff strain rate : "<<Particles[i]->eff_strain_rate<<", Et: "<<Particles[i]->Et<<"yield"<<Particles[i]->Sigmay<<endl;
       }
 		}
 }
