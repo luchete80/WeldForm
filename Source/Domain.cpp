@@ -1313,8 +1313,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		CalculateSurface(1);				//After Nb search			
 	}
 	
-	// if (gradKernelCorr)
-		// CalcGradCorrMatrix();	
+	if (gradKernelCorr)
+		CalcGradCorrMatrix();	
 	ClearNbData();
 	
 	while (Time<=tf && idx_out<=maxidx) {

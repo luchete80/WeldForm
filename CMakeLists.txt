@@ -87,7 +87,7 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
-	#CompressionForces
+	CompressionForces
 	#CompressionForces_Ghost
 	#Compression_Free
 	#CompressionForces2
@@ -103,7 +103,7 @@ SET(EXES
 	#Traction
 	#traction_app
 	#Traction_Hollomon
-	Traction_JC
+	#Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D

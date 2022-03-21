@@ -51,10 +51,10 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			//domi.Particles[i]->a(2)		= -VMAX/TAU;
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->a(2)		= -VMAX/TAU;
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
