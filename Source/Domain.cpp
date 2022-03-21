@@ -623,13 +623,21 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 }
 
 inline void Domain::MoveGhost(){
+	int axis = 2;
 	for (int gp=0; gp<GhostPairs.Size(); gp++){
 		int  i = GhostPairs[gp].first;
 		int gi = GhostPairs[gp].second;
-		//See normal direction
-		Particles[gi]-> v[0]  = Particles[i]-> v[0];
-		Particles[gi]-> va[0] = Particles[i]-> va[0];
-		Particles[gi]-> vb[0] = Particles[i]-> vb[0];
+		
+		//See normal direction, if it is vertical
+		Particles[gi]-> v = Particles[i]-> v;
+		Particles[gi]-> va = Particles[i]-> va;
+		Particles[gi]-> vb = Particles[i]-> vb;
+		
+		Particles[gi]-> v[axis] = 	-Particles[gi]-> v[axis]		
+		Particles[gi]-> va[axis] = 	-Particles[gi]-> va[axis];
+		Particles[gi]-> vb[axis] = 	-Particles[gi]-> vb[axis];
+		
+		//Position (xghost + xi )/2 = x wall 
 	}
 }
 

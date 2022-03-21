@@ -82,12 +82,12 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-	#Cantilever
+	Cantilever
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
-	CompressionForces
+	#CompressionForces
 	#CompressionForces_Ghost
 	#Compression_Free
 	#CompressionForces2
