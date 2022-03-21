@@ -616,8 +616,8 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		}
 		else if (Material_model == JOHNSON_COOK ){
 			Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
-			cout << "Yield Stress: "<< Sigmay << ", plstrain"<<pl_strain<<", eff_str_rate"<<eff_strain_rate<<endl;
-			cout << "StrainRate"<<StrainRate<<endl;
+			// cout << "Yield Stress: "<< Sigmay << ", plstrain"<<pl_strain<<", eff_str_rate"<<eff_strain_rate<<endl;
+			// cout << "StrainRate"<<StrainRate<<endl;
 		}
 		else if (Material_model == HOLLOMON ){
 			Sigmay = mat->CalcYieldStress(pl_strain); 
