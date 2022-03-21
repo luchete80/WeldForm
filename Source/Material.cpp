@@ -7,7 +7,7 @@ inline double JohnsonCook::CalcYieldStress(const double &strain, const double &s
 	double T_h = (temp - T_t) / (T_m - T_t);
 	double sr = strain_rate;
 	if (strain_rate == 0.0)
-		sr = 0.001;
+		sr = 1.e-5;
 	
 	double sy = (A+B*pow(strain, n))*(1.0 + C * log (sr/ eps_0) ) * (1.0 - pow(T_h,m));
 	
