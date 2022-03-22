@@ -261,7 +261,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				P2->dDensity	+= mi * (dj/di) * temp1;				
 			}else {
 				P2->a					-= mi * temp_c[1];
-				P2->dDensity	+= mj * (di/dj) * temp1_c[1];
+				P2->dDensity	+= mi * (dj/di) * temp1_c[1];
 			}
 
 
