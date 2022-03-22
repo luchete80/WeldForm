@@ -182,7 +182,15 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		Vec3_t temp = 0.0;
 		double temp1 = 0.0;
 		Vec3_t temp_c[2];
-
+		double temp1_c[2];
+		Vec3_t vc[2];
+		
+		if (!gradKernelCorr){
+			for (int i=0;i<2;i++){
+				Vec3_t v;
+				Mult (GKc[i], xij, vc[i]);
+			}
+		}
 
 		// Original
 		// if (GradientType == 0)
@@ -200,23 +208,29 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				//Left in vector form and multiply after??
 				for (int i=0;i<2;i++){
-					Vec3_t v;
-					Mult (GKc[i], xij, v);
-					Mult( v , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
+					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
 				}
 		}//Grad Corr
 		
 		if (Dimension == 2) temp(2) = 0.0;
-		temp1 = dot( vij , GK*xij );
-
+		
+		if (!gradKernelCorr){
+			temp1 = dot( vij , GK*xij );
+		} else {
+			for (int i=0;i<2;i++){			//TODO: DO THIS ONCE!
+				temp1_c[i] = dot( vij , vc[i] );
+			}
+		}
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
-				P1->a		+= mj * temp;
+				P1->a					+= mj * temp;
+				P1->dDensity	+= mj * (di/dj) * temp1;
 			} else{
-				P1->a		+= mj * temp_c[0];
+				P1->a					+= mj * temp_c[0];
+				P1->dDensity	+= mj * (di/dj) * temp1_c[0];
 			}
-			P1->dDensity	+= mj * (di/dj) * temp1;
+			
 
 			if (P1->IsFree) {
 				float mj_dj= mj/dj;
@@ -243,10 +257,12 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		omp_set_lock(&P2->my_lock);
 			if (!gradKernelCorr){
 				P2->a		-= mi * temp;
+				P2->dDensity	+= mi * (dj/di) * temp1;
 			}else {
 				P2->a		-= mi * temp_c[1];
+				P1->dDensity	-= mj * (di/dj) * temp1_c[1];
 			}
-			P2->dDensity	+= mi * (dj/di) * temp1;
+
 			if (P2->IsFree) {
 				float mi_di = mi/di;
 				P2->ZWab	+= mi_di* K;
