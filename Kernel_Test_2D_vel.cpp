@@ -24,7 +24,7 @@ int main(int argc, char **argv) try
 
 	L	= 1.0;		
   rho	= 1.0;
-  dx = 0.1;
+  dx = 0.05;
   h	= dx*1.2; //Very important
 
   dom.DomMax(0) = L;
@@ -81,8 +81,9 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		double x = dom.Particles[i]->x(0);
 		double y = dom.Particles[i]->x(1);
 
-		vx[i](0) = (y-0.5)*(y-0.5) + x;
+		vx[i](0) = (y-0.5)*(y-0.5) ;
 		vx[i](1) = x;
+		vx[i](2) = 0;
 	}
 
  cout << "Calculating Corrected Kernel Gradient..."<<endl;	
@@ -159,7 +160,7 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		// vx[i](0) = (y-0.5)*(y-0.5) + x;
 		// vx[i](1) = x;
 		
-   cout << "i, x,y, dvxdy anal, num, nb, "<< endl;  
+   cout << "i, x,y, dvxdy anal, num 01 num 10, nb, "<< endl;  
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
@@ -168,7 +169,7 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		// Vec3_t GK_c; 
 		// Mult(dom.Particles[i]->gradCorrM,dfx[i],GK_c);
 		
-    cout << i<<", "<<x<<", "<<y<<", "<< 2*(y-0.5)<<", "<<grad_vx[i](0,1)<<", "<<grad_vx_c[i](0,1)<<endl;
+    cout << i<<", "<<x<<", "<<y<<", "<< 2*(y-0.5)<<", "<<grad_vx[i](0,1)<<", "<<grad_vx[i](1,0)<<", "<<grad_vx_c[i](0,1)<<endl;
   }
 
  // cout << endl<< "i, x,y, grad anal, grad num, grad corr num, nb, "<< endl;  
