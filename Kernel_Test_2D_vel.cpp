@@ -24,7 +24,7 @@ int main(int argc, char **argv) try
 
 	L	= 1.0;		
   rho	= 1.0;
-  dx = 0.05;
+  dx = 0.1;
   h	= dx*1.2; //Very important
 
   dom.DomMax(0) = L;
@@ -167,9 +167,12 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		
 		// double GK = (1.+y)* SPH::GradKernel(Dimension, 0, 0., h);
 		// Vec3_t GK_c; 
+		Mat3_t grad_vx_cc;
+		Mult(grad_vx[i], dom.Particles[i]->gradCorrM,grad_vx_cc);
+		
 		// Mult(dom.Particles[i]->gradCorrM,dfx[i],GK_c);
 		
-    cout << i<<", "<<x<<", "<<y<<", "<< 2*(y-0.5)<<", "<<grad_vx[i](0,1)<<", "<<grad_vx[i](1,0)<<", "<<grad_vx_c[i](0,1)<<endl;
+    cout << i<<", "<<x<<", "<<y<<", "<< 2*(y-0.5)<<", "<<grad_vx[i](0,1)<<", "<<grad_vx_c[i](0,1)<<", "<<grad_vx_cc(0,1)<<endl;
   }
 
  // cout << endl<< "i, x,y, grad anal, grad num, grad corr num, nb, "<< endl;  
