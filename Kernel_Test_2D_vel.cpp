@@ -62,7 +62,7 @@ int main(int argc, char **argv) try
   
   cout << "Done"<<endl;
   
-  std::vector<Vec3_t>  v(dom.Particles.Size());
+  std::vector<Vec3_t>  vx(dom.Particles.Size());
   std::vector<Vec3_t> dfx(dom.Particles.Size());
 
   std::vector<Vec3_t> dfx_c(dom.Particles.Size());
@@ -116,27 +116,30 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 
       //grad va = Sum b (vb-va) X gradWb(xa)
       //Bonet et. al 1999 eqn (43)
-      vij = vx[j] - vx[i];
+      Vec3_t vij = vx[i] - vx[j];
       Mat3_t t;
 			Dyad (vij, Vec3_t(GK*xij),t);
       
-      grad_vx[i] += mj/dj * t
-      grad_vx[j] -= mi/di * t;
+      grad_vx[i] = grad_vx[i] + mj/dj * t;
+      grad_vx[j] = grad_vx[j] - mi/di * t;
 			
 			Vec3_t GK_ci, GK_cj; 
 
 			Mult(xij, GK * dom.Particles[i]->gradCorrM,GK_ci);
 			Mult(xij, GK * dom.Particles[j]->gradCorrM,GK_cj);	
+			Mat3_t t_ci,t_cj;
+			Dyad (vij, GK_ci,t_ci);
+			Dyad (vij, GK_cj,t_cj);
 			//cout << "x1,x2,
 
 			//This is like gradf_i = COrr x gradf
-      dfx_c[i] += mj/dj * (1 + P2->x(0))*(1.+P2->x(1)) * GK_ci; //If cj fails if ci is like applying 
-      dfx_c[j] -= mi/di * (1 + P1->x(0))*(1.+P1->x(1)) * GK_cj;
+      grad_vx_c[i] = grad_vx_c[i] + mj/dj * t_ci; //If cj fails if ci is like applying 
+      grad_vx_c[j] = grad_vx_c[j] - mi/di * t_cj;
 			
-			Mat3_t t;
-			Dyad (vxij, Vec3_t(GK*xij),t);
-			test [i] = test[i] - mj/dj * t;
-			test [j] = test[i] + mi/di * t;
+
+			// Dyad (vxij, Vec3_t(GK*xij),t);
+			// test [i] = test[i] - mj/dj * t;
+			// test [j] = test[i] + mi/di * t;
       
 		} //Nproc //Pairs  
   }
@@ -146,42 +149,41 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		double y = dom.Particles[i]->x(1);
 		double K	= SPH::Kernel(Dimension, 0, 0, h);
 		
-		fx[i] += /*mj/dj */dx * dx * (1.+x)*(1.+y) * K;
+		//fx[i] += /*mj/dj */dx * dx * (1.+x)*(1.+y) * K;
 
 	}
 	
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
-   cout << "i, x,y, anal, num, nb, "<< endl;  
-  for (int i = 0; i<dom.Particles.Size();i++) {
-    double x = dom.Particles[i]->x(0);
-    double y = dom.Particles[i]->x(1);
-    cout << i<<", "<<x<<", "<<y<<", "<<(1.+x)*(1.+y)<<", "<<fx[i]<<", "<<dom.Particles[i]->Nb<<endl;
-  }
-
- cout << endl<< "i, x,y, grad anal, grad num, grad corr num, nb, "<< endl;  
+		// vx[i](0) = (y-0.5)*(y-0.5) + x;
+		// vx[i](1) = x;
+		
+   cout << "i, x,y, dvxdy anal, num, nb, "<< endl;  
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);
     double y = dom.Particles[i]->x(1);
 		
-		double GK = (1.+y)* SPH::GradKernel(Dimension, 0, 0., h);
-		Vec3_t GK_c; 
-		Mult(dom.Particles[i]->gradCorrM,dfx[i],GK_c);
-			
-    cout << i<<", "<<x<<", "<<y<<", "<<(1.+y)<<", "<<dfx[i](0)<<", "<<GK_c(0)<<", "<<dfx_c[i](0)<<", "<<dom.Particles[i]->Nb<<endl;
+		// double GK = (1.+y)* SPH::GradKernel(Dimension, 0, 0., h);
+		// Vec3_t GK_c; 
+		// Mult(dom.Particles[i]->gradCorrM,dfx[i],GK_c);
+		
+    cout << i<<", "<<x<<", "<<y<<", "<< 2*(y-0.5)<<", "<<grad_vx[i](0,1)<<", "<<grad_vx_c[i](0,1)<<endl;
   }
-	
-	// for (int i = 0; i<dom.Particles.Size();i++) {
-		// cout << test[i]<<endl;
-	// }
-	
-  // cout << endl<< "Derivatives"<<endl;
+
+ // cout << endl<< "i, x,y, grad anal, grad num, grad corr num, nb, "<< endl;  
   // for (int i = 0; i<dom.Particles.Size();i++) {
     // double x = dom.Particles[i]->x(0);
-    // cout << "Analytical" << dom.Particles[i]->x(0)<<", "<<x*x<<endl;
-    // cout << dom.Particles[i]->x(0)<<", "<<dfx[i]<<endl;
+    // double y = dom.Particles[i]->x(1);
+		
+		// double GK = (1.+y)* SPH::GradKernel(Dimension, 0, 0., h);
+		// Vec3_t GK_c; 
+		// Mult(dom.Particles[i]->gradCorrM,dfx[i],GK_c);
+			
+    // cout << i<<", "<<x<<", "<<y<<", "<<(1.+y)<<", "<<dfx[i](0)<<", "<<GK_c(0)<<", "<<dfx_c[i](0)<<", "<<dom.Particles[i]->Nb<<endl;
   // }
+	
+
   
   return 0;
 }
