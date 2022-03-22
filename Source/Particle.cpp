@@ -673,7 +673,7 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				// if (Ep < 0)
 					// cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
 			}
-			if (Ep<0) Ep = 0.9*mat->Elastic().E();
+			if (Ep<0) Ep = 1.*mat->Elastic().E();
 			//Common for both methods
 			//if (Ep>0) {
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
