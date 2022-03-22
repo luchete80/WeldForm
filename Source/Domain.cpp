@@ -1329,7 +1329,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
-	of << "pl_strain, sigma_eq, sigmay"<<endl;
+	of << "pl_strain, eff_strain_rate, sigma_eq, sigmay"<<endl;
 	
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();
@@ -1477,7 +1477,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			
 			for (int p=0;p<Particles.Size();p++){
 				if (Particles[p]->print_history)
-					of << Particles[p]->pl_strain<<", "<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
+					of << Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
 			}
 		}
 		

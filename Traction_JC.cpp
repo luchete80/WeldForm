@@ -186,7 +186,7 @@ int main(int argc, char **argv) try
 				if ( z > L )
     			dom.Particles[a]->ID=3;
     	}
-		dom.WriteXDMF("maz");
+//		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
