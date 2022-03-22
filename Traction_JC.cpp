@@ -173,7 +173,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Fail		= 1;
     		//If let this to move function at the begining it fails
         dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);
-        cout << "Sigmay"<<dom.Particles[a]->Sigmay<<endl;
+        //cout << "Sigmay"<<dom.Particles[a]->Sigmay<<endl;
     		dom.Particles[a]->Alpha		= 1.0; 
     		dom.Particles[a]->TI			= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;

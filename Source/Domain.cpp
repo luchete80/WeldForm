@@ -1327,6 +1327,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		// CalcGradCorrMatrix();	
 	ClearNbData();
 	
+	//Print history
+	std::ofstream of("History.csv", std::ios::out);
+	of << "pl_strain, sigma_eq, sigmay"<<endl;
+	
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();
 		StartAcceleration(Gravity);
@@ -1473,7 +1477,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			
 			for (int p=0;p<Particles.Size();p++){
 				if (Particles[p]->print_history)
-					cout << Particles[p]->pl_strain<<", "<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
+					of << Particles[p]->pl_strain<<", "<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
 			}
 		}
 		
@@ -1514,6 +1518,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	}
 	
 
+	of.close();
+	
 	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
 
 }

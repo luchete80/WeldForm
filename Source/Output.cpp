@@ -237,8 +237,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Disvec);
 	dsname.Printf("Contact Force");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ContForce);	
-	dsname.Printf("Eff Strain Rate");
-    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,eff_str_rate);	
+	// dsname.Printf("Eff Strain Rate");
+    // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,eff_str_rate);	
 		
     delete [] Posvec;
     delete [] Velvec;
@@ -387,11 +387,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/Contact Force \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
-    oss << "     <Attribute Name=\"Eff Strain Rate\" AttributeType=\"Scalar\" Center=\"Node\">\n";
-    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
-    oss << "        " << fn.CStr() <<":/Eff Strain Rate \n";
-    oss << "       </DataItem>\n";
-    oss << "     </Attribute>\n";
+    // oss << "     <Attribute Name=\"Eff Strain Rate\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    // oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+    // oss << "        " << fn.CStr() <<":/Eff Strain Rate \n";
+    // oss << "       </DataItem>\n";
+    // oss << "     </Attribute>\n";
     oss << "   </Grid>\n";
     oss << " </Domain>\n";
     oss << "</Xdmf>\n";
