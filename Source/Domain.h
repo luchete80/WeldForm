@@ -67,7 +67,7 @@ public:
 																	double h,int type, int rotation, bool random, bool Fixed);									//Add a cube of particles with a defined dimensions
 
 	void AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
-									double r, double Density, double h, bool Fixed);
+									double r, double Density, double h, bool Fixed, bool ghost = false);
 
 	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,
@@ -133,6 +133,8 @@ public:
 	inline void CalcConvHeat ();
 	inline void CalcPlasticWorkHeat();
 	inline void CalcGradCorrMatrix();	//BONET GRADIENT CORRECTION
+	
+	inline void MoveGhost();
 
 	
 	
@@ -144,6 +146,7 @@ public:
 	void CalcContactForces();
 	double contact_force_factor;
 	double friction;
+	int ts_nb_inc;
 	
 	/////////////// MEMBERS //
     // Data
@@ -232,7 +235,8 @@ Array <Particle*>				Particles; 	///< Array of particles
 	bool 		contact;
 	double max_contact_force;
 		
-		
+	Array<std::pair<size_t,size_t> > GhostPairs;	//If used
+	
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
 		void Periodic_X_Correction	(Vec3_t & x, double const & h, Particle * P1, Particle * P2);		//Corrects xij for the periodic boundary condition

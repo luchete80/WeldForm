@@ -88,6 +88,7 @@ namespace SPH {
 		Mat3_t	RotationRate;	///< Global rotation tensor n
 		double	ShearRate;	///< Global shear rate for fluids
 		double	SBar;		///< shear component for LES
+    double  eff_strain_rate;
 
 		Mat3_t	ShearStress;	///< Deviatoric shear stress tensor (deviatoric part of the Cauchy stress tensor) n+1
 		Mat3_t	ShearStressa;	///< Deviatoric shear stress tensor (deviatoric part of the Cauchy stress tensor) n+1/2 (Leapfrog)
@@ -133,7 +134,7 @@ namespace SPH {
 		double	Sigmay;		///< Tensile yield stress
 		size_t	Fail;		///< Failure criteria
 		
-		double 	Ep;		//TODO: Move To Material
+		double 	Ep, Et;		//TODO: Move To Material
 		double 	Et_m;	//This not make sens to be a material member since is instantaneous 
 
 		double	V;		///< Volume of a particle
@@ -145,6 +146,8 @@ namespace SPH {
 		double	SumKernel;	///< Summation of the kernel value for neighbour particles
 		bool	FirstStep;	///< to initialize the integration scheme
 		bool	ThermalFirstStep;	///< to initialize the integration scheme
+		bool 	print_history; 		//TODO: CREATE AN ENUM TO VARIABLES
+		
 		
 		//LUCIANO: THERMAL PROPERTIES
 		double T,k_T,cp_T,dTdt;			// Temperature, avoid permeability	
@@ -169,8 +172,6 @@ namespace SPH {
 		int element;				// Element index (if comes from FEM)
 		
 		
-		// JOHNSON COOK_PARAMS
-		double eff_strain_rate;		//Useful only for this kind of material
 			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);

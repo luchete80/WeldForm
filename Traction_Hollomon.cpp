@@ -101,7 +101,7 @@ int main(int argc, char **argv) try
 	Hollomon mat(el,Fy/E,1220.e6,0.195);
 			
 
-		dx = 0.0085;
+		dx = 0.010;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -131,7 +131,14 @@ int main(int argc, char **argv) try
 
 
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-
+		//6777 if dx=8.5
+		//4081 if dx=10mm
+		//2421 if dx=12mm
+		
+		//dom.Particles[6777]->print_history = true;
+		dom.Particles[4081]->print_history = true;
+		//dom.Particles[6777]->ID = 1;
+		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				

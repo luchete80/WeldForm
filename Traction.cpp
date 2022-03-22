@@ -88,6 +88,10 @@ int main(int argc, char **argv) try
 		L = 2. * Lz_side + Lz_necktot;
 		
 		double E  = 210.e9;
+		double Et = 0.1 * E;
+		
+		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
+				
 		double nu = 0.3;
 		
     	rho	= 7850.0;
@@ -95,8 +99,8 @@ int main(int argc, char **argv) try
 		G= E / (2.* (1.+nu));
 		Fy	= 350.e6;
 
-
-		dx = 0.0085;
+		//dx = 0.0085;
+		dx = 0.012;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -126,12 +130,20 @@ int main(int argc, char **argv) try
 
 
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-
+		
+		//dom.Particles[6777]->print_history = true;
+		// dom.Particles[4081]->print_history = true; //If dx=10mm
+		// dom.Particles[4081]->ID = 4;
+		//If dx=12mm
+		dom.Particles[2421]->print_history = true;	//Particle 2421, 3 [     -0.006    -0.006     0.242 ]	
+		dom.ts_nb_inc = 1.;
+		cout << "Ep: " <<Ep<<endl;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		dom.Particles[a]->G		= G;
+				dom.Particles[a]->Ep 			= Ep;//HARDENING
+    		dom.Particles[a]->G				= G;
     		dom.Particles[a]->PresEq	= 0;
-    		dom.Particles[a]->Cs		= Cs;
+    		dom.Particles[a]->Cs			= Cs;
     		dom.Particles[a]->Shepard	= false;
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
@@ -155,4 +167,18 @@ int main(int argc, char **argv) try
     	dom.Solve(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
         return 0;
 }
+
+// // IF dx = 0.0085 (about 12k particles)
+
+// // Particle 6106, 3 [   -0.00425  -0.00425   0.23925 ]
+// // Particle 6107, 3 [    0.00425  -0.00425   0.23925 ]
+// // Particle 6116, 3 [   -0.00425   0.00425   0.23925 ]
+// // Particle 6117, 3 [    0.00425   0.00425   0.23925 ]
+
+// // Particle 6194, 3 [   -0.00425  -0.00425   0.24775 ]
+// // Particle 6195, 3 [    0.00425  -0.00425   0.24775 ]
+// // Particle 6204, 3 [   -0.00425   0.00425   0.24775 ]
+// // Particle 6205, 3 [    0.00425   0.00425   0.24775 ]
+
+
 MECHSYS_CATCH

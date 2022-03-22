@@ -114,34 +114,58 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		set_to_zero(RotationRate);
 		
 		//NEW
-		double m, mc[2];
 		Mat3_t GKc[2];
+		double m, mc[2];
 		GKc[0] = GK * P1->gradCorrM;
 		GKc[1] = GK * P2->gradCorrM;
 		if (gradKernelCorr){
 			
 		}
+		
+		Mat3_t StrainRate_c[2],RotationRate_c[2]; //Corrected gradients
 
-		// Calculation strain rate tensor
-		StrainRate(0,0) = 2.0*vab(0)*xij(0);
-		StrainRate(0,1) = vab(0)*xij(1)+vab(1)*xij(0);
-		StrainRate(0,2) = vab(0)*xij(2)+vab(2)*xij(0);
-		StrainRate(1,0) = StrainRate(0,1);
-		StrainRate(1,1) = 2.0*vab(1)*xij(1);
-		StrainRate(1,2) = vab(1)*xij(2)+vab(2)*xij(1);
-		StrainRate(2,0) = StrainRate(0,2);
-		StrainRate(2,1) = StrainRate(1,2);
-		StrainRate(2,2) = 2.0*vab(2)*xij(2);
-		StrainRate	= -0.5 * GK * StrainRate;
-
-		// Calculation rotation rate tensor
-		RotationRate(0,1) = vab(0)*xij(1)-vab(1)*xij(0);
-		RotationRate(0,2) = vab(0)*xij(2)-vab(2)*xij(0);
-		RotationRate(1,2) = vab(1)*xij(2)-vab(2)*xij(1);
-		RotationRate(1,0) = -RotationRate(0,1);
-		RotationRate(2,0) = -RotationRate(0,2);
-		RotationRate(2,1) = -RotationRate(1,2);
-		RotationRate	  = -0.5 * GK * RotationRate;
+		// // // // Calculation strain rate tensor
+		// // // //ORIGINAL FORM			
+		if (!gradKernelCorr){
+			StrainRate(0,0) = 2.0*vab(0)*xij(0);
+			StrainRate(0,1) = vab(0)*xij(1)+vab(1)*xij(0);
+			StrainRate(0,2) = vab(0)*xij(2)+vab(2)*xij(0);
+			StrainRate(1,0) = StrainRate(0,1);
+			StrainRate(1,1) = 2.0*vab(1)*xij(1);
+			StrainRate(1,2) = vab(1)*xij(2)+vab(2)*xij(1);
+			StrainRate(2,0) = StrainRate(0,2);
+			StrainRate(2,1) = StrainRate(1,2);
+			StrainRate(2,2) = 2.0*vab(2)*xij(2);
+			StrainRate	= -0.5 * GK * StrainRate;
+			
+			RotationRate(0,1) = vab(0)*xij(1)-vab(1)*xij(0);
+			RotationRate(0,2) = vab(0)*xij(2)-vab(2)*xij(0);
+			RotationRate(1,2) = vab(1)*xij(2)-vab(2)*xij(1);
+			RotationRate(1,0) = -RotationRate(0,1);
+			RotationRate(2,0) = -RotationRate(0,2);
+			RotationRate(2,1) = -RotationRate(1,2);
+			RotationRate	  = -0.5 * GK * RotationRate;
+		
+		}else{ 
+			//cout << "Applying kernel corr"<<endl;
+			////// New form
+			Mat3_t gradv[2],gradvT[2];
+			
+			//cout<<"gradv"<<gradv[0]<<endl;
+			Vec3_t gradK; 
+			Mult(GK * P1->gradCorrM,xij,gradK);
+			Dyad (vab,gradK,gradv[0]); //outer product. L, velocity gradient tensor
+			Mult(GK * P2->gradCorrM,xij,gradK);
+			Dyad (vab,gradK,gradv[1]); //outer product. L, velocity gradient tensor
+			
+			for (int i=0;i<2;i++){
+				Trans(gradv[i],gradvT[i]);
+				StrainRate_c[i] 	= -0.5*(gradv[i] + gradvT[i]);
+				RotationRate_c[i] = -0.5*(gradv[i] - gradvT[i]);
+			}
+			/////////////////////////////////////////////////////////////////////////////////
+			///////Chen eq 16. f'xi = Sum_j (mj/dj (fj-fi) Wij,x) / (Sum_j mj/dj (xj-xi) Wij) 
+		}
 
 		// XSPH Monaghan
 		if (XSPH != 0.0  && (P1->IsFree*P2->IsFree)) {
@@ -157,7 +181,16 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		// Calculating the forces for the particle 1 & 2
 		Vec3_t temp = 0.0;
 		double temp1 = 0.0;
-
+		Vec3_t temp_c[2];
+		double temp1_c[2];
+		Vec3_t vc[2];
+		
+		if (!gradKernelCorr){
+			for (int i=0;i<2;i++){
+				Vec3_t v;
+				Mult (GKc[i], xij, vc[i]);
+			}
+		}
 
 		// Original
 		// if (GradientType == 0)
@@ -166,34 +199,52 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
 
 		// NEW
-		//if (!gradKernelCorr) {
+		if (!gradKernelCorr) {
 		if (GradientType == 0)
 			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
 		else
 			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-		// } else {
-				// //Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
-				// //Left in vector form and multiply after??
-				// for (int i=0;i<2;i++){
-					// Vec3_t v;
-					// Mult (GKc[i], xij, v);
-					// //Mult( v , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
-				// }
-		// }//Grad Corr
+		} else {
+				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
+				//Left in vector form and multiply after??
+				for (int i=0;i<2;i++){
+					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
+				}
+		}//Grad Corr
 		
 		if (Dimension == 2) temp(2) = 0.0;
-		temp1 = dot( vij , GK*xij );
-
+		
+		if (!gradKernelCorr){
+			temp1 = dot( vij , GK*xij );
+		} else {
+			for (int i=0;i<2;i++){			//TODO: DO THIS ONCE!
+				temp1_c[i] = dot( vij , vc[i] );
+			}
+		}
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
-			P1->a		+= mj * temp;
-			P1->dDensity	+= mj * (di/dj) * temp1;
+			if (!gradKernelCorr){
+				P1->a					+= mj * temp;
+				P1->dDensity	+= mj * (di/dj) * temp1;
+			} else{
+				P1->a					+= mj * temp_c[0];
+				P1->dDensity	+= mj * (di/dj) * temp1_c[0];
+			}
+			
 
+				
 			if (P1->IsFree) {
 				float mj_dj= mj/dj;
 				P1->ZWab	+= mj_dj* K;
-				P1->StrainRate	 = P1->StrainRate + mj_dj*StrainRate;
-				P1->RotationRate = P1->RotationRate + mj_dj*RotationRate;
+				if (!gradKernelCorr){
+					P1->StrainRate = P1->StrainRate + mj_dj*StrainRate;
+					P1->RotationRate = P1->RotationRate + mj_dj*RotationRate;
+				}
+				else {
+					P1->StrainRate = P1->StrainRate + mj_dj*StrainRate_c[0];
+					P1->RotationRate = P1->RotationRate + mj_dj*RotationRate_c[0];
+				}
+
 			}
 			else
 				P1->ZWab	= 1.0;
@@ -205,13 +256,26 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 
 		// Locking the particle 2 for updating the properties
 		omp_set_lock(&P2->my_lock);
-			P2->a		-= mi * temp;
-			P2->dDensity	+= mi * (dj/di) * temp1;
+			if (!gradKernelCorr){
+				P2->a					-= mi * temp;
+				P2->dDensity	+= mi * (dj/di) * temp1;				
+			}else {
+				P2->a					-= mi * temp_c[1];
+				P2->dDensity	+= mi * (dj/di) * temp1_c[1];
+			}
+
+
 			if (P2->IsFree) {
 				float mi_di = mi/di;
 				P2->ZWab	+= mi_di* K;
-				P2->StrainRate	 = P2->StrainRate + mi_di*StrainRate;
-				P2->RotationRate = P2->RotationRate + mi_di*RotationRate;
+				if (!gradKernelCorr){
+					P2->StrainRate	 = P2->StrainRate + mi_di*StrainRate;
+					P2->RotationRate = P2->RotationRate + mi_di*RotationRate;
+				} else {
+					P2->StrainRate = P2->StrainRate 		+ mi_di*StrainRate_c[1];
+					P2->RotationRate = P2->RotationRate + mi_di*RotationRate_c[1];
+				}
+
 
 			}
 			else

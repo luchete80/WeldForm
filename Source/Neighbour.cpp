@@ -167,32 +167,32 @@ inline void Domain::ListGenerate ()
             if (i<0)
             {
                     if ((BLPF(0) - Particles[a]->x(0))<=hmax) i=0;
-                            else std::cout<<"Leaving"<<std::endl;
+                            else std::cout<<"Leaving, particle "<<a<< "yield "<<Particles[a]->Sigmay<<", eff_str_rate "<<Particles[a]->eff_strain_rate<<std::endl;
             }
             if (j<0)
             {
                     if ((BLPF(1) - Particles[a]->x(1))<=hmax) j=0;
-                            else std::cout<<"Leaving"<<std::endl;
+                            else std::cout<<"Leaving particle "<<a<<"yield "<<Particles[a]->Sigmay<<", eff_str_rate "<<Particles[a]->eff_strain_rate<<std::endl;
             }
             if (k<0)
             {
                     if ((BLPF(2) - Particles[a]->x(2))<=hmax) k=0;
-                            else std::cout<<"Leaving"<<std::endl;
+                            else std::cout<<"Leaving particle"<< a << "yield "<<Particles[a]->Sigmay<<", eff_str_rate "<<Particles[a]->eff_strain_rate<<std::endl;
             }
 			if (i>=CellNo[0])
 			{
 					if ((Particles[a]->x(0) - TRPR(0))<=hmax) i=CellNo[0]-1;
-							else std::cout<<"Leaving"<<std::endl;
+							else std::cout<<"Leavin particle "<<a<< "yield "<<Particles[a]->Sigmay<<", eff_str_rate "<<Particles[a]->eff_strain_rate<<std::endl;
 			}
             if (j>=CellNo[1])
             {
                     if ((Particles[a]->x(1) - TRPR(1))<=hmax) j=CellNo[1]-1;
-                            else std::cout<<"Leaving"<<std::endl;
+                            else std::cout<<"Leaving particle "<<a<<"yield "<<Particles[a]->Sigmay<<", eff_str_rate "<<Particles[a]->eff_strain_rate<<std::endl;
             }
             if (k>=CellNo[2])
             {
                     if ((Particles[a]->x(2) - TRPR(2))<=hmax) k=CellNo[2]-1;
-                            else std::cout<<"Leaving"<<std::endl;
+                            else std::cout<<"Leaving particle"<<a<<"yield "<<Particles[a]->Sigmay<<", eff_str_rate "<<Particles[a]->eff_strain_rate<<std::endl;
             }
 
             temp = HOC[i][j][k];

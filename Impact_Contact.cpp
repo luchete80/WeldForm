@@ -8,13 +8,16 @@
 using namespace SPH;
 using namespace std;
 
-void UserAcc(SPH::Domain & domi) {
-	double vcompress;
+//////////////////////////////////
+///// EXAMPLE FROM 
 
-	if (domi.getTime() < TAU ) 
-		vcompress = VMAX/TAU * domi.getTime();
-	else
-		vcompress = VMAX;
+void UserAcc(SPH::Domain & domi) {
+	double vcompress = 227.0;
+
+	// if (domi.getTime() < TAU ) 
+		// vcompress = VMAX/TAU * domi.getTime();
+	// else
+		// vcompress = VMAX;
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -64,20 +67,30 @@ int main(){
 	dom.Scheme	= 1;	//Mod Verlet
 	//dom.XSPH	= 0.1; //Very important
 
-		double dx,h,rho,K,G,Cs,Fy;
+	double dx,h,rho,E,nu,K,G,Cs,Fy;
 	double R,L,n;
 
-	R	= 0.15;
-	L	= 0.56;
-	n	= 30.0;		//in length, radius is same distance
+	R	= 0.0032;
+	L	= 0.0324;
+	n	= 60.0;		//in length, radius is same distance
 
-	rho	= 2700.0;
-	K	= 6.7549e10;
-	G	= 2.5902e10;
-	Fy	= 300.e6;
-	//dx	= L / (n-1);
-	//dx = L/(n-1);
-	dx = 0.015;
+	rho	= 8930.0;
+	
+	E = 117.0e9;
+	nu = 0.35;
+	K = E / ( 3.*(1.-2*nu) );
+	G = E / (2.* (1.+nu));
+	
+	double Et = 0.1*E;
+	//Elastic_ el(E,nu);
+	//Hollomon(const double eps0_, const double &k_, const double &m_):
+	//Hollomon mat(el,Fy/E,1220.e6,0.195);
+
+	double Ep =  E*Et/(E-Et);
+		
+	Fy	= 400.e6;
+	dx	= L / (n-1);
+	//dx = 0.001;
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -102,7 +115,7 @@ int main(){
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.01,-0.01, cyl_zmax),Vec3_t(0.01,0.01, cyl_zmax),40);
 	cout << "Plane z" << *mesh.node[0]<<endl;
 	
 	
@@ -111,10 +124,10 @@ int main(){
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
 	
-	dom.ts_nb_inc = 1;
-	
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
+		//dom.Particles[a]->mat = &mat;	//For  Hollomon
+		dom.Particles[a]->Ep		= Ep;
 		dom.Particles[a]->G		= G;
 		dom.Particles[a]->PresEq	= 0;
 		dom.Particles[a]->Cs		= Cs;
@@ -140,7 +153,7 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction = 0.15;
+	dom.friction = 0.0;
 	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
@@ -159,7 +172,7 @@ int main(){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

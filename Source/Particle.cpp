@@ -111,6 +111,9 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	delta_pl_strain = 0.0;
 	
 	element = -1;
+	
+	print_history = false;
+  eff_strain_rate = 0.;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);
@@ -563,14 +566,43 @@ inline void Particle::Mat2Leapfrog(double dt) {
 	Mult(RotationRate,ShearStress,RS);
 	double dep =0.;
 	double prev_sy;
-	double Et;
+	//double Et; Now is in particle
 	
 	// Elastic prediction step (ShearStress_e n+1)
 	if (FirstStep)
 		ShearStressa	= -dt/2.0*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStress;
 	ShearStressb	= ShearStressa;
 	ShearStressa	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressa;
+  
+	//cout << "StrainRate"<<StrainRate<<endl;
+                        
+	eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
+																	(StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
+																	(StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
+														3.0 * (StrainRate(0,1)*StrainRate(0,1) + StrainRate(1,2)*StrainRate(1,2) + StrainRate(2,0)*StrainRate(2,0))
+													);
+				// cout << "eff strain rate 1: "<<eff_strain_rate<<endl;			
+				// // //Live vm sqrt()
+				// // //expanding previous
+				// // //https://es.wikipedia.org/wiki/Tensi%C3%B3n_de_Von_Mises
+				// eff_strain_rate = sqrt ( 	StrainRate(0,0)*StrainRate(0,0) + StrainRate(1,1)*StrainRate(1,1) + StrainRate(2,2)*StrainRate(2,2) - 
+																	// ( StrainRate(0,0)*StrainRate(1,1) + StrainRate(1,1)*StrainRate(2,2) + StrainRate(2,2)*StrainRate(0,0)) +
+																	// 3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
+																// );
+				// cout << "eff strain rate 2: "<<eff_strain_rate<<endl;																			
+				// //from deviatoric
+				// //https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.950.3326&rep=rep1&type=pdf
+				// double em = 1./3.*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2));
+				// eff_strain_rate = sqrt ( 2./3.*( 	(StrainRate(0,0) - em )*( StrainRate(0,0) - em ) + 
+																					// (StrainRate(1,1) - em )*( StrainRate(1,1) - em ) +
+																					// (StrainRate(2,2) - em )*( StrainRate(2,2) - em ) +
+																		// 2.0	* (StrainRate(0,1)*StrainRate(1,2)*StrainRate(0,2))
+																// ));
+				// cout << "eff strain rate 3: "<<eff_strain_rate<<endl;	
 
+		if (Material_model == JOHNSON_COOK ){
+			Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
+		}			
 	if (Fail == 1) {
 		double J2	= 0.5*(ShearStressa(0,0)*ShearStressa(0,0) + 2.0*ShearStressa(0,1)*ShearStressa(1,0) +
 						2.0*ShearStressa(0,2)*ShearStressa(2,0) + ShearStressa(1,1)*ShearStressa(1,1) +
@@ -579,8 +611,23 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		ShearStressa= std::min((Sigmay/sqrt(3.0*J2)),1.0)*ShearStressa;
 		//In case of Flow Stress Model, Initial sigma_y should be calculated
 		double sig_trial = sqrt(3.0*J2);
-		
+		//cout << "Sigmay "<<Sigmay<<endl;
+    double sy;
+		//SINCE Sigma y depends on three parameters, it is theorically calculated
+		if (Material_model == BILINEAR ){
+			//Sigmay = Fy0 + pl_strain*Et
+		}
+		// else if (Material_model == JOHNSON_COOK ){
+			// Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
+			// // cout << "Yield Stress: "<< Sigmay << ", plstrain"<<pl_strain<<", eff_str_rate"<<eff_strain_rate<<endl;
+			// // cout << "StrainRate"<<StrainRate<<endl;
+		// }
+		else if (Material_model == HOLLOMON ){
+			Sigmay = mat->CalcYieldStress(pl_strain); 
+		}
+			
 		if ( sig_trial > Sigmay) {
+      //cout << "Plastic"<<endl;
 			//TODO: USE Same CalcYieldStress function with no arguments and update material "current state" before??
 			//Sigmay = mat->CalcYieldStress(pl_strain, eff_strain_rate, T);
 			if (Material_model == HOLLOMON ){
@@ -588,27 +635,56 @@ inline void Particle::Mat2Leapfrog(double dt) {
 				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
 				Et_m = Et;
 			}
-			//else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
+			else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR
+      
 				// ///////////////// JOHNSON COOK MATERIAL ////////////////////////
 				// //HERE, ET IS CALCULATED (NOT GIVEN), AND Flow stress is not incremented but calculated from expression
 				// //TODO: Calculate depdt this once (also in thermal expansion)
 				// Mat3_t depdt = 1./dt*Strain_pl_incr;	//Like in CalcPlasticWorkHeat
 			
 				// //equivalent strain rate 
-				// eff_strain_rate = sqrt ( 3.0 * 0.5*(depdt(0,0)*depdt(0,0) + 2.0*depdt(0,1)*depdt(1,0) +
-																			// 2.0*depdt(0,2)*depdt(2,0) + depdt(1,1)*depdt(1,1) +
-																			// 2.0*depdt(1,2)*depdt(2,1) + depdt(2,2)*depdt(2,2))
-																			// );
-				// //Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
-
-			if (Material_model > BILINEAR ) {//Else Ep = 0
-				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+				//
+				//grouping https://en.wikipedia.org/wiki/Von_Mises_yield_criterion
+				// eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
+																				// (StrainRate(1,1)-StrainRate(2,2))*(StrainRate(1,1)-StrainRate(2,2)) +
+																				// (StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
+																	// 3.0 * (StrainRate(0,1)*StrainRate(1,0) + StrainRate(1,2)*StrainRate(2,1) + StrainRate(2,0)*StrainRate(0,2))
+																// );																	
+				//Difference between these are 1.5
+				// //from deviatoric
+				// //https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.950.3326&rep=rep1&type=pdf
+				// double em = 1./3.*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2));
+				// eff_strain_rate = sqrt ( 2./3.*( 	(StrainRate(0,0) - em )*( StrainRate(0,0) - em ) + 
+																					// (StrainRate(1,1) - em )*( StrainRate(1,1) - em ) +
+																					// (StrainRate(2,2) - em )*( StrainRate(2,2) - em ) +
+																		// 2.0	* (StrainRate(0,1)*StrainRate(1,2)*StrainRate(0,2))
+																// ));
+				//cout << "eff strain rate: "<<eff_strain_rate<<endl;			
+				
+				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
+        //cout << "plstrain, eff_strain_rate, Et, yield "<<pl_strain<<", "<<eff_strain_rate<<","<<Et<<", " <<Sigmay<<endl;
+				
+				// if (Et<0)
+					// cout << "ATTENTION ET<0 "<<Et<<endl;
 			}
+			if (Material_model > BILINEAR ) {//Else Ep = 0
+        //cout << "Calculating Ep"<<endl;
+				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+				// if (Ep < 0)
+					// cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
+			}
+			if (Ep<0) Ep = 1.*mat->Elastic().E();
 			//Common for both methods
+			//if (Ep>0) {
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			//cout << "dep: "<<dep<<endl;
 			pl_strain += dep;
 			delta_pl_strain = dep; // For heating work calculation
-			Sigmay += dep*Ep;
+			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
+			if (Material_model == BILINEAR )
+				Sigmay += dep*Ep;
+			//}
+      //cout << "delta_pl_strain sigmay"<<delta_pl_strain<<", "<<Sigmay<<endl;
 		}//sig_trial > Sigmay
 	} //If fail
 	ShearStress	= 1.0/2.0*(ShearStressa+ShearStressb);
