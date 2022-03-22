@@ -123,7 +123,7 @@ int main(int argc, char **argv) try
 		
 		forcepart_count = 0;
 		dom.gradKernelCorr = true;
-		dom.ts_nb_inc = 1;		
+		dom.ts_nb_inc = 5;		
 		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{

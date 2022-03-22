@@ -272,7 +272,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 					P2->StrainRate	 = P2->StrainRate + mi_di*StrainRate;
 					P2->RotationRate = P2->RotationRate + mi_di*RotationRate;
 				} else {
-					P2->StrainRate = P2->StrainRate + mi_di*StrainRate_c[1];
+					P2->StrainRate = P2->StrainRate 		+ mi_di*StrainRate_c[1];
 					P2->RotationRate = P2->RotationRate + mi_di*RotationRate_c[1];
 				}
 
