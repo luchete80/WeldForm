@@ -1031,7 +1031,7 @@ inline void Domain::PrimaryComputeAcceleration () {
 
 inline void Domain::LastComputeAcceleration ()
 {
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) num_threads(Nproc)
 	for (int k=0; k<Nproc;k++) {
 		for (size_t i=0; i<SMPairs[k].Size();i++)
 			CalcForce2233(Particles[SMPairs[k][i].first],Particles[SMPairs[k][i].second]);

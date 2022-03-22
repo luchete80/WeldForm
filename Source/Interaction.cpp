@@ -119,14 +119,13 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		GKc[0] = GK * P1->gradCorrM;
 		GKc[1] = GK * P2->gradCorrM;
 		if (gradKernelCorr){
-			
 		}
 		
 		Mat3_t StrainRate_c[2],RotationRate_c[2]; //Corrected gradients
 
 		// // // // Calculation strain rate tensor
 		// // // //ORIGINAL FORM			
-		if (!gradKernelCorr){
+		//if (!gradKernelCorr){
 			StrainRate(0,0) = 2.0*vab(0)*xij(0);
 			StrainRate(0,1) = vab(0)*xij(1)+vab(1)*xij(0);
 			StrainRate(0,2) = vab(0)*xij(2)+vab(2)*xij(0);
@@ -145,8 +144,11 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			RotationRate(2,0) = -RotationRate(0,2);
 			RotationRate(2,1) = -RotationRate(1,2);
 			RotationRate	  = -0.5 * GK * RotationRate;
+			
+			// if (StrainRate(2,2)<-1.e-3)
+			// cout << "StrainRate"<<StrainRate<<endl;
 		
-		}else{ 
+		//}else{ 
 			//cout << "Applying kernel corr"<<endl;
 			////// New form
 			Mat3_t gradv[2],gradvT[2];
@@ -163,9 +165,11 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				StrainRate_c[i] 	= -0.5*(gradv[i] + gradvT[i]);
 				RotationRate_c[i] = -0.5*(gradv[i] - gradvT[i]);
 			}
+			// if (StrainRate_c[0](2,2)<-1.E-3)	
+			// cout << "StrainRate_c 1"<<StrainRate_c[0]<<"StrainRate_c 2"<<StrainRate_c[1]<<endl;
 			/////////////////////////////////////////////////////////////////////////////////
 			///////Chen eq 16. f'xi = Sum_j (mj/dj (fj-fi) Wij,x) / (Sum_j mj/dj (xj-xi) Wij) 
-		}
+		//}
 
 		// XSPH Monaghan
 		if (XSPH != 0.0  && (P1->IsFree*P2->IsFree)) {
@@ -185,9 +189,8 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		double temp1_c[2];
 		Vec3_t vc[2];
 		
-		if (!gradKernelCorr){
+		if (gradKernelCorr){
 			for (int i=0;i<2;i++){
-				Vec3_t v;
 				Mult (GKc[i], xij, vc[i]);
 			}
 		}
@@ -199,19 +202,26 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
 
 		// NEW
-		if (!gradKernelCorr) {
+		//if (!gradKernelCorr) {
 		if (GradientType == 0)
 			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
 		else
 			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-		} else {
+		//} else {
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				//Left in vector form and multiply after??
 				for (int i=0;i<2;i++){
 					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
 				}
-		}//Grad Corr
-		
+		//}//Grad Corr
+		// if (abs(temp(0))>1.e-3){
+		// cout << "Strain Rate"<<StrainRate<<endl;
+		// cout << "GK*xij"<<GK*xij<<endl;
+		// cout << "temp"<<temp<<endl;
+		// cout << "Strain Rate c 1"<<StrainRate_c[0]<<", StrainRate c 1"<<StrainRate_c[1]<<endl;
+		// cout << "GK*xij corr 1 "<<vc[0] <<"GK*xij corr 2 "<<vc[1]<<endl;
+		// cout << "temp_c 1"<<temp_c[0]<<", tempc 2 "<<temp_c[1]<<endl;
+		// }
 		if (Dimension == 2) temp(2) = 0.0;
 		
 		if (!gradKernelCorr){
@@ -225,11 +235,12 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
 				P1->a					+= mj * temp;
-				P1->dDensity	+= mj * (di/dj) * temp1;
+
 			} else{
 				P1->a					+= mj * temp_c[0];
-				P1->dDensity	+= mj * (di/dj) * temp1_c[0];
+				//P1->dDensity	+= mj * (di/dj) * temp1_c[0];
 			}
+			P1->dDensity	+= mj * (di/dj) * temp1;
 			
 
 				
@@ -237,12 +248,12 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				float mj_dj= mj/dj;
 				P1->ZWab	+= mj_dj* K;
 				if (!gradKernelCorr){
-					P1->StrainRate = P1->StrainRate + mj_dj*StrainRate;
-					P1->RotationRate = P1->RotationRate + mj_dj*RotationRate;
+					P1->StrainRate 		= P1->StrainRate + mj_dj*StrainRate;
+					P1->RotationRate 	= P1->RotationRate + mj_dj*RotationRate;
 				}
 				else {
-					P1->StrainRate = P1->StrainRate + mj_dj*StrainRate_c[0];
-					P1->RotationRate = P1->RotationRate + mj_dj*RotationRate_c[0];
+					P1->StrainRate 		= P1->StrainRate 		+ mj_dj * StrainRate_c[0];
+					P1->RotationRate 	= P1->RotationRate 	+ mj_dj * RotationRate_c[0];
 				}
 
 			}
@@ -258,12 +269,12 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		omp_set_lock(&P2->my_lock);
 			if (!gradKernelCorr){
 				P2->a					-= mi * temp;
-				P2->dDensity	+= mi * (dj/di) * temp1;				
+						
 			}else {
 				P2->a					-= mi * temp_c[1];
-				P2->dDensity	+= mi * (dj/di) * temp1_c[1];
+				//P2->dDensity	+= mi * (dj/di) * temp1_c[1];
 			}
-
+			P2->dDensity	+= mi * (dj/di) * temp1;		
 
 			if (P2->IsFree) {
 				float mi_di = mi/di;
