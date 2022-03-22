@@ -232,6 +232,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			}
 			
 
+				
 			if (P1->IsFree) {
 				float mj_dj= mj/dj;
 				P1->ZWab	+= mj_dj* K;
@@ -256,12 +257,13 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		// Locking the particle 2 for updating the properties
 		omp_set_lock(&P2->my_lock);
 			if (!gradKernelCorr){
-				P2->a		-= mi * temp;
-				P2->dDensity	+= mi * (dj/di) * temp1;
+				P2->a					-= mi * temp;
+				P2->dDensity	+= mi * (dj/di) * temp1;				
 			}else {
-				P2->a		-= mi * temp_c[1];
-				P1->dDensity	-= mj * (di/dj) * temp1_c[1];
+				P2->a					-= mi * temp_c[1];
+				P2->dDensity	+= mj * (di/dj) * temp1_c[1];
 			}
+
 
 			if (P2->IsFree) {
 				float mi_di = mi/di;
