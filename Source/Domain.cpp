@@ -167,11 +167,11 @@ inline void Domain::AdaptiveTimeStep()
 			deltat		= deltatint;
 	}
 	
-	// if (contact){
-		// if (min_force_ts < deltat)
-		// //cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
-		// deltat = min_force_ts;
-	// }
+	if (contact){
+		if (min_force_ts < deltat)
+		//cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
+		deltat = min_force_ts;
+	}
 
 	if (deltat<(deltatint/1.0e5))
 		//cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
@@ -1049,10 +1049,10 @@ inline void Domain::LastComputeAcceleration ()
 	// }
 	
 	// CONTACT FORCES
-	// if (contact) {
-		// CalcContactForces();
+	if (contact) {
+		CalcContactForces();
 		
-	// }
+	}
 		//Min time step check based on the acceleration
 		double test	= 0.0;
 		deltatmin	= deltatint;
@@ -1258,26 +1258,26 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	WholeVelocity();
 	
 	//TODO: MOVE
-	// if (contact){
-		// for (int i=0; i<Particles.Size(); i++)
-			// Particles [i] -> ID_orig = Particles [i] -> ID;
-	// }
+	if (contact){
+		for (int i=0; i<Particles.Size(); i++)
+			Particles [i] -> ID_orig = Particles [i] -> ID;
+	}
 	
 	cout << "Cell Size: "<<CellSize<<endl;
 	
-	// if (contact) { //Calculate particle Stiffness
-		// //Cs	= sqrt(K/rho);
-		// for (int i=0; i<Particles.Size(); i++){
-			// double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
-			// //TODO: If convection heat is updated every step, maybe dS could be calculated once 
-			// // in order to account for this too
-			// double dS = pow(Particles[i]->Mass/Particles[i]->Density,0.33333); //Fraser 3-119
-			// //Fraser Thesis, Eqn. 3-153
-			// Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
-		// }		
-		// cout << "dS, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " << Particles [0] -> cont_stiff <<endl;
-		// min_force_ts = deltat;
-	// }
+	if (contact) { //Calculate particle Stiffness
+		//Cs	= sqrt(K/rho);
+		for (int i=0; i<Particles.Size(); i++){
+			double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
+			//TODO: If convection heat is updated every step, maybe dS could be calculated once 
+			// in order to account for this too
+			double dS = pow(Particles[i]->Mass/Particles[i]->Density,0.33333); //Fraser 3-119
+			//Fraser Thesis, Eqn. 3-153
+			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
+		}		
+		cout << "dS, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " << Particles [0] -> cont_stiff <<endl;
+		min_force_ts = deltat;
+	}
 	cout << "Fixed Particles Size: "<<FixedParticles.Size()<<endl;
 	cout << "Initial Cell Number: "<<CellNo[0]<<", " <<CellNo[1]<<", "<< CellNo[2]<<", " <<endl;
 	
@@ -1318,7 +1318,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	if (contact){
 		MainNeighbourSearch();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-		//cout << "Calculating Surface"<<endl;
 		CalculateSurface(1);				//After Nb search			
 	}
 	
@@ -1333,8 +1332,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	of << "pl_strain, eff_strain_rate, sigma_eq, sigmay"<<endl;
 	
 	while (Time<=tf && idx_out<=maxidx) {
-		//
-		//cout << "---------------------------------------- STEP BEGIN --------------------------"<<endl;
 		clock_beg = clock();
 		StartAcceleration(Gravity);
 		start_acc_time_spent = (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -1378,7 +1375,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 						clock_beg = clock();
 						//if (update_contact_surface){
 							SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-							//cout << "Calculating contact surface"<<endl;
 							CalculateSurface(1);				//After Nb search			
 							ContactNbSearch();
 							SaveContNeighbourData();
@@ -1416,7 +1412,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				// }//contact				
 				// contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			// }// ts_i == 0
-
 			isfirst = false;
 		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 		
@@ -1477,35 +1472,32 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
 			
-			// if (contact)
-				// cout << "Max Contact Force: "<<max_contact_force<<endl;
+			if (contact)
+				cout << "Max Contact Force: "<<max_contact_force<<endl;
 			
-			// for (int p=0;p<Particles.Size();p++){
-				// if (Particles[p]->print_history)
-					// of << Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
-			// }
+			for (int p=0;p<Particles.Size();p++){
+				if (Particles[p]->print_history)
+					of << Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
+			}
 		}
 		
 		// for (int i=0; i<Particles.Size(); i++){
 			// if (Particles[i]->contforce>0.)
-		//cout << "Adaptive time step"<<endl;
+		
 		if (auto_ts)
 			AdaptiveTimeStep();
 		clock_beg = clock();
-		
-		//cout << "Move part"<<endl;
+
 		Move(deltat);
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
-		//////////////////////////////////////
-		/// ONLY NODE TO SURFACE PARTICLE ////
 		// Update velocity, plane coeff pplane and other things
-		// if (contact){
-			// //cout << "checking contact"<<endl;
-			// trimesh->UpdatePos (deltat); //Update Node Pos
-			// //Update Normals
-			// trimesh->UpdatePlaneCoeff();	//If normal does not change..
-		// }
+		if (contact){
+			//cout << "checking contact"<<endl;
+			trimesh->UpdatePos (deltat); //Update Node Pos
+			//Update Normals
+			trimesh->UpdatePlaneCoeff();	//If normal does not change..
+		}
 		trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		
 		Time += deltat;
