@@ -1413,12 +1413,13 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				// }//contact				
 				// contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			// }// ts_i == 0
-			isfirst = false;
+			
 		//NEW, gradient correction
 			if (isfirst) {
 				if (gradKernelCorr)
 					CalcGradCorrMatrix();		
 			}
+			isfirst = false;
 		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 		
 

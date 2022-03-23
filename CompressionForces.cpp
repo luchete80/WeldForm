@@ -122,7 +122,7 @@ int main(int argc, char **argv) try
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
 		forcepart_count = 0;
-		dom.gradKernelCorr = true;
+		dom.gradKernelCorr = false;
 		dom.ts_nb_inc = 5;		
 		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
