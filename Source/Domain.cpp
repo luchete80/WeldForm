@@ -1152,7 +1152,7 @@ inline void Domain::CalcGradCorrMatrix () {
 			Inv(temp[i],m);	
 
 			Particles[i] ->gradCorrM = m;
-			cout << "Corr Matrix: " << m <<endl;
+			//cout << "Corr Matrix: " << m <<endl;
 		} else {
 			Particles[i] ->gradCorrM = I;
 		}
@@ -1414,11 +1414,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				// contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			// }// ts_i == 0
 			isfirst = false;
+		//NEW, gradient correction
+			if (isfirst) {
+				if (gradKernelCorr)
+					CalcGradCorrMatrix();		
+			}
 		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 		
-		//NEW, gradient correction
-		if (gradKernelCorr)
-			CalcGradCorrMatrix();		
+
 			
 		auto end_task = std::chrono::system_clock::now();
 		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);

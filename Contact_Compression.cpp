@@ -112,7 +112,8 @@ int main(){
 	mesh.CalcSpheres(); //DONE ONCE
 	
 	dom.ts_nb_inc = 1;
-	
+	dom.gradKernelCorr = true;
+			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -140,7 +141,8 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction = 0.15;
+	//dom.friction = 0.15;
+	dom.friction = 0.0;
 	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
