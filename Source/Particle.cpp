@@ -707,7 +707,9 @@ inline void Particle::Mat2Leapfrog(double dt) {
 		// Strain_pl(0,1) += 1.5*f*(Sigma(0,1));
 		// Strain_pl(0,2) += 1.5*f*(Sigma(0,2));
 		// Strain_pl(1,2) += 1.5*f*(Sigma(1,2));
-	}	
+		update = true;
+	}	else 
+		update = false;
 
 	if (FirstStep)
 		Straina	= -dt/2.0*StrainRate + Strain;

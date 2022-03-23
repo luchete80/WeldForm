@@ -81,7 +81,7 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		double x = dom.Particles[i]->x(0);
 		double y = dom.Particles[i]->x(1);
 
-		vx[i](0) = (y-0.5)*(y-0.5) ;
+		vx[i](0) = (1.+x)*(1.+y) ;
 		vx[i](1) = x;
 		vx[i](2) = 0;
 	}
@@ -172,7 +172,7 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		
 		// Mult(dom.Particles[i]->gradCorrM,dfx[i],GK_c);
 		
-    cout << i<<", "<<x<<", "<<y<<", "<< 2*(y-0.5)<<", "<<grad_vx[i](0,1)<<", "<<grad_vx_c[i](0,1)<<", "<<grad_vx_cc(0,1)<<endl;
+    cout << i<<", "<<x<<", "<<y<<", "<< (1.+x) <<", "<<grad_vx[i](0,1)<<", "<<grad_vx_c[i](0,1)<<", "<<grad_vx_cc(0,1)<<endl;
   }
 
  // cout << endl<< "i, x,y, grad anal, grad num, grad corr num, nb, "<< endl;  

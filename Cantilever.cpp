@@ -95,7 +95,7 @@ int main(int argc, char **argv) try
 							Lx + Lx/20.0 , Ly /*+dx*/,  Lz /*+dx*/, 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-		//dom.gradKernelCorr = true;
+		dom.gradKernelCorr = true;
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)

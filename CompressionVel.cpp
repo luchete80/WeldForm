@@ -52,9 +52,12 @@ void UserAcc(SPH::Domain & domi)
 		{
 			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->a(2)		= -VMAX/TAU;
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->v(2)			= -vcompress;
+			domi.Particles[i]->va(2)		= -vcompress;
+			domi.Particles[i]->vb(2)		= -vcompress;
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -122,7 +125,7 @@ int main(int argc, char **argv) try
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
 		forcepart_count = 0;
-		dom.gradKernelCorr = true;
+		//dom.gradKernelCorr = true;
 		dom.ts_nb_inc = 5;		
 		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -145,7 +148,7 @@ int main(int argc, char **argv) try
     			dom.Particles[a]->NoSlip=true;			
 				
 				}
-    		if ( z > (L + L/10 -1.5*h)) {//Changed to only last row
+    		if ( z > (L -1.5*h)&& z<(L -1.5*h + h) ) {//Changed to only last row
     			dom.Particles[a]->ID=3;
 					//dom.Particles[a]->XSPH		= 0.1;
 					forcepart_count++;
