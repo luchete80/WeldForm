@@ -104,6 +104,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     float * Disvec	= new float[3*Particles.Size()];		//LUCIANO
 		float * ContForce	= new float[3*Particles.Size()];		//LUCIANO
 		float * eff_str_rate	= new float[ Particles.Size()];		//LUCIANO
+		float * gradcorrmat = new float [6 * Particles.Size()];
 		
 	double P1,P2,P3;
 
@@ -157,6 +158,14 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Strain_pl  [6*i+3] = float(Particles[i]->Strain_pl(0,1));
         Strain_pl  [6*i+4] = float(Particles[i]->Strain_pl(1,2));
         Strain_pl  [6*i+5] = float(Particles[i]->Strain_pl(0,2));
+        
+				gradcorrmat  [6*i  ] = float(Particles[i]->gradCorrM(0,0));
+        gradcorrmat  [6*i+1] = float(Particles[i]->gradCorrM(1,1));
+        gradcorrmat  [6*i+2] = float(Particles[i]->gradCorrM(2,2));
+        gradcorrmat  [6*i+3] = float(Particles[i]->gradCorrM(0,1));
+        gradcorrmat  [6*i+4] = float(Particles[i]->gradCorrM(1,2));
+        gradcorrmat  [6*i+5] = float(Particles[i]->gradCorrM(0,2));
+				
 				Sigma_eq[i    ] 	= float(Particles[i]->Sigma_eq);
 				Temp	[i    ] 		= float(Particles[i]->T);
 				Pl_Strain	[i] 		= float(Particles[i]->pl_strain);
@@ -172,6 +181,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
         ContForce  [3*i+2] = float(Particles[i]->contforce(2));		
         
         eff_str_rate [i] = float(Particles[i]->eff_strain_rate);
+
+
 				
 	UserOutput(Particles[i],P1,P2,P3);
         Prop1	[i    ] = float(P1);
@@ -221,6 +232,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,StrainRate);
     dsname.Printf("Strain_pl");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain_pl);
+    dsname.Printf("gradcorrmat");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,gradcorrmat);
     dims[0] = Particles.Size();
 	dsname.Printf("Sigma_eq");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Sigma_eq);
@@ -264,6 +277,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	delete [] Disvec;
 	delete [] ContForce;
 	delete [] eff_str_rate;
+	delete [] gradcorrmat;
 	
    //Closing the file
     H5Fflush(file_id,H5F_SCOPE_GLOBAL);
@@ -350,6 +364,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "     <Attribute Name=\"Strain_pl\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Strain_pl \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"gradcorrmat\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/gradcorrmat \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Temperature\" AttributeType=\"Scalar\" Center=\"Node\">\n";

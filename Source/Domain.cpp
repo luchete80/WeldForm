@@ -1152,6 +1152,7 @@ inline void Domain::CalcGradCorrMatrix () {
 			Inv(temp[i],m);	
 
 			Particles[i] ->gradCorrM = m;
+			cout << "Corr Matrix: " << m <<endl;
 		} else {
 			Particles[i] ->gradCorrM = I;
 		}
