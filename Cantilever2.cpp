@@ -25,14 +25,14 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,-vtraction,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,-vtraction,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,-vtraction,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -49,7 +49,7 @@ int main(int argc, char **argv) try
         dom.Dimension	= 3;
         dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
-    	dom.Scheme	= 0;	//Mod Verlet
+    	dom.Scheme	= 1;	//Mod Verlet
 //     	dom.XSPH	= 0.5; //Very important
 		
         double dx,h,rho,K,G,Cs,Fy;
