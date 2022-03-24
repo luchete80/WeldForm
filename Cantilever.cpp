@@ -25,14 +25,16 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,-vtraction,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,-vtraction,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,-vtraction,0.0);
+			//domi.Particles[i]->vb		= Vec3_t(0.0,-vtraction,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
+			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -126,7 +128,7 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.00001,"test06",999);
         return 0;
 }
 MECHSYS_CATCH
