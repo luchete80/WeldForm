@@ -163,6 +163,8 @@ namespace SPH {
 		double kin_energy;
 		double int_energy;
 		
+		double q_fric_work;
+		
 		int 	Nb;
 		int 	ContNb;
 		

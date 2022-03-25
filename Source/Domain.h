@@ -169,6 +169,8 @@ Array <Particle*>				Particles; 	///< Array of particles
     double					CsMax;		///< Max speed of sound for calculating the timestep
 	double 					Vol;		///LUCIANO
 	
+		bool cont_heat_gen;
+	
 		int 						first_fem_particle_idx;			//The rest are ridig bodies
 		/*Array<*/int/*>*/ 			id_free_surf;								//TODO: 
     Vec3_t					Gravity;       	///< Gravity acceleration
