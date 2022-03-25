@@ -124,7 +124,7 @@ inline void Domain::CalcTempInc () {
 		//cout << "temp "<<temp[i]<<endl;
 		Particles[i]->dTdt = 1./(Particles[i]->Density * Particles[i]->cp_T ) * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat);	
 		if (contact)
-			Particles[i]->dTdt += q_fric_work;
+			Particles[i]->dTdt += Particles[i]->q_fric_work;
 		if (Particles[i]->dTdt>max){
 			max= Particles[i]->dTdt;
 			imax=i;

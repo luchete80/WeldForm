@@ -237,10 +237,11 @@ void Domain::CalcContactForces(){
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 						
+						Vec3_t tgforce;
 						if (friction > 0.) {
 							if ( norm (vr)  != 0.0 ){
 							// //TG DIRECTION
-								Vec3_t tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
+								tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
 								omp_set_lock(&Particles[P1]->my_lock);
 								Particles[P1] -> a += tgforce / Particles[P1] -> Mass; 
 								omp_unset_lock(&Particles[P1]->my_lock);
@@ -251,7 +252,7 @@ void Domain::CalcContactForces(){
 								//Fraser Eqns 3.109 to 3.111
 								//lambda is fraction passed to 
 								omp_set_lock(&Particles[P1]->my_lock);
-								Particles[P1] ->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+								Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
 								omp_unset_lock(&Particles[P1]->my_lock);
 							}
 						}
