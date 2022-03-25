@@ -622,6 +622,145 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	R = r;
 }
 
+//////////////////////////////////////
+// HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
+void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
+									double r, double Density, double h, bool Fixed, double angle, bool ghost = false)
+{
+
+//	Util::Stopwatch stopwatch;
+    std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
+
+    size_t PrePS = Particles.Size();
+
+    double xp,yp;
+    size_t i,j;
+
+    double qin = 0.03;
+    srand(100);
+	
+	double Lx, Ly;
+	
+	//Particles are tried to be aligned 
+	int numpartxy=1;	//MAX ON EACH EDGE
+	//PARTCILES ARE NOT ALIGNED WITH AXIS; BUT SYMMETRIC ON EACH QUADRANT
+	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
+	numpartxy = calcHalfPartCount(r, Rxy, 1);
+	
+	//// GHOST THING
+	double ghost_inc = 0;
+	int ghost_rows = 3; 
+	if (ghost ) ghost_inc = 2*r*ghost_rows;
+	int first_nonghost_id[ghost_rows]; //First nonghost particle, from near plane 
+	int first_ghost_id [ghost_rows];
+	int xy_ghost_part_count[ghost_rows];
+	//cout << "X/Y Particles: " << numpartxy<<endl;
+	//yp=pos;
+	int numypart,numxpart;
+	int xinc,yinc,yinc_sign;
+	
+	int id_part=0;
+	
+	//
+	
+  if (Dimension==3) {
+    	//Cubic packing
+		double zp;
+		size_t k=0;
+		zp = V(2);
+		//Calculate row count for non ghost particles
+		while (zp <= (V(2)+Lz -r)){
+			k++; zp = V(2) + (2.0*k+1)*r;			
+		}
+		cout << "Particle Row count: "<< k << endl;
+		int last_nonghostrow = k;
+		
+		k = 0;zp = V(2);
+		int ghost_row=-1;
+		while (zp <= (V(2)+Lz + ghost_inc -r)) {
+			j = 0;
+			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
+			//cout << "y Extreme: "<<yp<<endl;
+			
+			numypart = 2*numpartxy;	//And then diminish by 2 on each y increment
+			yinc = numpartxy;	//particle row from the axis
+			yinc_sign=-1;
+			if (	k > ((last_nonghostrow - 1) - ghost_rows) && k < last_nonghostrow) { // CHECK IF IT IS A GHOST ROW
+				ghost_row++;
+				first_nonghost_id[ghost_row] 		= id_part;
+				xy_ghost_part_count[ghost_row] 	= numypart;
+				cout << "first_nonghost_id, particle: " << k << ", id part "<< id_part << endl;
+			}
+			if ( k > last_nonghostrow - 1) {
+				ghost_row++;
+				first_ghost_id [ghost_row - ghost_rows]= id_part;
+				cout << "first_ghost_id, particle: " << k << ", id part "<< id_part << endl;
+			} 
+			//cout << "y max particles: "<<numypart<<endl;
+			for (j=0;j<numypart;j++){
+				//cout << "y inc: "<<yinc<<endl;
+				numxpart = calcHalfPartCount(r, Rxy, yinc);
+				//cout << "xpart: "<< numxpart<<endl;
+				xp = V(0) - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
+				for (i=0; i<2*numxpart;i++) {
+					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					//	else    
+					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					id_part++;
+					xp += 2.*r;
+				}
+				yp += 2.*r;
+				yinc+=yinc_sign;
+				if (yinc<1) {//Reach the axis, now positive increments
+					yinc = 1;
+					yinc_sign=1;
+				}
+			}
+			k++;
+			zp = V(2) + (2.0*k+1)*r;
+		}
+		//Insert ghost pairs relation
+		// if (ghost){
+			// for (int grow=0; grow<ghost_rows;grow++){
+				// int pid  = first_nonghost_id[ghost_rows-1 - grow]; //non ghost particle, reverse order
+				// int gpid = first_ghost_id [grow];
+				// int last_gpid;
+				// if (grow<2)
+					// last_gpid = first_ghost_id [grow+1];
+				// else 
+					// last_gpid = Particles.Size() - 1;
+				// int part_count = last_gpid - gpid + 1;
+				// cout << "part count "<<part_count<<endl;
+				// for (int p=0;p<part_count;p++){
+					// cout << "Pair inserted: "<<pid<<", "<<gpid<<endl;
+					// GhostPairs.Push(std::make_pair(pid,gpid));
+					// pid++;gpid++;
+				// }
+			// }
+		// }
+		
+		double Vol = M_PI * Rxy * Rxy * Lz;		
+		//double Mass = Vol * Density / (Particles.Size()-PrePS);
+		double Mass = Vol * Density /Particles.Size();
+		
+		cout << "Total Particle count: " << Particles.Size() <<endl;
+		cout << "Particle mass: " << Mass <<endl;
+
+		#pragma omp parallel for num_threads(Nproc)
+		#ifdef __GNUC__
+		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+		#else
+		for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+		#endif
+		{
+			Particles[i]->Mass = Mass;
+		}
+
+	}//Dim 3
+
+	R = r;
+}
+
 inline void Domain::MoveGhost(){
 	int axis = 2;
 	for (int gp=0; gp<GhostPairs.Size(); gp++){
@@ -1068,6 +1207,52 @@ inline void Domain::LastComputeAcceleration ()
 				}
 			}
 		}
+}
+
+void Domain::CalcKinEnergyEqn(){
+	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif
+	{
+		Particles[i]->dkin_energy_dt = 0.;
+		
+	}
+	
+	double temp;
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t k=0; k<Nproc;k++) 
+	#else
+	for (int k=0; k<Nproc;k++) 
+	#endif
+	{
+		size_t P1,P2;
+		Vec3_t xij,vij;
+		double mi,mj,di,dj,GK;
+		double h,K;
+		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
+		for (size_t a=0; a<SMPairs[k].Size();a++) {
+			P1	= FSMPairs[k][a].first;
+			P2	= FSMPairs[k][a].second;
+			xij	= Particles[P1]->x-Particles[P2]->x;
+			vij	= Particles[P1]->v-Particles[P2]->v;
+			mi = Particles[P1]->Mass; mj = Particles[P2]->Mass;
+			di = Particles[P1]->Density; dj = Particles[P2]->Density;
+
+			h	= (Particles[P1]->h + Particles[P2]->h)/2.0;
+			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
+			
+			temp = mj*(Particles[P1]->Pressure/(di*di)+Particles[P2]->Pressure/(dj*dj))*
+							dot(vij,GK*xij);
+			 
+			Particles[P1]->dkin_energy_dt +=temp; 
+			Particles[P2]->dkin_energy_dt -=temp;			
+		}
+	}
+	
 }
 
 //New, for Bonet gradient correction

@@ -81,7 +81,7 @@ int main(){
 	K = E / ( 3.*(1.-2*nu) );
 	G = E / (2.* (1.+nu));
 	
-	double Et = 0.1*E;
+	double Et = 0.1e9;
 	//Elastic_ el(E,nu);
 	//Hollomon(const double eps0_, const double &k_, const double &m_):
 	//Hollomon mat(el,Fy/E,1220.e6,0.195);

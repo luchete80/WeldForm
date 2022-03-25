@@ -73,7 +73,15 @@ int main(int argc, char **argv) try
   std::vector<double>  gx(dom.Particles.Size());
   
   std::vector<Vec3_t>  vij(dom.Particles.Size());
-
+	
+  std::vector<Vec3_t>  gamma(dom.Particles.Size());
+  std::vector<double>  sumden(dom.Particles.Size());
+	
+	std::vector<Vec3_t>  grad_corrKern(dom.Particles.Size());	//Gradient of corrected kernel, bonet eqn 57
+	
+	 std::vector< Mat3_t > grad_corr_mat(dom.Particles.Size());
+	 
+	std::vector<Vec3_t>  corr_v(dom.Particles.Size());	//Kernel correction
 ///////////////////////////////////////
 ///// DEFINING VELOCITY FIELD:
 
@@ -115,6 +123,17 @@ for (int i = 0; i<dom.Particles.Size();i++) {
       cout << "r, K, GK: "<<norm(xij)/h<<", "<<K<<", "<<GK<<endl;
       cout <<"Vi"<<mj/dj<<endl;
 
+			//Mixed gradient correction
+      //Bonet Eqn 57  
+      gamma [i] += GK*xij*mj/dj;
+      gamma [j] -= GK*xij*mi/di;   
+
+      sumden [i]+= mj/dj * K;
+      sumden [j]-= mi/di * K;
+			
+			corr_v[i]+= mj/dj * K * v[j];
+			corr_v[j]-= mi/di * K * v[i];			
+			
       //grad va = Sum b (vb-va) X gradWb(xa)
       //Bonet et. al 1999 eqn (43)
       Vec3_t vij = vx[i] - vx[j];
@@ -145,21 +164,46 @@ for (int i = 0; i<dom.Particles.Size();i++) {
 		} //Nproc //Pairs  
   }
 
-	for (int i = 0; i<dom.Particles.Size();i++) {
-		double x = dom.Particles[i]->x(0);
-		double y = dom.Particles[i]->x(1);
-		double K	= SPH::Kernel(Dimension, 0, 0, h);
-		
-		//fx[i] += /*mj/dj */dx * dx * (1.+x)*(1.+y) * K;
-
+	//MIXED CORRECTION
+	for (int k=0; k<dom.Nproc;k++) {
+    double mi,mj;
+    double di,dj;
+    SPH::Particle *P1,*P2;
+    Vec3_t xij;
+		for (size_t a=0; a<dom.SMPairs[k].Size();a++) {
+      int i = dom.SMPairs[k][a].first;
+      int j = dom.SMPairs[k][a].second;
+			P1	= dom.Particles[i];
+			P2	= dom.Particles[j];
+			xij	= P1->x - P2->x;
+						
+			mi = P1->Mass;
+			mj = P2->Mass;	
+      
+      di = P1->Density;
+			dj = P2->Density;	
+      double K	= SPH::Kernel(Dimension, 0, norm(xij)/h, h);
+      double GK = SPH::GradKernel(Dimension, 0, norm(xij)/h, h);     
+			
+			//GRADIENT OF CORRECTED KERNEL
+			
+			
+			//grad_corr_mat
+			
+		}
 	}
+	
+	for (int i = 0; i<dom.Particles.Size();i++) 
+		corr_v[i] /=sumden[i];
 	
   cout << "Done."<<endl;
   //dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 		// vx[i](0) = (y-0.5)*(y-0.5) + x;
 		// vx[i](1) = x;
-		
+	
+
+	
    cout << "i, x,y, dvxdy anal, num 01 num 10, nb, "<< endl;  
   for (int i = 0; i<dom.Particles.Size();i++) {
     double x = dom.Particles[i]->x(0);

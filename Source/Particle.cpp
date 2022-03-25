@@ -109,6 +109,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	
 	Material_model = BILINEAR;
 	delta_pl_strain = 0.0;
+	kin_energy = int_energy = 0.;
 	
 	element = -1;
 	
@@ -127,6 +128,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     set_to_zero(StrainRate);
     set_to_zero(RotationRate);
     omp_init_lock(&my_lock);
+		
 
 }
 
@@ -770,6 +772,16 @@ inline void Particle::CalcPlasticWorkHeat(const double &dt){
 						);
 		//cout << "plastic heat "<<q_plheat<<endl;
 	}
+}
+
+inline void Particle::CalcIntEnergyEqn(){
+			dint_energy_dt 	= (
+						ShearStress(0,0)*StrainRate(0,0) + 
+						2.0*ShearStress(0,1)*StrainRate(1,0) + 2.0*ShearStress(0,2)*StrainRate(2,0) + 
+						ShearStress(1,1)*StrainRate(1,1) +
+						2.0*ShearStress(1,2)*StrainRate(2,1) + 
+						ShearStress(2,2)*StrainRate(2,2)
+						);
 }
 
 //THIS SHOULD BE CALLED AFTER CalcForces2233

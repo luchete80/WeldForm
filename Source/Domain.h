@@ -69,6 +69,10 @@ public:
 	void AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									double r, double Density, double h, bool Fixed, bool ghost = false);
 
+	//Cylinder Slice 
+	void AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
+									double r, double Density, double h, bool Fixed, double angle, bool ghost = false);
+									
 	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,
 											double r, double Density, double h, bool Fixed);
@@ -107,6 +111,7 @@ public:
 	inline void CalcThermalExpStrainRate();
 	inline void CalcPlasticWorkHeat(const double &dt);
 
+	inline void CalcKinEnergyEqn();
 
     void Solve_wo_init (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function	
 	//void Step(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);

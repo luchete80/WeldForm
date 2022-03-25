@@ -158,6 +158,11 @@ namespace SPH {
 		double q_plheat;				//Plastic Work Heat generation
 		double th_exp;		//Constant
 		
+		double dkin_energy_dt;		//
+		double dint_energy_dt;		//
+		double kin_energy;
+		double int_energy;
+		
 		int 	Nb;
 		int 	ContNb;
 		
@@ -193,6 +198,7 @@ namespace SPH {
 		void CalculateEquivalentStress();
 		void Move_Euler (Mat3_t I, double dt);
 		void Mat2Euler(double dt);
+		void CalcIntEnergyEqn();
 		
 		
 
