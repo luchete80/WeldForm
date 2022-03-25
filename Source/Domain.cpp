@@ -1487,9 +1487,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 						//}
 					}//contact				
 					contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-			}// ts_i == 0				
+				}// ts_i == 0				
 				
-				}
+			}
 			// cout << "RIG Pairs"<<endl;
 			// for (int p=0;p<Nproc;p++)
 				// cout << RIGPairs[p].size()<<", ";		
@@ -1520,13 +1520,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			// }// ts_i == 0
 			
 		//NEW, gradient correction
-		cout << "Calculating corr matrix"<<endl;
 			if (isfirst) {
+				cout << "Calculating gradient correction matrix"<<endl;
 				if (gradKernelCorr)
 					CalcGradCorrMatrix();		
+				cout << "Done."<<endl;
+				isfirst = false;
 			}
-			isfirst = false;
-		cout << "Calculated"<<endl;
+
 		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 		
 

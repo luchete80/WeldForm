@@ -111,7 +111,7 @@ int main(){
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
 	
-	dom.ts_nb_inc = 1;
+	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = true;
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
