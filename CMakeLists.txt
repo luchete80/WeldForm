@@ -83,10 +83,10 @@ SET(EXES
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
 	#Cantilever
-	Cantilever2
+	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	#Contact_Compression
+	Contact_Compression
 	#Contact_Compression_PtP
 	#CompressionForces
 	#CompressionVel
@@ -98,6 +98,7 @@ SET(EXES
 	#FreeSurface
 	#Elastic
 	#Heat_2D
+	#Impact_Campos
 	#Impact_Contact
 	#Impact_Zhang2017
   #Kernel_Test

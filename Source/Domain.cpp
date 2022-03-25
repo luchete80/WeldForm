@@ -1138,7 +1138,11 @@ inline void Domain::CalcGradCorrMatrix () {
 	//cout << "Inverting"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	//cout << "Inverting"<<endl;
-	for (int i=0; i<Particles.Size(); i++){
+	int max_id = Particles.Size();
+	if (contact)
+		max_id = first_fem_particle_idx;
+		
+	for (int i=0; i<max_id; i++){
 		// cout << "part "<<i<<endl;
 		//cout << "x: "<<Particles[i]->x<<endl;
 		// cout << "nb: "<<Particles[i]->Nb<<endl;
@@ -1432,7 +1436,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
 	of << "pl_strain, eff_strain_rate, sigma_eq, sigmay"<<endl;
-	
+
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();
 		StartAcceleration(Gravity);
@@ -1516,11 +1520,13 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			// }// ts_i == 0
 			
 		//NEW, gradient correction
+		cout << "Calculating corr matrix"<<endl;
 			if (isfirst) {
 				if (gradKernelCorr)
 					CalcGradCorrMatrix();		
 			}
 			isfirst = false;
+		cout << "Calculated"<<endl;
 		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 		
 
@@ -1589,7 +1595,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
 		// for (int i=0; i<Particles.Size(); i++){
 			// if (Particles[i]->contforce>0.)
-		
 		if (auto_ts)
 			AdaptiveTimeStep();
 		clock_beg = clock();
