@@ -1198,11 +1198,13 @@ inline void Domain::LastComputeAcceleration ()
 		#pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
 		for (int i=0; i<Particles.Size(); i++) {
 			if (Particles[i]->IsFree) {
-				test = sqrt(Particles[i]->h/norm(Particles[i]->a));
-				if (deltatmin > (sqrt_h_a*test))
-				{
+				//test = sqrt(Particles[i]->h/norm(Particles[i]->a));
+				test = Particles[i]->h/(Particles[i]->Cs*norm(Particles[i]->v));
+				//if (deltatmin > (sqrt_h_a*test)) {
+					if (deltatmin > test ) {
 					omp_set_lock(&dom_lock);
-						deltatmin = sqrt_h_a*test;
+						//deltatmin = sqrt_h_a*test
+						deltatmin = test;
 					omp_unset_lock(&dom_lock);
 				}
 			}
