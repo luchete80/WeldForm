@@ -1,0 +1,19 @@
+http://www2.me.rochester.edu/courses/ME204/nx_help/index.html#uid:id505456
+https://docs.plm.automation.siemens.com/data_services/resources/nxnastran/10/help/en_US/tdocExt/pdf/User.pdf
+
+
+There are two basic categories of input data formats in NX Nastran:
+
+“Free” format data, in which the data fields are simply separated by commas. This type of data is known as free field data.
+
+“Fixed” format data, in which your data must be aligned in columns of specific width. There are two subcategories of fixed format data that differ based on the size of the fixed column width:
+
+Small field format, in which a single line of data is divided into 10 fields that can contain eight characters each.
+
+Large field format, in which a single line of input is expanded into two lines The first and last fields on each line are eight columns wide, while the intermediate fields are sixteen columns wide. The large field format is useful when you need greater numerical accuracy.
+
+Which type of format data you use depends upon the section of the input file that you are working with.
+
+You must use the free field format for the NASTRAN statement and the File Management, Executive Control, and Case Control sections.
+You can use the free field, small field, or large field formats with the Bulk Data section.
+The rules for entering free field, small field, and large field format data are described in more detail below.
