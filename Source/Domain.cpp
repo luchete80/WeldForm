@@ -624,9 +624,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
-void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
-									double r, double Density, double h, bool Fixed, double angle, bool ghost = false)
-{
+void Domain::AddDoubleSymCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
+								double r, double Density, double h, bool Fixed, bool symlength = false){
 
 //	Util::Stopwatch stopwatch;
     std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
@@ -647,21 +646,12 @@ void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double
 	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
 	numpartxy = calcHalfPartCount(r, Rxy, 1);
 	
-	//// GHOST THING
-	double ghost_inc = 0;
-	int ghost_rows = 3; 
-	if (ghost ) ghost_inc = 2*r*ghost_rows;
-	int first_nonghost_id[ghost_rows]; //First nonghost particle, from near plane 
-	int first_ghost_id [ghost_rows];
-	int xy_ghost_part_count[ghost_rows];
-	//cout << "X/Y Particles: " << numpartxy<<endl;
+
 	//yp=pos;
 	int numypart,numxpart;
 	int xinc,yinc,yinc_sign;
 	
 	int id_part=0;
-	
-	//
 	
   if (Dimension==3) {
     	//Cubic packing
@@ -676,7 +666,7 @@ void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double
 		int last_nonghostrow = k;
 		
 		k = 0;zp = V(2);
-		int ghost_row=-1;
+
 		while (zp <= (V(2)+Lz + ghost_inc -r)) {
 			j = 0;
 			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
@@ -685,17 +675,7 @@ void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double
 			numypart = 2*numpartxy;	//And then diminish by 2 on each y increment
 			yinc = numpartxy;	//particle row from the axis
 			yinc_sign=-1;
-			if (	k > ((last_nonghostrow - 1) - ghost_rows) && k < last_nonghostrow) { // CHECK IF IT IS A GHOST ROW
-				ghost_row++;
-				first_nonghost_id[ghost_row] 		= id_part;
-				xy_ghost_part_count[ghost_row] 	= numypart;
-				cout << "first_nonghost_id, particle: " << k << ", id part "<< id_part << endl;
-			}
-			if ( k > last_nonghostrow - 1) {
-				ghost_row++;
-				first_ghost_id [ghost_row - ghost_rows]= id_part;
-				cout << "first_ghost_id, particle: " << k << ", id part "<< id_part << endl;
-			} 
+
 			//cout << "y max particles: "<<numypart<<endl;
 			for (j=0;j<numypart;j++){
 				//cout << "y inc: "<<yinc<<endl;
@@ -720,24 +700,34 @@ void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double
 			zp = V(2) + (2.0*k+1)*r;
 		}
 		//Insert ghost pairs relation
-		// if (ghost){
-			// for (int grow=0; grow<ghost_rows;grow++){
-				// int pid  = first_nonghost_id[ghost_rows-1 - grow]; //non ghost particle, reverse order
-				// int gpid = first_ghost_id [grow];
-				// int last_gpid;
-				// if (grow<2)
-					// last_gpid = first_ghost_id [grow+1];
-				// else 
-					// last_gpid = Particles.Size() - 1;
-				// int part_count = last_gpid - gpid + 1;
-				// cout << "part count "<<part_count<<endl;
-				// for (int p=0;p<part_count;p++){
-					// cout << "Pair inserted: "<<pid<<", "<<gpid<<endl;
-					// GhostPairs.Push(std::make_pair(pid,gpid));
-					// pid++;gpid++;
-				// }
-			// }
+		if (ghost){
+			for (int grow=0; grow<ghost_rows;grow++){
+				int pid  = first_nonghost_id[ghost_rows-1 - grow]; //non ghost particle, reverse order
+				int gpid = first_ghost_id [grow];
+				int last_gpid;
+				if (grow<2)
+					last_gpid = first_ghost_id [grow+1];
+				else 
+					last_gpid = Particles.Size() - 1;
+				int part_count = last_gpid - gpid + 1;
+				cout << "part count "<<part_count<<endl;
+				for (int p=0;p<part_count;p++){
+					cout << "Pair inserted: "<<pid<<", "<<gpid<<endl;
+					GhostPairs.Push(std::make_pair(pid,gpid));
+					pid++;gpid++;
+				}
+			}
+		}
+		///////Calculate particles' mass in 3D
+		// Vec3_t temp, Max=V;
+		// for (size_t i=PrePS; i<Particles.Size(); i++) {
+			// if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
+			// if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
+			// if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
 		// }
+		// Max +=r;
+		// temp = Max-V;
+		// double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
 		
 		double Vol = M_PI * Rxy * Rxy * Lz;		
 		//double Mass = Vol * Density / (Particles.Size()-PrePS);
@@ -758,8 +748,9 @@ void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double
 
 	}//Dim 3
 
-	R = r;
+	R = r;									
 }
+
 
 inline void Domain::MoveGhost(){
 	int axis = 2;
