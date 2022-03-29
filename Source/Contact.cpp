@@ -89,24 +89,15 @@ inline void Domain::ContactNbSearch(){
 //////////////////////////////// 
 //// 
 ////////////////////////////////
-void Domain::CalcContactForces(){
+inline void Domain::CalcContactForces(){
 	
-	// #pragma omp parallel for num_threads(Nproc)
-	// #ifdef __GNUC__
-	// for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
-	// #else
-	// for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
-	// #endif
-	// {
-		// Particles[i] -> contforce = 0.;
-	// }
 	double min_force_ts_=1000.;
 // https://stackoverflow.com/questions/10850155/whats-the-difference-between-static-and-dynamic-schedule-in-openmp
 			
 	max_contact_force = 0.;
 	double min_contact_force = 1000.;
 	int inside_pairs = 0;
-	//#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else

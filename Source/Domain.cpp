@@ -631,10 +631,8 @@ void Domain::AddDoubleSymCylinderLength(int tag, Vec3_t const & V, double Rxy, d
     std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
 
     size_t PrePS = Particles.Size();
-
     double xp,yp;
     size_t i,j;
-
     double qin = 0.03;
     srand(100);
 	
@@ -667,7 +665,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, Vec3_t const & V, double Rxy, d
 		
 		k = 0;zp = V(2);
 
-		while (zp <= (V(2)+Lz + ghost_inc -r)) {
+		while (zp <= ( V(2) + Lz - r)) {
 			j = 0;
 			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
 			//cout << "y Extreme: "<<yp<<endl;
@@ -699,35 +697,6 @@ void Domain::AddDoubleSymCylinderLength(int tag, Vec3_t const & V, double Rxy, d
 			k++;
 			zp = V(2) + (2.0*k+1)*r;
 		}
-		//Insert ghost pairs relation
-		if (ghost){
-			for (int grow=0; grow<ghost_rows;grow++){
-				int pid  = first_nonghost_id[ghost_rows-1 - grow]; //non ghost particle, reverse order
-				int gpid = first_ghost_id [grow];
-				int last_gpid;
-				if (grow<2)
-					last_gpid = first_ghost_id [grow+1];
-				else 
-					last_gpid = Particles.Size() - 1;
-				int part_count = last_gpid - gpid + 1;
-				cout << "part count "<<part_count<<endl;
-				for (int p=0;p<part_count;p++){
-					cout << "Pair inserted: "<<pid<<", "<<gpid<<endl;
-					GhostPairs.Push(std::make_pair(pid,gpid));
-					pid++;gpid++;
-				}
-			}
-		}
-		///////Calculate particles' mass in 3D
-		// Vec3_t temp, Max=V;
-		// for (size_t i=PrePS; i<Particles.Size(); i++) {
-			// if (Particles[i]->x(0) > Max(0)) Max(0) = Particles[i]->x(0);
-			// if (Particles[i]->x(1) > Max(1)) Max(1) = Particles[i]->x(1);
-			// if (Particles[i]->x(2) > Max(2)) Max(2) = Particles[i]->x(2);
-		// }
-		// Max +=r;
-		// temp = Max-V;
-		// double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
 		
 		double Vol = M_PI * Rxy * Rxy * Lz;		
 		//double Mass = Vol * Density / (Particles.Size()-PrePS);
