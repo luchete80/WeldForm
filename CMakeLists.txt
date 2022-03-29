@@ -73,6 +73,7 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
 	#Compression
+	#Compression_Sym
 	#Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD

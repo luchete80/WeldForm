@@ -70,7 +70,8 @@ public:
 									double r, double Density, double h, bool Fixed, bool ghost = false);
 
 	//Cylinder Slice of 90 degree and half length
-	void AddDoubleSymCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
+	// THIS DOES NOT HAVE Z INITIAL POSITION SINCE IT IS ZERO OR -LZ ACCORGIND TO LAST ARGUMENT
+	void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									double r, double Density, double h, bool Fixed, bool symlength = false);
 									
 	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,

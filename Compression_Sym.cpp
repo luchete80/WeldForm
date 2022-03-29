@@ -1,23 +1,4 @@
 
-/***********************************************************************************
-* PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
-*             and soils) using Smoothed Particle Hydrodynamics method              *   
-* Copyright (C) 2013 Maziar Gholami Korzani and Sergio Galindo-Torres              *
-*                                                                                  *
-* This file is part of PersianSPH                                                  *
-*                                                                                  *
-* This is free software; you can redistribute it and/or modify it under the        *
-* terms of the GNU General Public License as published by the Free Software        *
-* Foundation; either version 3 of the License, or (at your option) any later       *
-* version.                                                                         *
-*                                                                                  *
-* This program is distributed in the hope that it will be useful, but WITHOUT ANY  *
-* WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A  *
-* PARTICULAR PURPOSE. See the GNU General Public License for more details.         *
-*                                                                                  *
-* You should have received a copy of the GNU General Public License along with     *
-* PersianSPH; if not, see <http://www.gnu.org/licenses/>                           *
-************************************************************************************/
 
 #include "Domain.h"
 
@@ -91,10 +72,10 @@ int main(int argc, char **argv) try
 		//dx = L/(n-1);
 		dx = 0.015;
     h	= dx*1.2; //Very important
-		Cs	= sqrt(K/rho);
+        Cs	= sqrt(K/rho);
 
-		double timestep;
-		timestep = (0.2*h/(Cs));
+        double timestep;
+        timestep = (0.2*h/(Cs));
 		
 		//timestep = 2.5e-6;
 
@@ -110,8 +91,14 @@ int main(int argc, char **argv) try
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
-										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+		bool symlength = true; //Also Symmetric on z axis
+		bool Fixed = false;
+	//Cylinder Slice of 90 degree and half length
+	// THIS DOES NOT HAVE Z INITIAL POSITION SINCE IT IS ZERO OR -LZ ACCORGIND TO LAST ARGUMENT
+	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
+									// double r, double Density, double h, bool Fixed, bool symlength = false);
+									
+		dom.AddDoubleSymCylinderLength(1, R, L + 2.*L/10.,  dx/2., rho, h, Fixed, symlength); 
 		
     dom.gradKernelCorr = false;
         
@@ -145,7 +132,7 @@ int main(int argc, char **argv) try
 		dom.BC.InOutFlow = 0;
 
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }
