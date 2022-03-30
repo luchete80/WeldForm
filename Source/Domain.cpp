@@ -1220,8 +1220,8 @@ inline void Domain::LastComputeAcceleration ()
 		for (int i=0; i<Particles.Size(); i++) {
 			if (Particles[i]->IsFree) {
 				//test = sqrt(Particles[i]->h/norm(Particles[i]->a));
-				//test = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
-				test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+				test = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
+				//test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
 				//test2 = 0.3 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
 				//test = std::min(test1,test2);
 				//if (deltatmin > (sqrt_h_a*test)) {
