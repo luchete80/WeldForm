@@ -622,12 +622,12 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	R = r;
 }
 
+
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
 void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
-								double r, double Density, double h, bool Fixed, bool symlength = false){
-
-//	Util::Stopwatch stopwatch;
+																				double r, double Density, double h, bool Fixed, bool symlength = false) {
+	//Util::Stopwatch stopwatch;
 	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
 
 	size_t PrePS = Particles.Size();
@@ -639,7 +639,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 	double Lx, Ly;
 	
 	//Particles are tried to be aligned 
-	int numpartxy=1;	//MAX ON EACH EDGE
+	int numpartxy = 1;	//MAX ON EACH EDGE
 	//PARTCILES ARE NOT ALIGNED WITH AXIS; BUT SYMMETRIC ON EACH QUADRANT
 	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
 	numpartxy = calcHalfPartCount(r, Rxy, 1);
@@ -655,7 +655,8 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 	double z0;
 	if (symlength) 	z0 = r;
 	else						z0 = -Lz/2. - r; //CHECK: -Lz/2. - r or -Lz/2.?
-
+	
+	int part_per_row=0;
   if (Dimension==3) {
     	//Cubic packing
 		double zp;
@@ -667,7 +668,6 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 		}
 		cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
-		
 		k = 0;zp = z0;
 
 		while (zp <= ( z0 + Lz - r)) {
@@ -692,6 +692,9 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					//	else    
 					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					if (zp == z0)
+						part_per_row++;
+					
 					id_part++;
 					xp += 2.*r;
 				}
@@ -702,14 +705,58 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 			k++;
 			zp = z0 + (2.0*k+1)*r;
 		}
-		
+			cout << "Particles per row: "<<part_per_row<<endl;
 
-		//
+		//TODO: CONVERT THIS IN A QUARTER CYL SECTOR FUNCTION 
 		//Is it convenient to allocate these particles at the end? 		
 		//Allocate Symmetry particles, begining from x, y and z
-		xp = - (2.0*(ghost_rows-1) + 1)*r; //First increment is radius, following ones are 2r
-		yinc = 1;
-		numxpart = calcHalfPartCount(r, Rxy, yinc);
+		cout << "Creating ghost particles"<<endl;
+		zp = z0; k= 0;
+		cout << "zmax"<<( z0 + Lz - r)<<endl;
+		while (zp <= ( z0 + Lz - r)) {
+
+			numypart = numpartxy;	//And then diminish by 2 on each y increment
+			yinc = 1;	//particle row from the axis
+
+
+			cout << "y particles: "<<numypart<<endl;
+			for (j=0; j < ghost_rows ; j++){
+				xp = r;
+				yp = - r - 2*r*(yinc -1); //First increment is radius, following ones are 2r			
+				numxpart = calcHalfPartCount(r, Rxy, yinc);
+				cout << "x particles: "<<numypart<<endl;
+				for (i=0; i < numxpart;i++) {
+					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					//	else    
+					Particles.Push(new Particle(-1,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					Particles.Push(new Particle(-2,Vec3_t(yp,xp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					//Particles[id_part]->symm_part = ;
+					id_part+=2;
+					xp += 2.*r;
+				}//x rows
+				yinc++;
+			}//y rows
+			k++;
+			zp = z0 + (2.0 * k + 1) * r;	
+			cout << "zp " <<zp<<endl;
+		}
+		
+		//z Symm particles
+		int sym_part;
+		int part = 0;
+		for (int zinc = 0; zinc < ghost_rows ;zinc++){
+			for (int xy = 0; xy < part_per_row;xy++){
+				xp = Particles[part]->x(0);
+				yp = Particles[part]->x(1);
+				zp = Particles[part]->x(2);
+				Particles.Push(new Particle(-3,Vec3_t(xp,yp,-zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
+				//Particles[id_part]->symm_part = part;
+				id_part++;
+				part++;
+			}
+				
+
+		}
 		
 		
 		double Vol = M_PI * Rxy * Rxy * Lz;		
@@ -1173,9 +1220,10 @@ inline void Domain::LastComputeAcceleration ()
 		for (int i=0; i<Particles.Size(); i++) {
 			if (Particles[i]->IsFree) {
 				//test = sqrt(Particles[i]->h/norm(Particles[i]->a));
-				test1 = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
-				test2 = 0.3 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
-				test = std::min(test1,test2);
+				//test = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
+				test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+				//test2 = 0.3 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+				//test = std::min(test1,test2);
 				//if (deltatmin > (sqrt_h_a*test)) {
 					if (deltatmin > test ) {
 					omp_set_lock(&dom_lock);

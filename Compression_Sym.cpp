@@ -98,7 +98,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
-		dom.AddDoubleSymCylinderLength(1, R, L + 2.*L/10.,  dx/2., rho, h, Fixed, symlength); 
+		dom.AddDoubleSymCylinderLength(1, R, L/2. + L/10.,  dx/2., rho, h, Fixed, symlength); 
 		
     dom.gradKernelCorr = false;
         

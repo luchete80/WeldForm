@@ -235,7 +235,9 @@ void Domain::CalcContactForces(){
 							if (dt_fext > 0)
 								this -> min_force_ts = min_force_ts_;
 						}
+						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 						
 						Vec3_t tgforce;
