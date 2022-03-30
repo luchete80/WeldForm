@@ -70,8 +70,8 @@ public:
 									double r, double Density, double h, bool Fixed, bool ghost = false);
 
 	//Cylinder Slice 
-	void AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
-									double r, double Density, double h, bool Fixed, double angle, bool ghost = false);
+	void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
+								double r, double Density, double h, bool Fixed, bool symlength = false);
 									
 	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,

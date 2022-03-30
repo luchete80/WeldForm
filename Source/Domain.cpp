@@ -624,20 +624,17 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
-void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
-									double r, double Density, double h, bool Fixed, double angle, bool ghost = false)
-{
+void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
+								double r, double Density, double h, bool Fixed, bool symlength = false){
 
 //	Util::Stopwatch stopwatch;
-    std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
+	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
 
-    size_t PrePS = Particles.Size();
-
-    double xp,yp;
-    size_t i,j;
-
-    double qin = 0.03;
-    srand(100);
+	size_t PrePS = Particles.Size();
+	double xp,yp;
+	size_t i,j;
+	double qin = 0.03;
+	srand(100);
 	
 	double Lx, Ly;
 	
@@ -647,62 +644,51 @@ void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double
 	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
 	numpartxy = calcHalfPartCount(r, Rxy, 1);
 	
-	//// GHOST THING
-	double ghost_inc = 0;
-	int ghost_rows = 3; 
-	if (ghost ) ghost_inc = 2*r*ghost_rows;
-	int first_nonghost_id[ghost_rows]; //First nonghost particle, from near plane 
-	int first_ghost_id [ghost_rows];
-	int xy_ghost_part_count[ghost_rows];
-	//cout << "X/Y Particles: " << numpartxy<<endl;
+
 	//yp=pos;
 	int numypart,numxpart;
-	int xinc,yinc,yinc_sign;
+	int xinc,yinc;
 	
 	int id_part=0;
+	int ghost_rows = 2;
 	
-	//
-	
+	double z0;
+	if (symlength) 	z0 = r;
+	else						z0 = -Lz/2. - r; //CHECK: -Lz/2. - r or -Lz/2.?
+
   if (Dimension==3) {
     	//Cubic packing
 		double zp;
 		size_t k=0;
-		zp = V(2);
+		zp = z0;
 		//Calculate row count for non ghost particles
-		while (zp <= (V(2)+Lz -r)){
-			k++; zp = V(2) + (2.0*k+1)*r;			
+		while (zp <= (z0+Lz -r)){
+			k++; zp = z0 + (2.0*k+1)*r;			
 		}
 		cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
 		
-		k = 0;zp = V(2);
-		int ghost_row=-1;
-		while (zp <= (V(2)+Lz + ghost_inc -r)) {
+		k = 0;zp = z0;
+
+		while (zp <= ( z0 + Lz - r)) {
 			j = 0;
-			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
-			//cout << "y Extreme: "<<yp<<endl;
+			//yp = - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
+			yp = r; //First increment is radius, following ones are 2r
+			cout << "y Extreme: "<<yp<<endl;
 			
-			numypart = 2*numpartxy;	//And then diminish by 2 on each y increment
-			yinc = numpartxy;	//particle row from the axis
-			yinc_sign=-1;
-			if (	k > ((last_nonghostrow - 1) - ghost_rows) && k < last_nonghostrow) { // CHECK IF IT IS A GHOST ROW
-				ghost_row++;
-				first_nonghost_id[ghost_row] 		= id_part;
-				xy_ghost_part_count[ghost_row] 	= numypart;
-				cout << "first_nonghost_id, particle: " << k << ", id part "<< id_part << endl;
-			}
-			if ( k > last_nonghostrow - 1) {
-				ghost_row++;
-				first_ghost_id [ghost_row - ghost_rows]= id_part;
-				cout << "first_ghost_id, particle: " << k << ", id part "<< id_part << endl;
-			} 
-			//cout << "y max particles: "<<numypart<<endl;
+			numypart = numpartxy;	//And then diminish by 2 on each y increment
+			yinc = 1;	//particle row from the axis
+
+
+			cout << "y max particles: "<<numypart<<endl;
 			for (j=0;j<numypart;j++){
-				//cout << "y inc: "<<yinc<<endl;
+				cout << "y inc: "<<yinc<<endl;
 				numxpart = calcHalfPartCount(r, Rxy, yinc);
 				//cout << "xpart: "<< numxpart<<endl;
-				xp = V(0) - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
-				for (i=0; i<2*numxpart;i++) {
+				//xp = - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
+				//It is convenient to allocate now the ghost (symmetry) variables?
+				xp = r; //First increment is radius, following ones are 2r
+				for (i=0; i < numxpart;i++) {
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					//	else    
 					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
@@ -710,34 +696,21 @@ void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double
 					xp += 2.*r;
 				}
 				yp += 2.*r;
-				yinc+=yinc_sign;
-				if (yinc<1) {//Reach the axis, now positive increments
-					yinc = 1;
-					yinc_sign=1;
-				}
+				yinc +=1;
+
 			}
 			k++;
-			zp = V(2) + (2.0*k+1)*r;
+			zp = z0 + (2.0*k+1)*r;
 		}
-		//Insert ghost pairs relation
-		// if (ghost){
-			// for (int grow=0; grow<ghost_rows;grow++){
-				// int pid  = first_nonghost_id[ghost_rows-1 - grow]; //non ghost particle, reverse order
-				// int gpid = first_ghost_id [grow];
-				// int last_gpid;
-				// if (grow<2)
-					// last_gpid = first_ghost_id [grow+1];
-				// else 
-					// last_gpid = Particles.Size() - 1;
-				// int part_count = last_gpid - gpid + 1;
-				// cout << "part count "<<part_count<<endl;
-				// for (int p=0;p<part_count;p++){
-					// cout << "Pair inserted: "<<pid<<", "<<gpid<<endl;
-					// GhostPairs.Push(std::make_pair(pid,gpid));
-					// pid++;gpid++;
-				// }
-			// }
-		// }
+		
+
+		//
+		//Is it convenient to allocate these particles at the end? 		
+		//Allocate Symmetry particles, begining from x, y and z
+		xp = - (2.0*(ghost_rows-1) + 1)*r; //First increment is radius, following ones are 2r
+		yinc = 1;
+		numxpart = calcHalfPartCount(r, Rxy, yinc);
+		
 		
 		double Vol = M_PI * Rxy * Rxy * Lz;		
 		//double Mass = Vol * Density / (Particles.Size()-PrePS);
@@ -758,7 +731,7 @@ void Domain::AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double
 
 	}//Dim 3
 
-	R = r;
+	R = r;									
 }
 
 inline void Domain::MoveGhost(){
@@ -1783,6 +1756,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 					of << Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
 			}
 		}
+		
+		if (isyielding)
+			cout << "Current Time Step: "<<deltat<<endl;
 		
 		// for (int i=0; i<Particles.Size(); i++){
 			// if (Particles[i]->contforce>0.)

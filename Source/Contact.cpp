@@ -269,7 +269,7 @@ void Domain::CalcContactForces(){
 	}//Nproc
 
 	max_contact_force = sqrt (max_contact_force);
-	min_contact_force = sqrt (min_contact_force);
+	//min_contact_force = sqrt (min_contact_force);
 	if (max_contact_force > 0.){
 		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
