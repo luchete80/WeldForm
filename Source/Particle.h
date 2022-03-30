@@ -172,6 +172,7 @@ namespace SPH {
 		
 		////////////////// CONTACT //////////////////////
 		double 	cont_stiff;
+    double  delta_cont; // penetration
 		Vec3_t	contforce;
 		
 		/////////////////////// SURFACE NORMALS /////////////////////

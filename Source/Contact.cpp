@@ -102,7 +102,13 @@ void Domain::CalcContactForces(){
 	// }
 	double min_force_ts_=1000.;
 // https://stackoverflow.com/questions/10850155/whats-the-difference-between-static-and-dynamic-schedule-in-openmp
-			
+	
+  #pragma omp parallel for num_threads(Nproc)
+  for (int i = 0;i<Particles.Size();i++){
+		Particles[i] -> contforce = 0.; //RESET    
+		Particles[i] -> delta_cont = 0.; //RESET    
+  }
+  
 	max_contact_force = 0.;
 	double min_contact_force = 1000.;
 	int inside_pairs = 0;
@@ -141,16 +147,16 @@ void Domain::CalcContactForces(){
 				Element* e = trimesh-> element[Particles[P2]->element];
 				double pplane = e -> pplane; 
 				//cout<< "contact distance"<<Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
-
+      				
 				double deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (-delta_);								//Eq 3-142 
 				Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
 
 				//Check for contact in this time step 
 				//Calculate time step for external forces
 				double dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));	//Fraser 3-145
-				omp_set_lock(&Particles[P1]->my_lock);
-				Particles[P1] -> contforce = 0.; //RESET
-				omp_unset_lock(&Particles[P1]->my_lock);
+				// omp_set_lock(&Particles[P1]->my_lock);
+        // Particles[P1] -> contforce = 0.; //RESET
+				// omp_unset_lock(&Particles[P1]->my_lock);
 				// if (dt_fext > deltat)
 					// cout << "Time step size ("<<deltat<<" is larger than max allowable contact forces step ("<<dt_fext<<")"<<endl;
 				if (deltat_cont < deltat){ //Originaly //	if (deltat_cont < std::min(deltat,dt_fext) 
@@ -176,7 +182,7 @@ void Domain::CalcContactForces(){
 			// cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
 						// cout << "/////////////////////////////////////////" <<endl;
 						// cout << " vr: "<< vr<<endl;
-						// cout << "delta_: "<<delta_<<endl;
+						//cout << "delta_: "<<delta_<<endl;
 						// cout << "Particles[P1]->x"<< Particles[P1]->x<<endl;
 						 // cout << "Particles[P2]->x"<< Particles[P2]->x<<endl;
 						 // cout << "Particles[P2]->n"<< Particles[P2]->normal<<endl;
@@ -223,6 +229,7 @@ void Domain::CalcContactForces(){
 						}
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
+            Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
 						force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						
@@ -269,7 +276,7 @@ void Domain::CalcContactForces(){
 			}//delta_ > 0 : PARTICLES ARE APPROACHING EACH OTHER
 		}//Contact Pairs
 	}//Nproc
-
+  //cout << "END CONTACT----------------------"<<endl;
 	max_contact_force = sqrt (max_contact_force);
 	//min_contact_force = sqrt (min_contact_force);
 	if (max_contact_force > 0.){
