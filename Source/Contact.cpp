@@ -106,7 +106,8 @@ void Domain::CalcContactForces(){
 	max_contact_force = 0.;
 	double min_contact_force = 1000.;
 	int inside_pairs = 0;
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	double force2 = 0.;
+	#pragma omp parallel for schedule (static) private(force2) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -223,7 +224,7 @@ void Domain::CalcContactForces(){
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
 						omp_unset_lock(&Particles[P1]->my_lock);
-						double force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
+						force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						
 						// if (force2 > (1.e10))
 							// Particles[P1] -> contforce = 1.e5;
