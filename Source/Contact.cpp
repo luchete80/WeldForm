@@ -106,7 +106,7 @@ void Domain::CalcContactForces(){
 	max_contact_force = 0.;
 	double min_contact_force = 1000.;
 	int inside_pairs = 0;
-	//#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
