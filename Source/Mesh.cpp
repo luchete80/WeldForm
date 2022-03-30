@@ -163,9 +163,4 @@ inline void TriMesh::UpdatePos(const double &dt){
 	
 }
 
-TriMesh::TriMesh(Vec3_t *nodes,int *elcon) { //as flat array
-
-}
-
-
 };

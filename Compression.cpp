@@ -91,10 +91,10 @@ int main(int argc, char **argv) try
 		//dx = L/(n-1);
 		dx = 0.015;
     h	= dx*1.2; //Very important
-		Cs	= sqrt(K/rho);
+        Cs	= sqrt(K/rho);
 
-		double timestep;
-		timestep = (0.2*h/(Cs));
+        double timestep;
+        timestep = (0.2*h/(Cs));
 		
 		//timestep = 2.5e-6;
 

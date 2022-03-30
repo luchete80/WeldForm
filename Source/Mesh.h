@@ -49,7 +49,6 @@ class TriMesh{
 	
 	Vec3_t							v;						//Constant Uniform v
 	TriMesh();
-  TriMesh(Vec3_t *nodes,int *elcon); //as flat array
 	inline void AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2, const int &dens);
 	inline void ApplyConstVel(const Vec3_t &v);
 	inline void CalcCentroidVelFromNodes();

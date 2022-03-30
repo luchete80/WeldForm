@@ -112,7 +112,7 @@ int main(){
 	mesh.CalcSpheres(); //DONE ONCE
 	
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{

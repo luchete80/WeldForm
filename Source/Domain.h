@@ -69,10 +69,9 @@ public:
 	void AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									double r, double Density, double h, bool Fixed, bool ghost = false);
 
-	//Cylinder Slice of 90 degree and half length
-	// THIS DOES NOT HAVE Z INITIAL POSITION SINCE IT IS ZERO OR -LZ ACCORGIND TO LAST ARGUMENT
-	void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
-									double r, double Density, double h, bool Fixed, bool symlength = false);
+	//Cylinder Slice 
+	void AddCylinderSymmLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
+									double r, double Density, double h, bool Fixed, double angle, bool ghost = false);
 									
 	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,
@@ -150,7 +149,7 @@ public:
 	inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
 	void CalculateSurface(const int &id = 1);
-	inline void CalcContactForces();
+	void CalcContactForces();
 	double contact_force_factor;
 	double friction;
 	int ts_nb_inc;
