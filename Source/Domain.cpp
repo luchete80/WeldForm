@@ -167,11 +167,11 @@ inline void Domain::AdaptiveTimeStep()
 			deltat		= deltatint;
 	}
 	
-	if (contact){
-		if (min_force_ts < deltat)
-		//cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
-		deltat = min_force_ts;
-	}
+	// if (contact){
+		// if (min_force_ts < deltat)
+		// cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
+		// deltat = min_force_ts;
+	// }
 
 	if (deltat<(deltatint/1.0e5))
 		//cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
@@ -1173,16 +1173,22 @@ inline void Domain::LastComputeAcceleration ()
 		deltatmin	= deltatint;
 		#pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
 		for (int i=0; i<Particles.Size(); i++) {
+			//ORIGINAL WAS LIKE THIS:
+			//test = Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+				//if (deltatmin > test ) {
+					//deltatmin = sqrt_h_a*test;
+				
 			if (Particles[i]->IsFree) {
 				//test1 = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
 				//test2 = Particles[i]->h/(Particles[i]->Cs*norm(Particles[i]->v));
-				test = Particles[i]->h/(Particles[i]->Cs*norm(Particles[i]->v));
+				//test = Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+				test = sqrt(Particles[i]->h/norm(Particles[i]->a));
 				//double test = std::min(test1,test2); //Minimum between accel and vel criteria
 				//if (deltatmin > (sqrt_h_a*test)) {
 					if (deltatmin > test ) {
 					omp_set_lock(&dom_lock);
-						//deltatmin = sqrt_h_a*test
-						deltatmin = test;
+						deltatmin = sqrt_h_a*test;
+						//deltatmin = test;
 					omp_unset_lock(&dom_lock);
 				}
 			}
@@ -1764,6 +1770,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (auto_ts)
 			AdaptiveTimeStep();
 		clock_beg = clock();
+		
+		if (isyielding){
+			cout << "Current time step: "<<deltat<<endl;
+		}
 
 		Move(deltat);
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
