@@ -142,8 +142,8 @@ int main(){
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction = 0.0;
-	dom.PFAC = 1.0;
+	dom.friction = 0.1;
+	dom.PFAC = 0.5;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 	
@@ -161,7 +161,7 @@ int main(){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

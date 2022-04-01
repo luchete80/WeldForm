@@ -1,0 +1,4 @@
+https://cs.famaf.unc.edu.ar/~nicolasw/Docencia/CP/2014/11-omp1.html#slide25
+
+http://jakascorner.com/blog/2016/06/omp-for-scheduling.html
+

@@ -265,9 +265,11 @@ Array <Particle*>				Particles; 	///< Array of particles
     double					deltatmin;			//Minimum Time Step
     double					deltatint;			//Initial Time Step
 		
+		int 						cont_pairs;
 		bool enable_th_exp;
 		bool enable_plastic_heat_gen;
 		void AllocateNbPair(const int &temp1, const int &temp2, const int &T);
+		
 
 };
 

@@ -515,6 +515,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	int id_part=0;
 	
   if (Dimension==3) {
+		int part_per_row = 0;
     	//Cubic packing
 		double zp;
 		size_t k=0;
@@ -557,6 +558,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					//	else    
 					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					if (zp == V(2))
+						part_per_row++;
 					id_part++;
 					xp += 2.*r;
 				}
@@ -570,6 +573,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 			k++;
 			zp = V(2) + (2.0*k+1)*r;
 		}
+		cout << "Particles per row: "<<part_per_row<<endl;
+		
 		//Insert ghost pairs relation
 		if (ghost){
 			for (int grow=0; grow<ghost_rows;grow++){
@@ -1666,21 +1671,21 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 		}
 		
-		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
-			ClearNbData();
+		// if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
+			// ClearNbData();
 
-			MainNeighbourSearch/*_Ext*/();
+			// MainNeighbourSearch/*_Ext*/();
 			
-			if (contact) {
-				//TODO: CHANGE CONTACT STIFFNESS!
-				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-				CalculateSurface(1);				//After Nb search			
-				ContactNbSearch();
-				SaveContNeighbourData();	//Again Save Nb data
-			}//contact
-			isyielding  = true ;
-		}
-		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+			// if (contact) {
+				// //TODO: CHANGE CONTACT STIFFNESS!
+				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+				// CalculateSurface(1);				//After Nb search			
+				// ContactNbSearch();
+				// SaveContNeighbourData();	//Again Save Nb data
+			// }//contact
+			// isyielding  = true ;
+		// }
+		//if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared){
@@ -1700,7 +1705,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 					contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 				}// ts_i == 0				
 				
-			}
+			//}
+			////////////////////////////////////////////////////////
+			
 			// cout << "RIG Pairs"<<endl;
 			// for (int p=0;p<Nproc;p++)
 				// cout << RIGPairs[p].size()<<", ";		
@@ -1829,7 +1836,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
-		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
+		
+		//if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
 			if ( ts_i == (ts_nb_inc - 1) ){
 				ClearNbData();
 			}
@@ -1838,7 +1846,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			if ( ts_i > (ts_nb_inc - 1) ) 
 				ts_i = 0;
 		
-		}
+		//}
 		
 	
 	}

@@ -1,4 +1,5 @@
 #include "matvec.h" 
+#define VMIN_FOR_FRICTION	1.e-5
 
 namespace SPH {
 
@@ -25,6 +26,7 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const i
 
 inline void Domain::ContactNbSearch(){
 	//cout << "Performing Nb Search"<<endl;
+	cont_pairs = 0;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -54,6 +56,7 @@ inline void Domain::ContactNbSearch(){
 					//cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
 					//ContPairs[k].Push(std::make_pair(P1, P2));
 					ContPairs[k].Push(RIGPairs[k][a]);
+					cont_pairs++;
 					//If the problem is not thermal (only mechanic)
 					//Could be deleted this pair in Whole Pairs
 					}	//belongs to free surf
@@ -63,7 +66,8 @@ inline void Domain::ContactNbSearch(){
 				a--;
 			}
 		}
-
+		cout << "Found "<<cont_pairs<< " contact pairs."<<endl;
+		
 		// for (size_t a=0; a<SMPairs[k].Size();a++) {
 			// P1	= SMPairs[k][a].first;
 			// P2	= SMPairs[k][a].second;	
@@ -102,25 +106,42 @@ void Domain::CalcContactForces(){
 	// }
 	double min_force_ts_=1000.;
 // https://stackoverflow.com/questions/10850155/whats-the-difference-between-static-and-dynamic-schedule-in-openmp
+
+	////////////////////////
+	// DEBUG THINGS //////
+	int inside_part[Particles.Size()];
+	int inside_part_count = 0;
+	double min_delta,max_delta;
+	min_delta = 1000.; max_delta = 0.;
+	int inside_time;
 	
-  #pragma omp parallel for num_threads(Nproc)
+  //#pragma omp parallel for num_threads(Nproc)
   for (int i = 0;i<Particles.Size();i++){
+		omp_set_lock(&Particles[i]->my_lock);
 		Particles[i] -> contforce = 0.; //RESET    
 		Particles[i] -> delta_cont = 0.; //RESET    
+		omp_unset_lock(&Particles[i]->my_lock);
+		inside_part[i] = 0;
+		inside_time=0;
   }
-  
+ 
+	
 	max_contact_force = 0.;
 	double min_contact_force = 1000.;
 	int inside_pairs = 0;
 	double force2 = 0.;
-	#pragma omp parallel for schedule (static) private(force2) num_threads(Nproc)
+	double delta_ = 0.;
+	double deltat_cont;
+	
+	int P1,P2;
+	
+	//#pragma omp parallel for schedule (static) private(force2,delta_,delta_cont, inside,i,j,crit) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
 	for (int k=0; k<Nproc;k++) 
 	#endif	
 	{
-		int P1,P2;
 		Vec3_t xij;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
@@ -139,7 +160,7 @@ void Domain::CalcContactForces(){
 			//ok, FEM Particles normals can be calculated by two ways, the one used to
 			//calculate SPH ones, and could be given by mesh input
 			//delta_ Is the projection of relative velocity 
-			double delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
+			delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
 			
 
 			//Check if SPH and fem particles are approaching each other
@@ -148,7 +169,7 @@ void Domain::CalcContactForces(){
 				double pplane = e -> pplane; 
 				//cout<< "contact distance"<<Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
       				
-				double deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (-delta_);								//Eq 3-142 
+				deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (-delta_);								//Eq 3-142 
 				Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
 
 				//Check for contact in this time step 
@@ -160,7 +181,7 @@ void Domain::CalcContactForces(){
 				// if (dt_fext > deltat)
 					// cout << "Time step size ("<<deltat<<" is larger than max allowable contact forces step ("<<dt_fext<<")"<<endl;
 				if (deltat_cont < deltat){ //Originaly //	if (deltat_cont < std::min(deltat,dt_fext) 
-				
+					inside_time++;
 					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
 					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
@@ -179,7 +200,8 @@ void Domain::CalcContactForces(){
 					}
 					
 					if (inside ) { //Contact point inside element, contact proceeds
-			// cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
+			
+		// cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
 						// cout << "/////////////////////////////////////////" <<endl;
 						// cout << " vr: "<< vr<<endl;
 						//cout << "delta_: "<<delta_<<endl;
@@ -196,6 +218,13 @@ void Domain::CalcContactForces(){
 						
 						//Calculate penetration depth (Fraser 3-49)
 						double delta = (deltat - deltat_cont) * delta_;
+						// DEBUG THINGS, REMOVE ////////////
+						inside_part[P1] ++;
+						inside_part_count++;
+						if (delta > max_delta) max_delta = delta;
+						if (delta < min_delta) min_delta = delta;
+					///////////////////////////
+				
 						//cout << "delta: "<<delta<<endl;
 						// omp_set_lock(&Particles[P1]->my_lock);
 						// if (Particles[P1]->delta_pl_strain > 0.) {
@@ -213,7 +242,13 @@ void Domain::CalcContactForces(){
 						double kij = PFAC * Particles[P1]-> cont_stiff;
 						double omega = sqrt (kij/Particles[P1]->Mass);
 						double psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
-											
+
+						omp_set_lock(&Particles[P1]->my_lock);
+						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
+            Particles[P1] -> delta_cont = delta;
+						omp_unset_lock(&Particles[P1]->my_lock);
+						force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
+						
 						// TANGENTIAL COMPONENNT
 						// Fraser Eqn 3-167
 						// TODO - recalculate vr here too!
@@ -227,11 +262,6 @@ void Domain::CalcContactForces(){
 								Vec3_t tgdir = tgvr / norm(tgvr);
 							}
 						}
-						omp_set_lock(&Particles[P1]->my_lock);
-						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
-            Particles[P1] -> delta_cont = delta;
-						omp_unset_lock(&Particles[P1]->my_lock);
-						force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						
 						// if (force2 > (1.e10))
 							// Particles[P1] -> contforce = 1.e5;
@@ -248,22 +278,26 @@ void Domain::CalcContactForces(){
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 						
 						Vec3_t tgforce;
+						double tgcomp = abs(dot(tgdir,tgvr));
+						double tgcomp2 = norm(tgvr);
 						if (friction > 0.) {
-							if ( norm (vr)  != 0.0 ){
+							if (tgcomp > VMIN_FOR_FRICTION * VMIN_FOR_FRICTION){
+								cout << "tgcomp: "<<tgcomp<<", tgcomp2 "<<tgcomp2<<endl;
 							// //TG DIRECTION
 								tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
 								omp_set_lock(&Particles[P1]->my_lock);
 								Particles[P1] -> a += tgforce / Particles[P1] -> Mass; 
 								omp_unset_lock(&Particles[P1]->my_lock);
 								//cout << "tg force "<< tgforce <<endl;
-							}
-							
-							if (cont_heat_gen) {
+								
+								if (cont_heat_gen) {
 								//Fraser Eqns 3.109 to 3.111
 								//lambda is fraction passed to 
 								omp_set_lock(&Particles[P1]->my_lock);
 								Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
 								omp_unset_lock(&Particles[P1]->my_lock);
+								}
+							
 							}
 						}
 						
@@ -279,6 +313,22 @@ void Domain::CalcContactForces(){
   //cout << "END CONTACT----------------------"<<endl;
 	max_contact_force = sqrt (max_contact_force);
 	//min_contact_force = sqrt (min_contact_force);
+	cout << "Inside pairs count: "<<inside_part_count<<", Inside time: "<<inside_time<<", Total cont pairs" << cont_pairs <<endl;
+	inside_part_count = 0;
+	int cont_force_count = 0;
+	// for (int i = 0;i<Particles.Size();i++){
+		// //DO THIS IN SERIAL (NOT PARALLEL) MODE OR BLOCK THIS IN PRAGMA
+		// if (inside_part[i]>0)
+			// inside_part_count++;
+		// if (inside_part[i]>1)
+			// cout << "WARNING, SAME PARTICLE HAS 2 DIFFERENT RIGID CONTACT POINTS. "<<endl;
+		// // if (norm(Particles[i]->contforce)>0.)
+			// // cont_force_count++;
+	// }
+	// cout << "Inside particle count: "<<inside_part_count<<endl;
+	// cout << "Max penetration: "<<max_delta<<", min penetration: "<<min_delta<<endl; 
+	//cout << "Particles with contact force: "<<cont_force_count<<endl;
+	
 	if (max_contact_force > 0.){
 		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;

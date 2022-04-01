@@ -1,0 +1,5 @@
+The schedule(static, chunk-size) clause of the loop construct specifies that the for loop has the static scheduling type. 
+OpenMP divides the iterations into chunks of size chunk-size and it distributes the chunks to threads in a circular order.
+When no chunk-size is specified, OpenMP divides iterations into chunks that are approximately equal in size and it distributes at most one chunk to each thread.
+
+Here are three examples of static scheduling.
