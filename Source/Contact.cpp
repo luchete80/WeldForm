@@ -66,7 +66,7 @@ inline void Domain::ContactNbSearch(){
 				a--;
 			}
 		}
-		cout << "Found "<<cont_pairs<< " contact pairs."<<endl;
+		//cout << "Found "<<cont_pairs<< " contact pairs."<<endl;
 		
 		// for (size_t a=0; a<SMPairs[k].Size();a++) {
 			// P1	= SMPairs[k][a].first;
