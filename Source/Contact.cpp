@@ -253,13 +253,15 @@ void Domain::CalcContactForces(){
 						// Fraser Eqn 3-167
 						// TODO - recalculate vr here too!
 						Vec3_t tgvr, tgdir;
+						double norm_tgvr;
 						if (friction > 0.) {						
 							if ( norm (vr)  != 0.0 ) {
 								//TODO: THIS VELOCITY SHOULD BE THE CORRECTED ONE 
 								//Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
 								// Is Fraser thesis is explained better 
 								Vec3_t tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal
-								Vec3_t tgdir = tgvr / norm(tgvr);
+								norm_tgvr = norm(tgvr);
+								tgdir = tgvr / norm_tgvr;
 							}
 						}
 						
@@ -278,11 +280,9 @@ void Domain::CalcContactForces(){
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 						
 						Vec3_t tgforce;
-						double tgcomp = abs(dot(tgdir,tgvr));
-						double tgcomp2 = norm(tgvr);
 						if (friction > 0.) {
-							if (tgcomp > VMIN_FOR_FRICTION * VMIN_FOR_FRICTION){
-								cout << "tgcomp: "<<tgcomp<<", tgcomp2 "<<tgcomp2<<endl;
+							if (norm_tgvr > 0.){
+
 							// //TG DIRECTION
 								tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
 								omp_set_lock(&Particles[P1]->my_lock);
@@ -313,7 +313,7 @@ void Domain::CalcContactForces(){
   //cout << "END CONTACT----------------------"<<endl;
 	max_contact_force = sqrt (max_contact_force);
 	//min_contact_force = sqrt (min_contact_force);
-	cout << "Inside pairs count: "<<inside_part_count<<", Inside time: "<<inside_time<<", Total cont pairs" << cont_pairs <<endl;
+	//cout << "Inside pairs count: "<<inside_part_count<<", Inside time: "<<inside_time<<", Total cont pairs" << cont_pairs <<endl;
 	inside_part_count = 0;
 	int cont_force_count = 0;
 	// for (int i = 0;i<Particles.Size();i++){
