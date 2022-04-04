@@ -175,6 +175,7 @@ namespace SPH {
     double  delta_cont; // penetration
 		Vec3_t	contforce;
 		
+		Vec3_t	tgdir;			//TEMP: FO DEBUG
 		/////////////////////// SURFACE NORMALS /////////////////////
 		Vec3_t normal;	
 		bool is_surface;		// BUT A SPECIFIC ID WILL BE ADDED

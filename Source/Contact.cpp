@@ -1,5 +1,5 @@
 #include "matvec.h" 
-#define VMIN_FOR_FRICTION	1.e-5
+#define VMIN_FOR_FRICTION	1.e-3
 
 namespace SPH {
 
@@ -120,6 +120,7 @@ void Domain::CalcContactForces(){
 		omp_set_lock(&Particles[i]->my_lock);
 		Particles[i] -> contforce = 0.; //RESET    
 		Particles[i] -> delta_cont = 0.; //RESET    
+		Particles[i] -> tgdir = 0.;				//TODO: DELETE (DEBUG) 
 		omp_unset_lock(&Particles[i]->my_lock);
 		inside_part[i] = 0;
 		inside_time=0;
@@ -262,6 +263,9 @@ void Domain::CalcContactForces(){
 								Vec3_t tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal
 								norm_tgvr = norm(tgvr);
 								tgdir = tgvr / norm_tgvr;
+								omp_set_lock(&Particles[P1]->my_lock);
+								Particles[P1] -> tgdir = tgdir; // NORMAL DIRECTION, Fraser 3-159
+								omp_unset_lock(&Particles[P1]->my_lock);
 							}
 						}
 						
@@ -281,12 +285,12 @@ void Domain::CalcContactForces(){
 						
 						Vec3_t tgforce;
 						if (friction > 0.) {
-							if (norm_tgvr > 0.){
+							if (norm_tgvr > VMIN_FOR_FRICTION){
 
 							// //TG DIRECTION
 								tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
 								omp_set_lock(&Particles[P1]->my_lock);
-								Particles[P1] -> a += tgforce / Particles[P1] -> Mass; 
+								Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
 								omp_unset_lock(&Particles[P1]->my_lock);
 								//cout << "tg force "<< tgforce <<endl;
 								
