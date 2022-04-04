@@ -43,10 +43,10 @@ void NastranReader::read( char* fName){
 	cout << "[I] Reading ... "<<endl;
 	file.open(fileName.c_str());
 	if (file.is_open()) {
-		cout << "[I] Found input file " << fileName << endl;
+		//cout << "[I] Found input file " << fileName << endl;
 		found=true;
 	} else {
-		cerr << "[E] Input file " << fileName << " could not be found!!" << endl;
+		//cerr << "[E] Input file " << fileName << " could not be found!!" << endl;
 	}
 	
 	int l=0;
@@ -65,7 +65,7 @@ void NastranReader::read( char* fName){
       //Increment nodes
       //if (strcmp(str_inp1, str_inp2) == 0)
         //or str.compare
-      cout << "Searching "<<line.substr(0,4)<<endl;
+      //cout << "Searching "<<line.substr(0,4)<<endl;
       if (line.substr(0,4) == string("GRID")){
         //cout << "Node found!"<<endl;
         node_count++;
@@ -96,7 +96,7 @@ void NastranReader::read( char* fName){
   node  = new double [3 * node_count];
   int curr_line = line_start_node;
   for (int n=0;n<node_count;n++){
-    
+    string temp = rawData[curr_line].substr(0,5)
   }
   
   //IF FIXED FIELD

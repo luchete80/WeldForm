@@ -87,8 +87,8 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
-  Contact_Compression_test
-	#NastranReader_test
+  #Contact_Compression_test
+	NastranReader_test
 	#Contact_Compression_PtP
 	#CompressionForces
 	#CompressionVel

@@ -2,7 +2,7 @@
 
 int main(){
 	
-	NastranReader reader("Mesh.nas");
+	NastranReader reader("Tool.nas");
 	
 	return 0;
 	
