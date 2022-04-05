@@ -1,6 +1,8 @@
 #include "matvec.h" 
 #define VMIN_FOR_FRICTION	1.e-3
 
+#define VMAX_FOR_STA_FRICTION	1.e-5
+
 namespace SPH {
 
 	
@@ -135,8 +137,10 @@ void Domain::CalcContactForces(){
 	double deltat_cont;
 	
 	int P1,P2;
-	
+  Vec3_t tgforce;
+              
 	//#pragma omp parallel for schedule (static) private(force2,delta_,delta_cont, inside,i,j,crit) num_threads(Nproc)
+  //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -250,24 +254,42 @@ void Domain::CalcContactForces(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						
-						// TANGENTIAL COMPONENNT
+						// TANGENTIAL COMPONENNT DIRECTION
 						// Fraser Eqn 3-167
 						// TODO - recalculate vr here too!
 						Vec3_t tgvr, tgdir;
 						double norm_tgvr;
-						if (friction > 0.) {						
-							if ( norm (vr)  != 0.0 ) {
-								//TODO: THIS VELOCITY SHOULD BE THE CORRECTED ONE 
-								//Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
-								// Is Fraser thesis is explained better 
-								Vec3_t tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal
-								norm_tgvr = norm(tgvr);
-								tgdir = tgvr / norm_tgvr;
-								omp_set_lock(&Particles[P1]->my_lock);
-								Particles[P1] -> tgdir = tgdir; // NORMAL DIRECTION, Fraser 3-159
-								omp_unset_lock(&Particles[P1]->my_lock);
-							}
-						}
+            if (fric_type==Fr_Dyn){
+              if (friction > 0.) {						
+                if ( norm (vr)  != 0.0 ) {
+                  //TODO: THIS VELOCITY SHOULD BE THE CORRECTED ONE 
+                  //Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
+                  // Is Fraser thesis is explained better 
+                  Vec3_t tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal
+                  norm_tgvr = norm(tgvr);
+                  tgdir = tgvr / norm_tgvr;
+                  omp_set_lock(&Particles[P1]->my_lock);
+                  Particles[P1] -> tgdir = tgdir; // NORMAL DIRECTION, Fraser 3-159
+                  omp_unset_lock(&Particles[P1]->my_lock);
+                }
+              }
+            }
+            
+            if (fric_type==Fr_Sta){ //THERE IS NO DIRECTION HERE
+              //if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
+              if (norm_tgvr == 0.) {
+                if (friction > 0. ) {	
+                  double curr_force;
+                  tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
+                  curr_force = norm(Particles[P1] -> a * Particles[P1] -> Mass);  //WHICH IS APPLIED 
+                  if (curr_force < norm(tgforce)) {//DIRECTION DOES NOT EXIST
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                  }
+                }
+              }
+            }
 						
 						// if (force2 > (1.e10))
 							// Particles[P1] -> contforce = 1.e5;
@@ -283,26 +305,27 @@ void Domain::CalcContactForces(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 						
-						Vec3_t tgforce;
 						if (friction > 0.) {
-							if (norm_tgvr > VMIN_FOR_FRICTION){
+              if (fric_type==Fr_Dyn){
+                if (norm_tgvr > VMIN_FOR_FRICTION){
 
-							// //TG DIRECTION
-								tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
-								omp_set_lock(&Particles[P1]->my_lock);
-								Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-								omp_unset_lock(&Particles[P1]->my_lock);
-								//cout << "tg force "<< tgforce <<endl;
-								
-								if (cont_heat_gen) {
-								//Fraser Eqns 3.109 to 3.111
-								//lambda is fraction passed to 
-								omp_set_lock(&Particles[P1]->my_lock);
-								Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
-								omp_unset_lock(&Particles[P1]->my_lock);
-								}
-							
-							}
+                // //TG DIRECTION
+                  tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
+                  omp_set_lock(&Particles[P1]->my_lock);
+                  Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                  omp_unset_lock(&Particles[P1]->my_lock);
+                  //cout << "tg force "<< tgforce <<endl;
+                  
+                  if (cont_heat_gen) {
+                  //Fraser Eqns 3.109 to 3.111
+                  //lambda is fraction passed to 
+                  omp_set_lock(&Particles[P1]->my_lock);
+                  Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+                  omp_unset_lock(&Particles[P1]->my_lock);
+                  }
+                
+                }
+              }
 						}
 						
 						if   (force2 > max_contact_force ) max_contact_force = force2;

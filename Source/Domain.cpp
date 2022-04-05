@@ -119,6 +119,7 @@ inline Domain::Domain ()
 	friction = 0.0;
 	update_contact_surface = true;
 	ts_nb_inc = 5;
+  fric_type = Fr_Dyn;
 }
 
 inline Domain::~Domain ()
