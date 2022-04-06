@@ -135,14 +135,21 @@ void Domain::CalcContactForces(){
 	double force2 = 0.;
 	double delta_ = 0.;
 	double deltat_cont;
+  double crit;
+  
+  double kij, omega,psi_cont;
+  int i,j;  //For inside testing
 	
 	int P1,P2;
   Vec3_t tgforce;
   Vec3_t Qj[Particles.Size()]; //Things not allowed
-  Vec3_t vr[Particles.Size()]
+  //Vec3_t vr[Particles.Size()];
+  Vec3_t vr;
   double dt_fext;
+  Element* e;
+  bool inside;
   
-	//#pragma omp parallel for schedule (static) private(force2,delta_,delta_cont, inside,i,j,crit,dt_fext) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -162,7 +169,7 @@ void Domain::CalcContactForces(){
 			else {
 				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
 		
-			vr[P1] = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
+			vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
 			//cout << "Particle P1v: "<<Particles[P1]->v<<endl;
 			//cout << "Particle P2v: "<<Particles[P2]->v<<endl;
 			//ok, FEM Particles normals can be calculated by two ways, the one used to
@@ -173,16 +180,17 @@ void Domain::CalcContactForces(){
 
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
-				Element* e = trimesh-> element[Particles[P2]->element];
-				double pplane = e -> pplane; 
+				e = trimesh-> element[Particles[P2]->element];
+				//double pplane = trimesh-> element[Particles[P2]->element] -> pplane; 
 				//cout<< "contact distance"<<Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
       				
-				deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (- delta_);								//Eq 3-142 
+				deltat_cont = ( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
+                      - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (- delta_);								//Eq 3-142 
 				//Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
 
 				//Check for contact in this time step 
 				//Calculate time step for external forces
-				double dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));	//Fraser 3-145
+				// dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));	//Fraser 3-145
 				// omp_set_lock(&Particles[P1]->my_lock);
         // Particles[P1] -> contforce = 0.; //RESET
 				// omp_unset_lock(&Particles[P1]->my_lock);
@@ -196,12 +204,13 @@ void Domain::CalcContactForces(){
 					//Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
-					bool inside = true;
-					int i=0,j;			
+					inside = true;
+					i=0;		
 					while (i<3 && inside){
 						j = i+1;	if (j>2) j = 0;
-						double crit = dot (cross ( *trimesh->node[e -> node[j]] - *trimesh->node[e -> node[i]],
-																																Qj[P1]  - *trimesh->node[e -> node[i]]),
+						crit = dot (cross ( *trimesh->node[e -> node[j]] 
+                                        - *trimesh->node[e -> node[i]],
+                                        Qj[P1]  - *trimesh->node[e -> node[i]]),
 															Particles[P2]->normal);
 						if (crit < 0.0) inside = false;
 						i++;
@@ -229,8 +238,8 @@ void Domain::CalcContactForces(){
 						// DEBUG THINGS, REMOVE ////////////
 						inside_part[P1] ++;
 						inside_part_count++;
-						if (delta > max_delta) max_delta = delta;
-						if (delta < min_delta) min_delta = delta;
+						// if (delta > max_delta) max_delta = delta;
+						// if (delta < min_delta) min_delta = delta;
 					///////////////////////////
 				
 						//cout << "delta: "<<delta<<endl;
@@ -247,9 +256,9 @@ void Domain::CalcContactForces(){
 						// DAMPING
 						//Calculate SPH and FEM elements stiffness (series)
 						//Since FEM is assumed as rigid, stiffness is simply the SPH one 
-						double kij = PFAC * Particles[P1]-> cont_stiff;
-						double omega = sqrt (kij/Particles[P1]->Mass);
-						double psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
+						kij = PFAC * Particles[P1]-> cont_stiff;
+						omega = sqrt (kij/Particles[P1]->Mass);
+						psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
 
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
