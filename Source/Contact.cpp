@@ -138,8 +138,11 @@ void Domain::CalcContactForces(){
 	
 	int P1,P2;
   Vec3_t tgforce;
-              
-	//#pragma omp parallel for schedule (static) private(force2,delta_,delta_cont, inside,i,j,crit) num_threads(Nproc)
+  Vec3_t Qj[Particles.Size()]; //Things not allowed
+  Vec3_t vr[Particles.Size()]
+  double dt_fext;
+  
+	//#pragma omp parallel for schedule (static) private(force2,delta_,delta_cont, inside,i,j,crit,dt_fext) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -159,7 +162,7 @@ void Domain::CalcContactForces(){
 			else {
 				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
 		
-			Vec3_t vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
+			vr[P1] = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
 			//cout << "Particle P1v: "<<Particles[P1]->v<<endl;
 			//cout << "Particle P2v: "<<Particles[P2]->v<<endl;
 			//ok, FEM Particles normals can be calculated by two ways, the one used to
@@ -174,8 +177,8 @@ void Domain::CalcContactForces(){
 				double pplane = e -> pplane; 
 				//cout<< "contact distance"<<Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
       				
-				deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (-delta_);								//Eq 3-142 
-				Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
+				deltat_cont = ( Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (- delta_);								//Eq 3-142 
+				//Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
 
 				//Check for contact in this time step 
 				//Calculate time step for external forces
@@ -189,7 +192,7 @@ void Domain::CalcContactForces(){
 					inside_time++;
 					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
-					Vec3_t Qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
+					Qj[P1] = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
 					//Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
@@ -198,7 +201,7 @@ void Domain::CalcContactForces(){
 					while (i<3 && inside){
 						j = i+1;	if (j>2) j = 0;
 						double crit = dot (cross ( *trimesh->node[e -> node[j]] - *trimesh->node[e -> node[i]],
-																																Qj  - *trimesh->node[e -> node[i]]),
+																																Qj[P1]  - *trimesh->node[e -> node[i]]),
 															Particles[P2]->normal);
 						if (crit < 0.0) inside = false;
 						i++;
