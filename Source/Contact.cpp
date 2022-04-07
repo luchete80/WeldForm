@@ -149,7 +149,7 @@ void Domain::CalcContactForces(){
   Element* e;
   bool inside;
   
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,e,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 

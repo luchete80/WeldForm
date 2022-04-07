@@ -3,7 +3,7 @@
 #include <iostream>
 
 #define TAU		0.005
-#define VMAX	1.0
+#define VMAX	0.1
 
 using namespace SPH;
 using namespace std;
@@ -11,9 +11,9 @@ using namespace std;
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 
-	if (domi.getTime() < TAU ) 
-		vcompress = VMAX/TAU * domi.getTime();
-	else
+	// if (domi.getTime() < TAU ) 
+		// vcompress = VMAX/TAU * domi.getTime();
+	// else
 		vcompress = VMAX;
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
@@ -103,8 +103,12 @@ int main(){
 
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
-	
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.02,-0.02, cyl_zmax),Vec3_t(0.02,0.02, cyl_zmax),40);
+  double half_plane_length = 0.009;
+	int count = 2*0.009/dx;
+  
+  cout << "plane length particle count: "<<count<<endl;
+	mesh.AxisPlaneMesh(2,false, Vec3_t(-half_plane_length,-half_plane_length, cyl_zmax),
+                              Vec3_t( half_plane_length, half_plane_length, cyl_zmax),count);
 	cout << "Plane z" << *mesh.node[0]<<endl;
 	
 	
@@ -114,7 +118,7 @@ int main(){
 	mesh.CalcSpheres(); //DONE ONCE
 	
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
