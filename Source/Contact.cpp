@@ -28,15 +28,15 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const i
 
 inline void Domain::ContactNbSearch(){
 	//cout << "Performing Nb Search"<<endl;
+  		size_t P1,P2;
 	cont_pairs = 0;
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
 	for (int k=0; k<Nproc;k++) 
 	#endif	
 	{
-		size_t P1,P2;
 		Vec3_t xij;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
@@ -51,10 +51,9 @@ inline void Domain::ContactNbSearch(){
 			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
 				if (Particles[P1]->ID == id_free_surf || Particles[P2]->ID == id_free_surf ) {
 					Vec3_t xij	= Particles[P1]->x - Particles[P2]->x;
-					double r = norm(xij);
-					double rcutoff = ( Particles[P1]->h + Particles[P2]->h ) / 2.;
+
 					//cout << "r, rcutoff, h1, h2"<< r << ", "<< rcutoff << ", "<< Particles[P1]->h <<", "<<Particles[P2]->h<<endl;
-					if ( r < 2.0 *rcutoff ){
+					if ( norm (Particles[P1]->x - Particles[P2]->x) < ( Particles[P1]->h + Particles[P2]->h ) ){ //2* cutoff being cutoff (h1+h2)/2
 					//cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
 					//ContPairs[k].Push(std::make_pair(P1, P2));
 					ContPairs[k].Push(RIGPairs[k][a]);

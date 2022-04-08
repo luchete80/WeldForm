@@ -1653,6 +1653,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
 	of << "pl_strain, eff_strain_rate, sigma_eq, sigmay"<<endl;
+  
+  bool check_nb_every_time = false;
 
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();
@@ -1680,27 +1682,33 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
           imax=i;
 			}
 		}
-		
-		// if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
-			// ClearNbData();
 
-			// MainNeighbourSearch/*_Ext*/();
+    if (norm(max_disp) > 0.1 * hmax)
+      check_nb_every_time = true;
+    else 
+      check_nb_every_time = false;
+		
+		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
+			ClearNbData();
+
+			MainNeighbourSearch/*_Ext*/();
 			
-			// if (contact) {
-				// //TODO: CHANGE CONTACT STIFFNESS!
-				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-				// CalculateSurface(1);				//After Nb search			
-				// ContactNbSearch();
-				// SaveContNeighbourData();	//Again Save Nb data
-			// }//contact
-			// isyielding  = true ;
-		// }
-		//if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+			if (contact) {
+				//TODO: CHANGE CONTACT STIFFNESS!
+				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+				CalculateSurface(1);				//After Nb search			
+				ContactNbSearch();
+				SaveContNeighbourData();	//Again Save Nb data
+			}//contact
+			isyielding  = true ;
+		}
+		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared){
 					MainNeighbourSearch/*_Ext*/();
 					
+          // TODO: SEPARATE CONTACT SEARCH STEP INTERVAL
 					if (contact) {
 						neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 						//cout << "performing contact search"<<endl
@@ -1716,22 +1724,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				}// ts_i == 0				
 				
 			}
-
-			
-			// neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-				// //cout << "performing contact search"<<endl
-				// clock_beg = clock();
-				// if (contact) {
-					// //if (update_contact_surface){
-						// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-						// CalculateSurface(1);				//After Nb search			
-						// ContactNbSearch();
-						// SaveContNeighbourData();
-					// //}
-				// }//contact				
-				// contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-			// }// ts_i == 0
-		//} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+		
+    } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 
 		//NEW, gradient correction
 			if (isfirst) {
@@ -1831,7 +1825,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
 		
 		
-		//if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
+		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
 			if ( ts_i == (ts_nb_inc - 1) ){
 				ClearNbData();
 			}
@@ -1840,7 +1834,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			if ( ts_i > (ts_nb_inc - 1) ) 
 				ts_i = 0;
 		
-		//}
+		}
 		
 	
 	}
