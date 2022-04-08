@@ -124,7 +124,7 @@ int main(int argc, char **argv) try
     			dom.Particles[a]->NoSlip=true;			
 				
 				}
-    		if ( z > L )
+    		if ( z > L/2. )
     			dom.Particles[a]->ID=3;
     	}
 		dom.WriteXDMF("maz");

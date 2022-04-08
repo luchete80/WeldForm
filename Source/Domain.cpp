@@ -675,7 +675,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 		while (zp <= (z0+Lz -r)){
 			k++; zp = z0 + (2.0*k+1)*r;			
 		}
-		cout << "Particle Row count: "<< k << endl;
+		//cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
 		k = 0;zp = z0;
 
@@ -683,7 +683,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 			j = 0;
 			//yp = - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
 			yp = r; //First increment is radius, following ones are 2r
-			cout << "y Extreme: "<<yp<<endl;
+			//cout << "y Extreme: "<<yp<<endl;
 			
 			numypart = numpartxy;	//And then diminish by 2 on each y increment
 			yinc = 1;	//particle row from the axis
@@ -691,7 +691,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 
 			cout << "y max particles: "<<numypart<<endl;
 			for (j=0;j<numypart;j++){
-				cout << "y inc: "<<yinc<<endl;
+				//cout << "y inc: "<<yinc<<endl;
 				numxpart = calcHalfPartCount(r, Rxy, yinc);
 				//cout << "xpart: "<< numxpart<<endl;
 				//xp = - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
@@ -703,11 +703,11 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
           if ( i < ghost_rows ){
             symm_x.push_back(id_part);
-            if (k==0) Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+            //if (k==0) Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
           }
           if ( j < ghost_rows) {
             symm_y.push_back(id_part);
-            if (k==0) Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+            //if (k==0) Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
 					}
           if (zp == z0)
 						part_per_row++;
@@ -728,8 +728,11 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 		//Is it convenient to allocate these particles at the end? 		
 		//Allocate Symmetry particles, begining from x, y and z
 		cout << "Creating ghost particles"<<endl;
+    
+    
+    ///// X AND Y PLANE //////////
 		zp = z0; k= 0;
-		cout << "zmax"<<( z0 + Lz - r)<<endl;
+		//cout << "zmax"<<( z0 + Lz - r)<<endl;
 		while (zp <= ( z0 + Lz - r)) {
 
 			numypart = numpartxy;	//And then diminish by 2 on each y increment
@@ -737,12 +740,12 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 
       int sym_y_count = 0;
       int sym_x_count;
-			cout << "y particles: "<<numypart<<endl;
+			//cout << "y particles: "<<numypart<<endl;
 			for (j=0; j < ghost_rows ; j++){
 				xp = r;
 				yp = - r - 2*r*(yinc -1); //First increment is radius, following ones are 2r			
 				numxpart = calcHalfPartCount(r, Rxy, yinc);
-				cout << "x particles: "<<numypart<<endl;
+				//cout << "x particles: "<<numypart<<endl;
         sym_x_count = j;
 				for (i=0; i < numxpart;i++) {
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
@@ -750,9 +753,9 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 					Particles.Push(new Particle(-1,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //First insert on y plane 
 					Particles.Push(new Particle(-2,Vec3_t(yp,xp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //Transpose for x plane
 
-          if (k==0) Particles[id_part  ]->ID = symm_y[sym_y_count]; //ONLY FOR TESTING IN PARAVIEW!  
+          //if (k==0) Particles[id_part  ]->ID = symm_y[sym_y_count]; //ONLY FOR TESTING IN PARAVIEW!  
           //SYMMETRY ON Y PLANE IS ALTERNATED ON INDICES
-          if (k==0) Particles[id_part+1]->ID = symm_x[sym_x_count]; //ONLY FOR TESTING IN PARAVIEW!           
+          //if (k==0) Particles[id_part+1]->ID = symm_x[sym_x_count]; //ONLY FOR TESTING IN PARAVIEW!           
           
 					Particles[id_part  ]->inner_mirr_part = symm_y[sym_y_count];
 					Particles[id_part+1]->inner_mirr_part = symm_x[sym_x_count];
@@ -772,13 +775,16 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 			}//y rows
 			k++;
 			zp = z0 + (2.0 * k + 1) * r;	
-			cout << "zp " <<zp<<endl;
+			//cout << "zp " <<zp<<endl;
 		}
 		
+    //// Z PLANE, BOTTOM COORDINATE /////
     cout << "inserting z particles"<<endl;
 		//z Symm particles
 		int sym_part;
 		int part = 0;
+    id_part = Particles.Size(); //REDUNDANT
+
 		for (int zinc = 0; zinc < ghost_rows ;zinc++){
 			for (int xy = 0; xy < part_per_row;xy++){
 				xp = Particles[part]->x(0);
@@ -786,16 +792,17 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 				zp = Particles[part]->x(2);
 				Particles.Push(new Particle(-3,Vec3_t(xp,yp,-zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
 				Particles[id_part]->inner_mirr_part = part;
-        Particles[id_part]->ID = part;
-        
+        //Particles[id_part]->ID = -50;
+        cout << "part , sym"<<part<<", "<<id_part<<endl;
         Particles[id_part]->ghost_plane_axis = 2;
+        GhostPairs.Push(std::make_pair(part,id_part));
+        
 				id_part++;
 				part++;
 			}
-				
-
 		}
-		
+		////// PARALLELIZE!
+    
 		
 		double Vol = M_PI * Rxy * Rxy * Lz;		
 		//double Mass = Vol * Density / (Particles.Size()-PrePS);
@@ -825,10 +832,11 @@ inline void Domain::MoveGhost(){
 		int  i = GhostPairs[gp].first;
 		int gi = GhostPairs[gp].second;
 		
+    //ASSUMING SYMMETRY
 		//See normal direction, if it is vertical
-		Particles[gi]-> v = Particles[i]-> v;
-		Particles[gi]-> va = Particles[i]-> va;
-		Particles[gi]-> vb = Particles[i]-> vb;
+		Particles[gi]-> v  = - Particles[i]-> v;
+		Particles[gi]-> va = - Particles[i]-> va;
+		Particles[gi]-> vb = - Particles[i]-> vb;
 		
 		// Particles[gi]-> v[axis] = 	-Particles[gi]-> v[axis]		
 		// Particles[gi]-> va[axis] = 	-Particles[gi]-> va[axis];
@@ -1844,6 +1852,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		clock_beg = clock();
 
 		Move(deltat);
+    MoveGhost(); //If Symmetry
+    
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things
