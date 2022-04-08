@@ -50,9 +50,11 @@ inline void Domain::ContactNbSearch(){
 			// cout << "Sec Particle index, ID: "<<P2 << ", " << Particles[P2]->ID  <<endl;
 			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
 				if (Particles[P1]->ID == id_free_surf || Particles[P2]->ID == id_free_surf ) {
+					Vec3_t xij	= Particles[P1]->x - Particles[P2]->x;
+					double r = norm(xij);
+					double rcutoff = ( Particles[P1]->h + Particles[P2]->h ) / 2.;
 					//cout << "r, rcutoff, h1, h2"<< r << ", "<< rcutoff << ", "<< Particles[P1]->h <<", "<<Particles[P2]->h<<endl;
-					if ( norm (Particles[P1]->x - Particles[P2]->x) < 
-                    2.0 * ( Particles[P1]->h + Particles[P2]->h ) / 2.; ){
+					if ( r < 2.0 *rcutoff ){
 					//cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
 					//ContPairs[k].Push(std::make_pair(P1, P2));
 					ContPairs[k].Push(RIGPairs[k][a]);
@@ -147,14 +149,7 @@ void Domain::CalcContactForces(){
   Element* e;
   bool inside;
   
-  std::vector <bool > inside_[Nproc];
-  //std::vector <std::pair<int,int> > inside_pairs[Nproc];
-    
-  for (size_t a = 0; a < Nproc ;a++) {
-    inside_[a].resize(ContPairs[a].Size());
-  }
-  
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,e,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -195,6 +190,12 @@ void Domain::CalcContactForces(){
 
 				//Check for contact in this time step 
 				//Calculate time step for external forces
+				// dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));	//Fraser 3-145
+				// omp_set_lock(&Particles[P1]->my_lock);
+        // Particles[P1] -> contforce = 0.; //RESET
+				// omp_unset_lock(&Particles[P1]->my_lock);
+				// if (dt_fext > deltat)
+					// cout << "Time step size ("<<deltat<<" is larger than max allowable contact forces step ("<<dt_fext<<")"<<endl;
 				if (deltat_cont < deltat){ //Originaly //	if (deltat_cont < std::min(deltat,dt_fext) 
 					inside_time++;
 					//cout << "Inside dt contact" <<endl;
@@ -215,7 +216,23 @@ void Domain::CalcContactForces(){
 						i++;
 					}
 					
-					if (inside ) { //Contact point inside element, contact proceeds				
+					if (inside ) { //Contact point inside element, contact proceeds
+			
+		// cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
+						// cout << "/////////////////////////////////////////" <<endl;
+						// cout << " vr: "<< vr<<endl;
+						//cout << "delta_: "<<delta_<<endl;
+						// cout << "Particles[P1]->x"<< Particles[P1]->x<<endl;
+						 // cout << "Particles[P2]->x"<< Particles[P2]->x<<endl;
+						 // cout << "Particles[P2]->n"<< Particles[P2]->normal<<endl;
+						 // cout << "Particles[P1]->h"<< Particles[P1]->h<<endl;
+						 // cout << "pplane" << pplane<<endl;
+						 // cout << "dot (Particles[P2]->normal,	Particles[P1]->x)" <<dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
+						 //cout << "dt contact: "<<deltat_cont<<endl;
+				
+						//Recalculate vr (for large FEM mesh densities)
+						//cout << "particle "<<P1 <<" inside element"<<endl;
+						
 						//Calculate penetration depth (Fraser 3-49)
 						double delta = (deltat - deltat_cont) * delta_;
 						// DEBUG THINGS, REMOVE ////////////
