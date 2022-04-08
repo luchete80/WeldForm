@@ -1682,7 +1682,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
           imax=i;
 			}
 		}
-
+    
+    // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
+    //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
     if (norm(max_disp) > 0.1 * hmax)
       check_nb_every_time = true;
     else 
@@ -1702,7 +1704,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}//contact
 			isyielding  = true ;
 		}
-		if ( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared){
