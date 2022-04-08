@@ -1842,8 +1842,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			}
 		}
 		
-		if (isyielding)
-			cout << "Current Time Step: "<<deltat<<endl;
+		// if (isyielding)
+			// cout << "Current Time Step: "<<deltat<<endl;
 		
 		// for (int i=0; i<Particles.Size(); i++){
 			// if (Particles[i]->contforce>0.)
