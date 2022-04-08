@@ -1671,6 +1671,15 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				imax=i;
 			}
 		}
+
+    Vec3_t max_disp = Vec3_t(0.,0.,0.);
+		for (int i=0; i<Particles.Size(); i++){
+      for (int j=0;j<3;j++)
+        if (Particles[i]->Displacement[j]>max_disp[j]){
+          max_disp[j] = Particles[i]->Displacement [j];
+          imax=i;
+			}
+		}
 		
 		// if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			// ClearNbData();
@@ -1706,23 +1715,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 					contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 				}// ts_i == 0				
 				
-			//}
-			////////////////////////////////////////////////////////
-			
-			// cout << "RIG Pairs"<<endl;
-			// for (int p=0;p<Nproc;p++)
-				// cout << RIGPairs[p].size()<<", ";		
-				// cout <<endl;
+			}
 
-			// cout << "SM Pairs"<<endl;
-			// for (int p=0;p<Nproc;p++)
-				// cout << SMPairs[p].size()<<", ";		
-				// cout <<endl;
-
-			// cout << "Cont Pairs"<<endl;
-			// for (int p=0;p<Nproc;p++)
-				// cout << ContPairs[p].size()<<", ";		
-				// cout <<endl;					
 			
 			// neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 				// //cout << "performing contact search"<<endl
@@ -1737,7 +1731,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				// }//contact				
 				// contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 			// }// ts_i == 0
-			
+		//} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+
 		//NEW, gradient correction
 			if (isfirst) {
 				cout << "Calculating gradient correction matrix"<<endl;
@@ -1745,10 +1740,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 					CalcGradCorrMatrix();		
 				cout << "Done."<<endl;
 				isfirst = false;
-			}
-
-		} //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
-		
+			}		
 
 			
 		auto end_task = std::chrono::system_clock::now();
@@ -1803,7 +1795,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
-			
+			cout << "Max Displacements: "<<max_disp<<endl;
+      
 			if (contact)
 				cout << "Max Contact Force: "<<max_contact_force<<endl;
 			

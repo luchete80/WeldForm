@@ -138,7 +138,7 @@ int main(){
 		}
 		// if ( z > L )
 			// dom.Particles[a]->ID=3;
-	}
+	}  
 	//Contact Penalty and Damping Factors
   dom.fric_type = Fr_Sta;
 	dom.contact = true;
