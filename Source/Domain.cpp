@@ -663,6 +663,9 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 	else						z0 = -Lz/2. - r; //CHECK: -Lz/2. - r or -Lz/2.?
 	
 	int part_per_row=0;
+  std::vector <int> symm_x;
+  std::vector <int> symm_y;
+  
   if (Dimension==3) {
     	//Cubic packing
 		double zp;
@@ -698,7 +701,15 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					//	else    
 					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					if (zp == z0)
+          if ( i < ghost_rows ){
+            symm_x.push_back(id_part);
+            if (k==0) Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+          }
+          if ( j < ghost_rows) {
+            symm_y.push_back(id_part);
+            if (k==0) Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+					}
+          if (zp == z0)
 						part_per_row++;
 					
 					id_part++;
@@ -712,7 +723,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 			zp = z0 + (2.0*k+1)*r;
 		}
 			cout << "Particles per row: "<<part_per_row<<endl;
-
+    cout << " symmetric particles x, y :"<< symm_x.size()<<", "<<symm_y.size()<<endl;
 		//TODO: CONVERT THIS IN A QUARTER CYL SECTOR FUNCTION 
 		//Is it convenient to allocate these particles at the end? 		
 		//Allocate Symmetry particles, begining from x, y and z
@@ -724,21 +735,38 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 			numypart = numpartxy;	//And then diminish by 2 on each y increment
 			yinc = 1;	//particle row from the axis
 
-
+      int sym_y_count = 0;
+      int sym_x_count;
 			cout << "y particles: "<<numypart<<endl;
 			for (j=0; j < ghost_rows ; j++){
 				xp = r;
 				yp = - r - 2*r*(yinc -1); //First increment is radius, following ones are 2r			
 				numxpart = calcHalfPartCount(r, Rxy, yinc);
 				cout << "x particles: "<<numypart<<endl;
+        sym_x_count = j;
 				for (i=0; i < numxpart;i++) {
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					//	else    
-					Particles.Push(new Particle(-1,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					Particles.Push(new Particle(-2,Vec3_t(yp,xp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					//Particles[id_part]->symm_part = ;
-					id_part+=2;
+					Particles.Push(new Particle(-1,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //First insert on y plane 
+					Particles.Push(new Particle(-2,Vec3_t(yp,xp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //Transpose for x plane
+
+          if (k==0) Particles[id_part  ]->ID = symm_y[sym_y_count]; //ONLY FOR TESTING IN PARAVIEW!  
+          //SYMMETRY ON Y PLANE IS ALTERNATED ON INDICES
+          if (k==0) Particles[id_part+1]->ID = symm_x[sym_x_count]; //ONLY FOR TESTING IN PARAVIEW!           
+          
+					Particles[id_part  ]->inner_mirr_part = symm_y[sym_y_count];
+					Particles[id_part+1]->inner_mirr_part = symm_x[sym_x_count];
+          
+          GhostPairs.Push(std::make_pair(symm_y[sym_y_count],id_part  ));
+          GhostPairs.Push(std::make_pair(symm_x[sym_x_count],id_part+1));
+          
+          Particles[id_part  ]->ghost_plane_axis = 1;
+          Particles[id_part  ]->ghost_plane_axis = 0;
+					
+          id_part+=2;
 					xp += 2.*r;
+          sym_y_count++;
+          sym_x_count+=ghost_rows;
 				}//x rows
 				yinc++;
 			}//y rows
@@ -747,6 +775,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 			cout << "zp " <<zp<<endl;
 		}
 		
+    cout << "inserting z particles"<<endl;
 		//z Symm particles
 		int sym_part;
 		int part = 0;
@@ -756,7 +785,10 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 				yp = Particles[part]->x(1);
 				zp = Particles[part]->x(2);
 				Particles.Push(new Particle(-3,Vec3_t(xp,yp,-zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
-				//Particles[id_part]->symm_part = part;
+				Particles[id_part]->inner_mirr_part = part;
+        Particles[id_part]->ID = part;
+        
+        Particles[id_part]->ghost_plane_axis = 2;
 				id_part++;
 				part++;
 			}

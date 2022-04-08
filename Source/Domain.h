@@ -249,8 +249,10 @@ Array <Particle*>				Particles; 	///< Array of particles
 	bool 		contact;
 	double max_contact_force;
 		
+    
+  //ATTENTION: REDUNDANT, ghost pairs and reference
 	Array<std::pair<size_t,size_t> > GhostPairs;	//If used
-	
+  
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
 		void Periodic_X_Correction	(Vec3_t & x, double const & h, Particle * P1, Particle * P2);		//Corrects xij for the periodic boundary condition

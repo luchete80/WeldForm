@@ -181,6 +181,10 @@ namespace SPH {
 		bool is_surface;		// BUT A SPECIFIC ID WILL BE ADDED
 		int element;				// Element index (if comes from FEM)
 		
+    //SYMMETRY AND GHOST
+    int     inner_mirr_part;       //NEW: SYMMETRIC PARTICLE 
+    bool    is_ghost;      
+    int     ghost_plane_axis;      //Assuming is cartesian
 		
 			
 		// Constructor
