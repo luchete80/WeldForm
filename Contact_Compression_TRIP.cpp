@@ -104,7 +104,7 @@ int main(){
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
   double half_plane_length = 0.009;
-	int count = 2*0.009/dx;
+	int count = 2*0.009/(2.*dx); //Half the density... od original mesh
   
   cout << "plane length particle count: "<<count<<endl;
 	mesh.AxisPlaneMesh(2,false, Vec3_t(-half_plane_length,-half_plane_length, cyl_zmax),
@@ -147,8 +147,8 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	//dom.friction = 0.15;
-	dom.friction = 0.0;
+	dom.friction = 0.15;
+	//dom.friction = 0.0;
 	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
