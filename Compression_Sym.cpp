@@ -36,6 +36,7 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 2)
 		{
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a [2]		= 0.0;
 			domi.Particles[i]->v[2]	    = 0.0;
       domi.Particles[i]->va[2]		= 0.0;
 			domi.Particles[i]->vb[2]		= 0.0;
@@ -45,6 +46,7 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 4)
 		{
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a [0]		= 0.0;
 			domi.Particles[i]->v[0]	    = 0.0;
       domi.Particles[i]->va[0]		= 0.0;
 			domi.Particles[i]->vb[0]		= 0.0;
@@ -54,6 +56,7 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 5)
 		{
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a[1]		= 0.0;
 			domi.Particles[i]->v[1]	    = 0.0;
       domi.Particles[i]->va[1]		= 0.0;
 			domi.Particles[i]->vb[1]		= 0.0;
@@ -121,7 +124,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
-		dom.AddDoubleSymCylinderLength(1, R, L/2. + L/10.,  dx/2., rho, h, Fixed, symlength); 
+		dom.AddDoubleSymCylinderLength(1, R, L/2. ,  dx/2., rho, h, Fixed, symlength); 
 		
     dom.gradKernelCorr = false;
         
@@ -150,11 +153,11 @@ int main(int argc, char **argv) try
     			// dom.Particles[a]->NoSlip=true;			
 				
 				}
-    		if ( z > L/2. )
+    		if ( z > L/2. - dx)
     			dom.Particles[a]->ID=3;
-    		if ( x < dx  && x > -dx/2.)
+    		if ( x < dx  && x > -dx/2. && z < L/2. - dx)
     			dom.Particles[a]->ID=4;
-    		if ( y < dx  && y > -dx/2. )
+    		if ( y < dx  && y > -dx/2. && z < L/2. - dx)
     			dom.Particles[a]->ID=5;        
     	}
       
