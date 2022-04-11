@@ -30,14 +30,15 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
 			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+      domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -118,10 +119,11 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 ){
+
+    		if ( z < dx  && z > -dx/2. ){
     			dom.Particles[a]->ID=2;
-	    			dom.Particles[a]->IsFree=false;
-    			dom.Particles[a]->NoSlip=true;			
+	    			// dom.Particles[a]->IsFree=false;
+    			// dom.Particles[a]->NoSlip=true;			
 				
 				}
     		if ( z > L/2. )

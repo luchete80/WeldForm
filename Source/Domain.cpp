@@ -1829,6 +1829,15 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			cout << "Average Nb search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step)<<endl;
 
 			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
+      
+      cout << "Particle 0 pos and vel "<<endl;
+      cout << Particles[0]->x<<endl;
+      cout << Particles[0]->v<<endl;
+      
+      cout << "ghost pair 0" << GhostPairs[0].first<<", "<<GhostPairs[0].second<<endl;
+      cout << Particles[GhostPairs[0].second]->x<<endl;
+      cout << Particles[GhostPairs[0].second]->v<<endl;
+      
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
 			cout << "Max Displacements: "<<max_disp<<endl;
@@ -1853,6 +1862,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 		Move(deltat);
     MoveGhost(); //If Symmetry
+   
+    
+    
     
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();

@@ -140,7 +140,7 @@ int main(){
 			// dom.Particles[a]->ID=3;
 	}  
 	//Contact Penalty and Damping Factors
-  dom.fric_type = Fr_Sta;
+  //dom.fric_type = Fr_Sta;
 	dom.contact = true;
 	//dom.friction = 0.15;
 	dom.friction = 0.1;
