@@ -36,9 +36,9 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 2)
 		{
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-      domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v[2]	    = 0.0;
+      domi.Particles[i]->va[2]		= 0.0;
+			domi.Particles[i]->vb[2]		= 0.0;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}

@@ -765,6 +765,10 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
           
           Particles[id_part  ]->ghost_plane_axis = 1;
           Particles[id_part+1]->ghost_plane_axis = 0;
+
+          //ONLY FOR TESTING SYMMETRY PLANES!
+          //Particles[id_part  ]->ID = 1; //ONLY FOR TESTING IN PARAVIEW!  
+          //Particles[id_part+1]->ID = 0; //ONLY FOR TESTING IN PARAVIEW!   
 					
           id_part+=2;
 					xp += 2.*r;
@@ -795,6 +799,9 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
         //Particles[id_part]->ID = -50;
         cout << "part , sym"<<part<<", "<<id_part<<endl;
         Particles[id_part]->ghost_plane_axis = 2;
+        
+        //ONLY FOR TESTING SYMMETRY PLANES!
+        //Particles[id_part]->ID = Particles[id_part]->ghost_plane_axis; //ONLY FOR TESTING IN PARAVIEW!   
         GhostPairs.Push(std::make_pair(part,id_part));
         
 				id_part++;
