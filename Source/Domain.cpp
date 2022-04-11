@@ -827,16 +827,23 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 }
 
 inline void Domain::MoveGhost(){
-	int axis = 2;
+
 	for (int gp=0; gp<GhostPairs.Size(); gp++){
 		int  i = GhostPairs[gp].first;
 		int gi = GhostPairs[gp].second;
 		
     //ASSUMING SYMMETRY
 		//See normal direction, if it is vertical
-		Particles[gi]-> v  = - Particles[i]-> v;
-		Particles[gi]-> va = - Particles[i]-> va;
-		Particles[gi]-> vb = - Particles[i]-> vb;
+    // tg axis is the same speed
+		Particles[gi]-> v  = Particles[i]-> v;
+		Particles[gi]-> va = Particles[i]-> va;
+		Particles[gi]-> vb = Particles[i]-> vb;
+    
+    int axis = Particles[gi]-> ghost_plane_axis;
+    
+		Particles[gi]-> v[axis]  = - Particles[i]-> v[axis];
+		Particles[gi]-> va[axis] = - Particles[i]-> va[axis];
+		Particles[gi]-> vb[axis] = - Particles[i]-> vb[axis];
 		
 		// Particles[gi]-> v[axis] = 	-Particles[gi]-> v[axis]		
 		// Particles[gi]-> va[axis] = 	-Particles[gi]-> va[axis];
