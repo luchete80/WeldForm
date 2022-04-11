@@ -125,6 +125,19 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
 		dom.AddDoubleSymCylinderLength(1, R, L/2. ,  dx/2., rho, h, Fixed, symlength); 
+
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+
+	
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
+	cout << "Plane z" << *mesh.node[0]<<endl;
+	
+	
+	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
+	cout << "Creating Spheres.."<<endl;
+	//mesh.v = Vec3_t(0.,0.,);
+	mesh.CalcSpheres(); //DONE ONCE
+
 		
     dom.gradKernelCorr = false;
         
@@ -155,14 +168,14 @@ int main(int argc, char **argv) try
 				}
     		if ( z > L/2. - dx)
     			dom.Particles[a]->ID=3;
-    		// if ( x < dx  && x > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=4;
-    		// if ( y < dx  && y > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=5;        
+    		if ( x < dx  && x > -dx/2. && z < L/2. - dx)
+    			dom.Particles[a]->ID=4;
+    		if ( y < dx  && y > -dx/2. && z < L/2. - dx)
+    			dom.Particles[a]->ID=5;        
     	}
       
-    dom.Particles[0]->IsFree=false;
-    dom.Particles[0]->NoSlip=true;			
+    // dom.Particles[0]->IsFree=false;
+    // dom.Particles[0]->NoSlip=true;			
 
 
 		dom.WriteXDMF("maz");

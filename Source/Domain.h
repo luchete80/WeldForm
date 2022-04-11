@@ -70,6 +70,9 @@ public:
 	void AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									double r, double Density, double h, bool Fixed, bool ghost = false);
 
+  void AddQuarterCylinderLength(int tag, double Rxy, double Lz, 
+																				double r, double Density, double h, bool Fixed, bool symlength = false);
+                                          
 	//Cylinder Slice 
 	void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 								double r, double Density, double h, bool Fixed, bool symlength = false);

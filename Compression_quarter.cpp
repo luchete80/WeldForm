@@ -1,4 +1,23 @@
 
+/***********************************************************************************
+* PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
+*             and soils) using Smoothed Particle Hydrodynamics method              *   
+* Copyright (C) 2013 Maziar Gholami Korzani and Sergio Galindo-Torres              *
+*                                                                                  *
+* This file is part of PersianSPH                                                  *
+*                                                                                  *
+* This is free software; you can redistribute it and/or modify it under the        *
+* terms of the GNU General Public License as published by the Free Software        *
+* Foundation; either version 3 of the License, or (at your option) any later       *
+* version.                                                                         *
+*                                                                                  *
+* This program is distributed in the hope that it will be useful, but WITHOUT ANY  *
+* WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A  *
+* PARTICULAR PURPOSE. See the GNU General Public License for more details.         *
+*                                                                                  *
+* You should have received a copy of the GNU General Public License along with     *
+* PersianSPH; if not, see <http://www.gnu.org/licenses/>                           *
+************************************************************************************/
 
 #include "Domain.h"
 
@@ -30,7 +49,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
 			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -62,11 +81,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->vb[1]		= 0.0;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
-
-
 	}
-  
-
 }
 
 
@@ -117,16 +132,13 @@ int main(int argc, char **argv) try
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
+
 		bool symlength = true; //Also Symmetric on z axis
 		bool Fixed = false;
-	//Cylinder Slice of 90 degree and half length
-	// THIS DOES NOT HAVE Z INITIAL POSITION SINCE IT IS ZERO OR -LZ ACCORGIND TO LAST ARGUMENT
-	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
-									// double r, double Density, double h, bool Fixed, bool symlength = false);
-									
-		dom.AddDoubleSymCylinderLength(1, R, L/2. ,  dx/2., rho, h, Fixed, symlength); 
+    
+		dom.AddQuarterCylinderLength(1, R, L/2. ,  dx/2., rho, h, Fixed, symlength); 
 		
-    dom.gradKernelCorr = false;
+    dom.gradKernelCorr = true;
         
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -143,28 +155,22 @@ int main(int argc, char **argv) try
     		//dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
+
     		double x = dom.Particles[a]->x(0);
     		double y = dom.Particles[a]->x(1);
     		double z = dom.Particles[a]->x(2);
-
-    		if ( z < dx  && z > -dx/2. ){
+    		
+        if ( z < dx  && z > -dx/2. )
     			dom.Particles[a]->ID=2;
-	    			// dom.Particles[a]->IsFree=false;
-    			// dom.Particles[a]->NoSlip=true;			
-				
-				}
-    		if ( z > L/2. - dx)
+    		if ( z > L/2. - dx )
     			dom.Particles[a]->ID=3;
-    		// if ( x < dx  && x > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=4;
-    		// if ( y < dx  && y > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=5;        
+    		
+        if ( x < dx  && x > -dx/2. && z < L/2. - dx)
+    			dom.Particles[a]->ID=4;
+    		if ( y < dx  && y > -dx/2. && z < L/2. - dx)
+    			dom.Particles[a]->ID=5;   
+        
     	}
-      
-    dom.Particles[0]->IsFree=false;
-    dom.Particles[0]->NoSlip=true;			
-
-
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;

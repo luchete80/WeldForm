@@ -628,6 +628,124 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	R = r;
 }
 
+//////////////////////////////////////
+// HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
+void Domain::AddQuarterCylinderLength(int tag, double Rxy, double Lz, 
+																				double r, double Density, double h, bool Fixed, bool symlength = false) {
+	//Util::Stopwatch stopwatch;
+	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
+
+	size_t PrePS = Particles.Size();
+	double xp,yp;
+	size_t i,j;
+	double qin = 0.03;
+	srand(100);
+	
+	double Lx, Ly;
+	
+	//Particles are tried to be aligned 
+	int numpartxy = 1;	//MAX ON EACH EDGE
+	//PARTCILES ARE NOT ALIGNED WITH AXIS; BUT SYMMETRIC ON EACH QUADRANT
+	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
+	numpartxy = calcHalfPartCount(r, Rxy, 1);
+	
+
+	//yp=pos;
+	int numypart,numxpart;
+	int xinc,yinc;
+	
+	int id_part=0;
+	int ghost_rows = 2;
+	
+	double z0;
+	if (symlength) 	z0 = r;
+	else						z0 = -Lz/2. - r; //CHECK: -Lz/2. - r or -Lz/2.?
+	
+	int part_per_row=0;
+  std::vector <int> symm_x;
+  std::vector <int> symm_y;
+  
+  if (Dimension==3) {
+    	//Cubic packing
+		double zp;
+		size_t k=0;
+		zp = z0;
+		//Calculate row count for non ghost particles
+		while (zp <= (z0+Lz -r)){
+			k++; zp = z0 + (2.0*k+1)*r;			
+		}
+		//cout << "Particle Row count: "<< k << endl;
+		int last_nonghostrow = k;
+		k = 0;zp = z0;
+
+		while (zp <= ( z0 + Lz - r)) {
+			j = 0;
+			//yp = - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
+			yp = r; //First increment is radius, following ones are 2r
+			//cout << "y Extreme: "<<yp<<endl;
+			
+			numypart = numpartxy;	//And then diminish by 2 on each y increment
+			yinc = 1;	//particle row from the axis
+
+
+			cout << "y max particles: "<<numypart<<endl;
+			for (j=0;j<numypart;j++){
+				//cout << "y inc: "<<yinc<<endl;
+				numxpart = calcHalfPartCount(r, Rxy, yinc);
+				//cout << "xpart: "<< numxpart<<endl;
+				//xp = - r - (2.*r*(numxpart - 1) ); //First increment is radius, following ones are 2r
+				//It is convenient to allocate now the ghost (symmetry) variables?
+				xp = r; //First increment is radius, following ones are 2r
+				for (i=0; i < numxpart;i++) {
+					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+					//	else    
+					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+          if ( i < ghost_rows ){
+            symm_x.push_back(id_part);
+            //if (k==0) Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+          }
+          if ( j < ghost_rows) {
+            symm_y.push_back(id_part);
+            //if (k==0) Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+					}
+          if (zp == z0)
+						part_per_row++;
+					
+					id_part++;
+					xp += 2.*r;
+				}
+				yp += 2.*r;
+				yinc +=1;
+
+			}
+			k++;
+			zp = z0 + (2.0*k+1)*r;
+		}
+			cout << "Particles per row: "<<part_per_row<<endl;
+    cout << " symmetric particles x, y :"<< symm_x.size()<<", "<<symm_y.size()<<endl;
+		
+		double Vol = M_PI * Rxy * Rxy * Lz;		
+		//double Mass = Vol * Density / (Particles.Size()-PrePS);
+		double Mass = Vol * Density /Particles.Size();
+		
+		cout << "Total Particle count: " << Particles.Size() <<endl;
+		cout << "Particle mass: " << Mass <<endl;
+
+		#pragma omp parallel for num_threads(Nproc)
+		#ifdef __GNUC__
+		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+		#else
+		for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+		#endif
+		{
+			Particles[i]->Mass = Mass;
+		}
+
+	}//Dim 3
+
+	R = r;									
+}
+
 
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
@@ -1848,9 +1966,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
       cout << Particles[0]->x<<endl;
       cout << Particles[0]->v<<endl;
       
-      cout << "ghost pair 0" << GhostPairs[0].first<<", "<<GhostPairs[0].second<<endl;
-      cout << Particles[GhostPairs[0].second]->x<<endl;
-      cout << Particles[GhostPairs[0].second]->v<<endl;
+      // cout << "ghost pair 0" << GhostPairs[0].first<<", "<<GhostPairs[0].second<<endl;
+      // cout << Particles[GhostPairs[0].second]->x<<endl;
+      // cout << Particles[GhostPairs[0].second]->v<<endl;
       
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
@@ -1875,7 +1993,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		clock_beg = clock();
 
 		Move(deltat);
-    MoveGhost(); //If Symmetry
+    //MoveGhost(); //If Symmetry
    
     
     
