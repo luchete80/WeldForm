@@ -764,7 +764,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
           GhostPairs.Push(std::make_pair(symm_x[sym_x_count],id_part+1));
           
           Particles[id_part  ]->ghost_plane_axis = 1;
-          Particles[id_part  ]->ghost_plane_axis = 0;
+          Particles[id_part+1]->ghost_plane_axis = 0;
 					
           id_part+=2;
 					xp += 2.*r;
