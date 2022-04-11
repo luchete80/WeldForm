@@ -42,6 +42,8 @@ void UserAcc(SPH::Domain & domi)
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
+  
+
 }
 
 
@@ -129,6 +131,9 @@ int main(int argc, char **argv) try
     		if ( z > L/2. )
     			dom.Particles[a]->ID=3;
     	}
+      
+    dom.Particles[0]->IsFree=false;
+    dom.Particles[0]->NoSlip=true;			
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
