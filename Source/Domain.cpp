@@ -750,8 +750,8 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 				for (i=0; i < numxpart;i++) {
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					//	else    
-					Particles.Push(new Particle(-1,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //First insert on y plane 
-					Particles.Push(new Particle(-2,Vec3_t(yp,xp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //Transpose for x plane
+					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //First insert on y plane 
+					Particles.Push(new Particle(tag,Vec3_t(yp,xp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //Transpose for x plane
 
           //if (k==0) Particles[id_part  ]->ID = symm_y[sym_y_count]; //ONLY FOR TESTING IN PARAVIEW!  
           //SYMMETRY ON Y PLANE IS ALTERNATED ON INDICES
@@ -794,7 +794,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 				xp = Particles[part]->x(0);
 				yp = Particles[part]->x(1);
 				zp = Particles[part]->x(2);
-				Particles.Push(new Particle(-3,Vec3_t(xp,yp,-zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
+				Particles.Push(new Particle(tag,Vec3_t(xp,yp,-zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
 				Particles[id_part]->inner_mirr_part = part;
         //Particles[id_part]->ID = -50;
         cout << "part , sym"<<part<<", "<<id_part<<endl;

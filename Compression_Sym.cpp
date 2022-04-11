@@ -41,6 +41,26 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->vb[2]		= 0.0;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
+
+		if (domi.Particles[i]->ID == 4)
+		{
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v[0]	    = 0.0;
+      domi.Particles[i]->va[0]		= 0.0;
+			domi.Particles[i]->vb[0]		= 0.0;
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+
+		if (domi.Particles[i]->ID == 5)
+		{
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v[1]	    = 0.0;
+      domi.Particles[i]->va[1]		= 0.0;
+			domi.Particles[i]->vb[1]		= 0.0;
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+
+
 	}
   
 
@@ -120,6 +140,8 @@ int main(int argc, char **argv) try
     		//dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
+    		double x = dom.Particles[a]->x(0);
+    		double y = dom.Particles[a]->x(1);
     		double z = dom.Particles[a]->x(2);
 
     		if ( z < dx  && z > -dx/2. ){
@@ -130,10 +152,16 @@ int main(int argc, char **argv) try
 				}
     		if ( z > L/2. )
     			dom.Particles[a]->ID=3;
+    		if ( x < dx  && x > -dx/2.)
+    			dom.Particles[a]->ID=4;
+    		if ( y < dx  && y > -dx/2. )
+    			dom.Particles[a]->ID=5;        
     	}
       
-    dom.Particles[0]->IsFree=false;
-    dom.Particles[0]->NoSlip=true;			
+    // dom.Particles[0]->IsFree=false;
+    // dom.Particles[0]->NoSlip=true;			
+
+
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
