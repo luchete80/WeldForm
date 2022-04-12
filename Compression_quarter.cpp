@@ -48,7 +48,7 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 11) 
 		{
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->a [2]		= 0.0;
+			domi.Particles[i]->a[2]		= 0.0;
 			domi.Particles[i]->v[2]	    = -vcompress;
       domi.Particles[i]->va[2]		= -vcompress;
 			domi.Particles[i]->vb[2]		= -vcompress;
@@ -58,12 +58,12 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 8) { //yz
 			domi.Particles[i]->a[1]	=domi.Particles[i]->a [2] = 0.0; 
       domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
-      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= -vcompress;
 		}
     if (domi.Particles[i]->ID == 9) { //xz
 			domi.Particles[i]->a [0]= domi.Particles[i]->a [2] = 0.0; 
       domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
-      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= -vcompress;
 		}
     if (domi.Particles[i]->ID == 10) { //xyz
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
@@ -74,23 +74,28 @@ void UserAcc(SPH::Domain & domi)
 
     // BOTTOM
 
-		if (domi.Particles[i]->ID == 8) { //yz
+		if (domi.Particles[i]->ID == 5) { //yz
 			domi.Particles[i]->a[1]	= domi.Particles[i]->a [2] = 0.0; 
       domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
       domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
 		}
-    if (domi.Particles[i]->ID == 9) { //xz
+    if (domi.Particles[i]->ID == 6) { //xz
 			domi.Particles[i]->a[0] = domi.Particles[i]->a [2] = 0.0; 
       domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
       domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
 		}
-    if (domi.Particles[i]->ID == 10) { //xyz - TRY ALSO TO FIX
+    if (domi.Particles[i]->ID == 7) { //xyz - TRY ALSO TO FIX
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 		}
 
+    if (domi.Particles[i]->ID == 3) { //y
+			domi.Particles[i]->a[2]		= 0.0; 
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+		} 
+    
     //CENTER
 		if (domi.Particles[i]->ID == 1) { //x
 			domi.Particles[i]->a[0]		= 0.0; 
@@ -100,10 +105,13 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->a[1]		= 0.0; 
       domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
 		}    
-    if (domi.Particles[i]->ID == 3) { //y
-			domi.Particles[i]->a[2]		= 0.0; 
-      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
-		}    
+
+    if (domi.Particles[i]->ID == 4) { //xy
+			domi.Particles[i]->a[0] = domi.Particles[i]->a [1] = 0.0; 
+      domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
+      domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
+		}
+    
 	}
 }
 
