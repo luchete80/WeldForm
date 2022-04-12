@@ -44,43 +44,66 @@ void UserAcc(SPH::Domain & domi)
 	#endif
 	
 	{
-		if (domi.Particles[i]->ID == 3)
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
-		if (domi.Particles[i]->ID == 2)
+    // TOP
+		if (domi.Particles[i]->ID == 11) 
 		{
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->a [2]		= 0.0;
-			domi.Particles[i]->v[2]	    = 0.0;
-      domi.Particles[i]->va[2]		= 0.0;
-			domi.Particles[i]->vb[2]		= 0.0;
+			domi.Particles[i]->v[2]	    = -vcompress;
+      domi.Particles[i]->va[2]		= -vcompress;
+			domi.Particles[i]->vb[2]		= -vcompress;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 
-		if (domi.Particles[i]->ID == 4)
-		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->a [0]		= 0.0;
-			domi.Particles[i]->v[0]	    = 0.0;
-      domi.Particles[i]->va[0]		= 0.0;
-			domi.Particles[i]->vb[0]		= 0.0;
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		if (domi.Particles[i]->ID == 8) { //yz
+			domi.Particles[i]->a[1]	=domi.Particles[i]->a [2] = 0.0; 
+      domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+		}
+    if (domi.Particles[i]->ID == 9) { //xz
+			domi.Particles[i]->a [0]= domi.Particles[i]->a [2] = 0.0; 
+      domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+		}
+    if (domi.Particles[i]->ID == 10) { //xyz
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 		}
 
-		if (domi.Particles[i]->ID == 5)
-		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->a[1]		= 0.0;
-			domi.Particles[i]->v[1]	    = 0.0;
-      domi.Particles[i]->va[1]		= 0.0;
-			domi.Particles[i]->vb[1]		= 0.0;
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+    // BOTTOM
+
+		if (domi.Particles[i]->ID == 8) { //yz
+			domi.Particles[i]->a[1]	= domi.Particles[i]->a [2] = 0.0; 
+      domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
 		}
+    if (domi.Particles[i]->ID == 9) { //xz
+			domi.Particles[i]->a[0] = domi.Particles[i]->a [2] = 0.0; 
+      domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+		}
+    if (domi.Particles[i]->ID == 10) { //xyz - TRY ALSO TO FIX
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+		}
+
+    //CENTER
+		if (domi.Particles[i]->ID == 1) { //x
+			domi.Particles[i]->a[0]		= 0.0; 
+      domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
+		}
+    if (domi.Particles[i]->ID == 2) { //y
+			domi.Particles[i]->a[1]		= 0.0; 
+      domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
+		}    
+    if (domi.Particles[i]->ID == 3) { //y
+			domi.Particles[i]->a[2]		= 0.0; 
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+		}    
 	}
 }
 
@@ -136,7 +159,7 @@ int main(int argc, char **argv) try
 		bool symlength = true; //Also Symmetric on z axis
 		bool Fixed = false;
     
-		dom.AddQuarterCylinderLength(1, R, L/2. ,  dx/2., rho, h, Fixed, symlength); 
+		dom.AddQuarterCylinderLength(0, R, L/2. ,  dx/2., rho, h, Fixed, symlength); 
 		
     dom.gradKernelCorr = true;
         
@@ -161,15 +184,34 @@ int main(int argc, char **argv) try
     		double z = dom.Particles[a]->x(2);
     		
         if ( z < dx  && z > -dx/2. )
-    			dom.Particles[a]->ID=2;
-    		if ( z > L/2. - dx )
     			dom.Particles[a]->ID=3;
     		
         if ( x < dx  && x > -dx/2. && z < L/2. - dx)
-    			dom.Particles[a]->ID=4;
+    			dom.Particles[a]->ID=1;
     		if ( y < dx  && y > -dx/2. && z < L/2. - dx)
-    			dom.Particles[a]->ID=5;   
+    			dom.Particles[a]->ID=2; 
+          
+        //x,y
+    		if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < L/2. - dx)
+    			dom.Particles[a]->ID=4;  
         
+    		if ( y < dx  && y > -dx/2. && z < dx  && z > -dx/2. ) //yz -5
+    			dom.Particles[a]->ID=5;           
+     		if (  x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 6
+    			dom.Particles[a]->ID=6;         
+        if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
+    			dom.Particles[a]->ID=7;   
+
+
+    		if ( z > L/2. - dx )
+    			dom.Particles[a]->ID=11;
+        
+    		if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
+    			dom.Particles[a]->ID=8;           
+     		if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
+    			dom.Particles[a]->ID=9;         
+        if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
+    			dom.Particles[a]->ID=10;    
     	}
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
