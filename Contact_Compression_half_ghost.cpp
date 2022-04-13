@@ -123,7 +123,7 @@ int main(int argc, char **argv) try
   bool ghost = true;
   dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, Fixed, ghost); 
 
-	double cyl_zmax = L/2. + 5.1e-4;
+	double cyl_zmax = L/2. + 4.94e-4;
 
 	cout << "Creating contact mesh.."<<endl;
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
@@ -196,8 +196,8 @@ int main(int argc, char **argv) try
   dom.fric_type = Fr_Sta;
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction = 0.15;
-	dom.PFAC = 0.5;
+	dom.friction = 0.1;
+	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 
