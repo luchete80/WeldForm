@@ -1989,20 +1989,22 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (auto_ts)
 			AdaptiveTimeStep();
 		clock_beg = clock();
-    
+
 		Move(deltat);
     MoveGhost(); //If Symmetry
-        
+    
     
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things
-		if (contact){
-			//cout << "checking contact"<<endl;
+		
+    if (contact){
+ 		//cout << "checking contact"<<endl;
 			trimesh->UpdatePos (deltat); //Update Node Pos
-			//Update Normals
+ 			//Update Normals
 			trimesh->UpdatePlaneCoeff();	//If normal does not change..
 		}
+
 		trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		
 		Time += deltat;

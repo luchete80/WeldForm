@@ -1,5 +1,5 @@
 
-
+#include "Mesh.h"
 #include "Domain.h"
 
 #define TAU		0.005
@@ -25,45 +25,6 @@ void UserAcc(SPH::Domain & domi)
 	#endif
 	
 	{
-    // TOP
-		if (domi.Particles[i]->ID == 11)  //FIXED
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress/2.);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress/2.);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress/2.);
-
-		}
-
-		// if (domi.Particles[i]->ID == 8) { //yz
-			// domi.Particles[i]->a[1]	=domi.Particles[i]->a [2] = 0.0; 
-      // domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
-      // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= -vcompress;
-		// }
-    // if (domi.Particles[i]->ID == 9) { //xz
-			// domi.Particles[i]->a [0]= domi.Particles[i]->a [2] = 0.0; 
-      // domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
-      // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= -vcompress;
-		// }
-    // if (domi.Particles[i]->ID == 10) { //xyz
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			// domi.Particles[i]->va  = Vec3_t(0.0,0.0,-vcompress);
-			// domi.Particles[i]->vb	= Vec3_t(0.0,0.0,-vcompress);
-		// }
-
-    // BOTTOM
-
-		// if (domi.Particles[i]->ID == 5) { //yz
-			// domi.Particles[i]->a[1]	= domi.Particles[i]->a [2] = 0.0; 
-      // domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
-      // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
-		// }
-    // if (domi.Particles[i]->ID == 6) { //xz
-			// domi.Particles[i]->a[0] = domi.Particles[i]->a [2] = 0.0; 
-      // domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
-      // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
-		// }
     if (domi.Particles[i]->ID == 7) { //xyz - TRY ALSO TO FIX
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
@@ -86,13 +47,15 @@ void UserAcc(SPH::Domain & domi)
       // domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
 		// }    
 
-    if (domi.Particles[i]->ID == 4) { //xy
-			domi.Particles[i]->a[0] = domi.Particles[i]->a [1] = 0.0; 
-      domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
-      domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
-		}
-    
+    // if (domi.Particles[i]->ID == 4) { //xy
+			// domi.Particles[i]->a[0] = domi.Particles[i]->a [1] = 0.0; 
+      // domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
+      // domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
+		// }
+
 	}
+  
+
 }
 
 
@@ -101,6 +64,7 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
+  SPH::TriMesh mesh;
 		 SPH::Domain	dom;
 
 		dom.Dimension	= 3;
@@ -150,9 +114,25 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
-		//dom.AddDoubleSymCylinderLength(1, R, L/2. + L/18.,  dx/2., rho, h, Fixed, symlength); 
-		
-    dom.gradKernelCorr = false;
+  bool ghost = true;
+  dom.AddCylinderLength(1, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, Fixed, ghost); 
+
+	double cyl_zmax = L/2. - dx/2. -1.e-4;
+
+	cout << "Creating contact mesh.."<<endl;
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
+	cout << "Plane z" << *mesh.node[0]<<endl;
+  
+  cout << "Mesh node size "<<mesh.node.Size()<<endl;
+	
+	
+	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
+	cout << "Creating Spheres.."<<endl;
+	//mesh.v = Vec3_t(0.,0.,);
+	mesh.CalcSpheres(); //DONE ONCE
+
+	dom.ts_nb_inc = 5;
+	dom.gradKernelCorr = true;
         
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -169,6 +149,7 @@ int main(int argc, char **argv) try
     		//dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
+        
     		double x = dom.Particles[a]->x(0);
     		double y = dom.Particles[a]->x(1);
     		double z = dom.Particles[a]->x(2);
@@ -191,29 +172,42 @@ int main(int argc, char **argv) try
     			// dom.Particles[a]->ID=5;           
      		// if (  x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 6
     			// dom.Particles[a]->ID=6;         
-        // if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
-    			// dom.Particles[a]->ID=7;   
+        if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
+    			dom.Particles[a]->ID=7;   
 
-
-    		if ( z > L/2. - dx ){
-    			dom.Particles[a]->ID=11;	         
-        }
         //TOP
     		// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
     			// dom.Particles[a]->ID=8;           
      		// if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
     			// dom.Particles[a]->ID=9;         
         // if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
-    			// dom.Particles[a]->ID=10;   	
+    			// dom.Particles[a]->ID=10;         
+    	}
+      
+    // dom.Particles[0]->IsFree=false;
+    // dom.Particles[0]->NoSlip=true;			
+	//Contact Penalty and Damping Factors
+  dom.fric_type = Fr_Sta;
+	dom.contact = true;
+	//dom.friction = 0.15;
+	dom.friction = 0.15;
+	dom.PFAC = 0.5;
+	dom.DFAC = 0.2;
+	dom.update_contact_surface = false;
 
-      }
-		dom.WriteXDMF("maz");
-		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
-		dom.BC.InOutFlow = 0;
+  dom.WriteXDMF("maz");
+  dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
+  dom.BC.InOutFlow = 0;
 
-    //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+	//ALWAYS AFTER SPH PARTICLES
+	//TODO: DO THIS INSIDE SOLVER CHECKS
+	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
+											//Not for any force calc in contact formulation
+	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
     
-		return 0;
+  //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+  
+  return 0;
 }
 MECHSYS_CATCH

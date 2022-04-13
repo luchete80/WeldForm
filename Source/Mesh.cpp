@@ -105,6 +105,9 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 		element[e] -> normal (axis) = f;
 	}
 
+  cout << "Created Mesh with "<< node.size()<< " nodes. "<<endl;
+  if (node.size() == 0)
+    throw new Fatal("ATTENTION! Check mesh generation");
 }
 
 //This is done once, Since mesh is rigid
