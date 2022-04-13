@@ -480,7 +480,7 @@ int calcHalfPartCount(const double &r, const double &R, const int xinc){
 }
 
 inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
-									double r, double Density, double h, bool Fixed, bool ghost) {
+									double r, double Density, double h, bool Fixed, bool ghost) { //ghost refers to symmetry at bottom z coordinate
 
 //	Util::Stopwatch stopwatch;
     std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
@@ -502,11 +502,9 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	numpartxy = calcHalfPartCount(r, Rxy, 1);
 	
 	//// GHOST THING
-	double ghost_inc = 0;
+
 	int ghost_rows = 3; 
-	if (ghost ) ghost_inc = 2*r*ghost_rows;
-	int first_nonghost_id[ghost_rows]; //First nonghost particle, from near plane 
-	int first_ghost_id [ghost_rows];
+
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
 	//yp=pos;
@@ -529,8 +527,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		int last_nonghostrow = k;
 		
 		k = 0;zp = V(2);
-		int ghost_row=-1;
-		while (zp <= (V(2)+Lz + ghost_inc -r)) {
+
+		while (zp <= (V(2)+Lz -r)) {
 			j = 0;
 			yp = V(1) - r - (2.*r*(numpartxy - 1) ); //First increment is radius, following ones are 2r
 			//cout << "y Extreme: "<<yp<<endl;
@@ -538,17 +536,6 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 			numypart = 2*numpartxy;	//And then diminish by 2 on each y increment
 			yinc = numpartxy;	//particle row from the axis
 			yinc_sign=-1;
-			if (	k > ((last_nonghostrow - 1) - ghost_rows) && k < last_nonghostrow) { // CHECK IF IT IS A GHOST ROW
-				ghost_row++;
-				first_nonghost_id[ghost_row] 		= id_part;
-				xy_ghost_part_count[ghost_row] 	= numypart;
-				cout << "first_nonghost_id, particle: " << k << ", id part "<< id_part << endl;
-			}
-			if ( k > last_nonghostrow - 1) {
-				ghost_row++;
-				first_ghost_id [ghost_row - ghost_rows]= id_part;
-				cout << "first_ghost_id, particle: " << k << ", id part "<< id_part << endl;
-			} 
 			//cout << "y max particles: "<<numypart<<endl;
 			for (j=0;j<numypart;j++){
 				//cout << "y inc: "<<yinc<<endl;
@@ -578,22 +565,33 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		
 		//Insert ghost pairs relation
 		if (ghost){
-			for (int grow=0; grow<ghost_rows;grow++){
-				int pid  = first_nonghost_id[ghost_rows-1 - grow]; //non ghost particle, reverse order
-				int gpid = first_ghost_id [grow];
-				int last_gpid;
-				if (grow<2)
-					last_gpid = first_ghost_id [grow+1];
-				else 
-					last_gpid = Particles.Size() - 1;
-				int part_count = last_gpid - gpid + 1;
-				cout << "part count "<<part_count<<endl;
-				for (int p=0;p<part_count;p++){
-					cout << "Pair inserted: "<<pid<<", "<<gpid<<endl;
-					GhostPairs.Push(std::make_pair(pid,gpid));
-					pid++;gpid++;
-				}
-			}
+      //// Z PLANE, BOTTOM COORDINATE /////
+      cout << "inserting z ghost particles at z bottom..."<<endl;
+      //z Symm particles
+      int sym_part;
+      int part = 0;
+      id_part = Particles.Size(); //REDUNDANT
+
+      for (int zinc = 0; zinc < ghost_rows ;zinc++){
+        for (int xy = 0; xy < part_per_row;xy++){
+          xp = Particles[part]->x(0);
+          yp = Particles[part]->x(1);
+          zp = Particles[part]->x(2);
+          Particles.Push(new Particle(tag,Vec3_t(xp,yp,-zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
+          Particles[id_part]->inner_mirr_part = part;
+          //Particles[id_part]->ID = -50;
+          cout << "part , sym"<<part<<", "<<id_part<<endl;
+          Particles[id_part]->ghost_plane_axis = 2;
+          
+          //ONLY FOR TESTING SYMMETRY PLANES!
+          //Particles[id_part]->ID = Particles[id_part]->ghost_plane_axis; //ONLY FOR TESTING IN PARAVIEW!   
+          GhostPairs.Push(std::make_pair(part,id_part));
+          
+          id_part++;
+          part++;
+        }
+      }
+		////// PARALLELIZE!
 		}
 		///////Calculate particles' mass in 3D
 		// Vec3_t temp, Max=V;

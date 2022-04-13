@@ -96,7 +96,8 @@ SET(EXES
 	#CompressionForces_Ghost
 	#Compression_Free
   #Compression_qt
-	Compression_qt_ghost
+	#Compression_qt_ghost
+  Compression_half_ghost
 	#CompressionForces2
 	#Cantilever_comp_contact
 	#Contact_Cantilever
