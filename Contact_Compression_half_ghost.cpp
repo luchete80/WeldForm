@@ -162,9 +162,10 @@ int main(int argc, char **argv) try
         
         
         //BOTTOM PLANE
-        if ( z < dx  && z > -dx/2. )
+        if ( z < dx  && z > -dx/2. ){
     			dom.Particles[a]->ID=3;
-    		
+          dom.Particles[a]->not_write_surf_ID = true;
+        }
         // if ( x < dx  && x > -dx/2. && z < L/2. - dx)
     			// dom.Particles[a]->ID=1;
     		// if ( y < dx  && y > -dx/2. && z < L/2. - dx)

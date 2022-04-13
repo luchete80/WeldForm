@@ -169,6 +169,8 @@ namespace SPH {
 		int 	ContNb;
 		
 		omp_lock_t my_lock;		///< Open MP lock
+    
+    bool not_write_surf_ID;
 		
 		////////////////// CONTACT //////////////////////
 		double 	cont_stiff;

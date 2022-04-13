@@ -1159,7 +1159,8 @@ void Domain::CalculateSurface(const int &id){
 		Particles[i]->normal *= 1./totmass;
 		
 		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= 46) {//3-114 Fraser {
-			Particles[i]->ID = id;
+			if (!Particles[i]->not_write_surf_ID)
+      Particles[i]->ID = id;
 			surf_part++;
 		}
 	}

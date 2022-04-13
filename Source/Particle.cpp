@@ -115,6 +115,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	
 	print_history = false;
   eff_strain_rate = 0.;
+  
+  not_write_surf_ID = false;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);
