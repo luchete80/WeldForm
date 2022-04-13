@@ -219,7 +219,7 @@ void Domain::CalcContactForces(){
 					
 					if (inside ) { //Contact point inside element, contact proceeds
 			
-            cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
+            //cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
 						// cout << "/////////////////////////////////////////" <<endl;
 						// cout << " vr: "<< vr<<endl;
 						//cout << "delta_: "<<delta_<<endl;
