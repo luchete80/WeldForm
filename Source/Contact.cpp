@@ -167,7 +167,7 @@ void Domain::CalcContactForces(){
 				P1 = ContPairs[k][a].second; P2 = ContPairs[k][a].first; 	}
 			else {
 				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
-		
+      
 			vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
 			//cout << "Particle P1v: "<<Particles[P1]->v<<endl;
 			//cout << "Particle P2v: "<<Particles[P2]->v<<endl;
@@ -175,13 +175,14 @@ void Domain::CalcContactForces(){
 			//calculate SPH ones, and could be given by mesh input
 			//delta_ Is the projection of relative velocity 
 			delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
-			
-
+      
+      //cout << "p1 vel "<<Particles[P1]->v << "p2 vel "<< Particles[P2]->v <<endl;
+      // cout << "distance "<< Particles[P1]->x - Particles[P2]->x<<endl;
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
 				e = trimesh-> element[Particles[P2]->element];
 				//double pplane = trimesh-> element[Particles[P2]->element] -> pplane; 
-				//cout<< "contact distance"<<Particles[P1]->h + pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
+				//cout<< "contact distance"<<Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
       				
 				deltat_cont = ( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
                       - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (- delta_);								//Eq 3-142 
@@ -195,6 +196,7 @@ void Domain::CalcContactForces(){
 				// omp_unset_lock(&Particles[P1]->my_lock);
 				// if (dt_fext > deltat)
 					// cout << "Time step size ("<<deltat<<" is larger than max allowable contact forces step ("<<dt_fext<<")"<<endl;
+        //cout << "deltat_cont "<<deltat_cont<< "deltat" << deltat <<endl; 
 				if (deltat_cont < deltat){ //Originaly //	if (deltat_cont < std::min(deltat,dt_fext) 
 					inside_time++;
 					//cout << "Inside dt contact" <<endl;
@@ -217,7 +219,7 @@ void Domain::CalcContactForces(){
 					
 					if (inside ) { //Contact point inside element, contact proceeds
 			
-		// cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
+            cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
 						// cout << "/////////////////////////////////////////" <<endl;
 						// cout << " vr: "<< vr<<endl;
 						//cout << "delta_: "<<delta_<<endl;

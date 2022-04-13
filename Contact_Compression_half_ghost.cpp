@@ -25,6 +25,7 @@ void UserAcc(SPH::Domain & domi)
 	#endif
 	
 	{
+    // IF THIS IS NOT APPLIED, WITH CONTACT, CYLINDER GOES AWAY
     if (domi.Particles[i]->ID == 7) { //xyz - TRY ALSO TO FIX
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
@@ -55,6 +56,11 @@ void UserAcc(SPH::Domain & domi)
 
 	}
   
+  domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
+  for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
+    domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
+    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
+  }
 
 }
 
@@ -115,9 +121,9 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
   bool ghost = true;
-  dom.AddCylinderLength(1, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, Fixed, ghost); 
+  dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, Fixed, ghost); 
 
-	double cyl_zmax = L/2. - dx/2. -1.e-4;
+	double cyl_zmax = L/2. + 5.1e-4;
 
 	cout << "Creating contact mesh.."<<endl;
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
