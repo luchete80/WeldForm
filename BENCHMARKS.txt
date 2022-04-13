@@ -1,0 +1,2 @@
+Compression_quarter       Is like compression, but 1/4 of the cylinder, and BC are not Fixed, 
+Compression_qt_vz_nosym

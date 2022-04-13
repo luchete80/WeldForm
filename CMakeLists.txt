@@ -88,14 +88,15 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
   #Contact_Compression_test
+  #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
 	#NastranReader_test
 	#CompressionForces
 	#CompressionVel
 	#CompressionForces_Ghost
 	#Compression_Free
-  Compression_quarter
-	#Compression_Sym
+  #Compression_qt
+	Compression_qt_ghost
 	#CompressionForces2
 	#Cantilever_comp_contact
 	#Contact_Cantilever

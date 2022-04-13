@@ -1,5 +1,5 @@
 
-
+#include "Mesh.h"
 #include "Domain.h"
 
 #define TAU		0.005
@@ -28,9 +28,9 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 3)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress/2.);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress/2.);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress/2.);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -75,6 +75,7 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
+  SPH::TriMesh mesh;
 		 SPH::Domain	dom;
 
 		dom.Dimension	= 3;
@@ -124,9 +125,22 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
-		dom.AddDoubleSymCylinderLength(1, R, L/2. ,  dx/2., rho, h, Fixed, symlength); 
-		
-    dom.gradKernelCorr = false;
+	dom.AddDoubleSymCylinderLength(1, R, L/2. ,  dx/2., rho, h, Fixed, symlength); 
+
+	double cyl_zmax = L/2. + 1.000001 * dx/2. /*- 1.e-6*/;
+
+	cout << "Creating contact mesh.."<<endl;
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
+	cout << "Plane z" << *mesh.node[0]<<endl;
+	
+	
+	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
+	cout << "Creating Spheres.."<<endl;
+	//mesh.v = Vec3_t(0.,0.,);
+	mesh.CalcSpheres(); //DONE ONCE
+
+	dom.ts_nb_inc = 5;
+	dom.gradKernelCorr = true;
         
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -155,15 +169,22 @@ int main(int argc, char **argv) try
 				}
     		if ( z > L/2. - dx)
     			dom.Particles[a]->ID=3;
-    		// if ( x < dx  && x > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=4;
-    		// if ( y < dx  && y > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=5;        
+    		if ( x < dx  && x > -dx/2. && z < L/2. - dx)
+    			dom.Particles[a]->ID=4;
+    		if ( y < dx  && y > -dx/2. && z < L/2. - dx)
+    			dom.Particles[a]->ID=5;        
     	}
       
-    dom.Particles[0]->IsFree=false;
-    dom.Particles[0]->NoSlip=true;			
-
+    // dom.Particles[0]->IsFree=false;
+    // dom.Particles[0]->NoSlip=true;			
+	//Contact Penalty and Damping Factors
+  dom.fric_type = Fr_Sta;
+	dom.contact = true;
+	//dom.friction = 0.15;
+	dom.friction = 0.15;
+	dom.PFAC = 0.5;
+	dom.DFAC = 0.2;
+	dom.update_contact_surface = false;
 
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	

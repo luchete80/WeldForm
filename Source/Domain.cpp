@@ -1991,12 +1991,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		if (auto_ts)
 			AdaptiveTimeStep();
 		clock_beg = clock();
-
+    
 		Move(deltat);
-    //MoveGhost(); //If Symmetry
-   
-    
-    
+    MoveGhost(); //If Symmetry
+        
     
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();

@@ -166,7 +166,7 @@ int main(int argc, char **argv) try
 		bool symlength = true; //Also Symmetric on z axis
 		bool Fixed = false;
     
-		dom.AddQuarterCylinderLength(0, R, L/2. +L/5.,  dx/2., rho, h, Fixed, symlength); 
+		dom.AddQuarterCylinderLength(0, R, L/2. +L/18.,  dx/2., rho, h, Fixed, symlength); 
 		
     dom.gradKernelCorr = true;
         

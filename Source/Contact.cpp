@@ -287,8 +287,8 @@ void Domain::CalcContactForces(){
             }
             
             if (fric_type==Fr_Sta){ //THERE IS NO DIRECTION HERE
-              if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
-              //if (norm_tgvr == 0.) {
+              //if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
+              if (norm_tgvr == 0.) {
                 if (friction > 0. ) {	
                   double curr_force;
                   tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
