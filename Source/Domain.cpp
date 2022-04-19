@@ -521,8 +521,9 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		zp = V(2);
 		//Calculate row count for non ghost particles
 		while (zp <= (V(2)+Lz -r)){
-			k++; zp = V(2) + (2.0*k+1)*r;		
-      //zp += 2.*r;      
+			k++; 
+      if (!ghost) zp = V(2) + (2.0*k+1)*r;		
+      else        zp += 2.*r;      
 		}
 		cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
@@ -560,8 +561,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 				}
 			}
 			k++;
-			zp = V(2) + (2.0*k+1)*r;
-      //zp += 2.*r;
+			if (!ghost) zp = V(2) + (2.0*k+1)*r;
+      else        zp += 2.*r;
 		}
 		cout << "Particles per row: "<<part_per_row<<endl;
 		
