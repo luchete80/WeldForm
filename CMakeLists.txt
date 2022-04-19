@@ -72,7 +72,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-	#Compression
+	Compression
 	#Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
@@ -88,7 +88,7 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
   #Contact_Compression_test
-  Contact_Compression_half_ghost
+  #Contact_Compression_half_ghost
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
 	#NastranReader_test
