@@ -503,7 +503,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 3; 
+	int ghost_rows = 4; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
@@ -559,7 +559,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 				}
 			}
 			k++;
-			zp = V(2) + (2.0*k+1)*r;
+			//zp = V(2) + (2.0*k+1)*r;
+      zp+=2.*r;
 		}
 		cout << "Particles per row: "<<part_per_row<<endl;
 		
@@ -582,6 +583,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
           //Particles[id_part]->ID = -50;
           cout << "part , sym"<<part<<", "<<id_part<<endl;
           Particles[id_part]->ghost_plane_axis = 2;
+          Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
           
           //ONLY FOR TESTING SYMMETRY PLANES!
           //Particles[id_part]->ID = Particles[id_part]->ghost_plane_axis; //ONLY FOR TESTING IN PARAVIEW!   

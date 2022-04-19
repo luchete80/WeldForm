@@ -126,7 +126,7 @@ int main(int argc, char **argv) try
 	double cyl_zmax = L/2. + 4.94e-4;
 
 	cout << "Creating contact mesh.."<<endl;
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.2,-0.2, cyl_zmax),Vec3_t(0.2,0.2, cyl_zmax),15);
 	cout << "Plane z" << *mesh.node[0]<<endl;
   
   cout << "Mesh node size "<<mesh.node.Size()<<endl;
@@ -166,6 +166,8 @@ int main(int argc, char **argv) try
     			dom.Particles[a]->ID=3;
           dom.Particles[a]->not_write_surf_ID = true;
         }
+        
+        
         // if ( x < dx  && x > -dx/2. && z < L/2. - dx)
     			// dom.Particles[a]->ID=1;
     		// if ( y < dx  && y > -dx/2. && z < L/2. - dx)

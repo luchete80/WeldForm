@@ -96,6 +96,7 @@ SET(EXES
 	#CompressionVel
 	#CompressionForces_Ghost
 	#Compression_Free
+  #Compression_Free_GPU_v1
   #Compression_qt
 	#Compression_qt_ghost
   #Compression_half_ghost

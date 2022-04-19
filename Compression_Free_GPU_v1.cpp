@@ -30,10 +30,11 @@ void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
 
-	if (domi.getTime() < TAU ) 
-		vcompress = VMAX/TAU * domi.getTime();
-	else
-		vcompress = VMAX;
+	// if (domi.getTime() < TAU ) 
+		// vcompress = VMAX/TAU * domi.getTime();
+	// else
+		// vcompress = VMAX;
+  vcompress = 1.;
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -143,11 +144,10 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 		
-		//dom.auto_ts = false;
-		//timestep = 1.0e-7;
-    
+		dom.auto_ts = false;
+		timestep = 1.0e-7;
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*/0.00105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		dom.Solve(/*tf*/0.000505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }
