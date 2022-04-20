@@ -274,32 +274,30 @@ void Domain::CalcContactForces(){
 						double norm_tgvr;
             if (friction > 0.) {	
               tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal
-              norm_tgvr = norm(tgvr);            
+              norm_tgvr = norm(tgvr);  
+              tgdir = tgvr / norm_tgvr;              
               if (fric_type==Fr_Dyn){					
                 if ( norm (vr)  != 0.0 ) {
                   //TODO: THIS VELOCITY SHOULD BE THE CORRECTED ONE 
                   //Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
                   // Is Fraser thesis is explained better 
-                  tgdir = tgvr / norm_tgvr;
                   omp_set_lock(&Particles[P1]->my_lock);
                   Particles[P1] -> tgdir = tgdir; // NORMAL DIRECTION, Fraser 3-159
                   omp_unset_lock(&Particles[P1]->my_lock);
                 }
-              }
-
-              else if (fric_type==Fr_Sta){ //THERE IS NO DIRECTION HERE
-                //if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
-              if (norm_tgvr == 0.) {
-                  double curr_force;
-                  tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
-                  curr_force = norm(Particles[P1] -> a * Particles[P1] -> Mass);  //WHICH IS APPLIED 
-                  if (curr_force < norm(tgforce)) {//DIRECTION DOES NOT EXIST
-                    omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-                    omp_unset_lock(&Particles[P1]->my_lock);
+              } else if (fric_type==Fr_Sta){ //THERE IS NO DIRECTION HERE
+                if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                //if (norm_tgvr == 0.) {
+                    double curr_force;
+                    tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
+                    curr_force = norm(Particles[P1] -> a * Particles[P1] -> Mass);  //WHICH IS APPLIED 
+                    if (curr_force < norm(tgforce)) {//DIRECTION DOES NOT EXIST
+                      omp_set_lock(&Particles[P1]->my_lock);
+                      Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                      omp_unset_lock(&Particles[P1]->my_lock);
+                    }
+                    
                   }
-                  
-                }
               }
             }
             
