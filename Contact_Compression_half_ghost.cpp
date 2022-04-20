@@ -33,10 +33,10 @@ void UserAcc(SPH::Domain & domi)
 			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 		// }
 
-    // if (domi.Particles[i]->ID == 3) { //xy
-			// domi.Particles[i]->a[2]		= 0.0; 
-      // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
-		// } 
+    if (domi.Particles[i]->ID == 3) { //xy
+			domi.Particles[i]->a[2]		= 0.0; 
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+		} 
     
     // //CENTER
 		// if (domi.Particles[i]->ID == 1) { //x
@@ -163,10 +163,10 @@ int main(int argc, char **argv) try
         
         
         //BOTTOM PLANE
-        // if ( z < dx  && z > -dx/2. ){
-    			// dom.Particles[a]->ID=3;
-          // dom.Particles[a]->not_write_surf_ID = true;
-        // }
+        if ( z < dx  && z > -dx/2. ){
+    			dom.Particles[a]->ID=3;
+          dom.Particles[a]->not_write_surf_ID = true;
+        }
         
         
         // if ( x < dx  && x > -dx/2. && z < L/2. - dx)
