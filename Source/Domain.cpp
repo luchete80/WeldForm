@@ -503,7 +503,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 1; 
+	int ghost_rows = 3; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
@@ -522,9 +522,9 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		//Calculate row count for non ghost particles
 		while (zp <= (V(2)+Lz -r)){
 			k++; 
-      //if (!ghost) 
+      if (!ghost) 
         zp = V(2) + (2.0*k+1)*r;		
-      //else        zp += 2.*r;      
+      else        zp += 2.*r;      
 		}
 		cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
@@ -562,9 +562,9 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 				}
 			}
 			k++;
-			//if (!ghost) 
+			if (!ghost) 
         zp = V(2) + (2.0*k+1)*r;
-      //else        zp += 2.*r;
+      else        zp += 2.*r;
 		}
 		cout << "Particles per row: "<<part_per_row<<endl;
 		

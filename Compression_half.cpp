@@ -36,10 +36,10 @@ void UserAcc(SPH::Domain & domi)
 		}
 
 
-    // if (domi.Particles[i]->ID == 3) { //xy
-			// domi.Particles[i]->a[2]		= 0.0; 
-      // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
-		// } 
+    if (domi.Particles[i]->ID == 3) { //xy
+			domi.Particles[i]->a[2]		= 0.0; 
+      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+		} 
 
 
     

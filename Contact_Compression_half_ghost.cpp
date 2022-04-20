@@ -26,12 +26,12 @@ void UserAcc(SPH::Domain & domi)
 	
 	{
     // IF THIS IS NOT APPLIED, WITH CONTACT, CYLINDER GOES AWAY
-    if (domi.Particles[i]->ID == 7) { //xyz - TRY ALSO TO FIX
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-		}
+    // if (domi.Particles[i]->ID == 7) { //xyz - TRY ALSO TO FIX
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+		// }
 
     // if (domi.Particles[i]->ID == 3) { //xy
 			// domi.Particles[i]->a[2]		= 0.0; 
@@ -139,7 +139,7 @@ int main(int argc, char **argv) try
 	mesh.CalcSpheres(); //DONE ONCE
 
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true;
+	dom.gradKernelCorr = false;
         
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
@@ -163,10 +163,10 @@ int main(int argc, char **argv) try
         
         
         //BOTTOM PLANE
-        if ( z < dx  && z > -dx/2. ){
-    			dom.Particles[a]->ID=3;
-          dom.Particles[a]->not_write_surf_ID = true;
-        }
+        // if ( z < dx  && z > -dx/2. ){
+    			// dom.Particles[a]->ID=3;
+          // dom.Particles[a]->not_write_surf_ID = true;
+        // }
         
         
         // if ( x < dx  && x > -dx/2. && z < L/2. - dx)

@@ -272,26 +272,24 @@ void Domain::CalcContactForces(){
 						// TODO - recalculate vr here too!
 						Vec3_t tgvr, tgdir;
 						double norm_tgvr;
-            if (fric_type==Fr_Dyn){
-              if (friction > 0.) {						
+            if (friction > 0.) {	
+              tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal
+              norm_tgvr = norm(tgvr);            
+              if (fric_type==Fr_Dyn){					
                 if ( norm (vr)  != 0.0 ) {
                   //TODO: THIS VELOCITY SHOULD BE THE CORRECTED ONE 
                   //Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
                   // Is Fraser thesis is explained better 
-                  Vec3_t tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal
-                  norm_tgvr = norm(tgvr);
                   tgdir = tgvr / norm_tgvr;
                   omp_set_lock(&Particles[P1]->my_lock);
                   Particles[P1] -> tgdir = tgdir; // NORMAL DIRECTION, Fraser 3-159
                   omp_unset_lock(&Particles[P1]->my_lock);
                 }
               }
-            }
-            
-            if (fric_type==Fr_Sta){ //THERE IS NO DIRECTION HERE
-              //if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
+
+              else if (fric_type==Fr_Sta){ //THERE IS NO DIRECTION HERE
+                //if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
               if (norm_tgvr == 0.) {
-                if (friction > 0. ) {	
                   double curr_force;
                   tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
                   curr_force = norm(Particles[P1] -> a * Particles[P1] -> Mass);  //WHICH IS APPLIED 
@@ -300,10 +298,11 @@ void Domain::CalcContactForces(){
                     Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
                     omp_unset_lock(&Particles[P1]->my_lock);
                   }
+                  
                 }
               }
             }
-						
+            
 						// if (force2 > (1.e10))
 							// Particles[P1] -> contforce = 1.e5;
 						dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));
