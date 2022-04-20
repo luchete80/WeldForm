@@ -185,8 +185,8 @@ int main(int argc, char **argv) try
         
         //First one captures 4 particle, second one
         //if ( y < dx  && y > -dx && x < dx  && x > -dx && z < dx  && z > -dx/2. ) //xz - 7
-        if ( y < dx  && y > -dx && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
-    			dom.Particles[a]->ID=7;   
+        // if ( y < dx  && y > -dx && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
+    			// dom.Particles[a]->ID=7;   
 
         //TOP
     		// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
