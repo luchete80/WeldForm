@@ -503,7 +503,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 4; 
+	int ghost_rows = 1; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
@@ -522,9 +522,9 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		//Calculate row count for non ghost particles
 		while (zp <= (V(2)+Lz -r)){
 			k++; 
-      if (!ghost) 
+      //if (!ghost) 
         zp = V(2) + (2.0*k+1)*r;		
-      else        zp += 2.*r;      
+      //else        zp += 2.*r;      
 		}
 		cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
@@ -562,11 +562,13 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 				}
 			}
 			k++;
-			if (!ghost) zp = V(2) + (2.0*k+1)*r;
-      else        zp += 2.*r;
+			//if (!ghost) 
+        zp = V(2) + (2.0*k+1)*r;
+      //else        zp += 2.*r;
 		}
 		cout << "Particles per row: "<<part_per_row<<endl;
 		
+    zp = V(2) - 2.0*r;
 		//Insert ghost pairs relation
 		if (ghost){
       //// Z PLANE, BOTTOM COORDINATE /////
@@ -580,8 +582,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
         for (int xy = 0; xy < part_per_row;xy++){
           xp = Particles[part]->x(0);
           yp = Particles[part]->x(1);
-          zp = Particles[part]->x(2);
-          Particles.Push(new Particle(tag,Vec3_t(xp,yp,-zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
+          //zp = Particles[part]->x(2);
+          Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
           Particles[id_part]->inner_mirr_part = part;
           //Particles[id_part]->ID = -50;
           cout << "part , sym"<<part<<", "<<id_part<<endl;
@@ -595,6 +597,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
           id_part++;
           part++;
         }
+        zp -= 2.0*r;
       }
 		////// PARALLELIZE!
 		}

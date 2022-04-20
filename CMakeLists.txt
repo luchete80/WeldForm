@@ -88,7 +88,7 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
   #Contact_Compression_test
-  Contact_Compression_half_ghost
+  #Contact_Compression_half_ghost
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
 	#NastranReader_test
@@ -99,7 +99,8 @@ SET(EXES
   #Compression_Free_GPU_v1
   #Compression_qt
 	#Compression_qt_ghost
-  #Compression_half_ghost
+  #Compression_half  
+  Compression_half_ghost
 	#CompressionForces2
 	#Cantilever_comp_contact
 	#Contact_Cantilever
