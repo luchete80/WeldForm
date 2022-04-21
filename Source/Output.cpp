@@ -258,8 +258,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Disvec);
 	dsname.Printf("Contact Force");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ContForce);	
-	// dsname.Printf("Tg Dir");
-    // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,TgDir);	
+	dsname.Printf("Tg Dir");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,TgDir);	
     // dsname.Printf("deltacont");
     // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,deltacont);
 	// dsname.Printf("Eff Strain Rate");
@@ -288,7 +288,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	delete [] ContNb;
 	delete [] Disvec;
 	delete [] ContForce;
-	// delete [] TgDir;
+	delete [] TgDir;
   // delete [] deltacont;
 	delete [] eff_str_rate;
 	delete [] gradcorrmat;
@@ -420,11 +420,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/Contact Force \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
-    // oss << "     <Attribute Name=\"Tg Dir\" AttributeType=\"Vector\" Center=\"Node\">\n";
-    // oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
-    // oss << "        " << fn.CStr() <<":/Tg Dir \n";
-    // oss << "       </DataItem>\n";
-    // oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"Tg Dir\" AttributeType=\"Vector\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/Tg Dir \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
     // oss << "     <Attribute Name=\"deltacont\" AttributeType=\"Scalar\" Center=\"Node\">\n";
     // oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Int\" Precision=\"10\"  Format=\"HDF\">\n";
     // oss << "        " << fn.CStr() <<":/deltacont \n";

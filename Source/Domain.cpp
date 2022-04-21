@@ -1400,15 +1400,20 @@ inline void Domain::LastComputeAcceleration ()
 		//Min time step check based on the acceleration
 		double test	= 0.0;
 		double test1, test2;
+    
 		deltatmin	= deltatint;
-		#pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
+		#pragma omp parallel for schedule (static) private(test,test1,test2) num_threads(Nproc)
 		for (int i=0; i<Particles.Size(); i++) {
 			if (Particles[i]->IsFree) {
 				//test = sqrt(Particles[i]->h/norm(Particles[i]->a));
-				test = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
+				test1 = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
+        //cout << "time step with a criteria"<< test1<<endl;
 				//test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
-				//test2 = 0.3 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
-				//test = std::min(test1,test2);
+				//if (norm(Particles[i]->v) != 0.){
+          test2 = 0.3 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+          //cout << "time step with v criteria"<< test2<<endl;
+        //} else
+        test = std::min(test1,test2);
 				//if (deltatmin > (sqrt_h_a*test)) {
 					if (deltatmin > test ) {
 					omp_set_lock(&dom_lock);
@@ -1418,6 +1423,7 @@ inline void Domain::LastComputeAcceleration ()
 				}
 			}
 		}
+  //cout << "deltatmin "<<deltatmin<<endl;
 }
 
 void Domain::CalcKinEnergyEqn(){

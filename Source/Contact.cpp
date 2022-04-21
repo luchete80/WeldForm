@@ -288,37 +288,49 @@ void Domain::CalcContactForces(){
                   omp_unset_lock(&Particles[P1]->my_lock);
                 }
               } else if (fric_type==Fr_Sta){ //THERE IS NO DIRECTION HERE
-                //if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
-                //if (norm_tgvr == 0.) {
-                  double curr_force;
-                  tgforce = friction * norm(Particles[P1] -> contforce); //TODO: COMPARE SQRTS
-                  //curr_force = norm(Particles[P1] -> a * Particles[P1] -> Mass);  //WHICH IS APPLIED 
                   
                   atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;
-
-                  //if (curr_force < norm(tgforce)) {//DIRECTION DOES NOT EXIST
-                  if ( (norm(atg) * Particles[P1] -> Mass) < norm(tgforce)) {
+                  if ( (norm(atg) * Particles[P1] -> Mass) < friction * norm(Particles[P1] -> contforce)
+                    && norm_tgvr < VMAX_FOR_STA_FRICTION) {
                     omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> tgdir = atg;
                     Particles[P1] -> a -= atg; 
                     omp_unset_lock(&Particles[P1]->my_lock);
                   }
-                    
-                //}
-              }
+                  
+                  
+                // if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                // //if (norm_tgvr == 0.) {
+                  // double curr_force;
+                  // tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
+                   // atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;
+                  // if ((norm(atg) * Particles[P1] -> Mass) < norm(tgforce)) {//DIRECTION DOES NOT EXIST
+                    // omp_set_lock(&Particles[P1]->my_lock);
+                    // Particles[P1] -> a -= atg; 
+                    // Particles[P1] -> tgdir = atg;
+                    // omp_unset_lock(&Particles[P1]->my_lock);
+                  // }   
+                // }
+                
+                
+                  // ///*//// ORIGINAL, DIRECTION IS BAD
+                  // if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                  // //if (norm_tgvr == 0.) {
+                    // if (friction > 0. ) {	
+                      // double curr_force;
+                      // tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
+                      // if ( (norm(Particles[P1] -> a * Particles[P1] -> Mass)) < norm(tgforce)) {//DIRECTION DOES NOT EXIST
+                        // omp_set_lock(&Particles[P1]->my_lock);
+                        // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                        // omp_unset_lock(&Particles[P1]->my_lock);
+                      // }
+                    // }
+                  // }
+                     
+                
+              }//Friction == sta
             }//friction > 0
-                //ORIGINAL STATIC
-                // // //if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
-                // // //if (norm_tgvr == 0.) {
-                  // // double curr_force;
-                  // // tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
-                  // // curr_force = norm(Particles[P1] -> a * Particles[P1] -> Mass);  //WHICH IS APPLIED 
-                  // // if (curr_force < norm(tgforce)) {//DIRECTION DOES NOT EXIST
-                    // // omp_set_lock(&Particles[P1]->my_lock);
-                    // // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-                    // // omp_unset_lock(&Particles[P1]->my_lock);-
-                  // // }
-                    
-                // // //} 
+
 						// if (force2 > (1.e10))
 							// Particles[P1] -> contforce = 1.e5;
 						dt_fext = contact_force_factor * (Particles[P1]->Mass * 2. * norm(Particles[P1]->v) / norm (Particles[P1] -> contforce));
