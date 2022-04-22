@@ -518,18 +518,16 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
     	//Cubic packing
 		double zp;
 		size_t k=0;
-		zp = V(2);
+		zp = V(2)+r;
 		//Calculate row count for non ghost particles
 		while (zp <= (V(2)+Lz -r)){
 			k++; 
-      if (!ghost) 
-        zp = V(2) + (2.0*k+1)*r;		
-      else        zp += 2.*r;      
+      zp += 2.*r;      
 		}
 		cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
 		
-		k = 0;zp = V(2);
+		k = 0;zp = V(2)+r;
 
 		while (zp <= (V(2)+Lz -r)) {
 			j = 0;
@@ -562,9 +560,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 				}
 			}
 			k++;
-			if (!ghost) 
-        zp = V(2) + (2.0*k+1)*r;
-      else        zp += 2.*r;
+      zp += 2.*r;
 		}
 		cout << "Particles per row: "<<part_per_row<<endl;
 		
