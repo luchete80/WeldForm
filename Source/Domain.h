@@ -156,6 +156,7 @@ public:
 	void CalcContactForces();
 	double contact_force_factor;
 	double friction;
+  double friction_sta, friction_dyn;
   // double friction_sta;
   // double friction_kin;
   Friction_Type fric_type;

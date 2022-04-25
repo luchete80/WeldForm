@@ -1395,7 +1395,8 @@ inline void Domain::LastComputeAcceleration ()
 	}
 		//Min time step check based on the acceleration
 		double test	= 0.0;
-		double test1, test2;
+		double test1 = 1000.;
+    double test2 = 1000.;
     
 		deltatmin	= deltatint;
 		#pragma omp parallel for schedule (static) private(test,test1,test2) num_threads(Nproc)
@@ -1406,7 +1407,7 @@ inline void Domain::LastComputeAcceleration ()
         //cout << "time step with a criteria"<< test1<<endl;
 				//test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
 				//if (norm(Particles[i]->v) != 0.){
-          test2 = 0.3 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+        test2 = 0.3 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
           //cout << "time step with v criteria"<< test2<<endl;
         //} else
         test = std::min(test1,test2);

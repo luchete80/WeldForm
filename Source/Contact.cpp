@@ -151,8 +151,9 @@ void Domain::CalcContactForces(){
   Vec3_t tgvr, tgdir;
   double norm_tgvr;
   Vec3_t atg;
-            
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+  
+  int max_reached_part = 0; //TEST
+	//#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -274,11 +275,11 @@ void Domain::CalcContactForces(){
 						// TANGENTIAL COMPONENNT DIRECTION
 						// Fraser Eqn 3-167
 						// TODO - recalculate vr here too!
-            if (friction > 0.) {	
-              tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal, FRASER 3-168
+            if (friction_sta > 0. || friction_dyn>0.) {	
+              // tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal, FRASER 3-168
               norm_tgvr = norm(tgvr);  
               tgdir = tgvr / norm_tgvr;              
-              if (fric_type==Fr_Dyn){					
+              if (friction_dyn > 0.){					
                 if ( norm (vr)  != 0.0 ) {
                   //TODO: THIS VELOCITY SHOULD BE THE CORRECTED ONE 
                   //Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
@@ -287,48 +288,28 @@ void Domain::CalcContactForces(){
                   Particles[P1] -> tgdir = tgdir; // NORMAL DIRECTION, Fraser 3-159
                   omp_unset_lock(&Particles[P1]->my_lock);
                 }
-              } else if (fric_type==Fr_Sta){ //THERE IS NO DIRECTION HERE
-                  
+              } 
+                if (friction_sta > 0.) { 
                   atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;
-                  if ( (norm(atg) * Particles[P1] -> Mass) < friction * norm(Particles[P1] -> contforce)
+                  if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
                     && norm_tgvr < VMAX_FOR_STA_FRICTION) {
                     omp_set_lock(&Particles[P1]->my_lock);
+                    //cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                    //cout << "atg "<<atg<<endl;
                     Particles[P1] -> tgdir = atg;
                     Particles[P1] -> a -= atg; 
+                    
+                    //cout << "particle accel x and y after"<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                    //cout << "particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> a[1] <<endl;
                     omp_unset_lock(&Particles[P1]->my_lock);
                   }
+                  else {
+                    max_reached_part++;
+                    //cout << "Max force reached! particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> v[1] <<endl;
+                  }
                   
-                  
-                // if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
-                // //if (norm_tgvr == 0.) {
-                  // double curr_force;
-                  // tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
-                   // atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;
-                  // if ((norm(atg) * Particles[P1] -> Mass) < norm(tgforce)) {//DIRECTION DOES NOT EXIST
-                    // omp_set_lock(&Particles[P1]->my_lock);
-                    // Particles[P1] -> a -= atg; 
-                    // Particles[P1] -> tgdir = atg;
-                    // omp_unset_lock(&Particles[P1]->my_lock);
-                  // }   
-                // }
-                
-                
-                  // ///*//// ORIGINAL, DIRECTION IS BAD
-                  // if (norm_tgvr < VMAX_FOR_STA_FRICTION) {
-                  // //if (norm_tgvr == 0.) {
-                    // if (friction > 0. ) {	
-                      // double curr_force;
-                      // tgforce = norm(friction * norm(Particles[P1] -> contforce) * tgdir); //TODO: COMPARE SQRTS
-                      // if ( (norm(Particles[P1] -> a * Particles[P1] -> Mass)) < norm(tgforce)) {//DIRECTION DOES NOT EXIST
-                        // omp_set_lock(&Particles[P1]->my_lock);
-                        // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-                        // omp_unset_lock(&Particles[P1]->my_lock);
-                      // }
-                    // }
-                  // }
-                     
-                
-              }//Friction == sta
+                }
+
             }//friction > 0
 
 						// if (force2 > (1.e10))
@@ -345,12 +326,12 @@ void Domain::CalcContactForces(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 						
-						if (friction > 0.) {
-              if (fric_type==Fr_Dyn){
-                if (norm_tgvr > VMIN_FOR_FRICTION){
+						if (friction_dyn > 0.) {
+              //if (fric_type==Fr_Dyn){
+                if (norm_tgvr > 0.0/*VMIN_FOR_FRICTION*/){
 
                 // //TG DIRECTION
-                  tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
+                  tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
                   omp_set_lock(&Particles[P1]->my_lock);
                   Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
                   omp_unset_lock(&Particles[P1]->my_lock);
@@ -365,7 +346,7 @@ void Domain::CalcContactForces(){
                   }
                 
                 }
-              }
+              //}
 						}
 						
 						if   (force2 > max_contact_force ) max_contact_force = force2;
@@ -397,6 +378,7 @@ void Domain::CalcContactForces(){
 	//cout << "Particles with contact force: "<<cont_force_count<<endl;
 	
 	if (max_contact_force > 0.){
+    cout << "max reached particles "<<max_reached_part<<endl;
 		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP

@@ -200,10 +200,11 @@ int main(int argc, char **argv) try
     // dom.Particles[0]->IsFree=false;
     // dom.Particles[0]->NoSlip=true;			
 	//Contact Penalty and Damping Factors
-  //dom.fric_type = Fr_Sta;
+  dom.fric_type = Fr_Dyn;
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction = 0.;
+	dom.friction_dyn = 0.0;
+  dom.friction_sta = 0.1;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;

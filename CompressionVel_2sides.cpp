@@ -49,15 +49,15 @@ void UserAcc(SPH::Domain & domi)
 	
 	{
 		if (domi.Particles[i]->ID == 3) {
-			domi.Particles[i]->v(2)			= -vcompress/2.;
-			domi.Particles[i]->va(2)		= -vcompress/2.;
-			domi.Particles[i]->vb(2)		= -vcompress/2.;
-		}
-		if (domi.Particles[i]->ID == 4) {
-
 			domi.Particles[i]->v(2)			= vcompress/2.;
 			domi.Particles[i]->va(2)		= vcompress/2.;
 			domi.Particles[i]->vb(2)		= vcompress/2.;
+		}
+		if (domi.Particles[i]->ID == 4) {
+
+			domi.Particles[i]->v(2)			= -vcompress/2.;
+			domi.Particles[i]->va(2)		= -vcompress/2.;
+			domi.Particles[i]->vb(2)		= -vcompress/2.;
 
 		}
 	}
