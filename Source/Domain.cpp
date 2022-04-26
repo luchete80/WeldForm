@@ -503,7 +503,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 3; 
+	int ghost_rows = 2; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
@@ -1403,11 +1403,12 @@ inline void Domain::LastComputeAcceleration ()
 		for (int i=0; i<Particles.Size(); i++) {
 			if (Particles[i]->IsFree) {
 				//test = sqrt(Particles[i]->h/norm(Particles[i]->a));
-				test1 = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
+				//test1 = 1000.;
+        test1 = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
         //cout << "time step with a criteria"<< test1<<endl;
 				//test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
 				//if (norm(Particles[i]->v) != 0.){
-        test2 = 0.3 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+        test2 = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
           //cout << "time step with v criteria"<< test2<<endl;
         //} else
         test = std::min(test1,test2);

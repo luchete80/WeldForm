@@ -150,10 +150,13 @@ void Domain::CalcContactForces(){
   
   Vec3_t tgvr, tgdir;
   double norm_tgvr;
+  double max_vr = 0.;
+ 
   Vec3_t atg;
   
   int max_reached_part = 0; //TEST
-	//#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+  int sta_frict_particles = 0;
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -276,7 +279,7 @@ void Domain::CalcContactForces(){
 						// Fraser Eqn 3-167
 						// TODO - recalculate vr here too!
             if (friction_sta > 0. || friction_dyn>0.) {	
-              // tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal, FRASER 3-168
+              tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal, FRASER 3-168
               norm_tgvr = norm(tgvr);  
               tgdir = tgvr / norm_tgvr;              
               if (friction_dyn > 0.){					
@@ -299,12 +302,22 @@ void Domain::CalcContactForces(){
                     Particles[P1] -> tgdir = atg;
                     Particles[P1] -> a -= atg; 
                     
+                    // THIS CRASHES
+                    //Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; 
+                    
+                    
+                    //cout << "particle 2 vel "<<Particles[P2] -> v<<endl;
                     //cout << "particle accel x and y after"<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
                     //cout << "particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> a[1] <<endl;
                     omp_unset_lock(&Particles[P1]->my_lock);
+                    omp_set_lock(&dom_lock);
+                        sta_frict_particles++;
+                    omp_unset_lock(&dom_lock);
                   }
                   else {
-                    max_reached_part++;
+                    omp_set_lock(&dom_lock);
+                      max_reached_part++;
+                    omp_unset_lock(&dom_lock);
                     //cout << "Max force reached! particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> v[1] <<endl;
                   }
                   
@@ -378,7 +391,7 @@ void Domain::CalcContactForces(){
 	//cout << "Particles with contact force: "<<cont_force_count<<endl;
 	
 	if (max_contact_force > 0.){
-    cout << "max reached particles "<<max_reached_part<<endl;
+    cout << "particles surpassed max fr force"<<max_reached_part<< ", below force: " <<sta_frict_particles<<endl;
 		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP

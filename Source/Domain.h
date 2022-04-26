@@ -162,6 +162,11 @@ public:
   Friction_Type fric_type;
 	
   int ts_nb_inc;
+  
+  //TEST
+  //Forces calculation time spent
+  double forces_tensile_inst_calctime, forces_stressstrain_calctime,forces_acc_calctime,
+          forces_artif_visc_calctime;
 	
 	/////////////// MEMBERS //
     // Data

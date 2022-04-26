@@ -88,7 +88,7 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
   #Contact_Compression_test
-  #Contact_Compression_half_ghost
+  Contact_Compression_half_ghost
   #Compression_half_ghost_vel
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
@@ -103,7 +103,7 @@ SET(EXES
   #Compression_half  
   #Compression_half_ghost_vel
   #CompressionVel_2sides
-  Compression_half_ghost
+  #Compression_half_ghost
 	#CompressionForces2
 	#Cantilever_comp_contact
 	#Contact_Cantilever
