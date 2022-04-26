@@ -278,52 +278,43 @@ void Domain::CalcContactForces(){
 						// TANGENTIAL COMPONENNT DIRECTION
 						// Fraser Eqn 3-167
 						// TODO - recalculate vr here too!
-            if (friction_sta > 0. || friction_dyn>0.) {	
-              tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal, FRASER 3-168
-              norm_tgvr = norm(tgvr);  
-              tgdir = tgvr / norm_tgvr;              
-              if (friction_dyn > 0.){					
-                if ( norm (vr)  != 0.0 ) {
-                  //TODO: THIS VELOCITY SHOULD BE THE CORRECTED ONE 
-                  //Vec3_t tgvr  = vr - dot(vr,Particles[P2]->normal) * Particles[P2]->normal;
-                  // Is Fraser thesis is explained better 
-                  omp_set_lock(&Particles[P1]->my_lock);
-                  Particles[P1] -> tgdir = tgdir; // NORMAL DIRECTION, Fraser 3-159
-                  omp_unset_lock(&Particles[P1]->my_lock);
-                }
-              } 
-                if (friction_sta > 0.) { 
-                  atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;
-                  if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
-                    && norm_tgvr < VMAX_FOR_STA_FRICTION) {
-                    omp_set_lock(&Particles[P1]->my_lock);
-                    //cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
-                    //cout << "atg "<<atg<<endl;
-                    Particles[P1] -> tgdir = atg;
-                    Particles[P1] -> a -= atg; 
-                    
-                    // THIS CRASHES
-                    Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; 
-                    
-                    
-                    //cout << "particle 2 vel "<<Particles[P2] -> v<<endl;
-                    //cout << "particle accel x and y after"<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
-                    //cout << "particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> a[1] <<endl;
-                    omp_unset_lock(&Particles[P1]->my_lock);
-                    // omp_set_lock(&dom_lock);
-                        // sta_frict_particles++;
-                    // omp_unset_lock(&dom_lock);
-                  }
-                  else {
-                    // omp_set_lock(&dom_lock);
-                      // max_reached_part++;
-                    // omp_unset_lock(&dom_lock);
-                    //cout << "Max force reached! particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> v[1] <<endl;
-                  }
-                  
-                }
+            
+            //removed if, this is calculated always
+            tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal, FRASER 3-168
+            norm_tgvr = norm(tgvr);  
+            tgdir = tgvr / norm_tgvr;              
 
-            }//friction > 0
+            if (friction_sta > 0.) { 
+              atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;
+              if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
+                && norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                omp_set_lock(&Particles[P1]->my_lock);
+                //cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                //cout << "atg "<<atg<<endl;
+                Particles[P1] -> tgdir = atg;
+                Particles[P1] -> a -= atg; 
+                
+                // THIS CRASHES
+                Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; 
+                
+                
+                //cout << "particle 2 vel "<<Particles[P2] -> v<<endl;
+                //cout << "particle accel x and y after"<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                //cout << "particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                omp_unset_lock(&Particles[P1]->my_lock);
+                // omp_set_lock(&dom_lock);
+                    // sta_frict_particles++;
+                // omp_unset_lock(&dom_lock);
+              }
+              else {
+                // omp_set_lock(&dom_lock);
+                  // max_reached_part++;
+                // omp_unset_lock(&dom_lock);
+                //cout << "Max force reached! particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> v[1] <<endl;
+              }
+              
+            }
+
 
 						// if (force2 > (1.e10))
 							// Particles[P1] -> contforce = 1.e5;
@@ -341,7 +332,7 @@ void Domain::CalcContactForces(){
 						
 						if (friction_dyn > 0.) {
               //if (fric_type==Fr_Dyn){
-                if (norm_tgvr > 0.0/*VMIN_FOR_FRICTION*/){
+                if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
 
                 // //TG DIRECTION
                   tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
