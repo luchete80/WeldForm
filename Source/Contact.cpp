@@ -303,21 +303,21 @@ void Domain::CalcContactForces(){
                     Particles[P1] -> a -= atg; 
                     
                     // THIS CRASHES
-                    //Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; 
+                    Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; 
                     
                     
                     //cout << "particle 2 vel "<<Particles[P2] -> v<<endl;
                     //cout << "particle accel x and y after"<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
                     //cout << "particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> a[1] <<endl;
                     omp_unset_lock(&Particles[P1]->my_lock);
-                    omp_set_lock(&dom_lock);
-                        sta_frict_particles++;
-                    omp_unset_lock(&dom_lock);
+                    // omp_set_lock(&dom_lock);
+                        // sta_frict_particles++;
+                    // omp_unset_lock(&dom_lock);
                   }
                   else {
-                    omp_set_lock(&dom_lock);
-                      max_reached_part++;
-                    omp_unset_lock(&dom_lock);
+                    // omp_set_lock(&dom_lock);
+                      // max_reached_part++;
+                    // omp_unset_lock(&dom_lock);
                     //cout << "Max force reached! particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> v[1] <<endl;
                   }
                   
@@ -391,7 +391,7 @@ void Domain::CalcContactForces(){
 	//cout << "Particles with contact force: "<<cont_force_count<<endl;
 	
 	if (max_contact_force > 0.){
-    cout << "particles surpassed max fr force"<<max_reached_part<< ", below force: " <<sta_frict_particles<<endl;
+    //cout << "particles surpassed max fr force"<<max_reached_part<< ", below force: " <<sta_frict_particles<<endl;
 		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP
