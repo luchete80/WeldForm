@@ -294,17 +294,13 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 						// (Particles[temp1]->ID == id_free_surf && Particles[temp2]->ID == contact_surf_id )) {	
 			if (Particles[temp1]->ID == contact_surf_id || Particles[temp2]->ID == contact_surf_id ) {
 				if (Particles[temp1]->ID == id_free_surf || Particles[temp2]->ID == id_free_surf ) {
-					//cout << "rig pair found! idsurf "<<id_free_surf<<endl;
-					
-					// Vec3_t xij	= Particles[temp1]->x - Particles[temp2]->x;
-					// double r = norm(xij);
-					// double rcutoff = ( Particles[temp1]->h + Particles[temp2]->h ) / 2.;
-					// //cout << "r, rcutoff, h1, h2"<< r << ", "<< rcutoff << ", "<< Particles[temp1]->h <<", "<<Particles[temp2]->h<<endl;
-					// if ( r < 2.0 *rcutoff ){
-						//cout << "Found contact pair: "<< temp1 << ", " << temp2 << endl;
-						//ContPairs[k].Push(std::make_pair(P1, P2));
+            //ORIGINAL
 						RIGPairs[T].Push(std::make_pair(temp1, temp2));
-				
+            
+            //NEW
+            if ( dot(Particles[temp1]->x - Particles[temp2]->x,Particles[temp1]->x - Particles[temp2]->x) < 
+                  ( Particles[temp1]->h + Particles[temp2]->h ) *( Particles[temp1]->h + Particles[temp2]->h ))
+              ContPairs[T].Push(std::make_pair(temp1, temp2));
 						//FSMPairs[T].Push(std::make_pair(temp1, temp2));
 					//}
 					//ContPairs[T].Push(std::make_pair(temp1, temp2));

@@ -904,31 +904,39 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 		
     //// Z PLANE, BOTTOM COORDINATE /////
     cout << "inserting z particles"<<endl;
-		//z Symm particles
-		int sym_part;
-		int part = 0;
-    id_part = Particles.Size(); //REDUNDANT
+    zp = z0 - r;
+		//Insert ghost pairs relation
+		if (symlength){
+      //// Z PLANE, BOTTOM COORDINATE /////
+      cout << "inserting z ghost particles at z bottom..."<<endl;
+      //z Symm particles
+      int sym_part;
+      int part = 0;
+      id_part = Particles.Size(); //REDUNDANT
 
-		for (int zinc = 0; zinc < ghost_rows ;zinc++){
-			for (int xy = 0; xy < part_per_row;xy++){
-				xp = Particles[part]->x(0);
-				yp = Particles[part]->x(1);
-				zp = Particles[part]->x(2);
-				Particles.Push(new Particle(tag,Vec3_t(xp,yp,-zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
-				Particles[id_part]->inner_mirr_part = part;
-        //Particles[id_part]->ID = -50;
-        cout << "part , sym"<<part<<", "<<id_part<<endl;
-        Particles[id_part]->ghost_plane_axis = 2;
-        
-        //ONLY FOR TESTING SYMMETRY PLANES!
-        //Particles[id_part]->ID = Particles[id_part]->ghost_plane_axis; //ONLY FOR TESTING IN PARAVIEW!   
-        GhostPairs.Push(std::make_pair(part,id_part));
-        
-				id_part++;
-				part++;
-			}
-		}
+      for (int zinc = 0; zinc < ghost_rows ;zinc++){
+        for (int xy = 0; xy < part_per_row;xy++){
+          xp = Particles[part]->x(0);
+          yp = Particles[part]->x(1);
+          //zp = Particles[part]->x(2);
+          Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
+          Particles[id_part]->inner_mirr_part = part;
+          //Particles[id_part]->ID = -50;
+          cout << "part , sym"<<part<<", "<<id_part<<endl;
+          Particles[id_part]->ghost_plane_axis = 2;
+          Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
+          
+          //ONLY FOR TESTING SYMMETRY PLANES!
+          //Particles[id_part]->ID = Particles[id_part]->ghost_plane_axis; //ONLY FOR TESTING IN PARAVIEW!   
+          GhostPairs.Push(std::make_pair(part,id_part));
+          
+          id_part++;
+          part++;
+        }
+        zp -= 2.0*r;
+      }
 		////// PARALLELIZE!
+		}
     
 		
 		double Vol = M_PI * Rxy * Rxy * Lz;		
@@ -1878,8 +1886,15 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
-
+      
+      // if (contact){
+				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+				// CalculateSurface(1);				//After Nb search			        
+      // }
+      
 			MainNeighbourSearch/*_Ext*/();
+      
+      //if (contact) SaveContNeighbourData();
 			
 			if (contact) {
 				//TODO: CHANGE CONTACT STIFFNESS!

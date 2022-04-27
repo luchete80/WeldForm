@@ -64,17 +64,17 @@ void UserAcc(SPH::Domain & domi)
       // domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
       // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
 		// }
-    if (domi.Particles[i]->ID == 7) { //xyz - TRY ALSO TO FIX
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-		}
+    // if (domi.Particles[i]->ID == 7) { //xyz - TRY ALSO TO FIX
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+		// }
 
-    if (domi.Particles[i]->ID == 3) { //xy
-			domi.Particles[i]->a[2]		= 0.0; 
-      domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
-		} 
+    // if (domi.Particles[i]->ID == 3) { //xy
+			// domi.Particles[i]->a[2]		= 0.0; 
+      // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
+		// } 
     
     // //CENTER
 		// if (domi.Particles[i]->ID == 1) { //x
@@ -86,11 +86,11 @@ void UserAcc(SPH::Domain & domi)
       // domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
 		// }    
 
-    if (domi.Particles[i]->ID == 4) { //xy
-			domi.Particles[i]->a[0] = domi.Particles[i]->a [1] = 0.0; 
-      domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
-      domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
-		}
+    // if (domi.Particles[i]->ID == 4) { //xy
+			// domi.Particles[i]->a[0] = domi.Particles[i]->a [1] = 0.0; 
+      // domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
+      // domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
+		// }
     
 	}
 }
@@ -150,7 +150,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
-		//dom.AddDoubleSymCylinderLength(1, R, L/2. + L/18.,  dx/2., rho, h, Fixed, symlength); 
+		dom.AddDoubleSymCylinderLength(1, R, L/2. + L/18.,  dx/2., rho, h, Fixed, symlength); 
 		
     dom.gradKernelCorr = false;
         
