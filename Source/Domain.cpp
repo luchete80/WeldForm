@@ -793,7 +793,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 		zp = z0;
 		//Calculate row count for non ghost particles
 		while (zp <= (z0+Lz -r)){
-			k++; zp = z0 + (2.0*k+1)*r;			
+			k++; zp += 2.0 * r;			
 		}
 		//cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
@@ -840,7 +840,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 
 			}
 			k++;
-			zp = z0 + (2.0*k+1)*r;
+			zp += 2.0 * r;
 		}
 			cout << "Particles per row: "<<part_per_row<<endl;
     cout << " symmetric particles x, y :"<< symm_x.size()<<", "<<symm_y.size()<<endl;
@@ -898,7 +898,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 				yinc++;
 			}//y rows
 			k++;
-			zp = z0 + (2.0 * k + 1) * r;	
+			zp += 2.0 * r;	
 			//cout << "zp " <<zp<<endl;
 		}
 		
@@ -1408,7 +1408,8 @@ inline void Domain::LastComputeAcceleration ()
         //cout << "time step with a criteria"<< test1<<endl;
 				//test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
 				//if (norm(Particles[i]->v) != 0.){
-        test2 = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+        test2 = 1000.;
+        //test2 = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
           //cout << "time step with v criteria"<< test2<<endl;
         //} else
         test = std::min(test1,test2);
@@ -1800,7 +1801,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	pr_acc_time_spent=acc_time_spent= start_acc_time_spent = 
 	contact_time_spent = trimesh_time_spent = bc_time_spent = 
 	mov_time_spent = 0.;
-
+  
+  double contact_nb_time_spent = 0.;
+  double contact_surf_time_spent = 0.;
 
 	//Initial model output
 	if (TheFileKey!=NULL) {
@@ -1892,20 +1895,23 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				clock_beg = clock();
 				if (m_isNbDataCleared){
 					MainNeighbourSearch/*_Ext*/();
-					
+					neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;					
+          
           // TODO: SEPARATE CONTACT SEARCH STEP INTERVAL
 					if (contact) {
-						neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+
 						//cout << "performing contact search"<<endl
-						clock_beg = clock();
-						//if (update_contact_surface){
-							SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-							CalculateSurface(1);				//After Nb search			
-							ContactNbSearch();
-							SaveContNeighbourData();
+            clock_beg = clock();
+          //if (update_contact_surface){
+            
+            SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+            CalculateSurface(1);				//After Nb search			
+            contact_surf_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+            ContactNbSearch();
+            SaveContNeighbourData();
+            contact_nb_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 						//}
 					}//contact				
-					contact_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 				}// ts_i == 0				
 				
 			}
@@ -1960,7 +1966,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			std::cout << "Total CPU time: "<<total_time.count() << endl <<
 			", Nb: " << clock_time_spent << ", StAcc:  " 
 			<< start_acc_time_spent << ", PrAcc: " <<
-			pr_acc_time_spent << "Ls Acc: " << acc_time_spent<< "Contact: "<< contact_time_spent << "Msh: " << trimesh_time_spent <<
+			pr_acc_time_spent << "Ls Acc: " << acc_time_spent<< "Contact Nb : "<< contact_nb_time_spent << 
+      "Contact Surf : "<< contact_surf_time_spent  << "Msh: " << trimesh_time_spent <<
 			", BC: "<< bc_time_spent << 
 			", mv: "<<mov_time_spent <<
 			std::endl;
