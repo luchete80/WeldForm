@@ -1894,7 +1894,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
       
 			MainNeighbourSearch/*_Ext*/();
       
-      //if (contact) SaveContNeighbourData();
+     // if (contact) SaveContNeighbourData();
 			
 			if (contact) {
 				//TODO: CHANGE CONTACT STIFFNESS!
@@ -1909,11 +1909,19 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared){
+
+          // if (contact){
+            // SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+            // CalculateSurface(1);				//After Nb search			        
+          // }
 					MainNeighbourSearch/*_Ext*/();
-					neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;					
+          //if (contact) SaveContNeighbourData();
+					
+          neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;					
           
           // TODO: SEPARATE CONTACT SEARCH STEP INTERVAL
-					if (contact) {
+					// OLD
+          if (contact) {
 
 						//cout << "performing contact search"<<endl
             clock_beg = clock();

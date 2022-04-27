@@ -63,8 +63,9 @@ inline void Domain::ContactNbSearch(){
 					}	//belongs to free surf
 				}
 				// Pair is removed either way is inside cutoff radius or is or in!
-				RIGPairs[k].DelItem(a);//Erase, NOT EFFICIENT
-				a--;
+				
+        //RIGPairs[k].DelItem(a);//Erase, NOT EFFICIENT
+				//a--;
 			}
 		}
 		//cout << "Found "<<cont_pairs<< " contact pairs."<<endl;
@@ -85,6 +86,11 @@ inline void Domain::ContactNbSearch(){
 		// }
 		
 	}
+  
+  	#pragma omp parallel for schedule (dynamic) num_threads(Nproc)
+    for (int i=0 ; i<Nproc ; i++)  //In the original version this was calculated after
+		RIGPairs[i].Clear();
+    
 	// cout << "Contact Pairs Count"<<endl;
 	// for (int k=0; k<Nproc;k++) 
 		// cout << ContPairs[k].Size()<<", ";
