@@ -1424,8 +1424,8 @@ inline void Domain::LastComputeAcceleration ()
         //cout << "time step with a criteria"<< test1<<endl;
 				//test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
 				//if (norm(Particles[i]->v) != 0.){
-        test2 = 1000.;
-        //test2 = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+        //test2 = 1000.;
+        test2 = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
           //cout << "time step with v criteria"<< test2<<endl;
         //} else
         test = std::min(test1,test2);

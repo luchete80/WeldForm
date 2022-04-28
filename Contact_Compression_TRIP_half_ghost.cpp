@@ -154,7 +154,7 @@ int main(){
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction_dyn = 0.1;
-  dom.friction_sta = 0.1;
+  dom.friction_sta = 0.0;
   
 	//dom.friction = 0.0;
 	dom.PFAC = 0.8;
