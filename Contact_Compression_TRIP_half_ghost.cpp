@@ -29,8 +29,8 @@ void UserAcc(SPH::Domain & domi) {
 		if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress/2.);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress/2.);
 //			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
@@ -45,7 +45,7 @@ void UserAcc(SPH::Domain & domi) {
 	
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
-	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
+	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
   for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
     domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
@@ -102,13 +102,15 @@ int main(){
 	dom.DomMin(0) = -L;
 
 	bool ghost = true;								
-	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false, ghost); 
+	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
   double half_plane_length = 0.009;
 	int count = 2*0.009/(2.*dx); //Half the density... od original mesh
+
+//double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
+	double cyl_zmax = L/2. + dx*0.545; //If new meshing 
   
   cout << "plane length particle count: "<<count<<endl;
 	mesh.AxisPlaneMesh(2,false, Vec3_t(-half_plane_length,-half_plane_length, cyl_zmax),

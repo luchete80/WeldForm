@@ -101,14 +101,17 @@ int main(){
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-									
-	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+	bool ghost = true;								
+	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
   double half_plane_length = 0.009;
 	int count = 2*0.009/(2.*dx); //Half the density... od original mesh
+
+//double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
+	double cyl_zmax = L/2. + dx*0.6 -1.e-3; //If new meshing 
   
   cout << "plane length particle count: "<<count<<endl;
 	mesh.AxisPlaneMesh(2,false, Vec3_t(-half_plane_length,-half_plane_length, cyl_zmax),
