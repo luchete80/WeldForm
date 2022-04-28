@@ -10,38 +10,8 @@ using namespace std;
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
-
-	// if (domi.getTime() < TAU ) 
-		// vcompress = VMAX/TAU * domi.getTime();
-	// else
 		vcompress = VMAX;
-	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
-	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
-	#ifdef __GNUC__
-	for (size_t i=0; i<domi.Particles.Size(); i++)
-	#else
-	for (int i=0; i<domi.Particles.Size(); i++)
-	#endif
-	
-	{
-		//TODO: Modify this by relating FEM & AND partciles 
-		if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress/2.);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress/2.);
-//			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
-		if (domi.Particles[i]->ID == 2)
-		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
-	}
 	
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
@@ -142,12 +112,7 @@ int main(){
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
-		if ( z < 0 ){
-			dom.Particles[a]->ID=2;
-			dom.Particles[a]->IsFree=false;
-			dom.Particles[a]->NoSlip=true;			
-		
-		}
+    
 		// if ( z > L )
 			// dom.Particles[a]->ID=3;
 	}
