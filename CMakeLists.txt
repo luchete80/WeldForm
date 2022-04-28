@@ -88,11 +88,11 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
   #Contact_Compression_test
-  #Contact_Compression_half_ghost
+  Contact_Compression_half_ghost
   #Compression_half_ghost_vel
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
-  Contact_Compression_TRIP_half_ghost
+  #Contact_Compression_TRIP_half_ghost
 	#NastranReader_test
 	#CompressionForces
 	#CompressionVel

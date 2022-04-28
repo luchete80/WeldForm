@@ -3,7 +3,7 @@
 #include <iostream>
 
 #define TAU		0.005
-#define VMAX	0.2
+#define VMAX	0.1
 
 using namespace SPH;
 using namespace std;
@@ -153,7 +153,9 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction = 0.1;
+	dom.friction_dyn = 0.1;
+  dom.friction_sta = 0.1;
+  
 	//dom.friction = 0.0;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;

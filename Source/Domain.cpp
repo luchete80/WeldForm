@@ -1888,8 +1888,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
     // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
     //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
     if (norm(max_disp) > 0.1 * hmax){
+      if (!check_nb_every_time)
+        cout << "Checking Nb Every step now."<<endl;
       check_nb_every_time = true;
-      cout << "Checking Nb Every step now."<<endl;
     }
     else 
       check_nb_every_time = false;
