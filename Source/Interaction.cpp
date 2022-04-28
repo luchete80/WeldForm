@@ -62,6 +62,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		// double GK	= m_kernel.gradW(rij/h);
 		// double K		= m_kernel.W(rij/h);
 		
+    m_clock_begin = clock();
 		// Artificial Viscosity
 		Mat3_t PIij;
 		set_to_zero(PIij);
@@ -76,6 +77,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			
 			if (dot(vij,xij)<0) PIij = (Alpha*Cij*MUij+Beta*MUij*MUij)/(0.5*(di+dj)) * I;		///<(2.74) Li, Liu Book
 		}
+    m_forces_artifvisc_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
 
 		Mat3_t Sigmaj,Sigmai;
 		set_to_zero(Sigmaj);
@@ -120,8 +122,10 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		GKc[1] = GK * P2->gradCorrM;
 		if (gradKernelCorr){
 		}
+
+    m_clock_begin = clock();		
 		
-		Mat3_t StrainRate_c[2],RotationRate_c[2]; //Corrected gradients
+    Mat3_t StrainRate_c[2],RotationRate_c[2]; //Corrected gradients
 
 		// // // // Calculation strain rate tensor
 		// // // //ORIGINAL FORM			
@@ -165,6 +169,8 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				StrainRate_c[i] 	= -0.5*(gradv[i] + gradvT[i]);
 				RotationRate_c[i] = -0.5*(gradv[i] - gradvT[i]);
 			}
+      
+      m_forces_tensors_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
 			// if (StrainRate_c[0](2,2)<-1.E-3)	
 			// cout << "StrainRate_c 1"<<StrainRate_c[0]<<"StrainRate_c 2"<<StrainRate_c[1]<<endl;
 			/////////////////////////////////////////////////////////////////////////////////
@@ -200,7 +206,8 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			// Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
 		// else
 			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-
+    
+    m_clock_begin = clock();
 		// NEW
 		//if (!gradKernelCorr) {
 		if (GradientType == 0)
@@ -214,6 +221,9 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
 				}
 		//}//Grad Corr
+    
+    m_forces_momentum_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
+    
 		// if (abs(temp(0))>1.e-3){
 		// cout << "Strain Rate"<<StrainRate<<endl;
 		// cout << "GK*xij"<<GK*xij<<endl;
@@ -231,6 +241,8 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				temp1_c[i] = dot( vij , vc[i] );
 			}
 		}
+    
+    m_clock_begin = clock();
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
@@ -297,6 +309,8 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 					P2->SumDen += mi*    K;
 
 		omp_unset_lock(&P2->my_lock);
+    
+    m_forces_update_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
 	//}//Interaction
 }
 

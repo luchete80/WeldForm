@@ -120,6 +120,11 @@ inline Domain::Domain ()
 	update_contact_surface = true;
 	ts_nb_inc = 5;
   fric_type = Fr_Dyn;
+  m_contact_forces_time = 0.; //TODO: MOVE TO ANOTHER CLASS
+  m_forces_artifvisc_time = 0.;
+  m_forces_momentum_time = 0.;
+  m_forces_tensors_time = 0.;
+  m_forces_update_time = 0.;
 }
 
 inline Domain::~Domain ()
@@ -1396,11 +1401,14 @@ inline void Domain::LastComputeAcceleration ()
 		// NSMPairs[i].Clear();
 	// }
 	
+  m_clock_begin = clock();
 	// CONTACT FORCES
 	if (contact) {
 		CalcContactForces();
 		
 	}
+  m_contact_forces_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
+  
 		//Min time step check based on the acceleration
 		double test	= 0.0;
 		double test1 = 1000.;
@@ -1879,14 +1887,17 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
     
     // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
     //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
-    if (norm(max_disp) > 0.1 * hmax)
+    if (norm(max_disp) > 0.1 * hmax){
       check_nb_every_time = true;
+      cout << "Checking Nb Every step now."<<endl;
+    }
     else 
       check_nb_every_time = false;
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
       
+      // THIS IS IF MAINNBSEARCH INCLUDE SEARCHING CONTACT (NEW)
       // if (contact){
 				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 				// CalculateSurface(1);				//After Nb search			        
@@ -1988,8 +1999,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			clock_time_spent += neigbour_time_spent_per_interval;
 			std::cout << "Total CPU time: "<<total_time.count() << endl <<
 			", Nb: " << clock_time_spent << ", StAcc:  " 
-			<< start_acc_time_spent << ", PrAcc: " <<
-			pr_acc_time_spent << "Ls Acc: " << acc_time_spent<< "Contact Nb : "<< contact_nb_time_spent << 
+			<< start_acc_time_spent << ", PrAcc: " << pr_acc_time_spent << endl<<
+      "Total Forces : " << acc_time_spent<< endl<<", Contact Forces: "<< m_contact_forces_time<<
+      "Artif Visc: "<<m_forces_artifvisc_time << ", Momentum forces: "<<m_forces_momentum_time << 
+      "Forces Tensor: "<<m_forces_tensors_time<< endl<<
+      " Forces Update: " << m_forces_update_time <<endl<<", Contact Nb : "<< contact_nb_time_spent << 
       "Contact Surf : "<< contact_surf_time_spent  << "Msh: " << trimesh_time_spent <<
 			", BC: "<< bc_time_spent << 
 			", mv: "<<mov_time_spent <<

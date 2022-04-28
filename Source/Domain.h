@@ -160,6 +160,14 @@ public:
   // double friction_sta;
   // double friction_kin;
   Friction_Type fric_type;
+  
+  //Profiler things
+  double m_contact_forces_time;
+  double m_clock_begin;
+  double m_forces_artifvisc_time;
+  double m_forces_momentum_time;
+  double m_forces_tensors_time;
+  double m_forces_update_time;
 	
   int ts_nb_inc;
   
