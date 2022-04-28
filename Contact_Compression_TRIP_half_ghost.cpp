@@ -3,7 +3,7 @@
 #include <iostream>
 
 #define TAU		0.005
-#define VMAX	0.1
+#define VMAX	0.2
 
 using namespace SPH;
 using namespace std;
