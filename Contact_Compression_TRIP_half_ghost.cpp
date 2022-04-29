@@ -58,7 +58,7 @@ int main() try{
 	Cs	= sqrt(K/rho);
 
 	double timestep;
-	timestep = (0.2*h/(Cs));
+	timestep = (0.05*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
 
 //timestep = 2.5e-6;
 
@@ -95,6 +95,10 @@ int main() try{
 	
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = true;
+  
+  dom.Particles[3863]->print_history = true;
+  cout << "Particle 3589 coords xyz "<<dom.Particles[3863]->x<<endl;
+  //dom.Particles[3863]->print_history = true;
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{

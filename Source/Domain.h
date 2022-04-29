@@ -175,6 +175,8 @@ public:
   //Forces calculation time spent
   double forces_tensile_inst_calctime, forces_stressstrain_calctime,forces_acc_calctime,
           forces_artif_visc_calctime;
+          
+  bool exit_at_small_timestep;
 	
 	/////////////// MEMBERS //
     // Data
@@ -265,6 +267,7 @@ Array <Particle*>				Particles; 	///< Array of particles
 	double PFAC, DFAC;		// Penalty and damping factors
 	bool 		contact;
 	double max_contact_force;
+  double contact_force_sum; //TODO: ADD ONE PER CONTACT PAIR
 		
     
   //ATTENTION: REDUNDANT, ghost pairs and reference
@@ -293,6 +296,7 @@ Array <Particle*>				Particles; 	///< Array of particles
 		bool enable_th_exp;
 		bool enable_plastic_heat_gen;
 		void AllocateNbPair(const int &temp1, const int &temp2, const int &T);
+    void ComputeContatForceSum();
 		
 
 };
