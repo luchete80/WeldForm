@@ -468,7 +468,7 @@ inline void Domain::WriteCSV(char const * FileKey)
 		
 		Particles[i]->CalculateEquivalentStress();		//If XML output is active this is calculated twice
 		oss << Particles[i]->Sigma_eq<< ", "<< Particles[i]->pl_strain <<
-    Particles[i]->contforce.x<< ", " << Particles[i]->contforce.y<< ", " <<Particles[i]->contforce.z<<endl;
+    Particles[i]->contforce(0)<< ", " << Particles[i]->contforce(1)<< ", " <<Particles[i]->contforce(2)<<endl;
 	}
 
 	fn = FileKey;
