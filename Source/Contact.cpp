@@ -279,13 +279,14 @@ void Domain::CalcContactForces(){
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
             Particles[P1] -> delta_cont = delta;
+						            
+            omp_unset_lock(&Particles[P1]->my_lock);
 						
             omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);
             omp_unset_lock(&dom_lock);	
             
-            omp_unset_lock(&Particles[P1]->my_lock);
-						force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
+            force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 							
 						// TANGENTIAL COMPONENNT DIRECTION
 						// Fraser Eqn 3-167
