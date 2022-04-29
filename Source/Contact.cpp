@@ -160,6 +160,8 @@ void Domain::CalcContactForces(){
  
   Vec3_t atg;
   
+  contact_force_sum = 0.;
+  
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
 	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
@@ -279,6 +281,11 @@ void Domain::CalcContactForces(){
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
             Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
+
+            omp_set_lock(&dom_lock);            
+              contact_force_sum += norm(Particles[P1] ->contforce);
+            omp_unset_lock(&dom_lock);	
+            
 						force2 = dot(Particles[P1] -> contforce,Particles[P1] -> contforce);
 						
 						// TANGENTIAL COMPONENNT DIRECTION

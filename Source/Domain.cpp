@@ -508,7 +508,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 2; 
+	int ghost_rows = 3; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
@@ -1854,7 +1854,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
-	of << "pl_strain, eff_strain_rate, sigma_eq, sigmay"<<endl;
+  of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
   
   bool check_nb_every_time = false;
 
@@ -2008,6 +2008,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
       "Contact Surf : "<< contact_surf_time_spent  << "Msh: " << trimesh_time_spent <<
 			", BC: "<< bc_time_spent << 
 			", mv: "<<mov_time_spent <<
+      ", Contact Force Sum "<<contact_force_sum<<
 			std::endl;
 						
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
@@ -2035,7 +2036,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			
 			for (int p=0;p<Particles.Size();p++){
 				if (Particles[p]->print_history)
-					of << Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
+          of << Particles[p]->Displacement << ", "<<Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< 
+          Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
+          contact_force_sum << endl;
 			}
 		}
 		

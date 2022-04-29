@@ -265,6 +265,8 @@ Array <Particle*>				Particles; 	///< Array of particles
 	double PFAC, DFAC;		// Penalty and damping factors
 	bool 		contact;
 	double max_contact_force;
+  
+  double contact_force_sum;
 		
     
   //ATTENTION: REDUNDANT, ghost pairs and reference
