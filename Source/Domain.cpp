@@ -125,8 +125,6 @@ inline Domain::Domain ()
   m_forces_momentum_time = 0.;
   m_forces_tensors_time = 0.;
   m_forces_update_time = 0.;
-  
-  exit_at_small_timestep = true;
 }
 
 inline Domain::~Domain ()
@@ -180,12 +178,10 @@ inline void Domain::AdaptiveTimeStep()
 		//cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
 		deltat = min_force_ts;
 	}
-  
-  if (exit_at_small_timestep) {
-    if (deltat<(deltatint/1.0e5))
-      //cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
-      throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
-  }
+
+	if (deltat<(deltatint/1.0e5))
+		//cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
+		throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
 }
 
 inline void Domain::AddSingleParticle(int tag, Vec3_t const & x, double Mass, double Density, double h, bool Fixed)
@@ -512,7 +508,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 3; 
+	int ghost_rows = 2; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
@@ -572,7 +568,6 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
       zp += 2.*r;
 		}
 		cout << "Particles per row: "<<part_per_row<<endl;
-    cout << "Last ZMax Particle ID: "<< Particles.Size() - 1 <<endl;
 		
     zp = V(2) - 2.0*r;
 		//Insert ghost pairs relation
@@ -592,7 +587,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
           Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
           Particles[id_part]->inner_mirr_part = part;
           //Particles[id_part]->ID = -50;
-          //cout << "part , sym"<<part<<", "<<id_part<<endl;
+          cout << "part , sym"<<part<<", "<<id_part<<endl;
           Particles[id_part]->ghost_plane_axis = 2;
           Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
           
@@ -1429,8 +1424,8 @@ inline void Domain::LastComputeAcceleration ()
         //cout << "time step with a criteria"<< test1<<endl;
 				//test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
 				//if (norm(Particles[i]->v) != 0.){
-        //test2 = 1000.;
-        test2 = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+        test2 = 1000.;
+        //test2 = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
           //cout << "time step with v criteria"<< test2<<endl;
         //} else
         test = std::min(test1,test2);
@@ -1712,15 +1707,6 @@ inline void Domain::Move (double dt) {
 		}
 }
 
-void Domain::ComputeContatForceSum() {
-  // contact_force_sum = 0.;
-  // #pragma omp parallel for schedule (dynamic) num_threads(Nproc)
-  // for (int i=0 ; i<Nproc ; i++) {
-    
-    
-  // }
-}
-
 inline void Domain::WholeVelocity() {
     //Apply a constant velocity to all particles in the initial time step
     if (norm(BC.allv)>0.0 || BC.allDensity>0.0) {
@@ -1868,7 +1854,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
-	of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
+	of << "pl_strain, eff_strain_rate, sigma_eq, sigmay"<<endl;
   
   bool check_nb_every_time = false;
 
@@ -2022,7 +2008,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
       "Contact Surf : "<< contact_surf_time_spent  << "Msh: " << trimesh_time_spent <<
 			", BC: "<< bc_time_spent << 
 			", mv: "<<mov_time_spent <<
-      "Contact Force Sum: "<<contact_force_sum<<
 			std::endl;
 						
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
@@ -2049,12 +2034,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 				cout << "Max Contact Force: "<<max_contact_force<<endl;
 			
 			for (int p=0;p<Particles.Size();p++){
-				if (Particles[p]->print_history){
-					of << Particles[p]->Displacement << ", "<<Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< 
-          Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
-          contact_force_sum << endl;
-        }
-      }
+				if (Particles[p]->print_history)
+					of << Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay <<endl;
+			}
 		}
 		
 		// if (isyielding)
