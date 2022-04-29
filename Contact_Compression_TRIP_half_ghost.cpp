@@ -23,7 +23,7 @@ void UserAcc(SPH::Domain & domi) {
 }
 
 
-int main(){
+int main() try{
 	//
 	TriMesh mesh;
 
@@ -144,3 +144,4 @@ int main(){
 	
 	dom.WriteXDMF("ContactTest");
 }
+MECHSYS_CATCH
