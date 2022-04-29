@@ -126,8 +126,8 @@ int main() try{
   dom.friction_sta = 0.0;
   
 	//dom.friction = 0.0;
-	dom.PFAC = 0.8;
-	dom.DFAC = 0.2;
+	dom.PFAC = 0.1;
+	dom.DFAC = 0.1;
 	dom.update_contact_surface = false;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
