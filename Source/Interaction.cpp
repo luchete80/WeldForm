@@ -211,18 +211,18 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
     
     clock_begin = clock();
 		// NEW
-		//if (!gradKernelCorr) {
+		if (!gradKernelCorr) {
 		if (GradientType == 0)
 			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
 		else
 			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-		//} else {
+		} else {
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				//Left in vector form and multiply after??
 				for (int i=0;i<2;i++){
 					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
 				}
-		//}//Grad Corr
+		}//Grad Corr
     
     m_forces_momentum_time += (double)(clock() - clock_begin) / CLOCKS_PER_SEC;
     
