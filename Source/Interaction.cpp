@@ -31,6 +31,8 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 
 	double rij	= norm(xij);
 
+  double clock_begin;
+
 	// if ((rij/h)<=Cellfac)
 	// {
 		double di=0.0,dj=0.0,mi=0.0,mj=0.0;
@@ -207,7 +209,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 		// else
 			// Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
     
-    //m_clock_begin = clock();
+    clock_begin = clock();
 		// NEW
 		//if (!gradKernelCorr) {
 		if (GradientType == 0)
@@ -222,7 +224,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				}
 		//}//Grad Corr
     
-    //m_forces_momentum_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
+    m_forces_momentum_time += (double)(clock() - clock_begin) / CLOCKS_PER_SEC;
     
 		// if (abs(temp(0))>1.e-3){
 		// cout << "Strain Rate"<<StrainRate<<endl;
@@ -242,9 +244,9 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			}
 		}
     
-    //m_clock_begin = clock();
+    clock_begin = clock();
 		// Locking the particle 1 for updating the properties
-		omp_set_lock(&P1->my_lock);
+		//omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
 				P1->a					+= mj * temp;
 				P1->dDensity	+= mj * (di/dj) * temp1;
@@ -275,10 +277,10 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			if (P1->Shepard)
 				if (P1->ShepardCounter == P1->ShepardStep)
 					P1->SumDen += mj*    K;
-		omp_unset_lock(&P1->my_lock);
+		//omp_unset_lock(&P1->my_lock);
 
 		// Locking the particle 2 for updating the properties
-		omp_set_lock(&P2->my_lock);
+		//omp_set_lock(&P2->my_lock);
 			if (!gradKernelCorr){
 				P2->a					-= mi * temp;
 				P2->dDensity	+= mi * (dj/di) * temp1;							
@@ -308,10 +310,12 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				if (P2->ShepardCounter == P2->ShepardStep)
 					P2->SumDen += mi*    K;
 
-		omp_unset_lock(&P2->my_lock);
-    
-    //m_forces_update_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
-	//}//Interaction
+		//omp_unset_lock(&P2->my_lock);
+ 
+		//omp_set_lock(&dom_lock); //THIS CAUSES EXTREMELY LONG TIMES
+    m_forces_update_time += (double)(clock() - clock_begin) / CLOCKS_PER_SEC;
+    //omp_unset_lock(&dom_lock);
+  //}//Interaction
 }
 
 

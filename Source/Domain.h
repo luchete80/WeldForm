@@ -93,6 +93,7 @@ public:
 
     void YZPlaneCellsNeighbourSearch(int q1);						//Create pairs of particles in cells of XZ plan
     void MainNeighbourSearch				();									//Create pairs of particles in the whole domain
+    void MainNeighbourSearch_CNS    (const double &r);  //NEW; ALLOWS TO SAVE DATA BY PARTICLE NBS (AND NOT LOCKING DOMAIN)
 		void MainNeighbourSearch_Ext		();									//Create pairs of particles in the whole domain
 		int AvgNeighbourCount						();									//Create pairs of particles in the whole domain
 		
@@ -267,6 +268,8 @@ Array <Particle*>				Particles; 	///< Array of particles
 	double max_contact_force;
   
   double contact_force_sum;
+  
+  double m_scalar_prop;  //User Defined Domain Property
 		
     
   //ATTENTION: REDUNDANT, ghost pairs and reference

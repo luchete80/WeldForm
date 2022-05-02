@@ -12,7 +12,16 @@ void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 		vcompress = VMAX;
 
-	
+  int first = 3588;
+  int last = 3863;
+  double dS = 0.0008*0.0008;
+  domi.m_scalar_prop = 0.;
+  for (int i = first;i<=last;i++){
+    domi.m_scalar_prop += domi.Particles[i]->Sigma (2,2) * dS;
+  }
+  //cout <<  "Sum "<<domi.m_scalar_prop<<endl;
+
+  
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
@@ -97,6 +106,7 @@ int main() try{
 	dom.gradKernelCorr = true;
   
   dom.Particles[3863]->print_history = true;
+  
   cout << "Particle 3589 coords xyz "<<dom.Particles[3863]->x<<endl;
   //dom.Particles[3863]->print_history = true;
 			
@@ -126,8 +136,8 @@ int main() try{
   dom.friction_sta = 0.0;
   
 	//dom.friction = 0.0;
-	dom.PFAC = 0.1;
-	dom.DFAC = 0.1;
+	dom.PFAC = 0.3;
+	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	

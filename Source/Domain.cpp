@@ -125,6 +125,7 @@ inline Domain::Domain ()
   m_forces_momentum_time = 0.;
   m_forces_tensors_time = 0.;
   m_forces_update_time = 0.;
+  m_scalar_prop = 0.;
 }
 
 inline Domain::~Domain ()
@@ -587,7 +588,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
           Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
           Particles[id_part]->inner_mirr_part = part;
           //Particles[id_part]->ID = -50;
-          cout << "part , sym"<<part<<", "<<id_part<<endl;
+          //cout << "part , sym"<<part<<", "<<id_part<<endl;
           Particles[id_part]->ghost_plane_axis = 2;
           Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
           
@@ -2009,6 +2010,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			", BC: "<< bc_time_spent << 
 			", mv: "<<mov_time_spent <<
       ", Contact Force Sum "<<contact_force_sum<<
+      ", UserDefProp: "<<m_scalar_prop<<
 			std::endl;
 						
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
