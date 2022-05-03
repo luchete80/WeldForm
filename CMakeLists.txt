@@ -82,7 +82,7 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-  Compression_TRIP_half_ghost_vel
+  #Compression_TRIP_half_ghost_vel
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
@@ -90,7 +90,7 @@ SET(EXES
 	#Contact_Compression
   #Contact_Compression_test
   #Contact_Compression_half_ghost
-  #Contact_Compression_half_ghost_debug
+  Contact_Compression_half_ghost_debug
   #Compression_half_ghost_vel
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP

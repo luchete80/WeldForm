@@ -205,7 +205,7 @@ int main(int argc, char **argv) try
 	//dom.friction = 0.15;
 	dom.friction_dyn = 0.1;
   dom.friction_sta = 0.0;
-	dom.PFAC = 0.5;
+	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 
@@ -222,7 +222,7 @@ int main(int argc, char **argv) try
    dom.auto_ts = true;
     timestep = 1.e-6;
   //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-  dom.Solve(/*tf*/50*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
+  dom.Solve(/*tf*/100*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
   
   return 0;
 }
