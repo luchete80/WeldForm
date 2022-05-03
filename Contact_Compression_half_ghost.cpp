@@ -206,7 +206,7 @@ int main(int argc, char **argv) try
 	dom.friction_dyn = 0.1;
   dom.friction_sta = 0.0;
 	dom.PFAC = 0.8;
-	dom.DFAC = 0.2;
+	dom.DFAC = 0.0;
 	dom.update_contact_surface = false;
 
   dom.WriteXDMF("maz");

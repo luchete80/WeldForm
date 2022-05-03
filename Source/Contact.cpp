@@ -164,7 +164,7 @@ void Domain::CalcContactForces(){
   
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -279,9 +279,12 @@ void Domain::CalcContactForces(){
 
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
-						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; //PREVIOUSLY THIS WAS +=
+            // if (norm(Particles[P1] -> contforce)>1e4)
+              
             Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
+            
+            cout << "ContForce "<<Particles[P1] -> contforce<<endl;
 
             omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);
@@ -329,6 +332,9 @@ void Domain::CalcContactForces(){
               
             }
 
+						omp_set_lock(&Particles[P1]->my_lock);
+						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; //PREVIOUSLY THIS WAS +=
+						omp_unset_lock(&Particles[P1]->my_lock);
 
 						// if (force2 > (1.e10))
 							// Particles[P1] -> contforce = 1.e5;
