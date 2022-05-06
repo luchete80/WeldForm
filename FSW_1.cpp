@@ -205,7 +205,7 @@ int main(int argc, char **argv) try
 	//dom.friction = 0.15;
 	dom.friction_dyn = 0.1;
   dom.friction_sta = 0.0;
-	dom.PFAC = 0.5;
+	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 
@@ -218,11 +218,9 @@ int main(int argc, char **argv) try
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
 	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-   
-   dom.auto_ts = true;
-    timestep = 1.e-6;
+    
   //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-  dom.Solve(/*tf*/50*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
   
   return 0;
 }

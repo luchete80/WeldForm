@@ -279,12 +279,8 @@ void Domain::CalcContactForces(){
 
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
-            // if (norm(Particles[P1] -> contforce)>1e4)
-              
             Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
-            
-            //cout << "ContForce "<<Particles[P1] -> contforce<<endl;
 
             omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);
@@ -332,9 +328,6 @@ void Domain::CalcContactForces(){
               
             }
 
-						omp_set_lock(&Particles[P1]->my_lock);
-						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; //PREVIOUSLY THIS WAS +=
-						omp_unset_lock(&Particles[P1]->my_lock);
 
 						// if (force2 > (1.e10))
 							// Particles[P1] -> contforce = 1.e5;
@@ -345,6 +338,9 @@ void Domain::CalcContactForces(){
 							if (dt_fext > 0)
 								this -> min_force_ts = min_force_ts_;
 						}
+						omp_set_lock(&Particles[P1]->my_lock);
+						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 						
 						if (friction_dyn > 0.) {

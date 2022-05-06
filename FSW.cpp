@@ -1,4 +1,3 @@
-
 #include "Mesh.h"
 #include "Domain.h"
 
@@ -79,7 +78,7 @@ int main(int argc, char **argv) try
 		dom.Scheme	= 1;	//Mod Verlet
 		//dom.XSPH	= 0.1; //Very important
 
-			double dx,h,rho,K,G,Cs,Fy;
+    double dx,h,rho,K,G,Cs,Fy;
 		double R,L,n;
 
 		R	= 0.15;
@@ -121,8 +120,9 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
   bool ghost = true;
-  dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, Fixed, ghost); 
-
+  
+  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
+      
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
   double cyl_zmax = L/2. + dx*0.6 -1.e-3; //If new meshing  
 
@@ -205,7 +205,7 @@ int main(int argc, char **argv) try
 	//dom.friction = 0.15;
 	dom.friction_dyn = 0.1;
   dom.friction_sta = 0.0;
-	dom.PFAC = 0.5;
+	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 
@@ -218,11 +218,9 @@ int main(int argc, char **argv) try
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
 	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-   
-   dom.auto_ts = true;
-    timestep = 1.e-6;
+    
   //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-  dom.Solve(/*tf*/50*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
   
   return 0;
 }
