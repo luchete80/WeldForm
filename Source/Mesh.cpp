@@ -11,9 +11,24 @@ TriMesh::TriMesh(){
 }
 
 TriMesh::TriMesh(NastranReader &nr){
+  //Insert nodes
   for (int n=0;n<nr.node_count;n++){
     node.Push(new Vec3_t(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]));
   }
+  cout << "Generated "<<node.Size()<< " trimesh nodes. "<<endl;
+  
+  for (int e=0;e<nr.elem_count;e++){
+    element.Push(new Element(nr.elcon[3*e],nr.elcon[3*e+1],nr.elcon[3*e+2]));		  
+		Vec3_t v = ( *node[nr.elcon[3*e]] + *node[nr.elcon[3*e+1]] + *node[nr.elcon[3*e+2]] ) / 3. ;
+    Vec3_t v1, v2;
+    //In COUNTERCLOCKWISE
+    v1 = *node[nr.elcon[3*e+1]] - *node[nr.elcon[3*e]];
+    v2 = *node[nr.elcon[3*e+2]] - *node[nr.elcon[3*e]];
+    element[e] ->normal = cross (v1,v2);
+    element[e] ->normal /= Norm(element[e] ->normal);
+    element[e] -> centroid = v; 
+  }
+  cout << "Generated "<<element.Size()<< " trimesh elements. "<<endl;  
 }
 
 Element::Element(const int &n1, const int &n2, const int &n3){

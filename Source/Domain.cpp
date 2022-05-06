@@ -255,7 +255,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 				}
 				k++;
 				zp = V(2) + ((2*sqrt(6.0)/3)*k+1)*r;
-				cout << "Z: "<<z<<endl;
+				//cout << "Z: "<<z<<endl;
 			}
     	}
     	else {
@@ -509,7 +509,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 3; 
+	int ghost_rows = 2; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;

@@ -9,19 +9,22 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
-#include "Mesh.h"
+#include <sstream>
+#include <ostream>
+#include "matvec.h"
 
 #define FIELD_LENGTH	8
 
-using namespace std;
+
 namespace SPH {
+
+using namespace std;
   
 class TriMesh;
 class NastranReader {
 private:
   friend class SPH::TriMesh;
-	std::vector <string> rawData;
+	std::vector <std::string> rawData;
 	int line_count;
 	int elem_count;
 	int node_count;
@@ -117,6 +120,7 @@ void NastranReader::read( char* fName){
   int curr_line = line_start_node;
 	l = curr_line;
   for (int n=0;n<node_count;n++){
+    cout << n+1; //DEBUG
 		string temp = rawData[l].substr(FIELD_LENGTH,FIELD_LENGTH); //Second field, id
 		nodeid[n] = atoi(temp.c_str());
 		nodepos.insert(std::make_pair(atoi(temp.c_str()),n));
@@ -148,10 +152,10 @@ void NastranReader::read( char* fName){
 			
 			double d = strtod(temp.c_str(),NULL);
 			//cout << temp<<", conv: "<<d<<"sign pos" << sign_pos<<endl;
-			//cout <<d<< " ";
+			cout <<d<< " ";
 			node[3*n+i] = d;
 		}
-		//cout << endl;
+		cout << endl;
 		l++;
   }
 	
@@ -165,6 +169,7 @@ void NastranReader::read( char* fName){
   curr_line = line_start_elem;
 	l = curr_line;
   for (int n=0;n<elem_count;n++){
+    cout << n+1<< " ";
 		for (int en=0;en<3;en++){
 			int pos = 3*(FIELD_LENGTH)+ en*FIELD_LENGTH;
 			string temp = rawData[l].substr(pos,FIELD_LENGTH); //Second field, id
@@ -172,9 +177,9 @@ void NastranReader::read( char* fName){
 			int nod = nodepos.find(d)->second;
 			//cout << "node ind: "<<d<<"real node ind: "<<nod<<endl; 
 			elcon[3*n+en] = nod;
-			//cout << d<<" ";
+			cout << d<<" ";
 		}
-		//cout << endl;
+		cout << endl;
 		l++;
 	}    
   cout << "Done."<<endl;

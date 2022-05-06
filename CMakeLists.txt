@@ -95,7 +95,7 @@ SET(EXES
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
   #Contact_Compression_TRIP_half_ghost
-	#NastranReader_test
+	NastranReader_test
 	#CompressionForces
 	#CompressionVel
 	#CompressionForces_Ghost

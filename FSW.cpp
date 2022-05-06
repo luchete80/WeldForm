@@ -70,7 +70,6 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
-  SPH::TriMesh mesh;
 		 SPH::Domain	dom;
 
 		dom.Dimension	= 3;
@@ -83,7 +82,7 @@ int main(int argc, char **argv) try
 		double H,L,n;
 
 		H	= 0.005;
-		L	= 0.1;
+		L	= 0.05;
     
 		n	= 30.0;		//in length, radius is same distance
 		
@@ -127,6 +126,9 @@ int main(int argc, char **argv) try
 
   SPH::NastranReader reader("Tool.nas");
   
+  SPH::TriMesh mesh(reader);
+  mesh.CalcSpheres(); //DONE ONCE
+  
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
   double cyl_zmax = L/2. + dx*0.6 -1.e-3; //If new meshing  
 
@@ -141,7 +143,11 @@ int main(int argc, char **argv) try
 	cout << "Creating Spheres.."<<endl;
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
-
+	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
+											//Not for any force calc in contact formulation
+	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+    
+    
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = true;
         
@@ -205,7 +211,7 @@ int main(int argc, char **argv) try
     // dom.Particles[0]->NoSlip=true;			
 	//Contact Penalty and Damping Factors
   dom.fric_type = Fr_Dyn;
-	dom.contact = true;
+	dom.contact = false;
 	//dom.friction = 0.15;
 	dom.friction_dyn = 0.1;
   dom.friction_sta = 0.0;
@@ -217,11 +223,7 @@ int main(int argc, char **argv) try
   dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   dom.BC.InOutFlow = 0;
 
-	//ALWAYS AFTER SPH PARTICLES
-	//TODO: DO THIS INSIDE SOLVER CHECKS
-	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
-											//Not for any force calc in contact formulation
-	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+
     
   //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
   dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
