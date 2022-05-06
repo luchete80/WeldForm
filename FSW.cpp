@@ -1,5 +1,6 @@
 #include "Mesh.h"
 #include "Domain.h"
+#include "NastranReader.h"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -79,10 +80,11 @@ int main(int argc, char **argv) try
 		//dom.XSPH	= 0.1; //Very important
 
     double dx,h,rho,K,G,Cs,Fy;
-		double R,L,n;
+		double H,L,n;
 
-		R	= 0.15;
-		L	= 0.56;
+		H	= 0.005;
+		L	= 0.1;
+    
 		n	= 30.0;		//in length, radius is same distance
 		
 		rho	= 2700.0;
@@ -91,7 +93,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.015;
+		dx = 0.001;
     h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
@@ -121,8 +123,10 @@ int main(int argc, char **argv) try
 									
   bool ghost = true;
   
-  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
-      
+  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+
+  SPH::NastranReader reader("Tool.nas");
+  
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
   double cyl_zmax = L/2. + dx*0.6 -1.e-3; //If new meshing  
 

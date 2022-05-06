@@ -3,6 +3,7 @@
 
 #include "matvec.h"
 //#include
+#include "NastranReader.h"
 
 namespace SPH{
 	
@@ -40,7 +41,8 @@ class Element{
 
 
 class TriMesh{
-	
+private:
+friend class NastranReader;
 	public:
 
 	Array <Element* > 	element;
@@ -49,6 +51,7 @@ class TriMesh{
 	
 	Vec3_t							v;						//Constant Uniform v
 	TriMesh();
+  TriMesh(NastranReader &nr);
 	inline void AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2, const int &dens);
 	inline void ApplyConstVel(const Vec3_t &v);
 	inline void CalcCentroidVelFromNodes();

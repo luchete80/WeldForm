@@ -151,7 +151,7 @@ public:
 	
 	/////////////////////// CONTACT /////////////////////////////
 	void AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const int &id);
-	inline void ContactNbSearch();	//Performed AFTER neighbour search
+  inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
 	void CalculateSurface(const int &id = 1);
 	void CalcContactForces();

@@ -12,13 +12,15 @@
 
 #include "Mesh.h"
 
-
 #define FIELD_LENGTH	8
 
 using namespace std;
-
+namespace SPH {
+  
+class TriMesh;
 class NastranReader {
-
+private:
+  friend class SPH::TriMesh;
 	std::vector <string> rawData;
 	int line_count;
 	int elem_count;
@@ -279,6 +281,8 @@ NastranReader::~NastranReader(){
   delete node;
   delete elcon;  
 }
+
+};
 
 #endif
 

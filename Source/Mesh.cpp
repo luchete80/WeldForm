@@ -10,6 +10,12 @@ TriMesh::TriMesh(){
 	
 }
 
+TriMesh::TriMesh(NastranReader &nr){
+  for (int n=0;n<nr.node_count;n++){
+    
+  }
+}
+
 Element::Element(const int &n1, const int &n2, const int &n3){
 	
 	//centroid = Vec3_t();
