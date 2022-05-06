@@ -12,7 +12,7 @@ TriMesh::TriMesh(){
 
 TriMesh::TriMesh(NastranReader &nr){
   for (int n=0;n<nr.node_count;n++){
-    
+    node.Push(new Vec3_t(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]));
   }
 }
 
