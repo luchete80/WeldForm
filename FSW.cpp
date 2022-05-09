@@ -92,7 +92,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.00085;
+		dx = 0.001;
     h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
@@ -120,7 +120,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H + h/4., -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H - H/4., -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranReader reader("Tool.nas");
   
