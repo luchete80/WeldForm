@@ -139,7 +139,8 @@ public:
 	void Gradient_Approach_Set			(Gradient_Type const & GT);
 	
 	//Thermal Solver
-	void CalcTempInc 	(); 		//LUCIANO: Temperature increment
+	void CalcTempInc 		(); 		//LUCIANO: Temperature increment
+	void CalcTempIncSOA (); 		//LUCIANO: Temperature increment
 	inline void CalcConvHeat ();
 	inline void CalcPlasticWorkHeat();
 	inline void CalcGradCorrMatrix();	//BONET GRADIENT CORRECTION
@@ -277,8 +278,10 @@ public:
 	
 	/////////////////////// SOA (Since v0.4) ///////////////////////////////////
 	Vec3_t *m_x,*m_v,*m_a;
-	double *m_T, *m_kT, *m_cpT, *m_dTdt;
-	double *m_rho;
+	double *m_h;
+	double *m_T, *m_Tinf, *m_kT, *m_hcT, *m_cpT, *m_dTdt;
+	double *m_qhT,*m_qT;	//thermal T terms 
+	double *m_rho, *m_mass;
   
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
