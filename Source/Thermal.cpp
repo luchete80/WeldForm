@@ -91,11 +91,11 @@ inline void Domain::CalcTempInc () {
 					Vec3_t v;
 					Mult (GKc[i], GK * xij, v);
 					// if (SMPairs[k][a].first == 723)
-					cout << "Orig, Corr GK * xij, Nb"<<GK * xij<<", "<< v;
-					if (i==0)
-					cout << P1->Nb<<endl;
-					else
-					cout << P2->Nb<<endl;
+					//cout << "Orig, Corr GK * xij, Nb"<<GK * xij<<", "<< v;
+					// if (i==0)
+					// cout << P1->Nb<<endl;
+					// else
+					// cout << P2->Nb<<endl;
 					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v  )/ (norm(xij)*norm(xij));
 				}				
 			} else {
@@ -190,8 +190,8 @@ inline void Domain::CalcTempIncSOA () {
 				mc[0]=mc[1]=m;
 			}
 			//omp_set_lock(&P1->my_lock);
-			temp [SMPairs[k][a].first]  += mc[0];
-			temp [SMPairs[k][a].second] -= mc[1];
+			temp [P1]  += mc[0];
+			temp [P2] -= mc[1];
 		}
 	}//Nproc
 	//Another test
@@ -204,6 +204,7 @@ inline void Domain::CalcTempIncSOA () {
 	//TODO: MULTIPLY CORRECTED GRADIENT HERE AFTER ALL SUM 
 		//temp [i];
 	
+	cout << "end temp calculating dTdt"<<endl;
 	double max = 0;
 	int imax;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
@@ -385,11 +386,18 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		double max=0,min=1000.;
 		for (size_t i=0; i<Particles.Size(); i++){
 			//Particles[i]->T+= dt*Particles[i]->dTdt;
-			Particles[i]->TempCalcLeapfrog(dt);
-			if (Particles[i]->T > max)
-				max=Particles[i]->T;
-			if (Particles[i]->T < min)
-				min=Particles[i]->T;
+			//Particles[i]->TempCalcLeapfrog(dt);
+			m_T[i]+=m_dTdt[i]*dt;
+			// if (Particles[i]->T > max)
+				// max=Particles[i]->T;
+			// if (Particles[i]->T < min)
+				// min=Particles[i]->T;
+
+			if (m_T[i] > max)
+				max = m_T[i];
+			if (m_T[i] < min)
+				min = m_T[i];
+
 		}
 		// std::cout << "Max temp: "<< max << std::endl;
 
@@ -425,8 +433,8 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 
 		//AdaptiveTimeStep();
 		
-				CalcConvHeat();
-		CalcTempInc();
+		CalcConvHeatSOA();
+		CalcTempIncSOA();
 
 		Time += deltat;
 		

@@ -321,6 +321,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		m_qconvT= new double [Particles.Size()];
 		m_T 		= new double [Particles.Size()];
 		m_Tinf 	= new double [Particles.Size()];
+		m_dTdt 	= new double [Particles.Size()];
 		m_rho 	= new double [Particles.Size()];
 		m_mass 	= new double [Particles.Size()];		
 		//TODO-> CHANGE TO static members (particle will be deleted)
