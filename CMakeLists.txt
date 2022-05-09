@@ -135,7 +135,7 @@ SET(EXES
 	#Plate-Yield_CNS_v2
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
-	SolidBlock_Heat
+	SolidBlock_HeatSOA
 	#SolidBlock_Heat_CNS
 	#SolidBlock_Heat_conv3faces
 	#SolidBlock_Heat_source

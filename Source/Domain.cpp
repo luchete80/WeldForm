@@ -283,7 +283,8 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 						y = V(1) + (2.0*j+1)*r;
 						z = V(2) + (2.0*k+1)*r;
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-							else    Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+						else    		Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+						x_sta.push_back(Vec3_t(x,y,z));
 						i++;
 						xp = V(0) + (2*i+1)*r; //COMMENTED BY LUCIANO
 						//cout << "X: "<<xp<<endl;
@@ -313,18 +314,20 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		
 		// New SOA members
 		m_x 		= new Vec3_t[Particles.Size()];
+		m_h 		= new double [Particles.Size()];
 		m_kT 		= new double [Particles.Size()];
 		m_cpT 	= new double [Particles.Size()];
 		m_hcT 	= new double [Particles.Size()];
 		m_T 		= new double [Particles.Size()];
 		m_Tinf 	= new double [Particles.Size()];
 		m_rho 	= new double [Particles.Size()];
-		
+		m_mass 	= new double [Particles.Size()];		
 		//TODO-> CHANGE TO static members (particle will be deleted)
 		for (int p=0;p<Particles.Size();p++){
 			m_x[p] 		= x_sta[p];
 			m_rho[p] 	= Density; 
 			m_T[p] = m_Tinf[p] = m_hcT[p] = m_kT[p] = 0.;
+			m_mass[p] = Mass;
 		}
 		
 		#pragma omp parallel for num_threads(Nproc)

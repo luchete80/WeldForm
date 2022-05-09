@@ -208,7 +208,7 @@ inline void Domain::CalcTempIncSOA () {
 	int imax;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
-		m_dTdt[i] = 1./(m_rho[i]*m_cpT[i])*(temp[i]);
+		m_dTdt[i] = 1./(m_rho[i]*m_cpT[i])*(temp[i] + m_qconvT[i]);
 		if (contact)
 			Particles[i]->dTdt += Particles[i]->q_fric_work;
 		if (Particles[i]->dTdt>max){
@@ -244,6 +244,38 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 			if (Particles[i]->q_conv>max){
 				max= Particles[i]->q_conv;
 				imax=i;
+			}
+			//cout << "Particle  "<<Particles[i]->Mass<<endl;
+		}
+	}		
+	//cout << "Max Convection: " << max <<"in particle " << imax <<endl;
+	//cout << "Applied convection to "<< i << " Particles"<<endl;
+}
+
+inline void Domain::CalcConvHeatSOA (){ //TODO: Detect Free Surface Elements
+	double dS2;
+	//Fraser Eq 3-121 
+	double max=0.;
+	int imax;
+	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++){//Like in Domain::Move
+	#endif
+
+	
+		if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
+			dS2 = pow(m_mass[i]/m_rho[i],0.666666666);
+			//cout << "dS2" <<dS2<<endl;
+			//cout << Particles[i]->Density<<endl;
+			//Fraser Eq 3.121
+			m_qconvT[i] = m_rho[i] * m_hcT[i] * dS2 * (m_Tinf[i] - m_T[i])/m_mass[i];
+			
+			if (m_qconvT[i] > max){
+				max 	= m_qconvT[i];
+				imax	=	i;
 			}
 			//cout << "Particle  "<<Particles[i]->Mass<<endl;
 		}
@@ -332,8 +364,8 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
 	
-	CalcConvHeat();
-	CalcTempInc();	
+	CalcConvHeatSOA();
+	CalcTempIncSOA();	
 	while (Time<tf && idx_out<=maxidx) {
 
 		auto start_task = std::chrono::system_clock::now();
