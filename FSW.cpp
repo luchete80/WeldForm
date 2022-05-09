@@ -127,13 +127,12 @@ int main(int argc, char **argv) try
   SPH::NastranReader reader("Tool.nas");
   
   SPH::TriMesh mesh(reader);
-  mesh.CalcSpheres(); //DONE ONCE
   
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
   double cyl_zmax = L/2. + dx*0.6 -1.e-3; //If new meshing  
 
 	cout << "Creating contact mesh.."<<endl;
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.2,-0.2, cyl_zmax),Vec3_t(0.2,0.2, cyl_zmax),15);
+	
 	cout << "Plane z" << *mesh.node[0]<<endl;
   
   cout << "Mesh node size "<<mesh.node.Size()<<endl;
