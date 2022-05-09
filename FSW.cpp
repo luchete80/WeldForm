@@ -55,8 +55,8 @@ void UserAcc(SPH::Domain & domi)
 		// }
 
 	}
-  
   domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
+
   for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
     domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
@@ -120,7 +120,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
 									
-  bool ghost = true;
+  bool ghost = false;
   
   dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
@@ -146,66 +146,66 @@ int main(int argc, char **argv) try
 											//Not for any force calc in contact formulation
 	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
     
-    
+  
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true;
-        
-		cout << "Particle count: "<<dom.Particles.Size()<<endl;
+	dom.gradKernelCorr = false;
+			
+	cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
-    	for (size_t a=0; a<dom.Particles.Size(); a++)
-    	{
-    		dom.Particles[a]->G		= G;
-    		dom.Particles[a]->PresEq	= 0;
-    		dom.Particles[a]->Cs		= Cs;
-    		dom.Particles[a]->Shepard	= false;
-    		dom.Particles[a]->Material	= 2;
-    		dom.Particles[a]->Fail		= 1;
-    		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 1.0;
-    		//dom.Particles[a]->Beta		= 1.0;
-    		dom.Particles[a]->TI		= 0.3;
-    		dom.Particles[a]->TIInitDist	= dx;
-        
-    		double x = dom.Particles[a]->x(0);
-    		double y = dom.Particles[a]->x(1);
-    		double z = dom.Particles[a]->x(2);
-        
-        
-        //BOTTOM PLANE
-        // if ( z < dx  && z > -dx/2. ){
-    			// dom.Particles[a]->ID=3;
-          // dom.Particles[a]->not_write_surf_ID = true;
-        // }
-        
-        
-        // if ( x < dx  && x > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=1;
-    		// if ( y < dx  && y > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=2; 
-          
-        //x,y, central symmetry
-    		// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < L/2. - dx)
-    			// dom.Particles[a]->ID=4;  
-        
-    		// if ( y < dx  && y > -dx/2. && z < dx  && z > -dx/2. ) //yz -5
-    			// dom.Particles[a]->ID=5;           
-     		// if (  x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 6
-    			// dom.Particles[a]->ID=6;         
-        
-        //First one captures 4 particle, second one
-        //if ( y < dx  && y > -dx && x < dx  && x > -dx && z < dx  && z > -dx/2. ) //xz - 7
-        // if ( y < dx  && y > -dx && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
-    			// dom.Particles[a]->ID=7;   
+		for (size_t a=0; a<dom.Particles.Size(); a++)
+		{
+			dom.Particles[a]->G		= G;
+			dom.Particles[a]->PresEq	= 0;
+			dom.Particles[a]->Cs		= Cs;
+			dom.Particles[a]->Shepard	= false;
+			dom.Particles[a]->Material	= 2;
+			dom.Particles[a]->Fail		= 1;
+			dom.Particles[a]->Sigmay	= Fy;
+			dom.Particles[a]->Alpha		= 1.0;
+			//dom.Particles[a]->Beta		= 1.0;
+			dom.Particles[a]->TI		= 0.3;
+			dom.Particles[a]->TIInitDist	= dx;
+			
+			double x = dom.Particles[a]->x(0);
+			double y = dom.Particles[a]->x(1);
+			double z = dom.Particles[a]->x(2);
+			
+			
+			//BOTTOM PLANE
+			// if ( z < dx  && z > -dx/2. ){
+				// dom.Particles[a]->ID=3;
+				// dom.Particles[a]->not_write_surf_ID = true;
+			// }
+			
+			
+			// if ( x < dx  && x > -dx/2. && z < L/2. - dx)
+				// dom.Particles[a]->ID=1;
+			// if ( y < dx  && y > -dx/2. && z < L/2. - dx)
+				// dom.Particles[a]->ID=2; 
+				
+			//x,y, central symmetry
+			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < L/2. - dx)
+				// dom.Particles[a]->ID=4;  
+			
+			// if ( y < dx  && y > -dx/2. && z < dx  && z > -dx/2. ) //yz -5
+				// dom.Particles[a]->ID=5;           
+			// if (  x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 6
+				// dom.Particles[a]->ID=6;         
+			
+			//First one captures 4 particle, second one
+			//if ( y < dx  && y > -dx && x < dx  && x > -dx && z < dx  && z > -dx/2. ) //xz - 7
+			// if ( y < dx  && y > -dx && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
+				// dom.Particles[a]->ID=7;   
 
-        //TOP
-    		// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
-    			// dom.Particles[a]->ID=8;           
-     		// if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
-    			// dom.Particles[a]->ID=9;         
-        // if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
-    			// dom.Particles[a]->ID=10;         
-    	}
-      
+			//TOP
+			// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
+				// dom.Particles[a]->ID=8;           
+			// if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
+				// dom.Particles[a]->ID=9;         
+			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
+				// dom.Particles[a]->ID=10;         
+		}
+		
     // dom.Particles[0]->IsFree=false;
     // dom.Particles[0]->NoSlip=true;			
 	//Contact Penalty and Damping Factors
