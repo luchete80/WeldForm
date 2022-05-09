@@ -89,11 +89,11 @@ int main(int argc, char **argv) try
 			dom.gradKernelCorr = false;
     	for (size_t a=0; a<dom.Particles.Size(); a++) {
     		x = dom.Particles[a]->x(0);
-				dom.m_kT[a]			=	3000.;
-				dom.m_cpT[a]		=	1.;
-				dom.m_hcT[a]		= 100.0; //W/m2-K
-				dom.m_Tinf[a] 	= 500.;
-				dom.m_T[a]			= 20.0;		
+				*dom.m_kT[a]			=	3000.;
+				*dom.m_cpT[a]		=	1.;
+				*dom.m_hcT[a]		= 100.0; //W/m2-K
+				*dom.m_Tinf[a] 	= 500.;
+				*dom.m_T[a]			= 20.0;		
 			
 				if ( x < -H/2.0 ) {
 					dom.Particles[a]->ID 			= 2;
@@ -103,7 +103,7 @@ int main(int argc, char **argv) try
     	}
 
     timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
-		timestep = 0.05;
+		timestep = 0.001;
 		cout << "Time Step: "<<timestep<<endl;
 
 		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.01,"test06",999);

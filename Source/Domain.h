@@ -278,11 +278,11 @@ public:
 	Array<std::pair<size_t,size_t> > GhostPairs;	//If used
 	
 	/////////////////////// SOA (Since v0.4) ///////////////////////////////////
-	Vec3_t *m_x,*m_v,*m_a;
-	double *m_h;
-	double *m_T, *m_Tinf, *m_kT, *m_hcT, *m_cpT, *m_dTdt;
-	double *m_qconvT,*m_qT;	//thermal source terms 
-	double *m_rho, *m_mass;
+	Vec3_t **m_x,*m_v,*m_a;
+	double **m_h;
+	double **m_T, **m_Tinf, **m_kT, **m_hcT, **m_cpT, **m_dTdt;
+	double **m_qconvT,**m_qT;	//thermal source terms 
+	double **m_rho, **m_mass;
   
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);

@@ -313,23 +313,23 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		cout << "Particle mass: " << Mass <<endl;
 		
 		// New SOA members
-		m_x 		= new Vec3_t[Particles.Size()];
-		m_h 		= new double [Particles.Size()];
-		m_kT 		= new double [Particles.Size()];
-		m_cpT 	= new double [Particles.Size()];
-		m_hcT 	= new double [Particles.Size()];
-		m_qconvT= new double [Particles.Size()];
-		m_T 		= new double [Particles.Size()];
-		m_Tinf 	= new double [Particles.Size()];
-		m_dTdt 	= new double [Particles.Size()];
-		m_rho 	= new double [Particles.Size()];
-		m_mass 	= new double [Particles.Size()];		
+		m_x 		= new Vec3_t* [Particles.Size()];
+		m_h 		= new double* [Particles.Size()];
+		m_kT 		= new double* [Particles.Size()];
+		m_cpT 	= new double* [Particles.Size()];
+		m_hcT 	= new double* [Particles.Size()];
+		m_qconvT= new double* [Particles.Size()];
+		m_T 		= new double* [Particles.Size()];
+		m_Tinf 	= new double* [Particles.Size()];
+		m_dTdt 	= new double* [Particles.Size()];
+		m_rho 	= new double* [Particles.Size()];
+		m_mass 	= new double* [Particles.Size()];		
 		//TODO-> CHANGE TO static members (particle will be deleted)
 		for (int p=0;p<Particles.Size();p++){
-			m_x[p] 		= x_sta[p];
-			m_rho[p] 	= Density; 
-			m_T[p] = m_Tinf[p] = m_hcT[p] = m_kT[p] = m_qconvT[p] = 0.;
-			m_mass[p] = Mass;
+			m_x[p] 		= &x_sta[p];
+			*m_rho[p] 	= Density; 
+			*m_T[p] = *m_Tinf[p] = *m_hcT[p] = *m_kT[p] = *m_qconvT[p] = 0.;
+			*m_mass[p] = Mass;
 		}
 		
 		#pragma omp parallel for num_threads(Nproc)
