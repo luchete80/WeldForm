@@ -364,8 +364,11 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
 	
+	cout << "Calc conv "<<endl;
 	CalcConvHeatSOA();
-	CalcTempIncSOA();	
+	cout << "Done. "<<endl;
+	CalcTempIncSOA();
+	cout << "End."<<endl;	
 	while (Time<tf && idx_out<=maxidx) {
 
 		auto start_task = std::chrono::system_clock::now();
