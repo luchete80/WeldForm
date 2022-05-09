@@ -92,13 +92,13 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.001;
+		dx = 0.00085;
     h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
         double timestep;
         timestep = (0.2*h/(Cs));
-		
+		  
 		//timestep = 2.5e-6;
 
         cout<<"t  = "<<timestep<<endl;
@@ -119,10 +119,8 @@ int main(int argc, char **argv) try
 	// THIS DOES NOT HAVE Z INITIAL POSITION SINCE IT IS ZERO OR -LZ ACCORGIND TO LAST ARGUMENT
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
-									
-  bool ghost = false;
   
-  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H + h/4., -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranReader reader("Tool.nas");
   

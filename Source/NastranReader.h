@@ -119,7 +119,10 @@ void NastranReader::read( char* fName){
 	// NODAL FIELD DATA IS: GRID|ID|CP|X1|	
   int curr_line = line_start_node;
 	l = curr_line;
-  for (int n=0;n<node_count;n++){
+	Vec3_t min( 1000., 1000., 1000.);
+  Vec3_t max(-1000.,-1000.,-1000.);
+	
+	for (int n=0;n<node_count;n++){
     //cout << n+1; //DEBUG
 		string temp = rawData[l].substr(FIELD_LENGTH,FIELD_LENGTH); //Second field, id
 		nodeid[n] = atoi(temp.c_str());
@@ -154,11 +157,16 @@ void NastranReader::read( char* fName){
 			//cout << temp<<", conv: "<<d<<"sign pos" << sign_pos<<endl;
 			//cout <<d<< " ";
 			node[3*n+i] = d;
+			if (d<min[i])
+				min[i] = d;
+			else if (d > max[i])
+				max[i] = d;
 		}
-		//cout << endl;
 		l++;
   }
 	
+	cout << "Min values: "<< min <<endl;
+	cout << "Max values: "<< max <<endl;	
   
   //IF FIXED FIELD
   cout << "Allocating Elements..."<<endl;
