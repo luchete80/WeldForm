@@ -179,8 +179,8 @@ public:
 	
 	/////////////// MEMBERS //
     // Data
-//    std::vector< *Particle >				Particles; 	///< Array of particles
-Array <Particle*>				Particles; 	///< Array of particles
+	//    std::vector< *Particle >				Particles; 	///< Array of particles
+	Array <Particle*>				Particles; 	///< Array of particles
     double					R;		///< Particle Radius in addrandombox
 
 		double					sqrt_h_a;				//Coefficient for determining Time Step based on acceleration (can be defined by user)
@@ -274,6 +274,11 @@ Array <Particle*>				Particles; 	///< Array of particles
     
   //ATTENTION: REDUNDANT, ghost pairs and reference
 	Array<std::pair<size_t,size_t> > GhostPairs;	//If used
+	
+	/////////////////////// SOA (Since v0.4) ///////////////////////////////////
+	Vec3_t *m_x,*m_v,*m_a;
+	double *m_T, *m_kT, *m_cpT, *m_dTdt;
+	double *m_rho;
   
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);

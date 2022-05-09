@@ -123,6 +123,8 @@ inline void Domain::CalcTempInc () {
 	for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
 		Particles[i]->dTdt = 1./(Particles[i]->Density * Particles[i]->cp_T ) * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat);	
+		//New WAY SOA (from v.4)
+		m_dTdt[i] = 1./(m_rho[i]*m_cpT[i])*(temp[i]);
 		if (contact)
 			Particles[i]->dTdt += Particles[i]->q_fric_work;
 		if (Particles[i]->dTdt>max){
