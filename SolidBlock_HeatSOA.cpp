@@ -103,7 +103,7 @@ int main(int argc, char **argv) try
     	}
 
     timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
-		timestep = 0.001;
+		timestep = 0.01;
 		cout << "Time Step: "<<timestep<<endl;
 
 		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.01,"test06",999);

@@ -29,6 +29,18 @@
 
 #include <set>
 
+//https://stackoverflow.com/questions/19240540/dynamically-allocating-array-explain/19240932#19240932
+template <typename T>
+void Initiate (T ***mat,int row){
+	//initialize 10 x 20 array:
+	*mat = new T*[row];
+	for (int i = 0; i < row; i++)
+    (*mat)[i] = new T	; //DO NOT FORGET PARENTHESES, PRECEDENCE OF [] is HIGHER THAN DEREF *
+	
+	// for (int i=0;i<row;i++)
+		// cout<< "row size"<<sizeof(*mat[i])/sizeof(float)<<endl;
+}
+
 using namespace std;
 
 namespace SPH {
@@ -313,19 +325,32 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		cout << "Particle mass: " << Mass <<endl;
 		
 		// New SOA members
-		m_x 		= new Vec3_t* [Particles.Size()];
-		m_h 		= new double* [Particles.Size()];
-		m_kT 		= new double* [Particles.Size()];
-		m_cpT 	= new double* [Particles.Size()];
-		m_hcT 	= new double* [Particles.Size()];
-		m_qconvT= new double* [Particles.Size()];
-		m_T 		= new double* [Particles.Size()];
-		m_Tinf 	= new double* [Particles.Size()];
-		m_dTdt 	= new double* [Particles.Size()];
-		m_rho 	= new double* [Particles.Size()];
-		m_mass 	= new double* [Particles.Size()];		
+		cout << "Allocating "<<endl;
+		Initiate (&m_x,Particles.Size());
+		Initiate (&m_h,Particles.Size());
+		Initiate (&m_kT,Particles.Size());
+		Initiate (&m_cpT,Particles.Size());
+		Initiate (&m_hcT,Particles.Size());
+		Initiate (&m_qconvT,Particles.Size());
+		Initiate (&m_T,Particles.Size());		
+		Initiate (&m_Tinf,Particles.Size());
+		Initiate (&m_dTdt,Particles.Size());
+		Initiate (&m_rho,Particles.Size());
+		Initiate (&m_mass,Particles.Size());
+		cout << "Done."<<endl;
+		// m_x 		= new Vec3_t* [Particles.Size()];
+		// m_h 		= new double* [Particles.Size()];
+		// m_kT 		= new double* [Particles.Size()];
+		// m_cpT 	= new double* [Particles.Size()];
+		// m_hcT 	= new double* [Particles.Size()];
+		// m_qconvT= new double* [Particles.Size()];
+		// m_T 		= new double* [Particles.Size()];
+		// m_Tinf 	= new double* [Particles.Size()];
+		// m_dTdt 	= new double* [Particles.Size()];
+		// m_rho 	= new double* [Particles.Size()];
+		// m_mass 	= new double* [Particles.Size()];		
 		//TODO-> CHANGE TO static members (particle will be deleted)
-		for (int p=0;p<Particles.Size();p++){
+		for (int p=0;p<Particles.Size();p++){			
 			m_x[p] 		= &x_sta[p];
 			*m_rho[p] 	= Density; 
 			*m_T[p] = *m_Tinf[p] = *m_hcT[p] = *m_kT[p] = *m_qconvT[p] = 0.;

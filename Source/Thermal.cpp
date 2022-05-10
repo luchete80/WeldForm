@@ -140,6 +140,7 @@ inline void Domain::CalcTempIncSOA () {
 	
 	std::vector < double> temp(Particles.Size());
 	
+	//cout << "calc temp inc"<<endl;
 	#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( size_t k = 0; k < Nproc ; k++) {
 		int P1,P2;
@@ -154,14 +155,15 @@ inline void Domain::CalcTempIncSOA () {
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
 			P1	= SMPairs[k][a].first;
 			P2	= SMPairs[k][a].second;
-			xij	= *m_x[P1] - *m_x[P2];
-			h	= (*m_h[P1] + *m_h[P2])/2.0;
+			xij	= *m_x[P1] - (*m_x[P2]);
+			h	= (*m_h[P1] + (*m_h[P2]))/2.0;
 			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
 			
 			
 			di = *m_rho[P1]; mi = *m_mass[P1];
 			dj = *m_rho[P2]; mj = *m_mass[P2];
 			
+			//cout << "calc"<<endl;
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			//LUCIANO: TODO EXCLUDE THIS PRODUCT
 			double m, mc[2];
