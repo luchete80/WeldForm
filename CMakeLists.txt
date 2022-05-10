@@ -111,7 +111,7 @@ SET(EXES
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
-  FSW
+  #FSW
 	#Elastic
 	#Heat_2D
 	#Impact_Campos
@@ -135,7 +135,7 @@ SET(EXES
 	#Plate-Yield_CNS_v2
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
-	#SolidBlock_Heat
+	SolidBlock_Heat
 	#SolidBlock_Heat_CNS
 	#SolidBlock_Heat_conv3faces
 	#SolidBlock_Heat_source
