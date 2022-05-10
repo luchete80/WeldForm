@@ -2,11 +2,10 @@
 #include "Domain.h"
 #include "NastranReader.h"
 
-#define TAU		0.005
-#define VMAX	10.0
 
-#define VFAC	10.0
-
+#define VFAC			10.0
+#define VAVA			35.			//mm/min
+#define WROT 			1200.0 	//rpm
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -24,11 +23,13 @@ void UserAcc(SPH::Domain & domi) {
 
 
 	}
-  domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress * VFAC));
-
+	Vec3_t omega(0.,WROT*M_PI/30.*VFAC);
+  domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-VAVA * VFAC));
+	domi.trimesh->RotateAxisVel(omega, domi.getStepSize());
+	
   for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress * VFAC);
+    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-VAVA * VFAC);
   }
 
 }
