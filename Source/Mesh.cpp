@@ -45,6 +45,23 @@ void TriMesh::CalcCentroids(){
 		element[e]-> centroid = ( *node[element[e]->node[0]] + *node[element[e]->node[1]] + *node[element[e]->node[2]] ) / 3.; 
 	
 }
+
+//Rotate Mesh around a coordinate axis
+inline void TriMesh::RotateAxisVel(const Vec3_t &omega, const double &dt){
+
+	for (int n=0;n<node.size();n++){
+		Vec3_t v 	= cross(omega, node[n]);
+		node[n] 	= node[n] + v * dt;
+	}
+	//Normals and centroids
+	for (int e = 0; e < element.Size(); e++){ 
+			Vec3_t v = cross(omega, element[e] -> centroid);
+			element[e] -> centroid 	= element[e] -> centroid 	+ v*dt;
+			element[e] -> normal 		= element[e] -> normal 		+ v*dt;
+		}
+	}
+	UpdatePlaneCoeff();//Is not necesary to update spheres since nfar node is the same, but element plane constants change
+}
 // TODO: extend to all dirs
 inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2,  const int &dens){
 	int elemcount = dens * dens;

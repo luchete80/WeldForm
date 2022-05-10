@@ -5,16 +5,12 @@
 #define TAU		0.005
 #define VMAX	10.0
 
+#define VFAC	10.0
 
 
-void UserAcc(SPH::Domain & domi)
-{
+void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 
-	if (domi.getTime() < TAU ) 
-		vcompress = VMAX/TAU * domi.getTime();
-	else
-		vcompress = VMAX;
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -25,41 +21,14 @@ void UserAcc(SPH::Domain & domi)
 	#endif
 	
 	{
-    // IF THIS IS NOT APPLIED, WITH CONTACT, CYLINDER GOES AWAY
-    // if (domi.Particles[i]->ID == 7) { //xyz - TRY ALSO TO FIX
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-		// }
 
-    // if (domi.Particles[i]->ID == 3) { //xy
-			// domi.Particles[i]->a[2]		= 0.0; 
-      // domi.Particles[i]->v[2] = domi.Particles[i]->va[2] = domi.Particles[i]->vb[2]		= 0.;
-		// } 
-    
-    // //CENTER
-		// if (domi.Particles[i]->ID == 1) { //x
-			// domi.Particles[i]->a[0]		= 0.0; 
-      // domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
-		// }
-    // if (domi.Particles[i]->ID == 2) { //y
-			// domi.Particles[i]->a[1]		= 0.0; 
-      // domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
-		// }    
-
-    // if (domi.Particles[i]->ID == 4) { //xy
-			// domi.Particles[i]->a[0] = domi.Particles[i]->a [1] = 0.0; 
-      // domi.Particles[i]->v[0] = domi.Particles[i]->va[0] = domi.Particles[i]->vb[0]		= 0.;
-      // domi.Particles[i]->v[1] = domi.Particles[i]->va[1] = domi.Particles[i]->vb[1]		= 0.;
-		// }
 
 	}
-  domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
+  domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress * VFAC));
 
   for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
+    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress * VFAC);
   }
 
 }
