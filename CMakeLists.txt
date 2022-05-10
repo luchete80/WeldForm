@@ -111,7 +111,7 @@ SET(EXES
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
-  FSW
+  #FSW
 	#Elastic
 	#Heat_2D
 	#Impact_Campos
@@ -123,7 +123,7 @@ SET(EXES
 	#Traction
 	#traction_app
 	#Traction_Hollomon
-	#Traction_JC
+	Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D
