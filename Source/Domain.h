@@ -212,6 +212,7 @@ Array <Particle*>				Particles; 	///< Array of particles
 
     bool					FSI;						///< Selecting variable to choose Fluid-Structure Interaction
 		int						contact_type;		//0: no contact 1: node to surface 2: node 2 node
+		bool					thermal_solver;
 	
 	// BONET KERNEL CORRECTION
 	bool 					gradKernelCorr;	

@@ -126,6 +126,8 @@ inline Domain::Domain ()
   m_forces_tensors_time = 0.;
   m_forces_update_time = 0.;
   m_scalar_prop = 0.;
+	
+	thermal_solver = false;
 }
 
 inline Domain::~Domain ()
@@ -1977,6 +1979,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		LastComputeAcceleration();
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
+
+		if (thermal_solver){
+			CalcConvHeat();
+			CalcPlasticWorkHeat(deltat);
+			CalcTempInc();
+			CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
+		}
+		
 		clock_beg = clock();
 		GeneralAfter(*this);
 		bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
