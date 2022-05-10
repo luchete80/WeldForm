@@ -29,7 +29,7 @@ void UserAcc(SPH::Domain & domi) {
 	
   for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-VAVA * VFAC);
+    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0, - VAVA * VFAC);
   }
 
 }
@@ -55,30 +55,30 @@ int main(int argc, char **argv) try
 		L	= 0.05;
     
 		n	= 30.0;		//in length, radius is same distance
-		
-		rho	= 2700.0;
-		K	= 6.7549e10;
-		G	= 2.5902e10;
-		Fy	= 300.e6;
-    	//dx	= L / (n-1);
-		//dx = L/(n-1);
-		dx = 0.001;
-    h	= dx*1.2; //Very important
-        Cs	= sqrt(K/rho);
 
-        double timestep;
-        timestep = (0.2*h/(Cs));
+	rho	= 2700.0;
+	K	= 6.7549e10;
+	G	= 2.5902e10;
+	Fy	= 300.e6;
+	//dx	= L / (n-1);
+	//dx = L/(n-1);
+	dx = 0.00085;
+	h	= dx*1.2; //Very important
+	Cs	= sqrt(K/rho);
+
+	double timestep;
+	timestep = (0.2*h/(Cs));
 		  
 		//timestep = 2.5e-6;
 
-        cout<<"t  = "<<timestep<<endl;
-        cout<<"Cs = "<<Cs<<endl;
-        cout<<"K  = "<<K<<endl;
-        cout<<"G  = "<<G<<endl;
-        cout<<"Fy = "<<Fy<<endl;
-    	dom.GeneralAfter = & UserAcc;
-        dom.DomMax(0) = L;
-        dom.DomMin(0) = -L;
+	cout<<"t  = "<<timestep<<endl;
+	cout<<"Cs = "<<Cs<<endl;
+	cout<<"K  = "<<K<<endl;
+	cout<<"G  = "<<G<<endl;
+	cout<<"Fy = "<<Fy<<endl;
+	dom.GeneralAfter = & UserAcc;
+	dom.DomMax(0) = L;
+	dom.DomMin(0) = -L;
 
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
@@ -90,7 +90,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H - H/4., -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H -H/8., -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranReader reader("Tool.nas");
   
