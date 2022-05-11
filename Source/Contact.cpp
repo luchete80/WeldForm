@@ -97,7 +97,7 @@ inline void Domain::ContactNbSearch(){
 	 // cout <<endl;
 }
 
-void Domain::CalcInitialGap(){
+inline void Domain::CalcContactInitialGap(){
 
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
@@ -108,8 +108,7 @@ void Domain::CalcInitialGap(){
 	double min_contact_force = 1000.;
 	int inside_pairs = 0;
 	double force2 = 0.;
-	double delta_ = 0.;
-	double deltat_cont;
+  double distance;
   double crit;
   
   double kij, omega,psi_cont;
@@ -123,8 +122,9 @@ void Domain::CalcInitialGap(){
   Element* e;
 
   Vec3_t atg;
+  double mindist = 1000.;
 
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,distance, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,distance, e) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -150,14 +150,22 @@ void Domain::CalcInitialGap(){
             
       distance = ( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
                     - dot (Particles[P2]->normal,	Particles[P1]->x) ) ;								//Eq 3-142 
+                    
+      if (distance  < mindist){
+        omp_set_lock(&dom_lock);
+        mindist = distance;
+        omp_unset_lock(&dom_lock);
+      }
     }
+  }
+    cout << "Minimum contact gap is " << mindist<<endl;
 
 }
 
 //////////////////////////////// 
 //// 
 ////////////////////////////////
-void Domain::CalcContactForces(){
+inline void Domain::CalcContactForces(){
 	
 	// #pragma omp parallel for num_threads(Nproc)
 	// #ifdef __GNUC__

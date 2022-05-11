@@ -155,7 +155,8 @@ public:
   inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
 	void CalculateSurface(const int &id = 1);
-	void CalcContactForces();
+	inline void CalcContactForces();
+  inline void CalcContactInitialGap();
 	double contact_force_factor;
 	double friction;
   double friction_sta, friction_dyn;

@@ -1846,7 +1846,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	if (contact){
 		MainNeighbourSearch();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-		CalculateSurface(1);				//After Nb search			
+		CalculateSurface(1);				//After Nb search	
+    CalcContactInitialGap();
 	}
 	
 	//IF GRADCORR IS CALCULATED HERE; INVERSE IS NOT FOUND (ERROR)
@@ -1860,6 +1861,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
   of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
   
   bool check_nb_every_time = false;
+  
 
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();
