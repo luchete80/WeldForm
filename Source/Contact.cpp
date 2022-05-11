@@ -123,7 +123,8 @@ inline void Domain::CalcContactInitialGap(){
 
   Vec3_t atg;
   double mindist = 1000.;
-
+  double maxdist = -1000.;
+  
 	#pragma omp parallel for schedule (static) private(P1,P2,vr,distance, e) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
@@ -148,17 +149,22 @@ inline void Domain::CalcContactInitialGap(){
 
       e = trimesh-> element[Particles[P2]->element];
             
-      distance = ( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
+      distance = -( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
                     - dot (Particles[P2]->normal,	Particles[P1]->x) ) ;								//Eq 3-142 
       //cout << "pplane: "<<trimesh-> element[Particles[P2]->element] -> pplane <<endl;        
       if (distance  < mindist){
         omp_set_lock(&dom_lock);
-        mindist = distance;
+          mindist = distance;
         omp_unset_lock(&dom_lock);
+      } else if (distance  > maxdist){
+        omp_set_lock(&dom_lock);
+          maxdist = distance;
+        omp_unset_lock(&dom_lock);        
       }
     }
   }
-    cout << "Minimum contact gap is " << mindist<<endl;
+    cout << "Min contact gap is " << mindist<<endl;
+    cout << "Max contact gap is " << maxdist<<endl;    
 
 }
 
