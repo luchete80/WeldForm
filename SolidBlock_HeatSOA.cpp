@@ -106,7 +106,7 @@ int main(int argc, char **argv) try
 		timestep = 0.001;
 		cout << "Time Step: "<<timestep<<endl;
 
-		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.01,"test06",999);
+		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
         return 0;
 }
