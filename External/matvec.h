@@ -1949,4 +1949,37 @@ inline Vec3_t cross(const Vec3_t &a, const Vec3_t &b){
 	return ret;
 }
 
+//////SOA THINGS
+Mat3_t FromFlatSym(double flat[]){
+	Mat3_t ret;
+  ret(0,0) = flat[0];		ret(1,1) = flat[1];		ret(2,2) = flat[2];
+  ret(0,1) = ret(1,0) = flat[3];
+  ret(1,2) = ret(2,1) = flat[4];
+  ret(0,2) = ret(2,0) = flat[5];  
+	
+	return ret;
+}
+
+ Mat3_t FromFlatAntiSym(double flat[]){
+	Mat3_t ret;
+  ret(0,0) = flat[0];		ret(1,1) = flat[1];		ret(2,2) = flat[2];  
+
+	ret(0,1) = flat[3]; 
+	ret(1,2) = flat[4]; 
+	ret(0,2) = flat[5]; 
+	
+	ret(1,0) = -flat[3]; 
+	ret(2,1) = -flat[4]; 
+	ret(2,0) = -flat[5]; 
+  
+  return ret;
+}
+
+ void ToFlatSymPtr(const Mat3_t &m_data, double *flat, int initial){
+	flat [initial + 0] = m_data(0,0); flat [initial + 1] = m_data (1,1); flat [initial + 2] = m_data(2,2);
+  flat [initial + 3] = m_data(0,1);
+  flat [initial + 4] = m_data(1,2);
+  flat [initial + 5] = m_data(0,2);
+}
+
 #endif // MECHSYS_MATVEC_H

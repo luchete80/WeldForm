@@ -104,6 +104,7 @@ public:
     void PrimaryComputeAcceleration	();									//Compute the solid boundary properties
     void LastComputeAcceleration		();									//Compute the acceleration due to the other particles
     void CalcForce2233	(Particle * P1, Particle * P2);		//Calculates the contact force between soil-soil/solid-solid particles
+    void CalcForceSOA(int &i,int &j) ;
     void Move						(double dt);										//Move particles
 
     void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
@@ -286,6 +287,13 @@ public:
 	double **m_T, **m_Tinf, **m_kT, **m_hcT, **m_cpT, **m_dTdt;
 	double **m_qconvT,**m_qT;	//thermal source terms 
 	double **m_rho, **m_mass;
+  //Mechanics
+  double *sigma;
+	double *strrate,*rotrate;//all flattened, six component (rotation rate is upped matrix component, since it is antisymm)
+	double *shearstress,*shearstressa,*shearstressb;
+	double *strain,*straina,*strainb;
+	
+
   
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
