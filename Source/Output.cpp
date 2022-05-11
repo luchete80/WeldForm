@@ -433,9 +433,9 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/Tg Dir \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
-    oss << "     <Attribute Name=\"Norm Vec\" AttributeType=\"Vector\" Center=\"Node\">\n";
+    oss << "     <Attribute Name=\"Normal Vec\" AttributeType=\"Vector\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
-    oss << "        " << fn.CStr() <<":/Tg Dir \n";
+    oss << "        " << fn.CStr() <<":/Normal Vec \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     // oss << "     <Attribute Name=\"deltacont\" AttributeType=\"Scalar\" Center=\"Node\">\n";
