@@ -136,7 +136,7 @@ inline void Domain::CalcContactInitialGap(){
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
-		//cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
+		cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
 		for (size_t a = 0; a < ContPairs[k].Size();a++) {
 			//P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
 			if (Particles[ContPairs[k][a].first]->ID == contact_surf_id ) 	{ 	//Cont Surf is partcicles from FEM
@@ -150,7 +150,7 @@ inline void Domain::CalcContactInitialGap(){
             
       distance = ( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
                     - dot (Particles[P2]->normal,	Particles[P1]->x) ) ;								//Eq 3-142 
-                    
+      cout << "pplane: "<<trimesh-> element[Particles[P2]->element] -> pplane <<endl;        
       if (distance  < mindist){
         omp_set_lock(&dom_lock);
         mindist = distance;

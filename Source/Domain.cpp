@@ -1847,6 +1847,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		MainNeighbourSearch();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search	
+    ContactNbSearch();
+    SaveContNeighbourData();	//Again Save Nb data
     CalcContactInitialGap();
 	}
 	
@@ -1875,8 +1877,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		int imax;
 		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 		for (int i=0; i<Particles.Size(); i++){
-			if (Particles[i]->pl_strain>max){
+			if (Particles[i]->pl_strain > max){
+        omp_set_lock(&dom_lock);
 				max= Particles[i]->pl_strain;
+        omp_unset_lock(&dom_lock);
 				imax=i;
 			}
 		}
