@@ -19,7 +19,6 @@
 ************************************************************************************/
 
 #include "Domain.h"
-#include "Mesh.cuh"
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -88,46 +87,28 @@ int main(int argc, char **argv) try
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x;
 			dom.gradKernelCorr = false;
-    	for (size_t a=0; a<dom.Particles.Size(); a++)
-    	{
+    	for (size_t a=0; a<dom.Particles.Size(); a++) {
     		x = dom.Particles[a]->x(0);
-			dom.Particles[a]->k_T			=	3000.;
-			dom.Particles[a]->cp_T			=	1.;
-			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
-			dom.Particles[a]->T_inf 		= 500.;
-			dom.Particles[a]->T				= 20.0;			
-    		if ( x < -H/2.0 ) {
-    			dom.Particles[a]->ID 			= 2;
-    			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-				// cout << "Particle " << a << "is convection BC" <<endl;
-			}
+				*dom.m_kT[a]			=	3000.;
+				*dom.m_cpT[a]		=	1.;
+				*dom.m_hcT[a]		= 100.0; //W/m2-K
+				*dom.m_Tinf[a] 	= 500.;
+				*dom.m_T[a]			= 20.0;		
+			
+				if ( x < -H/2.0 ) {
+					dom.Particles[a]->ID 			= 2;
+					dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+					// cout << "Particle " << a << "is convection BC" <<endl;
+				}
     	}
 
-        timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
-				timestep = 0.001;	
+    timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
+		timestep = 0.001;
 		cout << "Time Step: "<<timestep<<endl;
-		//timestep=1.e-6;
-		//0.3 rho cp h^2/k
-	
-		
-//    	dom.WriteXDMF("maz");
-//    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
 		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
-//		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
-
         return 0;
 }
-
-
-			// dom.Particles[a]->k_T			=3000.;
-			// dom.Particles[a]->cp_T			=1.;
-			// dom.Particles[a]->h_conv		= 100.0; //W/m2-K
-			// dom.Particles[a]->T_inf 		= 500.;
-			// dom.Particles[a]->T				= 20.0;
-    		// x = dom.Particles[a]->x(0);
-    		// if (x=-H/2.0)
-    			// dom.Particles[a]->Thermal_BC=TH_BC_CONVECTION;
 
 MECHSYS_CATCH

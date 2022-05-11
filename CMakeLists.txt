@@ -82,6 +82,7 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
+  #Compression_TRIP_half_ghost_vel
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
@@ -89,11 +90,11 @@ SET(EXES
 	#Contact_Compression
   #Contact_Compression_test
   #Contact_Compression_half_ghost
-  Contact_Compression_half_ghost_debug
+  #Contact_Compression_half_ghost_debug
   #Compression_half_ghost_vel
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
-  Contact_Compression_TRIP_half_ghost
+  #Contact_Compression_TRIP_half_ghost
 	#NastranReader_test
 	#CompressionForces
 	#CompressionVel
@@ -110,6 +111,7 @@ SET(EXES
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
+  #FSW
 	#Elastic
 	#Heat_2D
 	#Impact_Campos
@@ -133,7 +135,7 @@ SET(EXES
 	#Plate-Yield_CNS_v2
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
-	#SolidBlock_Heat
+	SolidBlock_HeatSOA
 	#SolidBlock_Heat_CNS
 	#SolidBlock_Heat_conv3faces
 	#SolidBlock_Heat_source

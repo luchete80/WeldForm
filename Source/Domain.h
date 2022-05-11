@@ -93,6 +93,7 @@ public:
 
     void YZPlaneCellsNeighbourSearch(int q1);						//Create pairs of particles in cells of XZ plan
     void MainNeighbourSearch				();									//Create pairs of particles in the whole domain
+    void MainNeighbourSearch_CNS    (const double &r);  //NEW; ALLOWS TO SAVE DATA BY PARTICLE NBS (AND NOT LOCKING DOMAIN)
 		void MainNeighbourSearch_Ext		();									//Create pairs of particles in the whole domain
 		int AvgNeighbourCount						();									//Create pairs of particles in the whole domain
 		
@@ -138,22 +139,26 @@ public:
 	void Gradient_Approach_Set			(Gradient_Type const & GT);
 	
 	//Thermal Solver
-	void CalcTempInc 	(); 		//LUCIANO: Temperature increment
+	void CalcTempInc 		(); 		//LUCIANO: Temperature increment
+	void CalcTempIncSOA (); 		//LUCIANO: Temperature increment
 	inline void CalcConvHeat ();
+	inline void CalcConvHeatSOA();
 	inline void CalcPlasticWorkHeat();
 	inline void CalcGradCorrMatrix();	//BONET GRADIENT CORRECTION
 	inline void CalcGradCorrMixedMatrix();	//BONET GRADIENT CORRECTION
 	
 	inline void MoveGhost();
+	const double & getStepSize()const {return deltat;};
 
 	
 	
 	/////////////////////// CONTACT /////////////////////////////
 	void AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const int &id);
-	inline void ContactNbSearch();	//Performed AFTER neighbour search
+  inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
 	void CalculateSurface(const int &id = 1);
-	void CalcContactForces();
+	inline void CalcContactForces();
+  inline void CalcContactInitialGap();
 	double contact_force_factor;
 	double friction;
   double friction_sta, friction_dyn;
@@ -178,8 +183,8 @@ public:
 	
 	/////////////// MEMBERS //
     // Data
-//    std::vector< *Particle >				Particles; 	///< Array of particles
-Array <Particle*>				Particles; 	///< Array of particles
+	//    std::vector< *Particle >				Particles; 	///< Array of particles
+	Array <Particle*>				Particles; 	///< Array of particles
     double					R;		///< Particle Radius in addrandombox
 
 		double					sqrt_h_a;				//Coefficient for determining Time Step based on acceleration (can be defined by user)
@@ -210,6 +215,7 @@ Array <Particle*>				Particles; 	///< Array of particles
 
     bool					FSI;						///< Selecting variable to choose Fluid-Structure Interaction
 		int						contact_type;		//0: no contact 1: node to surface 2: node 2 node
+		bool					thermal_solver;
 	
 	// BONET KERNEL CORRECTION
 	bool 					gradKernelCorr;	
@@ -267,10 +273,19 @@ Array <Particle*>				Particles; 	///< Array of particles
 	double max_contact_force;
   
   double contact_force_sum;
+  
+  double m_scalar_prop;  //User Defined Domain Property
 		
     
   //ATTENTION: REDUNDANT, ghost pairs and reference
 	Array<std::pair<size_t,size_t> > GhostPairs;	//If used
+	
+	/////////////////////// SOA (Since v0.4) ///////////////////////////////////
+	Vec3_t **m_x,*m_v,*m_a;
+	double **m_h;
+	double **m_T, **m_Tinf, **m_kT, **m_hcT, **m_cpT, **m_dTdt;
+	double **m_qconvT,**m_qT;	//thermal source terms 
+	double **m_rho, **m_mass;
   
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);

@@ -9,17 +9,22 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-
-#include "Mesh.h"
-
+#include <sstream>
+#include <ostream>
+#include "matvec.h"
 
 #define FIELD_LENGTH	8
 
+
+namespace SPH {
+
 using namespace std;
-
+  
+class TriMesh;
 class NastranReader {
-
-	std::vector <string> rawData;
+private:
+  friend class SPH::TriMesh;
+	std::vector <std::string> rawData;
 	int line_count;
 	int elem_count;
 	int node_count;
@@ -114,7 +119,11 @@ void NastranReader::read( char* fName){
 	// NODAL FIELD DATA IS: GRID|ID|CP|X1|	
   int curr_line = line_start_node;
 	l = curr_line;
-  for (int n=0;n<node_count;n++){
+	Vec3_t min( 1000., 1000., 1000.);
+  Vec3_t max(-1000.,-1000.,-1000.);
+	
+	for (int n=0;n<node_count;n++){
+    //cout << n+1; //DEBUG
 		string temp = rawData[l].substr(FIELD_LENGTH,FIELD_LENGTH); //Second field, id
 		nodeid[n] = atoi(temp.c_str());
 		nodepos.insert(std::make_pair(atoi(temp.c_str()),n));
@@ -148,11 +157,16 @@ void NastranReader::read( char* fName){
 			//cout << temp<<", conv: "<<d<<"sign pos" << sign_pos<<endl;
 			//cout <<d<< " ";
 			node[3*n+i] = d;
+			if (d<min[i])
+				min[i] = d;
+			else if (d > max[i])
+				max[i] = d;
 		}
-		//cout << endl;
 		l++;
   }
 	
+	cout << "Min values: "<< min <<endl;
+	cout << "Max values: "<< max <<endl;	
   
   //IF FIXED FIELD
   cout << "Allocating Elements..."<<endl;
@@ -163,6 +177,7 @@ void NastranReader::read( char* fName){
   curr_line = line_start_elem;
 	l = curr_line;
   for (int n=0;n<elem_count;n++){
+    //cout << n+1<< " ";
 		for (int en=0;en<3;en++){
 			int pos = 3*(FIELD_LENGTH)+ en*FIELD_LENGTH;
 			string temp = rawData[l].substr(pos,FIELD_LENGTH); //Second field, id
@@ -279,6 +294,8 @@ NastranReader::~NastranReader(){
   delete node;
   delete elcon;  
 }
+
+};
 
 #endif
 

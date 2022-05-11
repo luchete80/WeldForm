@@ -1,6 +1,6 @@
 #include "NastranReader.h"
 
-
+using namespace SPH;
 
 int main(){
 	

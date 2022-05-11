@@ -29,6 +29,18 @@
 
 #include <set>
 
+//https://stackoverflow.com/questions/19240540/dynamically-allocating-array-explain/19240932#19240932
+template <typename T>
+void Initiate (T ***mat,int row){
+	//initialize 10 x 20 array:
+	*mat = new T*[row];
+	for (int i = 0; i < row; i++)
+    (*mat)[i] = new T	; //DO NOT FORGET PARENTHESES, PRECEDENCE OF [] is HIGHER THAN DEREF *
+	
+	// for (int i=0;i<row;i++)
+		// cout<< "row size"<<sizeof(*mat[i])/sizeof(float)<<endl;
+}
+
 using namespace std;
 
 namespace SPH {
@@ -125,6 +137,9 @@ inline Domain::Domain ()
   m_forces_momentum_time = 0.;
   m_forces_tensors_time = 0.;
   m_forces_update_time = 0.;
+  m_scalar_prop = 0.;
+	
+	thermal_solver = false;
 }
 
 inline Domain::~Domain ()
@@ -224,6 +239,9 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 
     double qin = 0.03;
     srand(100);
+		
+		//For new SOA accessing
+		std::vector <Vec3_t> x_sta;
 
     if (Dimension==3) {
     	if (type==0) {
@@ -245,7 +263,9 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 						y = V(1) + (sqrt(3.0)*(j+(1.0/3.0)*(k%2))+1)*r;
 						z = V(2) + ((2*sqrt(6.0)/3)*k+1)*r;
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-						else    	Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+						else    		{Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+													x_sta.push_back(Vec3_t(x,y,z));
+						}
 						i++;
 						if ((k%2!=0) && (j%2!=0)) xp = V(0) + (2*i+(j%2)+(k%2)-1)*r; else xp = V(0) + (2*i+(j%2)+(k%2)+1)*r;
 					}
@@ -254,7 +274,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 				}
 				k++;
 				zp = V(2) + ((2*sqrt(6.0)/3)*k+1)*r;
-				cout << "Z: "<<z<<endl;
+				//cout << "Z: "<<z<<endl;
 			}
     	}
     	else {
@@ -277,7 +297,8 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 						y = V(1) + (2.0*j+1)*r;
 						z = V(2) + (2.0*k+1)*r;
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-							else    Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+						else    		Particles.Push(new Particle(tag,Vec3_t(x,y,z),Vec3_t(0,0,0),0.0,Density,h,Fixed));
+						x_sta.push_back(Vec3_t(x,y,z));
 						i++;
 						xp = V(0) + (2*i+1)*r; //COMMENTED BY LUCIANO
 						//cout << "X: "<<xp<<endl;
@@ -304,6 +325,39 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
 		
 		cout << "Particle mass: " << Mass <<endl;
+		
+		// New SOA members
+		cout << "Allocating "<<endl;
+		Initiate (&m_x,Particles.Size());
+		Initiate (&m_h,Particles.Size());
+		Initiate (&m_kT,Particles.Size());
+		Initiate (&m_cpT,Particles.Size());
+		Initiate (&m_hcT,Particles.Size());
+		Initiate (&m_qconvT,Particles.Size());
+		Initiate (&m_T,Particles.Size());		
+		Initiate (&m_Tinf,Particles.Size());
+		Initiate (&m_dTdt,Particles.Size());
+		Initiate (&m_rho,Particles.Size());
+		Initiate (&m_mass,Particles.Size());
+		cout << "Done."<<endl;
+		// m_x 		= new Vec3_t* [Particles.Size()];
+		// m_h 		= new double* [Particles.Size()];
+		// m_kT 		= new double* [Particles.Size()];
+		// m_cpT 	= new double* [Particles.Size()];
+		// m_hcT 	= new double* [Particles.Size()];
+		// m_qconvT= new double* [Particles.Size()];
+		// m_T 		= new double* [Particles.Size()];
+		// m_Tinf 	= new double* [Particles.Size()];
+		// m_dTdt 	= new double* [Particles.Size()];
+		// m_rho 	= new double* [Particles.Size()];
+		// m_mass 	= new double* [Particles.Size()];		
+		//TODO-> CHANGE TO static members (particle will be deleted)
+		for (int p=0;p<Particles.Size();p++){			
+			m_x[p] 		= &x_sta[p];
+			*m_rho[p] 	= Density; 
+			*m_T[p] = *m_Tinf[p] = *m_hcT[p] = *m_kT[p] = *m_qconvT[p] = 0.;
+			*m_mass[p] = Mass;
+		}
 		
 		#pragma omp parallel for num_threads(Nproc)
 		#ifdef __GNUC__
@@ -508,7 +562,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 3; 
+	int ghost_rows = 2; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
@@ -587,7 +641,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
           Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
           Particles[id_part]->inner_mirr_part = part;
           //Particles[id_part]->ID = -50;
-          cout << "part , sym"<<part<<", "<<id_part<<endl;
+          //cout << "part , sym"<<part<<", "<<id_part<<endl;
           Particles[id_part]->ghost_plane_axis = 2;
           Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
           
@@ -1181,7 +1235,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	//cout << "Surface particles: " << surf_part<<endl;
+	cout << "Surface particles: " << surf_part<<endl;
 }
 
 
@@ -1843,7 +1897,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	if (contact){
 		MainNeighbourSearch();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-		CalculateSurface(1);				//After Nb search			
+		CalculateSurface(1);				//After Nb search	
 	}
 	
 	//IF GRADCORR IS CALCULATED HERE; INVERSE IS NOT FOUND (ERROR)
@@ -1857,6 +1911,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
   of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
   
   bool check_nb_every_time = false;
+  
 
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();
@@ -1870,8 +1925,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		int imax;
 		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 		for (int i=0; i<Particles.Size(); i++){
-			if (Particles[i]->pl_strain>max){
+			if (Particles[i]->pl_strain > max){
+        omp_set_lock(&dom_lock);
 				max= Particles[i]->pl_strain;
+        omp_unset_lock(&dom_lock);
 				imax=i;
 			}
 		}
@@ -1942,6 +1999,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
             SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
             CalculateSurface(1);				//After Nb search			
             contact_surf_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+            CalcContactInitialGap(); //BEFORE! contactnb
             ContactNbSearch();
             SaveContNeighbourData();
             contact_nb_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -1955,9 +2013,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 		//NEW, gradient correction
 			if (isfirst) {
-				cout << "Calculating gradient correction matrix"<<endl;
-				if (gradKernelCorr)
-					CalcGradCorrMatrix();		
+				if (gradKernelCorr){
+          cout << "Calculating gradient correction matrix"<<endl;
+          CalcGradCorrMatrix();	}
 				cout << "Done."<<endl;
 				isfirst = false;
 			}		
@@ -1976,6 +2034,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		LastComputeAcceleration();
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
+
+		if (thermal_solver){
+			CalcConvHeat();
+			CalcPlasticWorkHeat(deltat);
+			CalcTempInc();
+			CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
+		}
+		
 		clock_beg = clock();
 		GeneralAfter(*this);
 		bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -2009,6 +2075,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			", BC: "<< bc_time_spent << 
 			", mv: "<<mov_time_spent <<
       ", Contact Force Sum "<<contact_force_sum<<
+      ", UserDefProp: "<<m_scalar_prop<<
 			std::endl;
 						
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
