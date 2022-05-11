@@ -60,6 +60,7 @@ friend class NastranReader;
 	inline void CalcNormals();
 	inline void CalcSpheres();
 	void CalcCentroids();
+	inline void RotateAxisVel(const Vec3_t &omega, const double &dt);
 };
 
 };

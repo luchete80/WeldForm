@@ -14,9 +14,10 @@ TriMesh::TriMesh(NastranReader &nr){
   //Insert nodes
   for (int n=0;n<nr.node_count;n++){
     node.Push(new Vec3_t(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]));
+		node_v.Push(new Vec3_t(0.,0.,0.));
   }
   cout << "Generated "<<node.Size()<< " trimesh nodes. "<<endl;
-  
+  //cout << "Normals"<<endl;
   for (int e=0;e<nr.elem_count;e++){
     element.Push(new Element(nr.elcon[3*e],nr.elcon[3*e+1],nr.elcon[3*e+2]));		  
 		Vec3_t v = ( *node[nr.elcon[3*e]] + *node[nr.elcon[3*e+1]] + *node[nr.elcon[3*e+2]] ) / 3. ;
@@ -25,7 +26,9 @@ TriMesh::TriMesh(NastranReader &nr){
     v1 = *node[nr.elcon[3*e+1]] - *node[nr.elcon[3*e]];
     v2 = *node[nr.elcon[3*e+2]] - *node[nr.elcon[3*e]];
     element[e] ->normal = cross (v1,v2);
+
     element[e] ->normal /= Norm(element[e] ->normal);
+    //cout << "v1 "<< v1<< ", v2 " <<v2<< ", normal "<<element[e]->normal <<endl;
     element[e] -> centroid = v; 
   }
   cout << "Generated "<<element.Size()<< " trimesh elements. "<<endl;  
@@ -43,6 +46,24 @@ void TriMesh::CalcCentroids(){
 	for (int e=0;e<element.Size();e++)
 		element[e]-> centroid = ( *node[element[e]->node[0]] + *node[element[e]->node[1]] + *node[element[e]->node[2]] ) / 3.; 
 	
+}
+
+//Rotate Mesh around a coordinate axis
+inline void TriMesh::RotateAxisVel(const Vec3_t &omega, const double &dt){
+
+	for (int n=0;n<node.size();n++){
+		Vec3_t v 	= cross(omega, *node[n]);
+		*node[n] 	+= v * dt;
+	}
+	//Normals and centroids
+	for (int e = 0; e < element.Size(); e++){ 
+			Vec3_t v2 = element[e] -> centroid;
+			Vec3_t v = cross(omega, v2);
+			element[e] -> centroid 	= element[e] -> centroid 	+ v*dt;
+			element[e] -> normal 		= element[e] -> normal 		+ v*dt;
+	}
+	
+	UpdatePlaneCoeff();//Is not necesary to update spheres since nfar node is the same, but element plane constants change
 }
 // TODO: extend to all dirs
 inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2,  const int &dens){

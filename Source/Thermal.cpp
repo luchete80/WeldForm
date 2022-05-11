@@ -90,8 +90,7 @@ inline void Domain::CalcTempInc () {
 				for (int i=0;i<2;i++){
 					Vec3_t v;
 					Mult (GKc[i], GK * xij, v);
-					// if (SMPairs[k][a].first == 723)
-					//cout << "Orig, Corr GK * xij, Nb"<<GK * xij<<", "<< v;
+
 					// if (i==0)
 					// cout << P1->Nb<<endl;
 					// else

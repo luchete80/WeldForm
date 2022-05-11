@@ -119,8 +119,11 @@ void NastranReader::read( char* fName){
 	// NODAL FIELD DATA IS: GRID|ID|CP|X1|	
   int curr_line = line_start_node;
 	l = curr_line;
-  for (int n=0;n<node_count;n++){
-    cout << n+1; //DEBUG
+	Vec3_t min( 1000., 1000., 1000.);
+  Vec3_t max(-1000.,-1000.,-1000.);
+	
+	for (int n=0;n<node_count;n++){
+    //cout << n+1; //DEBUG
 		string temp = rawData[l].substr(FIELD_LENGTH,FIELD_LENGTH); //Second field, id
 		nodeid[n] = atoi(temp.c_str());
 		nodepos.insert(std::make_pair(atoi(temp.c_str()),n));
@@ -152,13 +155,18 @@ void NastranReader::read( char* fName){
 			
 			double d = strtod(temp.c_str(),NULL);
 			//cout << temp<<", conv: "<<d<<"sign pos" << sign_pos<<endl;
-			cout <<d<< " ";
+			//cout <<d<< " ";
 			node[3*n+i] = d;
+			if (d<min[i])
+				min[i] = d;
+			else if (d > max[i])
+				max[i] = d;
 		}
-		cout << endl;
 		l++;
   }
 	
+	cout << "Min values: "<< min <<endl;
+	cout << "Max values: "<< max <<endl;	
   
   //IF FIXED FIELD
   cout << "Allocating Elements..."<<endl;
@@ -169,7 +177,7 @@ void NastranReader::read( char* fName){
   curr_line = line_start_elem;
 	l = curr_line;
   for (int n=0;n<elem_count;n++){
-    cout << n+1<< " ";
+    //cout << n+1<< " ";
 		for (int en=0;en<3;en++){
 			int pos = 3*(FIELD_LENGTH)+ en*FIELD_LENGTH;
 			string temp = rawData[l].substr(pos,FIELD_LENGTH); //Second field, id
@@ -177,9 +185,9 @@ void NastranReader::read( char* fName){
 			int nod = nodepos.find(d)->second;
 			//cout << "node ind: "<<d<<"real node ind: "<<nod<<endl; 
 			elcon[3*n+en] = nod;
-			cout << d<<" ";
+			//cout << d<<" ";
 		}
-		cout << endl;
+		//cout << endl;
 		l++;
 	}    
   cout << "Done."<<endl;

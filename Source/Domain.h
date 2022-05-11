@@ -148,6 +148,7 @@ public:
 	inline void CalcGradCorrMixedMatrix();	//BONET GRADIENT CORRECTION
 	
 	inline void MoveGhost();
+	const double & getStepSize()const {return deltat;};
 
 	
 	
@@ -156,7 +157,8 @@ public:
   inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
 	void CalculateSurface(const int &id = 1);
-	void CalcContactForces();
+	inline void CalcContactForces();
+  inline void CalcContactInitialGap();
 	double contact_force_factor;
 	double friction;
   double friction_sta, friction_dyn;
@@ -213,6 +215,7 @@ public:
 
     bool					FSI;						///< Selecting variable to choose Fluid-Structure Interaction
 		int						contact_type;		//0: no contact 1: node to surface 2: node 2 node
+		bool					thermal_solver;
 	
 	// BONET KERNEL CORRECTION
 	bool 					gradKernelCorr;	

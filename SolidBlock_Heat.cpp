@@ -19,6 +19,7 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include "Mesh.cuh"
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -86,7 +87,7 @@ int main(int argc, char **argv) try
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
      	double x;
-			dom.gradKernelCorr = true;
+			dom.gradKernelCorr = false;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		x = dom.Particles[a]->x(0);
@@ -103,6 +104,7 @@ int main(int argc, char **argv) try
     	}
 
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
+				timestep = 0.001;	
 		cout << "Time Step: "<<timestep<<endl;
 		//timestep=1.e-6;
 		//0.3 rho cp h^2/k
@@ -111,7 +113,7 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.01,"test06",999);
+		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
 //		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 

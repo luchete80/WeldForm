@@ -126,6 +126,8 @@ inline Domain::Domain ()
   m_forces_tensors_time = 0.;
   m_forces_update_time = 0.;
   m_scalar_prop = 0.;
+	
+	thermal_solver = false;
 }
 
 inline Domain::~Domain ()
@@ -1208,7 +1210,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	//cout << "Surface particles: " << surf_part<<endl;
+	cout << "Surface particles: " << surf_part<<endl;
 }
 
 
@@ -1870,7 +1872,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 	if (contact){
 		MainNeighbourSearch();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-		CalculateSurface(1);				//After Nb search			
+		CalculateSurface(1);				//After Nb search	
 	}
 	
 	//IF GRADCORR IS CALCULATED HERE; INVERSE IS NOT FOUND (ERROR)
@@ -1884,6 +1886,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
   of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
   
   bool check_nb_every_time = false;
+  
 
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();
@@ -1897,8 +1900,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		int imax;
 		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 		for (int i=0; i<Particles.Size(); i++){
-			if (Particles[i]->pl_strain>max){
+			if (Particles[i]->pl_strain > max){
+        omp_set_lock(&dom_lock);
 				max= Particles[i]->pl_strain;
+        omp_unset_lock(&dom_lock);
 				imax=i;
 			}
 		}
@@ -1969,6 +1974,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
             SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
             CalculateSurface(1);				//After Nb search			
             contact_surf_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+            CalcContactInitialGap(); //BEFORE! contactnb
             ContactNbSearch();
             SaveContNeighbourData();
             contact_nb_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -1982,9 +1988,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 		//NEW, gradient correction
 			if (isfirst) {
-				cout << "Calculating gradient correction matrix"<<endl;
-				if (gradKernelCorr)
-					CalcGradCorrMatrix();		
+				if (gradKernelCorr){
+          cout << "Calculating gradient correction matrix"<<endl;
+          CalcGradCorrMatrix();	}
 				cout << "Done."<<endl;
 				isfirst = false;
 			}		
@@ -2003,6 +2009,14 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		LastComputeAcceleration();
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
+
+		if (thermal_solver){
+			CalcConvHeat();
+			CalcPlasticWorkHeat(deltat);
+			CalcTempInc();
+			CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term		
+		}
+		
 		clock_beg = clock();
 		GeneralAfter(*this);
 		bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
