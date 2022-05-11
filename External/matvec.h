@@ -1981,5 +1981,11 @@ Mat3_t FromFlatSym(double flat[]){
   flat [initial + 4] = m_data(1,2);
   flat [initial + 5] = m_data(0,2);
 }
+//
+void ToFlatAntiSymPtr(const Mat3_t &m_data, double *flat, int initial){
+  flat [initial + 3] = m_data(0,1);
+  flat [initial + 4] = m_data(1,2);
+  flat [initial + 5] = m_data(0,2);
+}
 
 #endif // MECHSYS_MATVEC_H
