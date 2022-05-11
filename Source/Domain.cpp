@@ -1847,9 +1847,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		MainNeighbourSearch();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search	
-    ContactNbSearch();
-    SaveContNeighbourData();	//Again Save Nb data
-    CalcContactInitialGap();
 	}
 	
 	//IF GRADCORR IS CALCULATED HERE; INVERSE IS NOT FOUND (ERROR)
@@ -1953,6 +1950,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
             contact_surf_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
             ContactNbSearch();
             SaveContNeighbourData();
+            CalcContactInitialGap();
             contact_nb_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 						//}
 					}//contact				
@@ -1964,9 +1962,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 		//NEW, gradient correction
 			if (isfirst) {
-				cout << "Calculating gradient correction matrix"<<endl;
-				if (gradKernelCorr)
-					CalcGradCorrMatrix();		
+				if (gradKernelCorr){
+          cout << "Calculating gradient correction matrix"<<endl;
+          CalcGradCorrMatrix();	}
 				cout << "Done."<<endl;
 				isfirst = false;
 			}		
