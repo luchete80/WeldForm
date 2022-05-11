@@ -17,7 +17,7 @@ TriMesh::TriMesh(NastranReader &nr){
 		node_v.Push(new Vec3_t(0.,0.,0.));
   }
   cout << "Generated "<<node.Size()<< " trimesh nodes. "<<endl;
-  
+  //cout << "Normals"<<endl;
   for (int e=0;e<nr.elem_count;e++){
     element.Push(new Element(nr.elcon[3*e],nr.elcon[3*e+1],nr.elcon[3*e+2]));		  
 		Vec3_t v = ( *node[nr.elcon[3*e]] + *node[nr.elcon[3*e+1]] + *node[nr.elcon[3*e+2]] ) / 3. ;
@@ -26,7 +26,9 @@ TriMesh::TriMesh(NastranReader &nr){
     v1 = *node[nr.elcon[3*e+1]] - *node[nr.elcon[3*e]];
     v2 = *node[nr.elcon[3*e+2]] - *node[nr.elcon[3*e]];
     element[e] ->normal = cross (v1,v2);
+
     element[e] ->normal /= Norm(element[e] ->normal);
+    //cout << "v1 "<< v1<< ", v2 " <<v2<< ", normal "<<element[e]->normal <<endl;
     element[e] -> centroid = v; 
   }
   cout << "Generated "<<element.Size()<< " trimesh elements. "<<endl;  
