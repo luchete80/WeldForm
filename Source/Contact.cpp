@@ -97,6 +97,63 @@ inline void Domain::ContactNbSearch(){
 	 // cout <<endl;
 }
 
+void Domain::CalcInitialGap(){
+
+	double min_delta,max_delta;
+	min_delta = 1000.; max_delta = 0.;
+	int inside_time;
+	
+
+	max_contact_force = 0.;
+	double min_contact_force = 1000.;
+	int inside_pairs = 0;
+	double force2 = 0.;
+	double delta_ = 0.;
+	double deltat_cont;
+  double crit;
+  
+  double kij, omega,psi_cont;
+  int i,j;  //For inside testing
+	
+	int P1,P2;
+
+  //Vec3_t vr[Particles.Size()];
+  Vec3_t vr;
+
+  Element* e;
+
+  Vec3_t atg;
+
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,distance, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+  //tgforce
+	#ifdef __GNUC__
+	for (size_t k=0; k<Nproc;k++) 
+	#else
+	for (int k=0; k<Nproc;k++) 
+	#endif	
+	{
+		Vec3_t xij;
+		double h,K;
+		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
+		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
+		//cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
+		for (size_t a = 0; a < ContPairs[k].Size();a++) {
+			//P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
+			if (Particles[ContPairs[k][a].first]->ID == contact_surf_id ) 	{ 	//Cont Surf is partcicles from FEM
+				P1 = ContPairs[k][a].second; P2 = ContPairs[k][a].first; 	}
+			else {
+				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
+      
+			vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
+
+      e = trimesh-> element[Particles[P2]->element];
+            
+      distance = ( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
+                    - dot (Particles[P2]->normal,	Particles[P1]->x) ) ;								//Eq 3-142 
+    }
+
+}
+
 //////////////////////////////// 
 //// 
 ////////////////////////////////
