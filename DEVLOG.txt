@@ -9,4 +9,6 @@
 20220512  -   Working on flat arrays, using Particle class. Next step is to compare with 
               Still not working. Fixed FSW example velocity.
               Working on contact Mesh update, now the update changes normals and centroids.
+              Changed JC material to FSW example.
+              Fixed thermal coupling. 
 

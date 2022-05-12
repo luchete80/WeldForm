@@ -453,6 +453,7 @@ inline void Domain::CalcContactForces(){
                   //lambda is fraction passed to 
                   omp_set_lock(&Particles[P1]->my_lock);
                   Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+                  //cout<< Particles[P1]->q_fric_work<<endl;
                   omp_unset_lock(&Particles[P1]->my_lock);
                   }
                 
@@ -490,8 +491,8 @@ inline void Domain::CalcContactForces(){
 	
 	if (max_contact_force > 0.){
     //cout << "particles surpassed max fr force"<<max_reached_part<< ", below force: " <<sta_frict_particles<<endl;
-		cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
-		cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
+		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP
 		// if (min_force_ts> 0)
 			// deltat = min_force_ts;

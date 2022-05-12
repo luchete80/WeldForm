@@ -387,8 +387,8 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		double max=0,min=1000.;
 		for (size_t i=0; i<Particles.Size(); i++){
 			//Particles[i]->T+= dt*Particles[i]->dTdt;
-			//Particles[i]->TempCalcLeapfrog(dt);
-			*m_T[i]+= (*m_dTdt[i])*dt;
+			Particles[i]->TempCalcLeapfrog(dt);
+			//*m_T[i]+= (*m_dTdt[i])*dt;
 			// if (Particles[i]->T > max)
 				// max=Particles[i]->T;
 			// if (Particles[i]->T < min)

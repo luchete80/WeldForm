@@ -63,9 +63,17 @@ int main(int argc, char **argv) try
 		n	= 30.0;		//in length, radius is same distance
 
 	rho	= 2700.0;
-	K	= 6.7549e10;
-	G	= 2.5902e10;
-	Fy	= 300.e6;
+	// K	= 6.7549e10;
+	// G	= 2.5902e10;
+	double E  = 70.e9;
+	double nu = 0.3;
+
+    
+	K= E / ( 3.*(1.-2*nu) );
+	G= E / (2.* (1.+nu));
+
+	Fy	= 350.e6;  
+	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
 	dx = 0.00085;
@@ -74,7 +82,26 @@ int main(int argc, char **argv) try
 
 	double timestep;
 	timestep = (0.2*h/(Cs));
-		  
+
+	Elastic_ el(E,nu);
+///// MATERIAL CONSTANTS EXAMPLE FROM
+///// Zhang_2017 (Aluminium) ?
+      double A,B,C,n_,m,T_m,T_t,eps_0;
+      A = 276.e6; B = 255.0e6; C = 0.0015;
+      m = 1.0;  n_ = 0.3; eps_0 = 1.0;
+      T_m = 775.; T_t = 273.;
+			
+	// 𝐴
+// 𝐽𝐶 276.0 MPa
+// 𝐵
+// 𝐽𝐶 255.0 MPa
+// 𝑛𝐽𝐶 0.3 -
+// 𝑚𝐽𝐶 1.0
+
+	JohnsonCook mat(el, A,B,C,
+                      m,n_,eps_0,
+                      T_m, T_t);	
+                      
 		//timestep = 2.5e-6;
 
 	cout<<"t  = "<<timestep<<endl;
@@ -130,6 +157,9 @@ int main(int argc, char **argv) try
   int bottom_particles = 0;
 		for (size_t a=0; a<dom.Particles.Size(); a++)
 		{
+      dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
+      dom.Particles[a]->mat = &mat;
+        
 			dom.Particles[a]->G		= G;
 			dom.Particles[a]->PresEq	= 0;
 			dom.Particles[a]->Cs		= Cs;
@@ -141,6 +171,12 @@ int main(int argc, char **argv) try
 			//dom.Particles[a]->Beta		= 1.0;
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
+      
+      dom.Particles[a]->k_T			  =	130.;
+			dom.Particles[a]->cp_T			=	960.;
+			// dom.Particles[a]->h_conv		= 100.0; //W/m2-K
+			// dom.Particles[a]->T_inf 		= 500.;
+			dom.Particles[a]->T				  = 20.0;			
 			
 			double x = dom.Particles[a]->x(0);
 			double y = dom.Particles[a]->x(1);
@@ -196,7 +232,7 @@ int main(int argc, char **argv) try
   dom.fric_type = Fr_Dyn;
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.1;
+	dom.friction_dyn = 0.3;
   dom.friction_sta = 0.0;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
@@ -211,9 +247,11 @@ int main(int argc, char **argv) try
   dom.trimesh->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
 
 
-  dom.auto_ts = false;
+  dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
+  dom.thermal_solver = true;
+  dom.cont_heat_gen = true;
   timestep = 1.e-8;
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/10*timestep,"test06",999);
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/50*timestep,"test06",999);
   
   return 0;
 }

@@ -207,7 +207,7 @@ inline void TriMesh::Update(const double &dt){
 		*node[n] += (*node_v[n])*dt;
 	}
   
-  cout << "Min Max Node pos" << min<< "; " <<max<<endl;
+  //cout << "Min Max Node pos" << min<< "; " <<max<<endl;
   
   CalcCentroids();
   CalcNormals();        //From node positions
