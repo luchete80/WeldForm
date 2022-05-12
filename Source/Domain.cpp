@@ -2129,9 +2129,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
     if (contact){
  		//cout << "checking contact"<<endl;
-			trimesh->UpdatePos (deltat); //Update Node Pos
- 			//Update Normals
-			trimesh->UpdatePlaneCoeff();	//If normal does not change..
+			trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
+      UpdateContactParticles(); //Updates normal and velocities
 		}
 
 		trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;

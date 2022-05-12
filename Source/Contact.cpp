@@ -26,6 +26,20 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const i
 	cout << first_fem_particle_idx << " is the first solid particle index."<<endl;
 }
 
+//PARTICLES POSITIONS IS USED IN MOVE!
+inline void Domain::UpdateContactParticles(){
+ 	for ( int e = 0; e < trimesh->element.Size(); e++ ){
+    Vec3_t v = 0.;
+    for (int en = 0;en<3;en++)
+      v += *trimesh -> node_v[trimesh->element[e] ->node[en]];
+		Particles[first_fem_particle_idx + e] -> v = 
+    Particles[first_fem_particle_idx + e] -> va = 
+    Particles[first_fem_particle_idx + e] -> vb = v/3.;
+		Particles[first_fem_particle_idx + e] -> normal  = trimesh->element[e] -> normal;
+    
+	} 
+}
+
 inline void Domain::ContactNbSearch(){
 	//cout << "Performing Nb Search"<<endl;
   		size_t P1,P2;

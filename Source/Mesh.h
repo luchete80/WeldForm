@@ -48,19 +48,24 @@ friend class NastranReader;
 	Array <Element* > 	element;
 	Array <Vec3_t* > 		node;
 	Array <Vec3_t* > 		node_v;				//Node velocities
+  
 	
-	Vec3_t							v;						//Constant Uniform v
+	Vec3_t							m_v;						//Constant Uniform v
+  Vec3_t              m_w;            //Constant axis rotation
+  
 	TriMesh();
   TriMesh(NastranReader &nr);
 	inline void AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2, const int &dens);
 	inline void ApplyConstVel(const Vec3_t &v);
 	inline void CalcCentroidVelFromNodes();
-	inline void UpdatePlaneCoeff();
-	inline void UpdatePos(const double &dt);
+	inline void UpdatePlaneCoeff();       //pplane, this is called by Update()
+	inline void Update(const double &dt); //UPDATES MESH NODES POSITIONS, VELOCITIES, NORMALS AND PPLANE
+                                        //ALL FROM RIGID TRANSLATION AND ROTATION
 	inline void CalcNormals();
 	inline void CalcSpheres();
 	void CalcCentroids();
-	inline void RotateAxisVel(const Vec3_t &omega, const double &dt);
+	inline void SetVel(const Vec3_t &v) {m_v = v;};
+	inline void SetRotAxisVel(const Vec3_t &omega){m_w = omega;};
 };
 
 };
