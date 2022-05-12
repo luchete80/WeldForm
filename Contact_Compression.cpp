@@ -151,6 +151,7 @@ int main(){
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
 
+  dom.contact_mesh_auto_update = false; //manually update
 	
 	//////////////////////
 

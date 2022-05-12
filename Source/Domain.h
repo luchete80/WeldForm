@@ -162,6 +162,8 @@ public:
   
   
   
+  
+  bool contact_mesh_auto_update;
   inline void ContactNbSearch();	//Performed AFTER neighbour search
 	int contact_surf_id;						//particles id from surface
 
