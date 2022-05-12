@@ -4,7 +4,7 @@
 
 
 #define VFAC			1.0
-#define VAVA			35.			//mm/min
+#define VAVA			0.035		//mm/min
 #define WROT 			1200.0 	//rpm
 #define TOOLRAD   0.0062
 
@@ -31,13 +31,11 @@ void UserAcc(SPH::Domain & domi) {
 		}
 
 	}
-	Vec3_t omega(0.,WROT*M_PI/30.*VFAC,0.);
-  domi.trimesh->ApplyConstVel(Vec3_t(0.0,-VAVA * VFAC,0.));
-	domi.trimesh->RotateAxisVel(omega, domi.getStepSize());
-	
+	//Mesh is updated automatically
   for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
+    //THIS SHOULD BE FROM BARICENTER AND AUTOMATIC!
+    //domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
   }
 
 }
@@ -205,6 +203,10 @@ int main(int argc, char **argv) try
   dom.WriteXDMF("maz");
   dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   dom.BC.InOutFlow = 0;
+  
+  // SET TOOL BOUNDARY CONDITIONS
+  dom.trimesh->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
+  dom.trimesh->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
 
   dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-7,"test06",999);
   

@@ -4,3 +4,4 @@
               Begining to add Mat3_t to flat conversions (to test soon SOA vs AOS).
 20220512  -   Working on flat arrays, using Particle class. Next step is to compare with 
               Still not working. Fixed FSW example velocity.
+              Working on contact Mesh update, now the update changes normals and centroids.
