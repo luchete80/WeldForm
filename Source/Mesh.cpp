@@ -195,11 +195,19 @@ inline void TriMesh::CalcCentroidVelFromNodes(){
 inline void TriMesh::Update(const double &dt){
 	//Seems to be More accurate to do this by node vel
 	//This is used by normals
+  Vec3_t min = 1000.;
+  Vec3_t max = -1000.;
 	for (int n=0;n<node.Size();n++){
     Vec3_t vr 	= cross(m_w, *node[n]);
     *node_v[n] = m_v + vr;
+    for (int i=0;i<3;i++) {
+      if      ((*node[n])(i) < min(i)) min[i] = (*node[n])(i);
+      else if ((*node[n])(i) > max(i)) max[i] = (*node[n])(i);
+    } 
 		*node[n] += (*node_v[n])*dt;
 	}
+  
+  cout << "Min Max Node pos" << min<< "; " <<max<<endl;
   
   CalcCentroids();
   CalcNormals();        //From node positions

@@ -96,7 +96,9 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , -H + H/20 , -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  double ybottom = -H + H/10; 
+  
+  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranReader reader("Tool.nas");
   
@@ -145,7 +147,7 @@ int main(int argc, char **argv) try
 			double z = dom.Particles[a]->x(2);
 			
       double r = sqrt (x*x+z*z);      
-      if (r < TOOLRAD && y < (-H + H/20 +dx ) ){
+      if (r < TOOLRAD && y < (ybottom +dx ) ){
         dom.Particles[a]->ID=3; //ID 1 is free surface  
         dom.Particles[a]->not_write_surf_ID = true;
         bottom_particles++;
@@ -208,7 +210,10 @@ int main(int argc, char **argv) try
   dom.trimesh->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
   dom.trimesh->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
 
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-7,"test06",999);
+
+  dom.auto_ts = false;
+  timestep = 1.e-8;
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/10*timestep,"test06",999);
   
   return 0;
 }

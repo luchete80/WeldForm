@@ -2118,6 +2118,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			// if (Particles[i]->contforce>0.)
 		if (auto_ts)
 			AdaptiveTimeStep();
+    //cout << "delta t"<<deltat<<endl;
+    
 		clock_beg = clock();
 
 		Move(deltat);
@@ -2132,8 +2134,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
  		//cout << "checking contact"<<endl;
       if (contact_mesh_auto_update)
         trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
+      //cout << "Updating contact particles"<<endl;
       UpdateContactParticles(); //Updates normal and velocities
 		}
+    //cout << "Done"<<endl;
 
 		trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		
