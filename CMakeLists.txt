@@ -87,7 +87,7 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	Contact_Compression
+	#Contact_Compression
   #Contact_Compression_test
   #Contact_Compression_half_ghost
   #Contact_Compression_half_ghost_debug
@@ -111,7 +111,7 @@ SET(EXES
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
-  #FSW
+  FSW
 	#Elastic
 	#Heat_2D
 	#Impact_Campos

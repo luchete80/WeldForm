@@ -4,8 +4,8 @@
 
 
 #define VFAC			1.0
-#define VAVA			0.035		//mm/min
-#define WROT 			1200.0 	//rpm
+#define VAVA			5.833e-4		//35 mm/min
+#define WROT 			1200.0 	    //rpm
 #define TOOLRAD   0.0062
 
 void UserAcc(SPH::Domain & domi) {
