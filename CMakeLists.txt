@@ -89,7 +89,7 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
   #Contact_Compression_test
-  Contact_Compression_half_ghost
+  #Contact_Compression_half_ghost
   #Contact_Compression_half_ghost_debug
   #Compression_half_ghost_vel
   #Contact_Compression_qt_ghost
@@ -111,7 +111,7 @@ SET(EXES
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
-  #FSW
+  FSW
 	#Elastic
 	#Heat_2D
 	#Impact_Campos

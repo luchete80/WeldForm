@@ -1,0 +1,1293 @@
+BoxDimensions: 0.0544, 0.00425, 0.0544,
+Particle mass: 1.65814e-06
+Allocating
+Done.
+Particle Count: 20480
+[I] Reading ...
+357 nodes and 662 elements found.
+[I] 1037 lines readed ...
+Allocating nodes
+Min values: 3 [    -0.0062         0   -0.0062 ]
+Max values: 3 [     0.0062 0.0022356    0.0062 ]
+Allocating Elements...
+Done.
+Generated 357 trimesh nodes.
+Generated 662 trimesh elements.
+Creating contact mesh..
+Plane z3 [  5.633e-19         0   -0.0046 ]
+Mesh node size 357
+Creating Spheres..
+662particles added with ID 10
+20480 is the first solid particle index.
+Particle count: 21142
+Bottom particles: 171
+
+--------------Solving---------------------------------------------------------------
+Initial checks
+Creating list and cells
+Time Step check
+Max allowable time step using CFL = 5.4861e-08 S
+User Time Step = 1e-08 S
+Cell Size: 3 [ 0.002061630.002369870.00209885 ]
+dS, Contact Stiffness0.00085006, 5.95042e+07
+Fixed Particles Size: 0
+Initial Cell Number: 49, 3, 26,
+
+Initial Condition has been generated
+
+Done.
+
+Output No. 2 at 0 has been generated
+Current Time Step = 1e-08
+Total CPU time: 0.448209
+, Nb: 0.032, StAcc:  0.005, PrAcc: 0
+Total Forces : 0.053
+, Contact Forces: 0.004Artif Visc: 0, Momentum forces: 0.009Forces Tensor: 0
+ Forces Update: 0.074
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0, mv: 0, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle0
+Steps count in this interval: 1Total Step count1
+Total Nb search time in this interval: 0.032Average Nb search time in this interval: 0.032
+Avg Neighbour Count43
+Max, Min, Avg temps: 20, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [          0         0         0 ]
+Max Contact Force: 0
+
+Output No. 3 at 1e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 0.65386
+, Nb: 0.032, StAcc:  0.004, PrAcc: 0.001
+Total Forces : 0.106
+, Contact Forces: 0.008Artif Visc: 0, Momentum forces: 0.021Forces Tensor: 0
+ Forces Update: 0.151
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0, mv: 0.005, Contact Force Sum 1.15067e+06, UserDefProp: 0
+Max plastic strain: 0in particle0
+Steps count in this interval: 1Total Step count2
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [          0         0         0 ]
+Max Contact Force: 12317.4
+
+Output No. 4 at 2e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 0.861082
+, Nb: 0.032, StAcc:  0.005, PrAcc: 0.002
+Total Forces : 0.158
+, Contact Forces: 0.011Artif Visc: 0, Momentum forces: 0.025Forces Tensor: 0
+ Forces Update: 0.228
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.001, mv: 0.008, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle12128
+Steps count in this interval: 1Total Step count3
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.11426e-07         01.11334e-07 ]
+Max Contact Force: 0
+
+Output No. 5 at 3e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 1.06573
+, Nb: 0.032, StAcc:  0.005, PrAcc: 0.004
+Total Forces : 0.211
+, Contact Forces: 0.014Artif Visc: 0, Momentum forces: 0.041Forces Tensor: 0
+ Forces Update: 0.296
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.002, mv: 0.011, Contact Force Sum 24634.7, UserDefProp: 0
+Max plastic strain: 0in particle12128
+Steps count in this interval: 1Total Step count4
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 2.2243e-075.27804e-132.22277e-07 ]
+Max Contact Force: 12317.4
+
+Output No. 6 at 4e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 1.27208
+, Nb: 0.032, StAcc:  0.005, PrAcc: 0.004
+Total Forces : 0.266
+, Contact Forces: 0.018Artif Visc: 0, Momentum forces: 0.052Forces Tensor: 0
+ Forces Update: 0.367
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.002, mv: 0.015, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle12128
+Steps count in this interval: 1Total Step count5
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 3.32565e-076.78428e-113.32427e-07 ]
+Max Contact Force: 0
+
+Output No. 7 at 5e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 1.48027
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.005
+Total Forces : 0.319
+, Contact Forces: 0.022Artif Visc: 0, Momentum forces: 0.061Forces Tensor: 0
+ Forces Update: 0.45
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.018, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle12128
+Steps count in this interval: 1Total Step count6
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 4.41763e-073.96104e-104.4194e-07 ]
+Max Contact Force: 0
+
+Output No. 8 at 6e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 1.68875
+, Nb: 0.032, StAcc:  0.005, PrAcc: 0.006
+Total Forces : 0.372
+, Contact Forces: 0.024Artif Visc: 0, Momentum forces: 0.07Forces Tensor: 0
+ Forces Update: 0.52
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.021, Contact Force Sum 172442, UserDefProp: 0
+Max plastic strain: 0in particle11168
+Steps count in this interval: 1Total Step count7
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 5.50278e-071.23788e-095.50655e-07 ]
+Max Contact Force: 12317.4
+
+Output No. 9 at 7e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 1.8959
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.006
+Total Forces : 0.424
+, Contact Forces: 0.027Artif Visc: 0, Momentum forces: 0.08Forces Tensor: 0
+ Forces Update: 0.597
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.024, Contact Force Sum 160124, UserDefProp: 0
+Max plastic strain: 0in particle11168
+Steps count in this interval: 1Total Step count8
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0001, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 6.57924e-072.83369e-096.58495e-07 ]
+Max Contact Force: 12317.3
+
+Output No. 10 at 8e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 2.10541
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.007
+Total Forces : 0.477
+, Contact Forces: 0.03Artif Visc: 0, Momentum forces: 0.092Forces Tensor: 0
+ Forces Update: 0.678
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.027, Contact Force Sum 24634.1, UserDefProp: 0
+Max plastic strain: 0in particle11168
+Steps count in this interval: 1Total Step count9
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0001, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 7.64584e-075.41177e-097.6539e-07 ]
+Max Contact Force: 12317.1
+
+Output No. 11 at 9e-08 has been generated
+Current Time Step = 1e-08
+Total CPU time: 2.3165
+, Nb: 0.032, StAcc:  0.005, PrAcc: 0.009
+Total Forces : 0.53
+, Contact Forces: 0.033Artif Visc: 0, Momentum forces: 0.106Forces Tensor: 0
+ Forces Update: 0.752
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.03, Contact Force Sum 12317.2, UserDefProp: 0
+Max plastic strain: 0in particle11493
+Steps count in this interval: 1Total Step count10
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0001, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 8.70189e-073.81913e-098.71272e-07 ]
+Max Contact Force: 12317.2
+
+Output No. 12 at 1e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 2.52909
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.01
+Total Forces : 0.584
+, Contact Forces: 0.036Artif Visc: 0, Momentum forces: 0.113Forces Tensor: 0
+ Forces Update: 0.822
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.033, Contact Force Sum 24634.4, UserDefProp: 0
+Max plastic strain: 0in particle11493
+Steps count in this interval: 1Total Step count11
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0001, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 9.74672e-076.07287e-099.76075e-07 ]
+Max Contact Force: 12317.3
+
+Output No. 13 at 1.1e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 2.7423
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.011
+Total Forces : 0.638
+, Contact Forces: 0.039Artif Visc: 0, Momentum forces: 0.122Forces Tensor: 0
+ Forces Update: 0.894
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.036, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count12
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0001, 20, 20
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.07797e-063.07437e-091.07974e-06 ]
+Max Contact Force: 0
+
+Output No. 14 at 1.2e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 2.95744
+, Nb: 0.032, StAcc:  0.008, PrAcc: 0.012
+Total Forces : 0.692
+, Contact Forces: 0.041Artif Visc: 0, Momentum forces: 0.141Forces Tensor: 0
+ Forces Update: 0.974
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.039, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count13
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0001, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.18001e-065.21089e-091.18221e-06 ]
+Max Contact Force: 0
+
+Output No. 15 at 1.3e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 3.21892
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.013
+Total Forces : 0.747
+, Contact Forces: 0.044Artif Visc: 0, Momentum forces: 0.153Forces Tensor: 0
+ Forces Update: 1.053
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.042, Contact Force Sum 12317.3, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count14
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0001, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.28074e-068.34572e-091.28343e-06 ]
+Max Contact Force: 12317.3
+
+Output No. 16 at 1.4e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 3.43761
+, Nb: 0.032, StAcc:  0.008, PrAcc: 0.014
+Total Forces : 0.802
+, Contact Forces: 0.046Artif Visc: 0, Momentum forces: 0.161Forces Tensor: 0
+ Forces Update: 1.127
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.045, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count15
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0001, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.38009e-061.26903e-081.38335e-06 ]
+Max Contact Force: 0
+
+Output No. 17 at 1.5e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 3.65535
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.015
+Total Forces : 0.856
+, Contact Forces: 0.049Artif Visc: 0, Momentum forces: 0.169Forces Tensor: 0
+ Forces Update: 1.208
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.003, mv: 0.048, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count16
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0001, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.47801e-061.84426e-081.48191e-06 ]
+Max Contact Force: 0
+
+Output No. 18 at 1.6e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 3.88269
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.016
+Total Forces : 0.911
+, Contact Forces: 0.053Artif Visc: 0, Momentum forces: 0.176Forces Tensor: 0
+ Forces Update: 1.283
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.004, mv: 0.051, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count17
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0001, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.57443e-062.57858e-081.57914e-06 ]
+Max Contact Force: 0
+
+Output No. 19 at 1.7e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 4.1069
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.016
+Total Forces : 0.967
+, Contact Forces: 0.056Artif Visc: 0, Momentum forces: 0.186Forces Tensor: 0
+ Forces Update: 1.356
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.004, mv: 0.056, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count18
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.66931e-063.48879e-081.67535e-06 ]
+Max Contact Force: 0
+
+Output No. 20 at 1.8e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 4.34905
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.017
+Total Forces : 1.026
+, Contact Forces: 0.059Artif Visc: 0, Momentum forces: 0.198Forces Tensor: 0
+ Forces Update: 1.433
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0, BC: 0.005, mv: 0.059, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count19
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.76258e-064.59015e-081.77011e-06 ]
+Max Contact Force: 0
+
+Output No. 21 at 1.9e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 4.5817
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.018
+Total Forces : 1.083
+, Contact Forces: 0.061Artif Visc: 0, Momentum forces: 0.205Forces Tensor: 0
+ Forces Update: 1.509
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.001, BC: 0.006, mv: 0.062, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count20
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.8542e-065.89626e-081.86335e-06 ]
+Max Contact Force: 0
+
+Output No. 22 at 2e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 4.80467
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.018
+Total Forces : 1.14
+, Contact Forces: 0.064Artif Visc: 0, Momentum forces: 0.22Forces Tensor: 0
+ Forces Update: 1.579
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.001, BC: 0.006, mv: 0.065, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count21
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 1.94411e-067.41897e-081.95503e-06 ]
+Max Contact Force: 0
+
+Output No. 23 at 2.1e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 5.03183
+, Nb: 0.032, StAcc:  0.008, PrAcc: 0.019
+Total Forces : 1.194
+, Contact Forces: 0.067Artif Visc: 0, Momentum forces: 0.236Forces Tensor: 0
+ Forces Update: 1.642
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.001, BC: 0.006, mv: 0.069, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count22
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [          0         0         0 ]
+Max Displacements: 3 [ 2.03227e-069.1684e-082.04509e-06 ]
+Max Contact Force: 0
+
+Output No. 24 at 2.2e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 5.25264
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.021
+Total Forces : 1.248
+, Contact Forces: 0.07Artif Visc: 0, Momentum forces: 0.244Forces Tensor: 0
+ Forces Update: 1.721
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.001, BC: 0.006, mv: 0.072, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count23
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -6.28258e-69-1.23039e-69-6.5135e-69 ]
+Max Displacements: 3 [ 2.11863e-061.11528e-072.13347e-06 ]
+Max Contact Force: 0
+
+Output No. 25 at 2.3e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 5.47694
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.022
+Total Forces : 1.305
+, Contact Forces: 0.072Artif Visc: 0, Momentum forces: 0.255Forces Tensor: 0
+ Forces Update: 1.794
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.001, BC: 0.006, mv: 0.075, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count24
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -4.139e-66-7.80499e-67-4.28838e-66 ]
+Max Displacements: 3 [ 2.20314e-061.33787e-072.22013e-06 ]
+Max Contact Force: 0
+
+Output No. 26 at 2.4e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 5.69914
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.022
+Total Forces : 1.361
+, Contact Forces: 0.075Artif Visc: 0, Momentum forces: 0.264Forces Tensor: 0
+ Forces Update: 1.885
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.002, BC: 0.006, mv: 0.078, Contact Force Sum 12296, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count25
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -4.61963e-64-8.69322e-65-4.78465e-64 ]
+Max Displacements: 3 [ 2.28576e-061.58505e-072.30502e-06 ]
+Max Contact Force: 12296
+
+Output No. 27 at 2.5e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 5.91795
+, Nb: 0.032, StAcc:  0.008, PrAcc: 0.023
+Total Forces : 1.416
+, Contact Forces: 0.077Artif Visc: 0, Momentum forces: 0.274Forces Tensor: 0
+ Forces Update: 1.956
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.002, BC: 0.006, mv: 0.081, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11482
+Steps count in this interval: 1Total Step count26
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0002, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.31268e-62-4.37161e-63-2.39489e-62 ]
+Max Displacements: 3 [ 2.36646e-061.8571e-072.3881e-06 ]
+Max Contact Force: 0
+
+Output No. 28 at 2.6e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 6.13803
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.023
+Total Forces : 1.472
+, Contact Forces: 0.079Artif Visc: 0, Momentum forces: 0.287Forces Tensor: 0
+ Forces Update: 2.029
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.002, BC: 0.006, mv: 0.084, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11488
+Steps count in this interval: 1Total Step count27
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0003, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -7.08291e-61-1.34713e-61-7.3342e-61 ]
+Max Displacements: 3 [ 2.44547e-062.15409e-072.46936e-06 ]
+Max Contact Force: 0
+
+Output No. 29 at 2.7e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 6.35903
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.024
+Total Forces : 1.526
+, Contact Forces: 0.081Artif Visc: 0, Momentum forces: 0.297Forces Tensor: 0
+ Forces Update: 2.098
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.002, BC: 0.006, mv: 0.087, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11488
+Steps count in this interval: 1Total Step count28
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0003, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.53267e-59-2.93433e-60-1.58702e-59 ]
+Max Displacements: 3 [ 2.52387e-062.47591e-072.54884e-06 ]
+Max Contact Force: 0
+
+Output No. 30 at 2.8e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 6.5802
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.025
+Total Forces : 1.581
+, Contact Forces: 0.084Artif Visc: 0, Momentum forces: 0.307Forces Tensor: 0
+ Forces Update: 2.167
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.002, BC: 0.007, mv: 0.09, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0in particle11488
+Steps count in this interval: 1Total Step count29
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0003, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.54218e-58-4.89926e-59-2.63243e-58 ]
+Max Displacements: 3 [ 2.60055e-062.82224e-072.62656e-06 ]
+Max Contact Force: 0
+
+Output No. 31 at 2.9e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 6.79997
+, Nb: 0.032, StAcc:  0.007, PrAcc: 0.026
+Total Forces : 1.634
+, Contact Forces: 0.086Artif Visc: 0, Momentum forces: 0.317Forces Tensor: 0
+ Forces Update: 2.241
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.002, BC: 0.008, mv: 0.094, Contact Force Sum 12268.4, UserDefProp: 0
+Max plastic strain: 0in particle11488
+Steps count in this interval: 1Total Step count30
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0003, 20, 20.0001
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -3.40451e-57-6.60328e-58-3.52563e-57 ]
+Max Displacements: 3 [ 2.67555e-063.19261e-072.70255e-06 ]
+Max Contact Force: 12268.4
+
+Output No. 32 at 3e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 7.07706
+, Nb: 0.032, StAcc:  0.008, PrAcc: 0.027
+Total Forces : 1.688
+, Contact Forces: 0.089Artif Visc: 0, Momentum forces: 0.322Forces Tensor: 0
+ Forces Update: 2.314
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.002, BC: 0.008, mv: 0.097, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 2.93027e-05in particle11488
+Steps count in this interval: 1Total Step count31
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0004, 20, 20.0002
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -3.81588e-56-7.44665e-57-3.95201e-56 ]
+Max Displacements: 3 [ 2.74889e-063.58633e-072.77684e-06 ]
+Max Contact Force: 0
+
+Output No. 33 at 3.1e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 7.29543
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.028
+Total Forces : 1.743
+, Contact Forces: 0.092Artif Visc: 0, Momentum forces: 0.333Forces Tensor: 0
+ Forces Update: 2.383
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.002, BC: 0.008, mv: 0.101, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count32
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0024, 20, 20.0012
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -3.67485e-55-7.2134e-56-3.8064e-55 ]
+Max Displacements: 3 [ 2.8211e-064.00254e-072.8494e-06 ]
+Max Contact Force: 0
+
+Output No. 34 at 3.2e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 7.55515
+, Nb: 0.032, StAcc:  0.006, PrAcc: 0.028
+Total Forces : 1.798
+, Contact Forces: 0.094Artif Visc: 0, Momentum forces: 0.343Forces Tensor: 0
+ Forces Update: 2.445
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.003, BC: 0.008, mv: 0.104, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count33
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0066, 20, 20.0033
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -3.10249e-54-6.12379e-55-3.214e-54 ]
+Max Displacements: 3 [ 2.89433e-064.44019e-072.92017e-06 ]
+Max Contact Force: 0
+
+Output No. 35 at 3.3e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 7.77618
+, Nb: 0.032, StAcc:  0.005, PrAcc: 0.028
+Total Forces : 1.854
+, Contact Forces: 0.098Artif Visc: 0, Momentum forces: 0.351Forces Tensor: 0
+ Forces Update: 2.527
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.003, BC: 0.009, mv: 0.107, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count34
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0145, 20, 20.0073
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.33287e-53-4.62901e-54-2.41708e-53 ]
+Max Displacements: 3 [ 2.96625e-064.89807e-072.98911e-06 ]
+Max Contact Force: 0
+
+Output No. 36 at 3.4e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 8.02173
+, Nb: 0.032, StAcc:  0.013, PrAcc: 0.028
+Total Forces : 1.915
+, Contact Forces: 0.102Artif Visc: 0, Momentum forces: 0.358Forces Tensor: 0
+ Forces Update: 2.61
+, Contact Nb : 0.02Contact Surf : 0.019Msh: 0.003, BC: 0.009, mv: 0.111, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count35
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0241, 20, 20.012
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.58253e-52-3.15585e-53-1.63991e-52 ]
+Max Displacements: 3 [ 3.03681e-065.3748e-073.05617e-06 ]
+Max Contact Force: 0
+
+Output No. 37 at 3.5e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 8.31016
+, Nb: 0.065, StAcc:  0.006, PrAcc: 0.028
+Total Forces : 1.977
+, Contact Forces: 0.105Artif Visc: 0, Momentum forces: 0.37Forces Tensor: 0
+ Forces Update: 2.679
+, Contact Nb : 0.04Contact Surf : 0.037Msh: 0.003, BC: 0.009, mv: 0.116, Contact Force Sum 12254.9, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count36
+Total Nb search time in this interval: 0.033Average Nb search time in this interval: 0.033
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0337, 20, 20.0169
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -9.78797e-52-1.96112e-52-1.01445e-51 ]
+Max Displacements: 3 [  3.106e-065.86882e-073.1213e-06 ]
+Max Contact Force: 12254.9
+
+Output No. 38 at 3.6e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 8.53521
+, Nb: 0.065, StAcc:  0.006, PrAcc: 0.029
+Total Forces : 2.034
+, Contact Forces: 0.108Artif Visc: 0, Momentum forces: 0.379Forces Tensor: 0
+ Forces Update: 2.76
+, Contact Nb : 0.04Contact Surf : 0.037Msh: 0.003, BC: 0.009, mv: 0.119, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count37
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0435, 20, 20.0217
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -5.56886e-51-1.12075e-51-5.77267e-51 ]
+Max Displacements: 3 [ 3.17379e-066.37843e-073.18446e-06 ]
+Max Contact Force: 0
+
+Output No. 39 at 3.7e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 8.76484
+, Nb: 0.065, StAcc:  0.007, PrAcc: 0.03
+Total Forces : 2.091
+, Contact Forces: 0.111Artif Visc: 0, Momentum forces: 0.387Forces Tensor: 0
+ Forces Update: 2.833
+, Contact Nb : 0.04Contact Surf : 0.037Msh: 0.003, BC: 0.009, mv: 0.122, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count38
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0533, 20, 20.0266
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.93661e-50-5.93474e-51-3.04459e-50 ]
+Max Displacements: 3 [ 3.24014e-066.90175e-073.2456e-06 ]
+Max Contact Force: 0
+
+Output No. 40 at 3.8e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 8.99214
+, Nb: 0.065, StAcc:  0.016, PrAcc: 0.031
+Total Forces : 2.147
+, Contact Forces: 0.114Artif Visc: 0, Momentum forces: 0.399Forces Tensor: 0
+ Forces Update: 2.914
+, Contact Nb : 0.04Contact Surf : 0.037Msh: 0.003, BC: 0.009, mv: 0.122, Contact Force Sum 70825.5, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count39
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0631, 20, 20.0316
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.44459e-49-2.93091e-50-1.49794e-49 ]
+Max Displacements: 3 [ 3.30504e-067.43681e-073.30468e-06 ]
+Max Contact Force: 11805.4
+
+Output No. 41 at 3.9e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 9.22061
+, Nb: 0.065, StAcc:  0.006, PrAcc: 0.031
+Total Forces : 2.206
+, Contact Forces: 0.118Artif Visc: 0, Momentum forces: 0.407Forces Tensor: 0
+ Forces Update: 2.987
+, Contact Nb : 0.04Contact Surf : 0.037Msh: 0.004, BC: 0.009, mv: 0.125, Contact Force Sum 672617, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count40
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.073, 20, 20.0365
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -6.66647e-49-1.35752e-49-6.91374e-49 ]
+Max Displacements: 3 [ 3.36844e-067.98146e-073.36166e-06 ]
+Max Contact Force: 11803.7
+
+Output No. 42 at 4e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 9.50638
+, Nb: 0.1, StAcc:  0.01, PrAcc: 0.031
+Total Forces : 2.273
+, Contact Forces: 0.121Artif Visc: 0, Momentum forces: 0.414Forces Tensor: 0
+ Forces Update: 3.086
+, Contact Nb : 0.048Contact Surf : 0.045Msh: 0.004, BC: 0.009, mv: 0.128, Contact Force Sum 342046, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count41
+Total Nb search time in this interval: 0.035Average Nb search time in this interval: 0.035
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.0828, 20, 20.0414
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.90018e-48-5.92603e-49-3.00819e-48 ]
+Max Displacements: 3 [ 3.43032e-068.53343e-073.32445e-06 ]
+Max Contact Force: 11796.5
+
+Output No. 43 at 4.1e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 9.73452
+, Nb: 0.1, StAcc:  0.008, PrAcc: 0.032
+Total Forces : 2.33
+, Contact Forces: 0.124Artif Visc: 0, Momentum forces: 0.425Forces Tensor: 0
+ Forces Update: 3.154
+, Contact Nb : 0.048Contact Surf : 0.045Msh: 0.004, BC: 0.009, mv: 0.131, Contact Force Sum 11785.8, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count42
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.0927, 20, 20.0463
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.19455e-47-2.44869e-48-1.2392e-47 ]
+Max Displacements: 3 [ 3.38355e-069.09027e-073.26646e-06 ]
+Max Contact Force: 11785.8
+
+Output No. 44 at 4.2e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 9.95758
+, Nb: 0.1, StAcc:  0.009, PrAcc: 0.033
+Total Forces : 2.385
+, Contact Forces: 0.126Artif Visc: 0, Momentum forces: 0.438Forces Tensor: 0
+ Forces Update: 3.237
+, Contact Nb : 0.048Contact Surf : 0.045Msh: 0.004, BC: 0.009, mv: 0.134, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count43
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.1025, 20, 20.0513
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -4.67614e-47-9.61435e-48-4.85155e-47 ]
+Max Displacements: 3 [ 3.33516e-069.6493e-073.20625e-06 ]
+Max Contact Force: 0
+
+Output No. 45 at 4.3e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 10.1771
+, Nb: 0.1, StAcc:  0.006, PrAcc: 0.034
+Total Forces : 2.441
+, Contact Forces: 0.129Artif Visc: 0, Momentum forces: 0.453Forces Tensor: 0
+ Forces Update: 3.317
+, Contact Nb : 0.048Contact Surf : 0.045Msh: 0.004, BC: 0.009, mv: 0.138, Contact Force Sum 16312.6, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count44
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.1124, 20, 20.0562
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.74566e-46-3.59922e-47-1.81135e-46 ]
+Max Displacements: 3 [ 3.28666e-061.02076e-063.24031e-06 ]
+Max Contact Force: 16312.6
+
+Output No. 46 at 4.4e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 10.3974
+, Nb: 0.1, StAcc:  0.007, PrAcc: 0.035
+Total Forces : 2.496
+, Contact Forces: 0.131Artif Visc: 0, Momentum forces: 0.463Forces Tensor: 0
+ Forces Update: 3.385
+, Contact Nb : 0.048Contact Surf : 0.045Msh: 0.004, BC: 0.009, mv: 0.141, Contact Force Sum 55803.8, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12127
+Steps count in this interval: 1Total Step count45
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.1222, 20, 20.0611
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -6.23378e-46-1.28865e-46-6.46905e-46 ]
+Max Displacements: 3 [ 3.23802e-061.07625e-063.2985e-06 ]
+Max Contact Force: 18721
+
+Output No. 47 at 4.5e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 10.6753
+, Nb: 0.134, StAcc:  0.006, PrAcc: 0.035
+Total Forces : 2.552
+, Contact Forces: 0.134Artif Visc: 0, Momentum forces: 0.482Forces Tensor: 0
+ Forces Update: 3.453
+, Contact Nb : 0.067Contact Surf : 0.063Msh: 0.005, BC: 0.01, mv: 0.144, Contact Force Sum 80589.2, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12448
+Steps count in this interval: 1Total Step count46
+Total Nb search time in this interval: 0.034Average Nb search time in this interval: 0.034
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.1319, 20, 20.066
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.13535e-45-4.425e-46-2.21614e-45 ]
+Max Displacements: 3 [ 3.23468e-061.1311e-063.35451e-06 ]
+Max Contact Force: 19779.1
+
+Output No. 48 at 4.6e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 10.8965
+, Nb: 0.134, StAcc:  0.007, PrAcc: 0.036
+Total Forces : 2.606
+, Contact Forces: 0.137Artif Visc: 0, Momentum forces: 0.496Forces Tensor: 0
+ Forces Update: 3.531
+, Contact Nb : 0.067Contact Surf : 0.063Msh: 0.005, BC: 0.011, mv: 0.148, Contact Force Sum 45744.6, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12125
+Steps count in this interval: 1Total Step count47
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.1417, 20, 20.0708
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -7.03409e-45-1.46098e-45-7.30086e-45 ]
+Max Displacements: 3 [ 3.2869e-061.18503e-063.40804e-06 ]
+Max Contact Force: 17086.3
+
+Output No. 49 at 4.7e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 11.1201
+, Nb: 0.134, StAcc:  0.007, PrAcc: 0.036
+Total Forces : 2.663
+, Contact Forces: 0.14Artif Visc: 0, Momentum forces: 0.503Forces Tensor: 0
+ Forces Update: 3.6
+, Contact Nb : 0.067Contact Surf : 0.063Msh: 0.005, BC: 0.012, mv: 0.151, Contact Force Sum 29974.3, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12125
+Steps count in this interval: 1Total Step count48
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.1513, 20, 20.0756
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.23346e-44-4.64878e-45-2.31833e-44 ]
+Max Displacements: 3 [ 3.34375e-061.23775e-063.4588e-06 ]
+Max Contact Force: 17331.5
+
+Output No. 50 at 4.8e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 11.3411
+, Nb: 0.134, StAcc:  0.007, PrAcc: 0.037
+Total Forces : 2.718
+, Contact Forces: 0.143Artif Visc: 0, Momentum forces: 0.514Forces Tensor: 0
+ Forces Update: 3.673
+, Contact Nb : 0.067Contact Surf : 0.063Msh: 0.005, BC: 0.012, mv: 0.154, Contact Force Sum 554.707, UserDefProp: 0
+Max plastic strain: 6.50941e-05in particle12125
+Steps count in this interval: 1Total Step count49
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.1608, 20, 20.0804
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -6.85015e-44-1.42865e-44-7.11093e-44 ]
+Max Displacements: 3 [ 3.39455e-061.28895e-063.50677e-06 ]
+Max Contact Force: 554.707
+
+Output No. 51 at 4.9e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 11.5628
+, Nb: 0.134, StAcc:  0.008, PrAcc: 0.037
+Total Forces : 2.768
+, Contact Forces: 0.143Artif Visc: 0, Momentum forces: 0.529Forces Tensor: 0
+ Forces Update: 3.739
+, Contact Nb : 0.067Contact Surf : 0.063Msh: 0.005, BC: 0.012, mv: 0.157, Contact Force Sum 16312.2, UserDefProp: 0
+Max plastic strain: 0.000163128in particle11482
+Steps count in this interval: 1Total Step count50
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.1703, 20, 20.0851
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.03342e-43-4.24876e-44-2.11096e-43 ]
+Max Displacements: 3 [ 3.53879e-061.33831e-063.55195e-06 ]
+Max Contact Force: 9796.85
+
+Output No. 52 at 5e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 11.8397
+, Nb: 0.166, StAcc:  0.007, PrAcc: 0.037
+Total Forces : 2.824
+, Contact Forces: 0.146Artif Visc: 0, Momentum forces: 0.537Forces Tensor: 0
+ Forces Update: 3.807
+, Contact Nb : 0.087Contact Surf : 0.082Msh: 0.005, BC: 0.012, mv: 0.16, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0.000163128in particle11804
+Steps count in this interval: 1Total Step count51
+Total Nb search time in this interval: 0.032Average Nb search time in this interval: 0.032
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.1796, 20, 20.0898
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -5.85257e-43-1.225e-43-6.07602e-43 ]
+Max Displacements: 3 [ 4.02878e-061.38554e-063.81418e-06 ]
+Max Contact Force: 0
+
+Output No. 53 at 5.1e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 12.0825
+, Nb: 0.166, StAcc:  0.008, PrAcc: 0.038
+Total Forces : 2.881
+, Contact Forces: 0.149Artif Visc: 0, Momentum forces: 0.551Forces Tensor: 0
+ Forces Update: 3.874
+, Contact Nb : 0.087Contact Surf : 0.082Msh: 0.005, BC: 0.012, mv: 0.163, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0.000205381in particle11804
+Steps count in this interval: 1Total Step count52
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.1887, 20, 20.0943
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.63599e-42-3.42985e-43-1.69853e-42 ]
+Max Displacements: 3 [ 4.50693e-061.43032e-064.07689e-06 ]
+Max Contact Force: 0
+
+Output No. 54 at 5.2e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 12.314
+, Nb: 0.166, StAcc:  0.009, PrAcc: 0.038
+Total Forces : 2.938
+, Contact Forces: 0.153Artif Visc: 0, Momentum forces: 0.562Forces Tensor: 0
+ Forces Update: 3.958
+, Contact Nb : 0.087Contact Surf : 0.082Msh: 0.005, BC: 0.012, mv: 0.166, Contact Force Sum 24092.6, UserDefProp: 0
+Max plastic strain: 0.00029051in particle12126
+Steps count in this interval: 1Total Step count53
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.1976, 20, 20.0988
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -4.44841e-42-9.34022e-43-4.61863e-42 ]
+Max Displacements: 3 [ 4.97313e-061.47234e-064.52025e-06 ]
+Max Contact Force: 11773.3
+
+Output No. 55 at 5.3e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 12.5397
+, Nb: 0.166, StAcc:  0.007, PrAcc: 0.039
+Total Forces : 2.996
+, Contact Forces: 0.155Artif Visc: 0, Momentum forces: 0.574Forces Tensor: 0
+ Forces Update: 4.03
+, Contact Nb : 0.087Contact Surf : 0.082Msh: 0.005, BC: 0.012, mv: 0.168, Contact Force Sum 12324.7, UserDefProp: 0
+Max plastic strain: 0.000393791in particle12126
+Steps count in this interval: 1Total Step count54
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.2064, 20, 20.1032
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.17825e-41-2.47745e-42-1.22337e-41 ]
+Max Displacements: 3 [ 5.42726e-061.51128e-065.0899e-06 ]
+Max Contact Force: 11771.4
+
+Output No. 56 at 5.4e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 12.7563
+, Nb: 0.166, StAcc:  0.007, PrAcc: 0.04
+Total Forces : 3.052
+, Contact Forces: 0.157Artif Visc: 0, Momentum forces: 0.583Forces Tensor: 0
+ Forces Update: 4.121
+, Contact Nb : 0.087Contact Surf : 0.082Msh: 0.005, BC: 0.012, mv: 0.17, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0.000511907in particle12126
+Steps count in this interval: 1Total Step count55
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.2149, 20, 20.1074
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -3.04408e-41-6.40911e-42-3.16073e-41 ]
+Max Displacements: 3 [ 5.86918e-061.54682e-065.64533e-06 ]
+Max Contact Force: 0
+
+Output No. 57 at 5.5e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 13.0313
+, Nb: 0.199, StAcc:  0.008, PrAcc: 0.04
+Total Forces : 3.107
+, Contact Forces: 0.159Artif Visc: 0, Momentum forces: 0.592Forces Tensor: 0
+ Forces Update: 4.182
+, Contact Nb : 0.106Contact Surf : 0.1Msh: 0.005, BC: 0.012, mv: 0.173, Contact Force Sum 11762.8, UserDefProp: 0
+Max plastic strain: 0.000638944in particle12126
+Steps count in this interval: 1Total Step count56
+Total Nb search time in this interval: 0.033Average Nb search time in this interval: 0.033
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.2232, 20, 20.1116
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -7.68058e-41-1.61909e-41-7.97505e-41 ]
+Max Displacements: 3 [ 6.29881e-061.57869e-066.18639e-06 ]
+Max Contact Force: 11762.8
+
+Output No. 58 at 5.6e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 13.2594
+, Nb: 0.199, StAcc:  0.007, PrAcc: 0.04
+Total Forces : 3.162
+, Contact Forces: 0.162Artif Visc: 0, Momentum forces: 0.597Forces Tensor: 0
+ Forces Update: 4.264
+, Contact Nb : 0.106Contact Surf : 0.1Msh: 0.006, BC: 0.012, mv: 0.176, Contact Force Sum 11754.9, UserDefProp: 0
+Max plastic strain: 0.000771171in particle12126
+Steps count in this interval: 1Total Step count57
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.2313, 20, 20.1156
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.89473e-40-3.99875e-41-1.9674e-40 ]
+Max Displacements: 3 [ 6.71609e-061.60663e-066.71295e-06 ]
+Max Contact Force: 11754.9
+
+Output No. 59 at 5.7e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 13.4812
+, Nb: 0.199, StAcc:  0.006, PrAcc: 0.041
+Total Forces : 3.218
+, Contact Forces: 0.165Artif Visc: 0, Momentum forces: 0.607Forces Tensor: 0
+ Forces Update: 4.335
+, Contact Nb : 0.106Contact Surf : 0.1Msh: 0.006, BC: 0.013, mv: 0.179, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0.000905626in particle12126
+Steps count in this interval: 1Total Step count58
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.2391, 20, 20.1196
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -4.57489e-40-9.66543e-41-4.75037e-40 ]
+Max Displacements: 3 [ 7.1209e-061.63046e-067.22484e-06 ]
+Max Contact Force: 0
+
+Output No. 60 at 5.8e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 13.6991
+, Nb: 0.199, StAcc:  0.007, PrAcc: 0.042
+Total Forces : 3.262
+, Contact Forces: 0.165Artif Visc: 0, Momentum forces: 0.613Forces Tensor: 0
+ Forces Update: 4.415
+, Contact Nb : 0.106Contact Surf : 0.1Msh: 0.006, BC: 0.013, mv: 0.181, Contact Force Sum 12301.5, UserDefProp: 0
+Max plastic strain: 0.00104011in particle12126
+Steps count in this interval: 1Total Step count59
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.2467, 20, 20.1234
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.08224e-39-2.28872e-40-1.12375e-39 ]
+Max Displacements: 3 [ 7.51318e-061.64998e-067.72197e-06 ]
+Max Contact Force: 11748.2
+
+Output No. 61 at 5.9e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 13.933
+, Nb: 0.199, StAcc:  0.006, PrAcc: 0.043
+Total Forces : 3.318
+, Contact Forces: 0.168Artif Visc: 0, Momentum forces: 0.629Forces Tensor: 0
+ Forces Update: 4.482
+, Contact Nb : 0.106Contact Surf : 0.1Msh: 0.006, BC: 0.013, mv: 0.185, Contact Force Sum 12406.5, UserDefProp: 0
+Max plastic strain: 0.00117297in particle12126
+Steps count in this interval: 1Total Step count60
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.254, 20, 20.127
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.51061e-39-5.31428e-40-2.60687e-39 ]
+Max Displacements: 3 [ 7.89293e-061.66497e-068.20431e-06 ]
+Max Contact Force: 8888.48
+
+Output No. 62 at 6e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 14.2268
+, Nb: 0.231, StAcc:  0.008, PrAcc: 0.043
+Total Forces : 3.375
+, Contact Forces: 0.17Artif Visc: 0, Momentum forces: 0.642Forces Tensor: 0
+ Forces Update: 4.562
+, Contact Nb : 0.125Contact Surf : 0.118Msh: 0.006, BC: 0.013, mv: 0.188, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0.00130292in particle12126
+Steps count in this interval: 1Total Step count61
+Total Nb search time in this interval: 0.032Average Nb search time in this interval: 0.032
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.261, 20, 20.1305
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -5.71642e-39-1.21102e-39-5.93547e-39 ]
+Max Displacements: 3 [ 8.26012e-061.67525e-068.67179e-06 ]
+Max Contact Force: 0
+
+Output No. 63 at 6.1e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 14.4908
+, Nb: 0.231, StAcc:  0.012, PrAcc: 0.043
+Total Forces : 3.443
+, Contact Forces: 0.174Artif Visc: 0, Momentum forces: 0.654Forces Tensor: 0
+ Forces Update: 4.66
+, Contact Nb : 0.125Contact Surf : 0.118Msh: 0.006, BC: 0.014, mv: 0.193, Contact Force Sum 13030.2, UserDefProp: 0
+Max plastic strain: 0.00142901in particle12126
+Steps count in this interval: 1Total Step count62
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count43
+Max, Min, Avg temps: 20.2678, 20, 20.1339
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.27853e-38-2.7106e-39-1.32748e-38 ]
+Max Displacements: 3 [ 8.61475e-061.68062e-069.12438e-06 ]
+Max Contact Force: 11728.9
+
+Output No. 64 at 6.2e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 14.7106
+, Nb: 0.231, StAcc:  0.006, PrAcc: 0.044
+Total Forces : 3.499
+, Contact Forces: 0.176Artif Visc: 0, Momentum forces: 0.663Forces Tensor: 0
+ Forces Update: 4.734
+, Contact Nb : 0.125Contact Surf : 0.118Msh: 0.006, BC: 0.014, mv: 0.197, Contact Force Sum 0, UserDefProp: 0
+Max plastic strain: 0.0015505in particle12126
+Steps count in this interval: 1Total Step count63
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.2742, 20, 20.1371
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.81103e-38-5.96372e-39-2.91853e-38 ]
+Max Displacements: 3 [ 8.95679e-061.68089e-069.56204e-06 ]
+Max Contact Force: 0
+
+Output No. 65 at 6.3e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 14.9358
+, Nb: 0.231, StAcc:  0.008, PrAcc: 0.044
+Total Forces : 3.557
+, Contact Forces: 0.179Artif Visc: 0, Momentum forces: 0.671Forces Tensor: 0
+ Forces Update: 4.81
+, Contact Nb : 0.125Contact Surf : 0.118Msh: 0.007, BC: 0.015, mv: 0.199, Contact Force Sum 12374, UserDefProp: 0
+Max plastic strain: 0.00166684in particle12126
+Steps count in this interval: 1Total Step count64
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.2803, 20, 20.1401
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -6.07993e-38-1.29067e-38-6.31212e-38 ]
+Max Displacements: 3 [ 9.28626e-061.67588e-069.98474e-06 ]
+Max Contact Force: 12374
+
+Output No. 66 at 6.4e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 15.1593
+, Nb: 0.231, StAcc:  0.006, PrAcc: 0.046
+Total Forces : 3.613
+, Contact Forces: 0.182Artif Visc: 0, Momentum forces: 0.686Forces Tensor: 0
+ Forces Update: 4.889
+, Contact Nb : 0.125Contact Surf : 0.118Msh: 0.007, BC: 0.015, mv: 0.202, Contact Force Sum 12999.6, UserDefProp: 0
+Max plastic strain: 0.0017776in particle12126
+Steps count in this interval: 1Total Step count65
+Total Nb search time in this interval: 0Average Nb search time in this interval: 0
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.2861, 20, 20.143
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -1.29449e-37-2.74948e-38-1.34384e-37 ]
+Max Displacements: 3 [ 9.60318e-061.6654e-061.03924e-05 ]
+Max Contact Force: 11693.2
+
+Output No. 67 at 6.5e-07 has been generated
+Current Time Step = 1e-08
+Total CPU time: 15.4485
+, Nb: 0.268, StAcc:  0.01, PrAcc: 0.046
+Total Forces : 3.67
+, Contact Forces: 0.184Artif Visc: 0, Momentum forces: 0.696Forces Tensor: 0
+ Forces Update: 4.978
+, Contact Nb : 0.144Contact Surf : 0.137Msh: 0.007, BC: 0.015, mv: 0.205, Contact Force Sum 25804.3, UserDefProp: 0
+Max plastic strain: 0.00188245in particle12126
+Steps count in this interval: 1Total Step count66
+Total Nb search time in this interval: 0.037Average Nb search time in this interval: 0.037
+Avg Neighbour Count44
+Max, Min, Avg temps: 20.2999, 20, 20.1499
+Particle 0 pos and vel
+3 [  -0.027075 -0.004075 -0.027075 ]
+3 [ -2.71482e-37-5.76893e-38-2.8181e-37 ]
+Max Displacements: 3 [ 9.90755e-061.66261e-061.07851e-05 ]
+Max Contact Force: 25804.3
+^C
