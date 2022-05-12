@@ -1,2 +1,3 @@
-20220510 - Working on FSW example. Working on Thermal SOA version.
-20220511 - FSW Example. Setting contact = true. Checking normals and min initial contact gap.
+20220510 - 	Working on FSW example. Working on Thermal SOA version.
+20220511 - 	FSW Example. Setting contact = true. Checking normals and min initial contact gap.
+						Begining to add Mat3_t to flat conversions (to test soon SOA vs AOS)

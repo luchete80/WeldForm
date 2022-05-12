@@ -262,8 +262,15 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				float mj_dj= mj/dj;
 				P1->ZWab	+= mj_dj* K;
 				if (!gradKernelCorr){
+					#ifndef FLAT_TENSORS
 					P1->StrainRate 		= P1->StrainRate + mj_dj*StrainRate;
 					P1->RotationRate 	= P1->RotationRate + mj_dj*RotationRate;
+					#else 
+					Mat3_t temp = FromFlatSym (P1->strrate)+ mj_dj*StrainRate;
+					ToFlatSym(temp,P1 -> strrate);
+					temp = FromFlatAntiSymNullDiag(P1->rotrate) + mj_dj*RotationRate;
+					ToFlatSymNullDiag(temp,P1 -> rotrate); //is the same function
+					#endif
 				}
 				else {
 					P1->StrainRate 		= P1->StrainRate 		+ mj_dj * StrainRate_c[0];
@@ -294,8 +301,15 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				float mi_di = mi/di;
 				P2->ZWab	+= mi_di* K;
 				if (!gradKernelCorr){
-					P2->StrainRate	 = P2->StrainRate + mi_di*StrainRate;
+					#ifndef FLAT_TENSORS
+          P2->StrainRate	 = P2->StrainRate + mi_di*StrainRate;
 					P2->RotationRate = P2->RotationRate + mi_di*RotationRate;
+					#else 
+					Mat3_t temp = FromFlatSym (P2->strrate)+ mi_di*StrainRate;
+					ToFlatSym(temp,P1 -> strrate);
+					temp = FromFlatAntiSymNullDiag(P2->rotrate) + mi_di*RotationRate;
+					ToFlatSymNullDiag(temp,P1 -> rotrate); //is the same function
+					#endif
 				} else {
 					P2->StrainRate = P2->StrainRate 		+ mi_di*StrainRate_c[1];
 					P2->RotationRate = P2->RotationRate + mi_di*RotationRate_c[1];
