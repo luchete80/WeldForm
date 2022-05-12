@@ -41,7 +41,7 @@ inline void Domain::ContactNbSearch(){
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
-		cout << "Rig Pair size"<<RIGPairs[k].Size()<<endl;
+		//cout << "Rig Pair size"<<RIGPairs[k].Size()<<endl;
 		for (size_t a=0; a<RIGPairs[k].Size();a++) {
 			
 			P1	= RIGPairs[k][a].first;
@@ -124,8 +124,9 @@ inline void Domain::CalcContactInitialGap(){
   Vec3_t atg;
   double mindist = 1000.;
   double maxdist = -1000.;
+  double delta_;
   
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,distance, e) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,distance, e) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -146,25 +147,32 @@ inline void Domain::CalcContactInitialGap(){
 				P1 = RIGPairs[k][a].first; P2 = RIGPairs[k][a].second; } 
       
 			vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
-
-      e = trimesh-> element[Particles[P2]->element];
-            
-      distance = -( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
-                    - dot (Particles[P2]->normal,	Particles[P1]->x) ) ;								//Eq 3-142 
-      //cout << "pplane: "<<trimesh-> element[Particles[P2]->element] -> pplane <<endl;        
-      if (distance  < mindist){
-        omp_set_lock(&dom_lock);
-          mindist = distance;
-        omp_unset_lock(&dom_lock);
-      } else if (distance  > maxdist){
-        omp_set_lock(&dom_lock);
-          maxdist = distance;
-        omp_unset_lock(&dom_lock);        
+			delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
+      
+      //cout << "p1 vel "<<Particles[P1]->v << "p2 vel "<< Particles[P2]->v <<endl;
+      // cout << "distance "<< Particles[P1]->x - Particles[P2]->x<<endl;
+			//Check if SPH and fem particles are approaching each other
+			if (delta_ > 0 ){
+        
+        e = trimesh-> element[Particles[P2]->element];
+              
+        distance = -( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
+                      - dot (Particles[P2]->normal,	Particles[P1]->x) ) ;								//Eq 3-142 
+        //cout << "pplane: "<<trimesh-> element[Particles[P2]->element] -> pplane <<endl;        
+        if (distance  < mindist){
+          omp_set_lock(&dom_lock);
+            mindist = distance;
+          omp_unset_lock(&dom_lock);
+        } else if (distance  > maxdist){
+          omp_set_lock(&dom_lock);
+            maxdist = distance;
+          omp_unset_lock(&dom_lock);        
+        }
       }
     }
   }
-    cout << "Min contact gap is " << mindist<<endl;
-    cout << "Max contact gap is " << maxdist<<endl;    
+    //cout << "Min contact gap is " << mindist<<endl;
+    //cout << "Max contact gap is " << maxdist<<endl;    
 
 }
 

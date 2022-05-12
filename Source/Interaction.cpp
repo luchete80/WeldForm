@@ -246,7 +246,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
     
     clock_begin = clock();
 		// Locking the particle 1 for updating the properties
-		//omp_set_lock(&P1->my_lock);
+		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
 				P1->a					+= mj * temp;
 				P1->dDensity	+= mj * (di/dj) * temp1;
@@ -284,10 +284,10 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 			if (P1->Shepard)
 				if (P1->ShepardCounter == P1->ShepardStep)
 					P1->SumDen += mj*    K;
-		//omp_unset_lock(&P1->my_lock);
+		omp_unset_lock(&P1->my_lock);
 
 		// Locking the particle 2 for updating the properties
-		//omp_set_lock(&P2->my_lock);
+		omp_set_lock(&P2->my_lock);
 			if (!gradKernelCorr){
 				P2->a					-= mi * temp;
 				P2->dDensity	+= mi * (dj/di) * temp1;							
@@ -306,9 +306,9 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 					P2->RotationRate = P2->RotationRate + mi_di*RotationRate;
 					#else 
 					Mat3_t temp = FromFlatSym (P2->strrate)+ mi_di*StrainRate;
-					ToFlatSym(temp,P1 -> strrate);
+					ToFlatSym(temp,P2 -> strrate);
 					temp = FromFlatAntiSymNullDiag(P2->rotrate) + mi_di*RotationRate;
-					ToFlatSymNullDiag(temp,P1 -> rotrate); //is the same function
+					ToFlatSymNullDiag(temp,P2 -> rotrate); //is the same function
 					#endif
 				} else {
 					P2->StrainRate = P2->StrainRate 		+ mi_di*StrainRate_c[1];
@@ -324,7 +324,7 @@ inline void Domain::CalcForce2233(Particle * P1, Particle * P2)
 				if (P2->ShepardCounter == P2->ShepardStep)
 					P2->SumDen += mi*    K;
 
-		//omp_unset_lock(&P2->my_lock);
+		omp_unset_lock(&P2->my_lock);
  
 		//omp_set_lock(&dom_lock); //THIS CAUSES EXTREMELY LONG TIMES
     m_forces_update_time += (double)(clock() - clock_begin) / CLOCKS_PER_SEC;

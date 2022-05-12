@@ -3,7 +3,7 @@
 #include "NastranReader.h"
 
 
-#define VFAC			10.0
+#define VFAC			1.0
 #define VAVA			35.			//mm/min
 #define WROT 			1200.0 	//rpm
 
@@ -23,13 +23,13 @@ void UserAcc(SPH::Domain & domi) {
 
 
 	}
-	Vec3_t omega(0.,WROT*M_PI/30.*VFAC);
-  domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-VAVA * VFAC));
+	Vec3_t omega(0.,WROT*M_PI/30.*VFAC,0.);
+  domi.trimesh->ApplyConstVel(Vec3_t(0.0,-VAVA * VFAC,0.));
 	domi.trimesh->RotateAxisVel(omega, domi.getStepSize());
 	
   for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0, - VAVA * VFAC);
+    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
   }
 
 }
@@ -90,7 +90,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , -H -H/5 , -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , -H + H/20 , -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranReader reader("Tool.nas");
   
@@ -190,7 +190,7 @@ int main(int argc, char **argv) try
   dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   dom.BC.InOutFlow = 0;
 
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.00001,"test06",999);
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-6,"test06",999);
   
   return 0;
 }

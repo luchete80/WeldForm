@@ -34,7 +34,7 @@
 #define HOLLOMON				1 //POWER LAW
 #define JOHNSON_COOK		2
 
-#define 	FLAT_TENSORS
+//#define 	FLAT_TENSORS
 
 namespace SPH {
 
