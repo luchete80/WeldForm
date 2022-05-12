@@ -62,7 +62,7 @@ void UserAcc(SPH::Domain & domi)
     // domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
     // domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
   // }
-  domi.trimesh->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
 
 }
 
