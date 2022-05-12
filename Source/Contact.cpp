@@ -35,8 +35,9 @@ inline void Domain::UpdateContactParticles(){
 		Particles[first_fem_particle_idx + e] -> v = 
     Particles[first_fem_particle_idx + e] -> va = 
     Particles[first_fem_particle_idx + e] -> vb = v/3.;
+    Particles[first_fem_particle_idx + e] -> a = 0.; 
 		Particles[first_fem_particle_idx + e] -> normal  = trimesh->element[e] -> normal;
-    
+    //cout << "v "<< v/3.<<", n "<<Particles[first_fem_particle_idx + e] -> normal<<endl;
 	} 
 }
 

@@ -198,7 +198,7 @@ inline void TriMesh::Update(const double &dt){
 	for (int n=0;n<node.Size();n++){
     Vec3_t vr 	= cross(m_w, *node[n]);
     *node_v[n] = m_v + vr;
-		*node[n] += *node[n] + (*node_v[n])*dt;
+		*node[n] += (*node_v[n])*dt;
 	}
   
   CalcCentroids();

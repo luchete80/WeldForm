@@ -2131,7 +2131,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
     if (contact){
  		//cout << "checking contact"<<endl;
       if (contact_mesh_auto_update)
-			trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
+        trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
       UpdateContactParticles(); //Updates normal and velocities
 		}
 

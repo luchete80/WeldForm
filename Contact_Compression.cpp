@@ -26,14 +26,14 @@ void UserAcc(SPH::Domain & domi) {
 	
 	{
 		//TODO: Modify this by relating FEM & AND partciles 
-		if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
+		// if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+// //			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }
 		if (domi.Particles[i]->ID == 2)
 		{
 			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
@@ -45,7 +45,8 @@ void UserAcc(SPH::Domain & domi) {
 	
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
-	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
+	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
+  domi.trimesh->SetVel(Vec3_t(0.0,0.,-vcompress));
 }
 
 
@@ -146,12 +147,10 @@ int main(){
 	dom.friction = 0.1;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
-	dom.update_contact_surface = false;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
 
-  dom.contact_mesh_auto_update = false; //manually update
 	
 	//////////////////////
 
