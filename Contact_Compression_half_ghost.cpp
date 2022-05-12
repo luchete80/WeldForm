@@ -56,11 +56,13 @@ void UserAcc(SPH::Domain & domi)
 
 	}
   
-  domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
-  for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
-    domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
-  }
+  //OLD
+  // domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
+  // for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
+    // domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
+    // domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
+  // }
+  domi.trimesh->SetVel(Vec3_t(0.0,0.,-vcompress));
 
 }
 
