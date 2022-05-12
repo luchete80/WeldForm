@@ -234,7 +234,7 @@ int main(int argc, char **argv) try
 	//dom.friction = 0.15;
 	dom.friction_dyn = 0.15;
   dom.friction_sta = 0.0;
-	dom.PFAC = 0.6 ;
+	dom.PFAC = 0.3 ;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 
@@ -251,7 +251,7 @@ int main(int argc, char **argv) try
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
   timestep = 1.e-8;
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*//*50**/ timestep,"test06",999);
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/100* timestep,"test06",999);
   
   return 0;
 }
