@@ -1,3 +1,12 @@
+
 20220509 - Woeking on SOA version. Same solver response for thermal.
 20220510 - Working on FSW example. Working on Thermal SOA version.
+            Working on FSW example. Working on Thermal SOA version.
+              Checking Johnson Cook Traction example. 
 20220511 - FSW Example. Setting contact = true. Checking normals and min initial contact gap.
+20220511  - 	FSW Example. Setting contact = true. Checking normals and min initial contact gap.
+              Begining to add Mat3_t to flat conversions (to test soon SOA vs AOS).
+20220512  -   Working on flat arrays, using Particle class. Next step is to compare with 
+              Still not working. Fixed FSW example velocity.
+              Working on contact Mesh update, now the update changes normals and centroids.
+

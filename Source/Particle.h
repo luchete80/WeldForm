@@ -34,6 +34,7 @@
 #define HOLLOMON				1 //POWER LAW
 #define JOHNSON_COOK		2
 
+//#define 	FLAT_TENSORS
 
 namespace SPH {
 
@@ -90,7 +91,8 @@ namespace SPH {
 		double	ShearRate;	///< Global shear rate for fluids
 		double	SBar;		///< shear component for LES
     double  eff_strain_rate;
-
+                
+		double strrate[6], rotrate[3];	//Null Diagonal for rot rate
 		Mat3_t	ShearStress;	///< Deviatoric shear stress tensor (deviatoric part of the Cauchy stress tensor) n+1
 		Mat3_t	ShearStressa;	///< Deviatoric shear stress tensor (deviatoric part of the Cauchy stress tensor) n+1/2 (Leapfrog)
 		Mat3_t	ShearStressb;	///< Deviatoric shear stress tensor (deviatoric part of the Cauchy stress tensor) n-1 (Modified Verlet)

@@ -7,6 +7,8 @@ namespace SPH {
 	
 TriMesh::TriMesh(){
 	
+  m_v = 0.;
+  m_w = 0.;
 	
 }
 
@@ -32,6 +34,9 @@ TriMesh::TriMesh(NastranReader &nr){
     element[e] -> centroid = v; 
   }
   cout << "Generated "<<element.Size()<< " trimesh elements. "<<endl;  
+  
+  m_v = 0.;
+  m_w = 0.;
 }
 
 Element::Element(const int &n1, const int &n2, const int &n3){
@@ -48,23 +53,6 @@ void TriMesh::CalcCentroids(){
 	
 }
 
-//Rotate Mesh around a coordinate axis
-inline void TriMesh::RotateAxisVel(const Vec3_t &omega, const double &dt){
-
-	for (int n=0;n<node.size();n++){
-		Vec3_t v 	= cross(omega, *node[n]);
-		*node[n] 	+= v * dt;
-	}
-	//Normals and centroids
-	for (int e = 0; e < element.Size(); e++){ 
-			Vec3_t v2 = element[e] -> centroid;
-			Vec3_t v = cross(omega, v2);
-			element[e] -> centroid 	= element[e] -> centroid 	+ v*dt;
-			element[e] -> normal 		= element[e] -> normal 		+ v*dt;
-	}
-	
-	UpdatePlaneCoeff();//Is not necesary to update spheres since nfar node is the same, but element plane constants change
-}
 // TODO: extend to all dirs
 inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2,  const int &dens){
 	int elemcount = dens * dens;
@@ -176,6 +164,7 @@ inline void TriMesh::UpdatePlaneCoeff(){
 		element[e]-> pplane = dot(*node [element[e] -> node[element[e] ->nfar]],element[e] -> normal);
 
 }
+// TODO: PARALELIZE
 inline void TriMesh::CalcNormals(){
 	Vec3_t u, v, w;
 	for (int e = 0; e < element.Size(); e++) {
@@ -188,6 +177,8 @@ inline void TriMesh::CalcNormals(){
 	}
 }
 
+// ATENTION: THIS OVERRIDES AUTO UPDATE WITH VELOCITIES 
+// IF RIGID TRANSLATION AND ROTATION IS USED; THIS IS NOT PREFERRED
 inline void TriMesh::ApplyConstVel(const Vec3_t &v){
 		for (int n=0;n<node.Size();n++)
 			*node_v[n] = v;
@@ -198,14 +189,29 @@ inline void TriMesh::CalcCentroidVelFromNodes(){
 	
 }
 
-inline void TriMesh::UpdatePos(const double &dt){
-	
+//UPDATES MESH NODES POSITIONS, VELOCITIES, NORMALS AND PPLANE
+//ALL FROM RIGID TRANSLATION AND ROTATION
+//THIS USES m_v and m_w members
+inline void TriMesh::Update(const double &dt){
 	//Seems to be More accurate to do this by node vel
 	//This is used by normals
+  Vec3_t min = 1000.;
+  Vec3_t max = -1000.;
 	for (int n=0;n<node.Size();n++){
-		*node[n] = *node[n] + (*node_v[n])*dt;
+    Vec3_t vr 	= cross(m_w, *node[n]);
+    *node_v[n] = m_v + vr;
+    for (int i=0;i<3;i++) {
+      if      ((*node[n])(i) < min(i)) min[i] = (*node[n])(i);
+      else if ((*node[n])(i) > max(i)) max[i] = (*node[n])(i);
+    } 
+		*node[n] += (*node_v[n])*dt;
 	}
-	
+  
+  cout << "Min Max Node pos" << min<< "; " <<max<<endl;
+  
+  CalcCentroids();
+  CalcNormals();        //From node positions
+  UpdatePlaneCoeff();   //pplane
 }
 
 };

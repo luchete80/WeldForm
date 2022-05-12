@@ -140,6 +140,7 @@ inline Domain::Domain ()
   m_scalar_prop = 0.;
 	
 	thermal_solver = false;
+  contact_mesh_auto_update = true;
 }
 
 inline Domain::~Domain ()
@@ -1235,7 +1236,7 @@ void Domain::CalculateSurface(const int &id){
 			surf_part++;
 		}
 	}
-	cout << "Surface particles: " << surf_part<<endl;
+	//cout << "Surface particles: " << surf_part<<endl;
 }
 
 
@@ -1999,7 +2000,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
             SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
             CalculateSurface(1);				//After Nb search			
             contact_surf_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-            CalcContactInitialGap(); //BEFORE! contactnb
+            if (isfirst)
+              CalcContactInitialGap(); //BEFORE! contactnb
             ContactNbSearch();
             SaveContNeighbourData();
             contact_nb_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -2116,6 +2118,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			// if (Particles[i]->contforce>0.)
 		if (auto_ts)
 			AdaptiveTimeStep();
+    //cout << "delta t"<<deltat<<endl;
+    
 		clock_beg = clock();
 
 		Move(deltat);
@@ -2128,10 +2132,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
     if (contact){
  		//cout << "checking contact"<<endl;
-			trimesh->UpdatePos (deltat); //Update Node Pos
- 			//Update Normals
-			trimesh->UpdatePlaneCoeff();	//If normal does not change..
+      if (contact_mesh_auto_update)
+        trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
+      //cout << "Updating contact particles"<<endl;
+      UpdateContactParticles(); //Updates normal and velocities
 		}
+    //cout << "Done"<<endl;
 
 		trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		

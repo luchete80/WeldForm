@@ -3,9 +3,10 @@
 #include "NastranReader.h"
 
 
-#define VFAC			10.0
-#define VAVA			35.			//mm/min
-#define WROT 			1200.0 	//rpm
+#define VFAC			1.0
+#define VAVA			5.833e-4		//35 mm/min
+#define WROT 			1200.0 	    //rpm
+#define TOOLRAD   0.0062
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -20,16 +21,21 @@ void UserAcc(SPH::Domain & domi) {
 	#endif
 	
 	{
-
+		if (domi.Particles[i]->ID == 3)
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
 
 	}
-	Vec3_t omega(0.,WROT*M_PI/30.*VFAC);
-  domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-VAVA * VFAC));
-	domi.trimesh->RotateAxisVel(omega, domi.getStepSize());
-	
+	//Mesh is updated automatically
   for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0, - VAVA * VFAC);
+    //THIS SHOULD BE FROM BARICENTER AND AUTOMATIC!
+    //domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
   }
 
 }
@@ -90,7 +96,9 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , -H -H/5 , -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  double ybottom = -H + H/10; 
+  
+  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranReader reader("Tool.nas");
   
@@ -119,7 +127,7 @@ int main(int argc, char **argv) try
 	dom.gradKernelCorr = false;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
-
+  int bottom_particles = 0;
 		for (size_t a=0; a<dom.Particles.Size(); a++)
 		{
 			dom.Particles[a]->G		= G;
@@ -138,6 +146,12 @@ int main(int argc, char **argv) try
 			double y = dom.Particles[a]->x(1);
 			double z = dom.Particles[a]->x(2);
 			
+      double r = sqrt (x*x+z*z);      
+      if (r < TOOLRAD && y < (ybottom +dx ) ){
+        dom.Particles[a]->ID=3; //ID 1 is free surface  
+        dom.Particles[a]->not_write_surf_ID = true;
+        bottom_particles++;
+      }
 			
 			//BOTTOM PLANE
 			// if ( z < dx  && z > -dx/2. ){
@@ -173,6 +187,8 @@ int main(int argc, char **argv) try
 			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
 				// dom.Particles[a]->ID=10;         
 		}
+    
+  cout << "Bottom particles: "<<bottom_particles<<endl;
 		
     // dom.Particles[0]->IsFree=false;
     // dom.Particles[0]->NoSlip=true;			
@@ -189,8 +205,15 @@ int main(int argc, char **argv) try
   dom.WriteXDMF("maz");
   dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   dom.BC.InOutFlow = 0;
+  
+  // SET TOOL BOUNDARY CONDITIONS
+  dom.trimesh->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
+  dom.trimesh->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
 
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+
+  dom.auto_ts = false;
+  timestep = 1.e-8;
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/10*timestep,"test06",999);
   
   return 0;
 }
