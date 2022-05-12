@@ -6,6 +6,7 @@
 #define VFAC			1.0
 #define VAVA			35.			//mm/min
 #define WROT 			1200.0 	//rpm
+#define TOOLRAD   0.0062
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -20,7 +21,14 @@ void UserAcc(SPH::Domain & domi) {
 	#endif
 	
 	{
-
+		if (domi.Particles[i]->ID == 3)
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
 
 	}
 	Vec3_t omega(0.,WROT*M_PI/30.*VFAC,0.);
@@ -119,7 +127,7 @@ int main(int argc, char **argv) try
 	dom.gradKernelCorr = false;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
-
+  int bottom_particles = 0;
 		for (size_t a=0; a<dom.Particles.Size(); a++)
 		{
 			dom.Particles[a]->G		= G;
@@ -138,6 +146,12 @@ int main(int argc, char **argv) try
 			double y = dom.Particles[a]->x(1);
 			double z = dom.Particles[a]->x(2);
 			
+      double r = sqrt (x*x+z*z);      
+      if (r < TOOLRAD && y < (-H + H/20 +dx ) ){
+        dom.Particles[a]->ID=3; //ID 1 is free surface  
+        dom.Particles[a]->not_write_surf_ID = true;
+        bottom_particles++;
+      }
 			
 			//BOTTOM PLANE
 			// if ( z < dx  && z > -dx/2. ){
@@ -173,6 +187,8 @@ int main(int argc, char **argv) try
 			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
 				// dom.Particles[a]->ID=10;         
 		}
+    
+  cout << "Bottom particles: "<<bottom_particles<<endl;
 		
     // dom.Particles[0]->IsFree=false;
     // dom.Particles[0]->NoSlip=true;			
@@ -190,7 +206,7 @@ int main(int argc, char **argv) try
   dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   dom.BC.InOutFlow = 0;
 
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-6,"test06",999);
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-7,"test06",999);
   
   return 0;
 }
