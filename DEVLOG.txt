@@ -11,4 +11,5 @@
               Working on contact Mesh update, now the update changes normals and centroids.
               Changed JC material to FSW example.
               Fixed thermal coupling. 
-
+20220513  -   Working on FSW example. timestep 5e-8 diverging. So, now is 2.e-8, fixed.
+              INITIAL GAP WAS WRONG. Fixed. 

@@ -123,7 +123,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  double ybottom = -H + H/10; 
+  double ybottom = -H + dx/5; 
   
   dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
 
@@ -234,7 +234,7 @@ int main(int argc, char **argv) try
 	//dom.friction = 0.15;
 	dom.friction_dyn = 0.15;
   dom.friction_sta = 0.0;
-	dom.PFAC = 0.3 ;
+	dom.PFAC = 0.3;
 	dom.DFAC = 0.2;
 	dom.update_contact_surface = false;
 
@@ -250,7 +250,7 @@ int main(int argc, char **argv) try
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
-  timestep = 1.e-8;
+  timestep = 2.e-8;
   dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/100* timestep,"test06",999);
   
   return 0;
