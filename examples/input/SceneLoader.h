@@ -1,8 +1,10 @@
 #ifndef __SceneLoader_h__
 #define __SceneLoader_h__
 
-//#include "SPlisHSPlasH/Common.h"
-//#include "extern/json/json.hpp"
+ /*********************************************************************/
+ /*             SCENE LOADER ******************************************/
+ /********      BASED ON SPLISH SPLASH INFO ***************************/
+ 
 #include <vector>
 //#include "ParameterObject.h"
 
