@@ -7,6 +7,7 @@
 #define VAVA			5.833e-4		//35 mm/min
 #define WROT 			1200.0 	    //rpm
 #define TOOLRAD   0.0062
+#define SUPPRAD   0.01
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -21,12 +22,12 @@ void UserAcc(SPH::Domain & domi) {
 	#endif
 	
 	{
-		if (domi.Particles[i]->ID == 3)
-		{
+    //Vertical Constraint
+		if (domi.Particles[i]->ID == 3) {
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va(1)	= 0.;
+			domi.Particles[i]->v(1)		= 0.;
+			domi.Particles[i]->vb(1)	= 0.;
 			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 
@@ -125,7 +126,9 @@ int main(int argc, char **argv) try
   
   double ybottom = -H + dx/5; 
   
-  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  double ytop = ybottom + H ; 
+  
+  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranReader reader("Tool.nas");
   
@@ -155,6 +158,7 @@ int main(int argc, char **argv) try
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
   int bottom_particles = 0;
+  int side_particles  =0;
 		for (size_t a=0; a<dom.Particles.Size(); a++)
 		{
       dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
@@ -183,18 +187,32 @@ int main(int argc, char **argv) try
 			double z = dom.Particles[a]->x(2);
 			
       double r = sqrt (x*x+z*z);      
-      if (r < TOOLRAD && y < (ybottom +dx ) ){
-        dom.Particles[a]->ID=3; //ID 1 is free surface  
+      if (/*r < TOOLRAD && */y < (ybottom +dx ) ){
+        dom.Particles[a]->ID=2; //ID 1 is free surface  
+        dom.Particles[a]->not_write_surf_ID = true;
+        bottom_particles++;
+      }
+
+      if (r > SUPPRAD && y > ( ytop - 2*dx ) ){
+        dom.Particles[a]->ID=2; //ID 1 is free surface  
         dom.Particles[a]->not_write_surf_ID = true;
         bottom_particles++;
       }
 			
-			//BOTTOM PLANE
-			// if ( z < dx  && z > -dx/2. ){
-				// dom.Particles[a]->ID=3;
-				// dom.Particles[a]->not_write_surf_ID = true;
-			// }
 			
+			//SIDES
+			if ( z < -L/2. + dx || z > L/2. - dx){
+				dom.Particles[a]->ID=3;
+				dom.Particles[a]->not_write_surf_ID = true;
+   			dom.Particles[a]->IsFree=false;
+        side_particles++;
+			}
+			else if ( x < -L/2. + 2.*dx || x > L/2. - 2.*dx){
+				dom.Particles[a]->ID=3;
+				dom.Particles[a]->not_write_surf_ID = true;
+        dom.Particles[a]->IsFree=false;
+        side_particles++;
+			}			
 			
 			// if ( x < dx  && x > -dx/2. && z < L/2. - dx)
 				// dom.Particles[a]->ID=1;
@@ -224,7 +242,8 @@ int main(int argc, char **argv) try
 				// dom.Particles[a]->ID=10;         
 		}
     
-  cout << "Bottom particles: "<<bottom_particles<<endl;
+  cout << "Top & Bottom particles: " << bottom_particles << endl;
+  cout << "Side particles: " << side_particles<<endl;
 		
     // dom.Particles[0]->IsFree=false;
     // dom.Particles[0]->NoSlip=true;			
