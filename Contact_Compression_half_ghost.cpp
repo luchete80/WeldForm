@@ -205,7 +205,7 @@ int main(int argc, char **argv) try
   dom.fric_type = Fr_Dyn;
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.1;
+	dom.friction_dyn = 0.15;
   dom.friction_sta = 0.0;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;

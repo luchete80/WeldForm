@@ -271,8 +271,8 @@ int main(int argc, char **argv) try
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
-  timestep = 2.e-8;
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/100* timestep,"test06",999);
+  timestep = 1.e-8;
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
   
   return 0;
 }

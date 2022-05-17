@@ -49,6 +49,24 @@ enum Gradient_Type { Squared_density=0, Multiplied_density=1 };
 
 enum Friction_Type{Fr_Sta=0,Fr_Dyn,Fr_StaDyn};
 namespace SPH {
+  
+  struct amplitude {
+	int id;
+	std::vector <double> time;
+	std::vector <double> value;
+	//std::map;
+};
+
+
+struct boundaryCondition {
+	int 	zoneId;
+	int 	type;	// ENUM TYPE Fixity, Velocity, Force, Temperature
+	bool 	free;	//is necessary??
+	int 	valueType;		//0: Constant, 1 amplitude table
+	
+	int 	ampId;			//if valuetype == 1
+	double 	ampFactor;		//if valuetype == 1
+};
 
 class Domain
 {
@@ -224,6 +242,8 @@ public:
     bool					FSI;						///< Selecting variable to choose Fluid-Structure Interaction
 		int						contact_type;		//0: no contact 1: node to surface 2: node 2 node
 		bool					thermal_solver;
+    
+   std::vector <boundaryCondition> bConds;  //NEW, For BCond
 	
 	// BONET KERNEL CORRECTION
 	bool 					gradKernelCorr;	

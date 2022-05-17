@@ -27,6 +27,9 @@
 
 #define PRINTVEC(v)	cout << v[0]<<", "<<v[1]<<", "<<v[2]<<endl;
 
+using std::cout;
+using std::endl;
+
 void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
@@ -36,71 +39,28 @@ void UserAcc(SPH::Domain & domi)
 	else
 		vcompress = VMAX;
 	
-	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
+	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
-	// #ifdef __GNUC__
-	// for (size_t i=0; i<domi.Particles.Size(); i++)
-	// #else
-	// for (int i=0; i<domi.Particles.Size(); i++)
-	// #endif
+	#ifdef __GNUC__
+	for (size_t i=0; i<domi.Particles.Size(); i++)
+	#else
+	for (int i=0; i<domi.Particles.Size(); i++)
+	#endif
 	
-	// {
-		// for (int bc=0;bc<bConds.size();bc++){
-			// if (domi.Particles[i]->ID == bConds[bc].zoneId ) {
-				// if (bConds.type == 0 ){
+	{
+		for (int bc=0;bc<domi.bConds.size();bc++){
+			if (domi.Particles[i]->ID == domi.bConds[bc].zoneId ) {
+				if (domi.bConds[bc].type == 0 ){
 					// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 					// domi.Particles[i]->v		= Vec3_t(0.0,0.0,);
 					// domi.Particles[i]->va		= Vec3_t(0.0,0.0,);
 					// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,);
-				// }
-			// }
+				}
+			}
 			
-		// }
-
-		// if (domi.Particles[i]->ID == 3)
-		// {
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-
-			// if (domi.Scheme == 1 )
-				// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			// else
-				// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
-// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		// }
-		// if (domi.Particles[i]->ID == 2)
-		// {
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.);
-			// if (domi.Scheme == 1 )
-				// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);//VERLET
-			// else
-				// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
-// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		// }
-	//}
+		}
+	}
 }
-
-using std::cout;
-using std::endl;
-
-struct amplitude {
-	int id;
-	std::vector <double> time;
-	std::vector <double> value;
-	//std::map;
-};
-
-
-struct boundaryCondition {
-	int 	zoneId;
-	int 	type;	// ENUM TYPE Fixity, Velocity, Force, Temperature
-	bool 	free;	//is necessary??
-	int 	valueType;		//0: Constant, 1 amplitude table
-	
-	int 	ampId;			//if valuetype == 1
-	double 	ampFactor;		//if valuetype == 1
-};
 
 int main(int argc, char **argv) try {
 
@@ -111,8 +71,8 @@ int main(int argc, char **argv) try {
 		i >> j;
 		
 		nlohmann::json config 		= j["Configuration"];
-		nlohmann::json material 	= j["Material"];
-		nlohmann::json domblock 	= j["DomainBlock"];
+		nlohmann::json material 	= j["Materials"];
+		nlohmann::json domblock 	= j["DomainBlocks"];
 		nlohmann::json domzones 	= j["DomainZones"];
 		nlohmann::json amplitudes 	= j["Amplitudes"];
 		nlohmann::json bcs 			= j["BoundaryConditions"];
@@ -133,6 +93,7 @@ int main(int argc, char **argv) try {
 		string kernel;
 		readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
     	dom.Kernel_Set(Qubic_Spline);
+    
 		
 		readValue(config["integrationMethod"], dom.Scheme); //0:Verlet, 1:LeapFrog, 2: Modified Verlet
 
@@ -152,12 +113,13 @@ int main(int argc, char **argv) try {
 		// MATERIAL //
 		//////////////
 		double rho,E,nu,K,G,Cs,Fy;
-    //for (auto& td : material)
-    	readValue(material["density0"], 		rho);
-    	readValue(material["youngsModulus"], 	E);
-    	readValue(material["poissonsRatio"], 	nu);
-    	readValue(material["yieldStress0"], 	Fy);
-		
+    cout << "Reading Material.."<<endl;
+    readValue(material[0]["density0"], 		rho);
+    readValue(material[0]["youngsModulus"], 	E);
+    readValue(material[0]["poissonsRatio"], 	nu);
+    readValue(material[0]["yieldStress0"], 	Fy);
+		cout << "Done. "<<endl;
+       
 		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
 
@@ -179,16 +141,20 @@ int main(int argc, char **argv) try {
 		// DOMAIN //
 		////////////
 		Vec3_t start,L;
+    int id;
 		int domtype=0;
     int matID;
-		readVector(domblock["start"], 	start);
-		readVector(domblock["dim"], 	L);
-		readValue(domblock["type"], 	domtype); //0: Box
-    readValue(domblock["matID"], 	matID); //0: Box
+		readValue(domblock[0]["id"], 	id);
+		readVector(domblock[0]["start"], 	start);
+		readVector(domblock[0]["dim"], 	L);
+		readValue(domblock[0]["type"], 	domtype); //0: Box
+    readValue(domblock[0]["matID"], 	matID); //0: Box
         for (int i=0;i<3;i++) {//TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
 			dom.DomMin(0) = -L[i];
 		}		
+    
+
 
 		
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
@@ -202,7 +168,7 @@ int main(int argc, char **argv) try {
 			if (sim2D)
 				L[2]=0.;	
       cout << "Adding Box Length..."<<endl;      
-			dom.AddBoxLength(1 ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
+			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 		}
 		else
 			dom.AddCylinderLength(1, start, L[0]/2., L[2], r, rho, h, false); 
@@ -245,7 +211,9 @@ int main(int argc, char **argv) try {
 				// dom.Particles[a]->NoSlip=true;
 			}
     	}
-		
+
+
+    cout << "Domain Zones "<<domzones.size()<<endl;		
 		for (auto& zone : domzones) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
 			int zoneid;
@@ -253,6 +221,7 @@ int main(int argc, char **argv) try {
 			readValue(zone["id"], 		zoneid);
 			readVector(zone["start"], 	start);
 			readVector(zone["end"], 	end);
+      cout << "Zone id "<<zoneid<<endl;
 			// cout << "Dimensions: "<<endl;
 			// PRINTVEC(start)
 			// PRINTVEC(end)
@@ -271,7 +240,7 @@ int main(int argc, char **argv) try {
 			std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
 		
-		std::vector <amplitude> amps;
+		std::vector <SPH::amplitude> amps;
 		
 		for (auto& ampl : amplitudes) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
@@ -281,7 +250,7 @@ int main(int argc, char **argv) try {
 			//readValue(zone["valueType"],zoneid);
 			readArray(ampl["time"], 	time);
 			readValue(ampl["value"], 	value);
-			amplitude amp;
+			SPH::amplitude amp;
 			for (int i=0;i<time.size();i++){
 				amp.time.push_back(time[i]);
 				amp.value.push_back(value[i]);
@@ -290,14 +259,14 @@ int main(int argc, char **argv) try {
 			//std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
 
-		std::vector <boundaryCondition> bConds;
 		for (auto& bc : bcs) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
 			int zoneid,valuetype,var,ampid;
 			double ampfactor;
 			bool free=true;
-			boundaryCondition bcon;
+			SPH::boundaryCondition bcon;
 			readValue(bc["zoneId"], 	bcon.zoneId);
+      //type 0 means velocity vc
 			readValue(bc["valueType"], 	bcon.valueType);
 			if ( valuetype == 1){ //Amplitude
 				readValue(bc["amplitudeId"], 		bcon.ampId);
@@ -305,13 +274,13 @@ int main(int argc, char **argv) try {
 			}
 				
 			readValue(bc["free"], 	bcon.free);
-			bConds.push_back(bcon);
+			dom.bConds.push_back(bcon);
 			
 //			std::cout<< "BCs "<<bc<< ", particle count: "<<partcount<<std::	endl;
 		}
 		
 		
-		// dom.WriteXDMF("maz");
+		dom.WriteXDMF("maz");
 		// dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		// dom.BC.InOutFlow = 0;
 
