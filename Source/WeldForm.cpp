@@ -51,10 +51,10 @@ void UserAcc(SPH::Domain & domi)
 		for (int bc=0;bc<domi.bConds.size();bc++){
 			if (domi.Particles[i]->ID == domi.bConds[bc].zoneId ) {
 				if (domi.bConds[bc].type == 0 ){
-					// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-					// domi.Particles[i]->v		= Vec3_t(0.0,0.0,);
-					// domi.Particles[i]->va		= Vec3_t(0.0,0.0,);
-					// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,);
+					domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+					domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+					domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
+					domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 				}
 			}
 			
@@ -278,6 +278,11 @@ int main(int argc, char **argv) try {
 			
 //			std::cout<< "BCs "<<bc<< ", particle count: "<<partcount<<std::	endl;
 		}
+    
+    //Add fixed particles, these have priority
+    
+    //TODO: CHECK IF DIFFERENT ZONES ARE INTERF
+    
 		
 		
 		dom.WriteXDMF("maz");
