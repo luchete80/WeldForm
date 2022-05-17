@@ -152,6 +152,7 @@ int main(int argc, char **argv) try {
 		// MATERIAL //
 		//////////////
 		double rho,E,nu,K,G,Cs,Fy;
+    //for (auto& td : material)
     	readValue(material["density0"], 		rho);
     	readValue(material["youngsModulus"], 	E);
     	readValue(material["poissonsRatio"], 	nu);
