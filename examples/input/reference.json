@@ -20,32 +20,26 @@
 ,
 "Materials": [
 	{
-        "id": "Solid",
-        "density0": 2700.0, 
-		"youngsModulus ": 68.9e9, 
-		"poissonsRatio ": 0.33,
-		"yieldStress ": 3.0E6,
-        "surfaceTension": 0.2,
-        "surfaceTensionMethod": 0,		
-        "viscosity": 0.01,
-        "viscosityMethod": 1, 
-        "vorticityMethod": 1, 
-        "vorticity": 0.15, 
-        "viscosityOmega": 0.05,
-        "inertiaInverse": 0.5
+    "id": "Solid",
+    "density0": 2700.0, 
+    "youngsModulus ": 68.9e9, 
+    "poissonsRatio ": 0.33,
+    "yieldStress ": 3.0E6,
+    "viscosityMethod": 1
 	}
 ]
 ,
 
-"DomainBlocks": [
-    {
-		"type": 1,
-        "denseMode": 0,
-        "start": [-2.0, 0.0, -1],
-        "dim": [-0.5, 1.5, 1],
-        "translation": [1.0, 0.0, 0.0],
-        "scale": [1, 1, 1]
-    }
+"DomainBlock": [
+  {
+    "type": 1,
+    "matID": 1,
+    "denseMode": 0,
+    "start": [-2.0, 0.0, -1],
+    "dim": [-0.5, 1.5, 1],
+    "translation": [1.0, 0.0, 0.0],
+    "scale": [1, 1, 1]
+  }
 ]	
 
 }

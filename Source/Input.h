@@ -94,6 +94,12 @@ protected:
 			unsigned char mode;
 			//Vector3r initialVelocity;
 		};
+
+		struct MaterialData
+		{
+			std::string id;
+
+		};
     
     //TODO: OUTPUT step CONTROL!
     

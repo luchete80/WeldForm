@@ -36,26 +36,26 @@ void UserAcc(SPH::Domain & domi)
 	else
 		vcompress = VMAX;
 	
-	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
+	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
-	#ifdef __GNUC__
-	for (size_t i=0; i<domi.Particles.Size(); i++)
-	#else
-	for (int i=0; i<domi.Particles.Size(); i++)
-	#endif
+	// #ifdef __GNUC__
+	// for (size_t i=0; i<domi.Particles.Size(); i++)
+	// #else
+	// for (int i=0; i<domi.Particles.Size(); i++)
+	// #endif
 	
-	{
-		for (int bc=0;bc<bConds.size();bc++){
-			if (domi.Particles[i]->ID == bConds[bc].zoneId ) {
-				if (bConds.type == 0 ){
-					domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-					domi.Particles[i]->v		= Vec3_t(0.0,0.0,);
-					domi.Particles[i]->va		= Vec3_t(0.0,0.0,);
-					domi.Particles[i]->vb		= Vec3_t(0.0,0.0,);
-				}
-			}
+	// {
+		// for (int bc=0;bc<bConds.size();bc++){
+			// if (domi.Particles[i]->ID == bConds[bc].zoneId ) {
+				// if (bConds.type == 0 ){
+					// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+					// domi.Particles[i]->v		= Vec3_t(0.0,0.0,);
+					// domi.Particles[i]->va		= Vec3_t(0.0,0.0,);
+					// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,);
+				// }
+			// }
 			
-		}
+		// }
 
 		// if (domi.Particles[i]->ID == 3)
 		// {
@@ -78,7 +78,7 @@ void UserAcc(SPH::Domain & domi)
 				// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);//LEAPFROG
 // //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		// }
-	}
+	//}
 }
 
 using std::cout;
@@ -179,9 +179,11 @@ int main(int argc, char **argv) try {
 		////////////
 		Vec3_t start,L;
 		int domtype=0;
+    int matID;
 		readVector(domblock["start"], 	start);
 		readVector(domblock["dim"], 	L);
-		readValue(domblock["type"], 	domtype);
+		readValue(domblock["type"], 	domtype); //0: Box
+    readValue(domblock["matID"], 	matID); //0: Box
         for (int i=0;i<3;i++) {//TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
 			dom.DomMin(0) = -L[i];
@@ -197,7 +199,8 @@ int main(int argc, char **argv) try {
 		PRINTVEC(L)
 		if (domtype == 0){
 			if (sim2D)
-				L[2]=0.;		
+				L[2]=0.;	
+      cout << "Adding Box Length..."<<endl;      
 			dom.AddBoxLength(1 ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 		}
 		else
@@ -313,6 +316,7 @@ int main(int argc, char **argv) try {
 
     	//dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.00005,"test06",999);
 	}	//Argc > 0
+  else {cout << "No input file found. Please specify input file."<<endl;}
 	
     return 0;
 }
