@@ -341,6 +341,8 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 		Initiate (&m_rho,Particles.Size());
 		Initiate (&m_mass,Particles.Size());
 		cout << "Done."<<endl;
+    sigma = new double [6*Particles.Size()];
+    
 		// m_x 		= new Vec3_t* [Particles.Size()];
 		// m_h 		= new double* [Particles.Size()];
 		// m_kT 		= new double* [Particles.Size()];
