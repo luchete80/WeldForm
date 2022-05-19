@@ -14,4 +14,5 @@
 20220513  -   Working on FSW example. timestep 5e-8 diverging. So, now is 2.e-8, fixed.
               INITIAL GAP WAS WRONG. Fixed. 
 20220519  -   Working on Compression TRIP problem. Manual TS with CFL values of 0.2 NOT CONVERGING.
-              
+              Found an error in Particles Move, ghost particles where moving BEFORE adjusting ghost velocity.
+              and acceleration were not forced to zero. MoveGhost is now also fixing accel to zero.

@@ -947,6 +947,8 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
           
           Particles[id_part  ]->ghost_plane_axis = 1;
           Particles[id_part+1]->ghost_plane_axis = 0;
+          Particles[id_part  ]->is_ghost = true;
+          Particles[id_part+1]->is_ghost = true;
 
           //ONLY FOR TESTING SYMMETRY PLANES!
           //Particles[id_part  ]->ID = 1; //ONLY FOR TESTING IN PARAVIEW!  
@@ -987,7 +989,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
           cout << "part , sym"<<part<<", "<<id_part<<endl;
           Particles[id_part]->ghost_plane_axis = 2;
           Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
-          
+          Particles[id_part  ]->is_ghost = true;
           //ONLY FOR TESTING SYMMETRY PLANES!
           //Particles[id_part]->ID = Particles[id_part]->ghost_plane_axis; //ONLY FOR TESTING IN PARAVIEW!   
           GhostPairs.Push(std::make_pair(part,id_part));
@@ -1041,6 +1043,8 @@ inline void Domain::MoveGhost(){
 		Particles[gi]-> v[axis]  = - Particles[i]-> v[axis];
 		Particles[gi]-> va[axis] = - Particles[i]-> va[axis];
 		Particles[gi]-> vb[axis] = - Particles[i]-> vb[axis];
+
+		Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
 		
 		// Particles[gi]-> v[axis] = 	-Particles[gi]-> v[axis]		
 		// Particles[gi]-> va[axis] = 	-Particles[gi]-> va[axis];
@@ -1756,7 +1760,8 @@ inline void Domain::Move (double dt) {
 				}
 			}
 			//cout << "Particle: "<<i<<endl;
-			Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
+      if (Particles[i]->is_ghost)
+        Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
       // if (i==624){
         // if (Particles[i]->eff_strain_rate>0)
           // cout << "particle 624, eff strain rate : "<<Particles[i]->eff_strain_rate<<", Et: "<<Particles[i]->Et<<"sigmaeq"<< Particles[i]->Sigma_eq<<", yield"<<Particles[i]->Sigmay<<endl;
@@ -2136,8 +2141,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
     
 		clock_beg = clock();
 
-		Move(deltat);
-    MoveGhost(); //If Symmetry
+		Move(deltat); // DOES NOT INCLUDE GHOST PARTICLES
+    MoveGhost();  //If Symmetry, 
     
     
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;

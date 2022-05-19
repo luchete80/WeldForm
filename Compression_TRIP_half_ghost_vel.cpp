@@ -127,7 +127,7 @@ int main() try{
   	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
-  dom.auto_ts = false;
+  //dom.auto_ts = false;
 
 	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	
