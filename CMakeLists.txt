@@ -82,7 +82,7 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-  #Compression_TRIP_half_ghost_vel
+  Compression_TRIP_half_ghost_vel
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
@@ -146,7 +146,7 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
+	#"Source/WeldForm"
 )
 
 add_subdirectory("examples")

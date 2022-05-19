@@ -13,3 +13,5 @@
               Fixed thermal coupling. 
 20220513  -   Working on FSW example. timestep 5e-8 diverging. So, now is 2.e-8, fixed.
               INITIAL GAP WAS WRONG. Fixed. 
+20220519  -   Working on Compression TRIP problem. Manual TS with CFL values of 0.2 NOT CONVERGING.
+              

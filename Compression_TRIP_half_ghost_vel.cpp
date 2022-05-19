@@ -3,7 +3,7 @@
 #include <iostream>
 
 #define TAU		0.005
-#define VMAX	1.
+#define VMAX	0.1
 
 using namespace SPH;
 using namespace std;
@@ -29,9 +29,9 @@ void UserAcc(SPH::Domain & domi) {
 		if (domi.Particles[i]->ID == 11)  //FIXED
 		{
       domi.Particles[i]->a		= Vec3_t(0.,0.,0.);
-      domi.Particles[i]->v		= Vec3_t(0.,0.,-vcompress/2.);
-			domi.Particles[i]->va		= Vec3_t(0.,0.,-vcompress/2.);
-			domi.Particles[i]->vb		= Vec3_t(0.,0.,-vcompress/2.);
+      domi.Particles[i]->v		= Vec3_t(0.,0.,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.,0.,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.,0.,-vcompress);
 
 		}
   }
@@ -65,7 +65,7 @@ int main() try{
   double nu = 0.3;
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
-	Fy	= 964.e6;
+	Fy	= 900.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
 	dx = 0.0008;  //Tenth of radius
@@ -127,7 +127,7 @@ int main() try{
   	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
-
+  dom.auto_ts = false;
 
 	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	
