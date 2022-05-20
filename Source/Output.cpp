@@ -94,7 +94,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     float * Sigma		= new float[6*Particles.Size()];
     float * ShearS   	= new float[6*Particles.Size()]; 	//LUCIANO
     float * Strain		= new float[6*Particles.Size()];
-	float * StrainRate	= new float[6*Particles.Size()];
+	// float * StrainRate	= new float[6*Particles.Size()];
 	float * Strain_pl		= new float[6*Particles.Size()];
 	float * Sigma_eq		= new float[  Particles.Size()];	//LUCIANO
 	float * Temp				= new float[  Particles.Size()];	//LUCIANO
@@ -103,8 +103,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	int   * ContNb			= new int  [  Particles.Size()];	//LUCIANO
     float * Disvec	= new float[3*Particles.Size()];		//LUCIANO
 		float * ContForce	= new float[3*Particles.Size()];		//LUCIANO
-		float * TgDir 		= new float[3*Particles.Size()];
-    float * Normvec	= new float[3*Particles.Size()];
+		// float * TgDir 		= new float[3*Particles.Size()];
+    // float * Normvec	= new float[3*Particles.Size()];
     float * deltacont	= new float[Particles.Size()];		//LUCIANO
 		float * eff_str_rate	= new float[ Particles.Size()];		//LUCIANO
 		float * gradcorrmat = new float [6 * Particles.Size()];
@@ -149,12 +149,12 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Strain  [6*i+3] = float(Particles[i]->Strain(0,1));
         Strain  [6*i+4] = float(Particles[i]->Strain(1,2));
         Strain  [6*i+5] = float(Particles[i]->Strain(0,2));
-        StrainRate  [6*i  ] = float(Particles[i]->StrainRate(0,0));
-        StrainRate  [6*i+1] = float(Particles[i]->StrainRate(1,1));
-        StrainRate  [6*i+2] = float(Particles[i]->StrainRate(2,2));
-        StrainRate  [6*i+3] = float(Particles[i]->StrainRate(0,1));
-        StrainRate  [6*i+4] = float(Particles[i]->StrainRate(1,2));
-        StrainRate  [6*i+5] = float(Particles[i]->StrainRate(0,2));
+        // StrainRate  [6*i  ] = float(Particles[i]->StrainRate(0,0));
+        // StrainRate  [6*i+1] = float(Particles[i]->StrainRate(1,1));
+        // StrainRate  [6*i+2] = float(Particles[i]->StrainRate(2,2));
+        // StrainRate  [6*i+3] = float(Particles[i]->StrainRate(0,1));
+        // StrainRate  [6*i+4] = float(Particles[i]->StrainRate(1,2));
+        // StrainRate  [6*i+5] = float(Particles[i]->StrainRate(0,2));
         Strain_pl  [6*i  ] = float(Particles[i]->Strain_pl(0,0));
         Strain_pl  [6*i+1] = float(Particles[i]->Strain_pl(1,1));
         Strain_pl  [6*i+2] = float(Particles[i]->Strain_pl(2,2));
@@ -183,13 +183,13 @@ inline void Domain::WriteXDMF (char const * FileKey)
         ContForce  [3*i+1] = float(Particles[i]->contforce(1));
         ContForce  [3*i+2] = float(Particles[i]->contforce(2));	
 
-        TgDir  [3*i  ] 	= float(Particles[i]->tgdir(0));
-        TgDir  [3*i+1] 	= float(Particles[i]->tgdir(1));
-        TgDir	[3*i+2] 	= float(Particles[i]->tgdir(2));	
+        // TgDir  [3*i  ] 	= float(Particles[i]->tgdir(0));
+        // TgDir  [3*i+1] 	= float(Particles[i]->tgdir(1));
+        // TgDir	[3*i+2] 	= float(Particles[i]->tgdir(2));	
 
-        Normvec  [3*i  ] 	= float( Particles[i]->normal(0));
-        Normvec  [3*i+1] 	= float(Particles[i]->normal(1));
-        Normvec	[3*i+2] 	= float(Particles[i]->normal(2));	
+        // Normvec  [3*i  ] 	= float( Particles[i]->normal(0));
+        // Normvec  [3*i+1] 	= float(Particles[i]->normal(1));
+        // Normvec	[3*i+2] 	= float(Particles[i]->normal(2));	
 				
         deltacont [i] =float(Particles[i]->delta_cont);       
         
@@ -242,8 +242,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     dsname.Printf("Strain");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain);
     dsname.Printf("StrainRate");
-    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,StrainRate);
-    dsname.Printf("Strain_pl");
+    // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,StrainRate);
+    // dsname.Printf("Strain_pl");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain_pl);
     dsname.Printf("gradcorrmat");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,gradcorrmat);
@@ -263,10 +263,10 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Disvec);
 	dsname.Printf("Contact Force");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ContForce);	
-	dsname.Printf("Tg Dir");
-    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,TgDir);	
-	dsname.Printf("Normal Vec");
-    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Normvec);	
+	// dsname.Printf("Tg Dir");
+    // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,TgDir);	
+	// dsname.Printf("Normal Vec");
+    // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Normvec);	
     // dsname.Printf("deltacont");
     // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,deltacont);
 	// dsname.Printf("Eff Strain Rate");
@@ -286,7 +286,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     delete [] Sigma;
     delete [] ShearS;
     delete [] Strain;
-    delete [] StrainRate;
+    // delete [] StrainRate;
     delete [] Strain_pl;
 	delete [] Temp;
 	delete [] Sigma_eq;
@@ -295,8 +295,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	delete [] ContNb;
 	delete [] Disvec;
 	delete [] ContForce;
-	delete [] TgDir;
-  delete [] Normvec;
+	// delete [] TgDir;
+  // delete [] Normvec;
   // delete [] deltacont;
 	delete [] eff_str_rate;
 	delete [] gradcorrmat;
@@ -378,11 +378,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/Strain \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
-    oss << "     <Attribute Name=\"StrainRate\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
-    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
-    oss << "        " << fn.CStr() <<":/StrainRate \n";
-    oss << "       </DataItem>\n";
-    oss << "     </Attribute>\n";
+    // oss << "     <Attribute Name=\"StrainRate\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
+    // oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    // oss << "        " << fn.CStr() <<":/StrainRate \n";
+    // oss << "       </DataItem>\n";
+    // oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Strain_pl\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Strain_pl \n";
@@ -428,16 +428,16 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/Contact Force \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
-    oss << "     <Attribute Name=\"Tg Dir\" AttributeType=\"Vector\" Center=\"Node\">\n";
-    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
-    oss << "        " << fn.CStr() <<":/Tg Dir \n";
-    oss << "       </DataItem>\n";
-    oss << "     </Attribute>\n";
-    oss << "     <Attribute Name=\"Normal Vec\" AttributeType=\"Vector\" Center=\"Node\">\n";
-    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
-    oss << "        " << fn.CStr() <<":/Normal Vec \n";
-    oss << "       </DataItem>\n";
-    oss << "     </Attribute>\n";
+    // oss << "     <Attribute Name=\"Tg Dir\" AttributeType=\"Vector\" Center=\"Node\">\n";
+    // oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    // oss << "        " << fn.CStr() <<":/Tg Dir \n";
+    // oss << "       </DataItem>\n";
+    // oss << "     </Attribute>\n";
+    // oss << "     <Attribute Name=\"Normal Vec\" AttributeType=\"Vector\" Center=\"Node\">\n";
+    // oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    // oss << "        " << fn.CStr() <<":/Normal Vec \n";
+    // oss << "       </DataItem>\n";
+    // oss << "     </Attribute>\n";
     // oss << "     <Attribute Name=\"deltacont\" AttributeType=\"Scalar\" Center=\"Node\">\n";
     // oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Int\" Precision=\"10\"  Format=\"HDF\">\n";
     // oss << "        " << fn.CStr() <<":/deltacont \n";
