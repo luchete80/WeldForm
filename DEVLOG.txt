@@ -16,3 +16,5 @@
 20220519  -   Working on Compression TRIP problem. Manual TS with CFL values of 0.2 NOT CONVERGING.
               Found an error in Particles Move, ghost particles where moving BEFORE adjusting ghost velocity.
               and acceleration were not forced to zero. MoveGhost is now also fixing accel to zero.
+20220520  -   Symm TRIP problem still does not work. Begining to add arrays for parallel sum (reduction)
+              instead of using particle lock (slow).

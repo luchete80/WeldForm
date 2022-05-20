@@ -1760,7 +1760,7 @@ inline void Domain::Move (double dt) {
 				}
 			}
 			//cout << "Particle: "<<i<<endl;
-      if (Particles[i]->is_ghost)
+      //if (Particles[i]->is_ghost)
         Particles[i]->Move(dt,DomSize,TRPR,BLPF,Scheme,I);
       // if (i==624){
         // if (Particles[i]->eff_strain_rate>0)
