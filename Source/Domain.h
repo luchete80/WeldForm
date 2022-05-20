@@ -279,6 +279,10 @@ public:
 																												//based on original neighbours
 		
     Array<Array<std::pair<size_t,size_t> > >	ContPairs;
+    
+    //NEW: For parallel sum/reduction
+    Array<size_t> Listi_SM,Listj_SM;          // i and j particles of pair list [l]
+    Array<size_t> ipair_SM,jpair_SM;          // i and j particles of pair list [l]
 		
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;
