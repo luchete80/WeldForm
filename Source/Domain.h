@@ -42,6 +42,8 @@
 
 #include "Mesh.h"
 
+#define NONLOCK_SUM
+
 //C++ Enum used for easiness of coding in the input files
 enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spline=3};
 enum Viscosity_Eq_Type { Morris=0, Shao=1, Incompressible_Full=2, Takeda=3 };
@@ -114,6 +116,9 @@ public:
     void MainNeighbourSearch_CNS    (const double &r);  //NEW; ALLOWS TO SAVE DATA BY PARTICLE NBS (AND NOT LOCKING DOMAIN)
 		void MainNeighbourSearch_Ext		();									//Create pairs of particles in the whole domain
 		int AvgNeighbourCount						();									//Create pairs of particles in the whole domain
+    
+    void CalcPairPosList();                             //Calculate position list for every particle ipl/jpl[NProc][particle]
+    void CalcRefTable();
 		
 		void SaveNeighbourData();
 		void SaveContNeighbourData();
@@ -281,9 +286,10 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	ContPairs;
     
     //NEW: For parallel sum/reduction
-    Array<size_t> Listi_SM,Listj_SM;          // i and j particles of pair list [l]
-    Array<size_t> ipair_SM,jpair_SM;          // i and j particles of pair list [l]
-		
+    Array< Array <size_t> > ilist_SM,jlist_SM;          // Size [Proc][Pairs] i and j particles of pair list [l]
+    std::vector < std::vector <size_t> > ipair_SM,jpair_SM; //[Proc][Particles]// This is nb count for each particle i<j and j>i
+    std::vector < std::vector <size_t> > ipl_SM,ipl_SM;            // [Proc][Particles] position of list (nb sum)
+    
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;
 	double 	& getTime (){return Time;}		//LUCIANO

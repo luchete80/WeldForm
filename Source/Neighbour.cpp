@@ -116,6 +116,11 @@ inline void Domain::CellInitiate () {
 			RIGPairs.Push(Initial);
 			
 			ContPairs.Push(Initial);
+      
+      //New integration/sum
+      Array <size_t> a;
+      ilist_SM.Push(a);jlist_SM.Push(a);
+      //ipair_SM.Push(a);jpair_SM.Push(a);
     }
 }
 
@@ -369,13 +374,22 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 				return;	//If either one particle or another is in the surface 
 			}				
 		}
-			
+		int i,j;
 		if ( CheckRadius(Particles[temp1],Particles[temp2])){
 			if (Particles[temp1]->IsFree || Particles[temp2]->IsFree) {
 				if (Particles[temp1]->Material == Particles[temp2]->Material)
 				{
-					if (Particles[temp1]->IsFree*Particles[temp2]->IsFree)//Both free, most common
+					if (Particles[temp1]->IsFree*Particles[temp2]->IsFree) {//Both free, most common
 						SMPairs[T].Push(std::make_pair(temp1, temp2));
+            #ifdef NONLOCK_SUM
+            i = std::min(temp1,temp2);
+            j = std::max(temp1,temp2);
+            ilist_SM[T].Push(i); //THIS COULD BE DONE AFTER 
+            jlist_SM[T].Push(j);
+            ipair_SM[T][i]++;
+            jpair_SM[T][j]++;
+            #endif
+          }
 					else
 						FSMPairs[T].Push(std::make_pair(temp1, temp2)); //TEMPORARY
 				} else
@@ -530,5 +544,55 @@ int Domain::AvgNeighbourCount(){
 
 }
 
+// Calculate position ipl
+inline void Domain::CalcPairPosList(){                             //Calculate position list for every particle
+  
+  int icount[Nproc],jcount[Nproc];
+  for (int p=0;p<Nproc;p++) {
+    icount[p]=jcount[p]=0;
+  }
+  
+  #pragma omp parallel for schedule (static) num_threads(Nproc)
+  for (int p=0;p<Nproc;p++){
+    for (int i=0;i<Particles.Size();i++){
+      ipl_SM[p][i] = icount[p];
+      icount[p]    += ipair_SM[p][i];
+      jpl_SM[p][i] = jcount[p];
+      jcount[p]    += jpair_SM[p][i];
+    }
+  }
+}
+
+// Nishimura (2011)
+// Algorithm 1: Creating contact candidate pair list and reference table from the table of neighbor particles
+// 1: for i = 0 to N
+// p  1 do {parallelized loop over particle index; Np is the total number of particles}
+// 2: for Itable = 0 to njgi½i  1 do {loop over neighbor particle array}
+// 3: Ilist  sjgi½i  1 + Itable {index of contact candidate pair list defined by Eq. (4)}
+// 4: j  Anei½i; Itable
+// 5: L
+// p½Ilist  i {creating contact candidate pair list by Step 4}
+// 6: Ln½Ilist  j
+// 7: Aref½i; Itable  Ilist {Step (i) of Fig. 7}
+// 8: for k = 0 to njli½j  1 do {Step (ii) of Fig. 7}
+// 9: if Anei½j; N  1  k = i then {Step (iii) of Fig. 7}
+// 10: Aref½j; njgi½j þ k  Ilist {Step (iv) of Fig. 7}
+// 11: end if
+// 12: end do
+// 13: end do
+// 14: end do
+
+inline void Domain::CalcRefTable(){
+  #pragma omp parallel for schedule (static) num_threads(Nproc)
+  for (int p=0;p<Nproc;p++){
+    for (int i = 0;i<Particles.Size();i++){
+    size_t T = omp_get_thread_num();
+      for (int n=0;n<ipl_SM[T][i];n++){
+        Aref = ipl_SM
+      }//nb
+    }//particle
+  } //Thread
+  
+}
 
 }; //SPH
