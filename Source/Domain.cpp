@@ -2425,7 +2425,7 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->UpdateDensity_Leapfrog(deltat);
-      Particles[i]->Mat2Euler(deltat); //Uses density  
+      //Particles[i]->Mat2Euler(deltat); //Uses density  
     }
     
     
@@ -2533,6 +2533,11 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
     }
     
     MoveGhost();  //If Symmetry, 
+
+    for (size_t i=0; i<Particles.Size(); i++){
+      //Particles[i]->UpdateDensity_Leapfrog(deltat);
+      Particles[i]->Mat2Euler(deltat); //Uses density  
+    }
     
     
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -2564,6 +2569,11 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 				ts_i = 0;
 		
 		}
+    
+    if (Particles[0]->FirstStep)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->FirstStep = false;
+    }
 		
 	
 	}
