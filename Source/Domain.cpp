@@ -2148,7 +2148,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
     
 		clock_beg = clock();
 
-		Move(deltat); // DOES NOT INCLUDE GHOST PARTICLES
+		Move(deltat); // INCLUDES GHOST PARTICLES
     MoveGhost();  //If Symmetry, 
     
     
