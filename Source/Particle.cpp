@@ -441,10 +441,10 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	Density = (Densitya+Densityb)/2.0;
 	vb = va;
 	va += dt*a;
-  for (int i=0;i<3;i++) { 
-    if (va(i)>v_max(i)) va(i) = v_max(i);
-    else if (va(i)<-v_max(i)) va(i) = -v_max(i);
-  }
+  // for (int i=0;i<3;i++) { 
+    // if (va(i)>v_max(i)) va(i) = v_max(i);
+    // else if (va(i)<-v_max(i)) va(i) = -v_max(i);
+  // }
 	v = (va + vb)/2.0;
 
 	x += dt*(va+VXSPH);
@@ -454,6 +454,33 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
     Mat2Leapfrog(dt);
 	if (FirstStep) FirstStep = false;
 
+}
+
+//Not update Stress (In order to update ir later)
+inline void Particle::UpdateDensity_Leapfrog(double dt)
+{
+	if (FirstStep) {
+		Densitya = Density - dt/2.0*dDensity;
+	}
+	Densityb = Densitya;
+	Densitya += dt*dDensity;
+	Density = (Densitya+Densityb)/2.0;
+}
+
+inline void Particle::UpdateVelPos_Leapfrog(double dt)
+{
+	if (FirstStep) {
+		va = v - dt/2.0*a;
+	}
+
+	vb = va;
+	va += dt*a;
+
+	v = (va + vb)/2.0;
+
+	x += dt*(va+VXSPH);
+	
+	Displacement += dt*va;
 }
 
 void Particle::TempCalcLeapfrog	(double dt){

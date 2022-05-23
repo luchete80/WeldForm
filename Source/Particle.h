@@ -199,6 +199,10 @@ namespace SPH {
 		void Move_MVerlet		(Mat3_t I, double dt);										///< Update the important quantities of a particle
 		void Move_Verlet		(Mat3_t I, double dt);		//LUCIANO
 		void Move_Leapfrog	(Mat3_t I, double dt);										///< Update the important quantities of a particle
+    //These two are set in order to alternate update (Randles Libersky 1996)
+    void UpdateDensity_Leapfrog(double dt);
+    void UpdateVelPos_Leapfrog(double dt);
+    
 		void translate			(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin);
 		void Mat2Verlet			(double dt);
 		void Mat2MVerlet		(double dt);

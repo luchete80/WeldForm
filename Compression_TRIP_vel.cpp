@@ -80,7 +80,7 @@ int main() try{
 	Cs	= sqrt(K/rho);
 
 	double timestep;
-	timestep = (0.05*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+	timestep = (0.3*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
 
 //timestep = 2.5e-6;
 
@@ -140,7 +140,8 @@ int main() try{
   	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
-  //dom.auto_ts = false;
+  dom.auto_ts = false;
+  timestep=1.e-8;
 
 	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	
