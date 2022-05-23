@@ -436,7 +436,7 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	vb = va;
 	va += dt*a;
 	v = (va + vb)/2.0;
-	x += dt*va;
+	x += dt*(va+VXSPH);
 	
 	Displacement += dt*va;
 
