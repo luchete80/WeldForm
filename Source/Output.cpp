@@ -241,9 +241,9 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Sigma);
     dsname.Printf("Strain");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain);
-    dsname.Printf("StrainRate");
+    //dsname.Printf("StrainRate");
     // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,StrainRate);
-    // dsname.Printf("Strain_pl");
+    dsname.Printf("Strain_pl");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain_pl);
     dsname.Printf("gradcorrmat");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,gradcorrmat);
@@ -298,7 +298,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	// delete [] TgDir;
   // delete [] Normvec;
   // delete [] deltacont;
-	delete [] eff_str_rate;
+	//delete [] eff_str_rate;
 	delete [] gradcorrmat;
 	
    //Closing the file
