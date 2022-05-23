@@ -221,6 +221,10 @@ inline void Particle::Move_MVerlet (Mat3_t I, double dt)
 		Vec3_t temp;
 		temp	= v;
 		v		= vb + 2*dt*a;
+    // for (int i=0;i<3;i++) { 
+      // if (v(i)>v_max(i)) v(i) = v_max(i);
+      // else if (v(i)<-v_max(i)) v(i) = -v_max(i);
+    // }
 		vb		= temp;
 	}
 
@@ -342,6 +346,7 @@ inline void Particle::Mat2MVerlet(double dt) {
 		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
 		if ( sig_trial > Sigmay) {
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+      dep/=2.;
 			pl_strain += dep;
 			Sigmay += dep*Ep;
 		}
@@ -399,28 +404,29 @@ inline void Particle::Move_Verlet (Mat3_t I, double dt) {
     Mat2Verlet(dt);	//This uses the same as modified verlet as ct always is != 30
 }
 
+//Only moves
 inline void Particle::Move_Euler (Mat3_t I, double dt) {
 
-	if (FirstStep) {
-		Densityb		= Density;
-		Density			+=dt*dDensity;
-		FirstStep = false;
-	}
+	// if (FirstStep) {
+		// Densityb		= Density;
+		// Density			+=dt*dDensity;
+		// FirstStep = false;
+	// }
 
 	Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;
 	Displacement += du;
 	x += du;
 
-	double dens	= Density;
-	Density		= Densityb + dt*dDensity;
-	Densityb	= dens;		
+	// double dens	= Density;
+	// Density		= Densityb + dt*dDensity;
+	// Densityb	= dens;		
 
 	Vec3_t temp;
 	temp	= v;
 	v		= vb + dt*a;
 	vb		= temp;	
 	
-    Mat2Euler(dt);	//This uses the same as modified verlet as ct always is != 30
+  //Mat2Euler(dt);	//This uses the same as modified verlet as ct always is != 30
 }
 
 
@@ -435,7 +441,12 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	Density = (Densitya+Densityb)/2.0;
 	vb = va;
 	va += dt*a;
+  for (int i=0;i<3;i++) { 
+    if (va(i)>v_max(i)) va(i) = v_max(i);
+    else if (va(i)<-v_max(i)) va(i) = -v_max(i);
+  }
 	v = (va + vb)/2.0;
+
 	x += dt*(va+VXSPH);
 	
 	Displacement += dt*va;
