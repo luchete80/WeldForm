@@ -2221,7 +2221,7 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 	bool isyielding = false;
 
 
-	ClearNbData();
+	//ClearNbData();
 	
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
@@ -2238,68 +2238,55 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 
 		double max = 0;
 		int imax;
-//		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
-		// for (int i=0; i<Particles.Size(); i++){
-			// if (Particles[i]->pl_strain > max){
-        // omp_set_lock(&dom_lock);
-				// max= Particles[i]->pl_strain;
-        // omp_unset_lock(&dom_lock);
-				// imax=i;
-			// }
-		// }
+		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		for (int i=0; i<Particles.Size(); i++){
+			if (Particles[i]->pl_strain > max){
+        omp_set_lock(&dom_lock);
+				max= Particles[i]->pl_strain;
+        omp_unset_lock(&dom_lock);
+				imax=i;
+			}
+		}
 
     Vec3_t max_disp = Vec3_t(0.,0.,0.);
-		// for (int i=0; i<Particles.Size(); i++){
-      // for (int j=0;j<3;j++)
-        // if (Particles[i]->Displacement[j]>max_disp[j]){
-          // max_disp[j] = Particles[i]->Displacement [j];
-          // imax=i;
-			// }
-		// }
+		for (int i=0; i<Particles.Size(); i++){
+      for (int j=0;j<3;j++)
+        if (Particles[i]->Displacement[j]>max_disp[j]){
+          max_disp[j] = Particles[i]->Displacement [j];
+          imax=i;
+			}
+		}
     
     // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
     //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
-    if (norm(max_disp) > 0.1 * hmax){
-      if (!check_nb_every_time)
-        cout << "Checking Nb Every step now."<<endl;
-      check_nb_every_time = true;
-    }
-    else 
-      check_nb_every_time = false;
+    // if (norm(max_disp) > 0.1 * hmax){
+      // if (!check_nb_every_time)
+        // cout << "Checking Nb Every step now."<<endl;
+      // check_nb_every_time = true;
+    // }
+    // else 
+      // check_nb_every_time = false;
 		
-		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
-			ClearNbData();
-      
-      // THIS IS IF MAINNBSEARCH INCLUDE SEARCHING CONTACT (NEW)
-      // if (contact){
-				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-				// CalculateSurface(1);				//After Nb search			        
-      // }
-      
-			MainNeighbourSearch/*_Ext*/();
-      
-			isyielding  = true ;
-		}
-		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
-			if ( ts_i == 0 ){
+		// if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
+			// ClearNbData(); 
+			// MainNeighbourSearch/*_Ext*/();
+			// isyielding  = true ;
+		// }
+		// if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
+			// if ( ts_i == 0 ){
 
-				if (m_isNbDataCleared){
-
-          // if (contact){
-            // SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-            // CalculateSurface(1);				//After Nb search			        
-          // }
-					MainNeighbourSearch/*_Ext*/();
-          //if (contact) SaveContNeighbourData();
+				// if (m_isNbDataCleared){
+					// MainNeighbourSearch/*_Ext*/();
+          // //if (contact) SaveContNeighbourData();
 					
 	
-				}// ts_i == 0				
+				// }// ts_i == 0				
 				
-			}
+			// }
 		
-    } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+    // } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 
-		//NEW, gradient correction
+		// //NEW, gradient correction
 			if (isfirst) {
 				if (gradKernelCorr){
           cout << "Calculating gradient correction matrix"<<endl;
@@ -2311,38 +2298,38 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 		
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
-    //CalcAccel(); //Nor density or neither strain rates
+    CalcAccel(); //Nor density or neither strain rates
 
 
-		// //Move(deltat); // INCLUDES GHOST PARTICLES
-    // #pragma omp parallel for schedule (static) num_threads(Nproc)
-    // for (size_t i=0; i<Particles.Size(); i++){
-      // Particles[i]->v += Particles[i]->a*dt/2.;
-    // }
+		//Move(deltat); // INCLUDES GHOST PARTICLES
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->v += Particles[i]->a*dt/2.;
+    }
 
-    // CalcDensInc(); //TODO: USE SAME KERNEL?
-    // #pragma omp parallel for schedule (static) num_threads(Nproc)
-    // for (size_t i=0; i<Particles.Size(); i++){
-      // Particles[i]->UpdateDensity_Leapfrog(deltat);
-    // }    
+    CalcDensInc(); //TODO: USE SAME KERNEL?
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->UpdateDensity_Leapfrog(deltat);
+    }    
     
-    // //BEFORE
-    // #pragma omp parallel for schedule (static) num_threads(Nproc)
-    // for (size_t i=0; i<Particles.Size(); i++){
-      // Particles[i]->x += Particles[i]->v*dt;
-    // }   
+    //BEFORE
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->x += Particles[i]->v*dt;
+    }   
 
-    // #pragma omp parallel for schedule (static) num_threads(Nproc)
-    // for (size_t i=0; i<Particles.Size(); i++){
-      // Particles[i]->v += Particles[i]->a*dt/2.;
-    // }
-    // cout << "calc rate tensors"<<endl;
-    // CalcRateTensors();  //With v and xn+1
-    // #pragma omp parallel for schedule (static) num_threads(Nproc)
-    // for (size_t i=0; i<Particles.Size(); i++){
-      // //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
-      // Particles[i]->CalcStressStrain(deltat); //Uses density  
-    // }   
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->v += Particles[i]->a*dt/2.;
+    }
+    cout << "calc rate tensors"<<endl;
+    CalcRateTensors();  //With v and xn+1
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
+      Particles[i]->CalcStressStrain(deltat); //Uses density  
+    }   
     
 		GeneralAfter(*this);
 
