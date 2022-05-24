@@ -18,3 +18,9 @@
               and acceleration were not forced to zero. MoveGhost is now also fixing accel to zero.
 20220520  -   Symm TRIP problem still does not work. Begining to add arrays for parallel sum (reduction)
               instead of using particle lock (slow).
+20220523  -   Numerical integration. Qpplied dep/2 in Modiried verlet algorithm.
+              Verlet is FAR FASTER than leapfrog. 
+              XSPH. Found an ERROR (XSPH was not applied on leapfrog). 
+              But not seeing results.
+              RANDLES-LIBERSY 1996: Main loop updating variables order. 
+              Begining to change this, alsp like fraser. Apparently allows to CFL up to 1.5
