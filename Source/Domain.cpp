@@ -2194,8 +2194,6 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 	//Initializing adaptive time step variables
 	deltat = deltatint = deltatmin	= dt;
 	
-	auto start_whole = std::chrono::steady_clock::now();
-		
 
 	InitialChecks();
 	CellInitiate();
@@ -2203,9 +2201,6 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 	PrintInput(TheFileKey);
 	TimestepCheck();
 	WholeVelocity();
-	
-
-	std::chrono::duration<double> total_time,neighbour_time;
 	
 
 	//Initial model output
