@@ -72,9 +72,13 @@ int main() try{
 	rho	= 7850.0;
   double E = 200.e9;
   double nu = 0.3;
+  
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 	Fy	= 900.e6;
+
+  double Et = (1500-Fy)/0.5*1.e6;
+  double Ep =  E*Et/(E-Et);
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
 	dx = 0.0008;  //Tenth of radius
@@ -116,6 +120,7 @@ int main() try{
 		dom.Particles[a]->Cs		= Cs;
 		dom.Particles[a]->Shepard	= false;
 		dom.Particles[a]->Material	= 2;
+    dom.Particles[a]->Ep		= Ep;
 		//dom.Particles[a]->Et_m = 0.01 * 68.9e9;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;

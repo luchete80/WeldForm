@@ -2442,7 +2442,8 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
     }
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->Mat2Leapfrog(deltat); //Uses density  
+      //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
+      Particles[i]->CalcStressStrain(deltat); //Uses density  
     }   
     
     //MoveGhost();  //If Symmetry, 
