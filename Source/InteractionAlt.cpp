@@ -4,7 +4,7 @@
 /*  NEW FUNCTION TO CALCULATE ACCELERATION, REMOVING STRAIN AND ROTATION RATES
 *** AND ALSO DENSITY; IN ORDER TO CALCULATE THEM SEPARATELY *//////
 //  NOTE: ONLY FOR FREE PARTICLES
-
+namespace SPH{
 inline void Domain::CalcAccel() {
   Particle *P1, *P2;
   
@@ -161,7 +161,7 @@ inline void Domain::CalcAccel() {
 }
 
 
-inline void Domain::CalcRateTensorsDens(Particle * P1, Particle * P2) {
+inline void Domain::CalcRateTensorsDens() {
   Particle *P1, *P2;
   
 	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
@@ -210,17 +210,18 @@ inline void Domain::CalcRateTensorsDens(Particle * P1, Particle * P2) {
 		Vec3_t vab = 0.0;
 		if (P1->IsFree*P2->IsFree) {
 			vab = vij;
-		} else {
-			if (P1->NoSlip || P2->NoSlip) {
-				// No-Slip velocity correction
-				if (P1->IsFree)	vab = P1->v - (2.0*P2->v-P2->NSv); else vab = (2.0*P1->v-P1->NSv) - P2->v;
-			}
-			// Please check
-			if (!(P1->NoSlip || P2->NoSlip)) {
-				if (P1->IsFree) vab = P1->v - P2->vb; else vab = P1->vb - P2->v;
-//				if (P1->IsFree) vab(0) = P1->v(0) + P2->vb(0); else vab(0) = -P1->vb(0) - P2->v(0);
-			}
-		}
+		} 
+    // else {
+			// if (P1->NoSlip || P2->NoSlip) {
+				// // No-Slip velocity correction
+				// if (P1->IsFree)	vab = P1->v - (2.0*P2->v-P2->NSv); else vab = (2.0*P1->v-P1->NSv) - P2->v;
+			// }
+			// // Please check
+			// if (!(P1->NoSlip || P2->NoSlip)) {
+				// if (P1->IsFree) vab = P1->v - P2->vb; else vab = P1->vb - P2->v;
+// //				if (P1->IsFree) vab(0) = P1->v(0) + P2->vb(0); else vab(0) = -P1->vb(0) - P2->v(0);
+			// }
+		// }
 
 		Mat3_t StrainRate,RotationRate;
 		set_to_zero(StrainRate);
@@ -290,20 +291,6 @@ inline void Domain::CalcRateTensorsDens(Particle * P1, Particle * P2) {
 			}
 		}
 
-		// NEW
-		if (!gradKernelCorr) {
-		if (GradientType == 0)
-			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
-		else
-			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
-		} else {
-				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
-				//Left in vector form and multiply after??
-				for (int i=0;i<2;i++){
-					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
-				}
-		}//Grad Corr
-    
 
 		if (Dimension == 2) temp(2) = 0.0;
 		
@@ -662,3 +649,5 @@ inline void Domain::CalcForceSOA(int &i,int &j) {
     //omp_unset_lock(&dom_lock);
   //}//Interaction
 }
+
+  };//SPH

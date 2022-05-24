@@ -2272,18 +2272,7 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 	bool isfirst = true;
 	bool isyielding = false;
 
-	//In case of contact this must be SURFACE particles
-	//TODO, REMOVE so many nb search
-	if (contact){
-		MainNeighbourSearch();
-		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-		CalculateSurface(1);				//After Nb search	
-	}
-	
-	//IF GRADCORR IS CALCULATED HERE; INVERSE IS NOT FOUND (ERROR)
-	// TO BE CHECK
-	// if (gradKernelCorr)
-		// CalcGradCorrMatrix();	
+
 	ClearNbData();
 	
 	//Print history
@@ -2341,13 +2330,7 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
-      
-      // THIS IS IF MAINNBSEARCH INCLUDE SEARCHING CONTACT (NEW)
-      // if (contact){
-				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-				// CalculateSurface(1);				//After Nb search			        
-      // }
-      
+
 			MainNeighbourSearch/*_Ext*/();
       
      // if (contact) SaveContNeighbourData();
@@ -2419,35 +2402,24 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 		PrimaryComputeAcceleration();
 		pr_acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
-		LastComputeAcceleration();
+		//LastComputeAcceleration();
+    CalcAccel(); //Nor density or neither strain rates
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
-
+    
+    
+    CalcRateTensorsDens();
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->UpdateDensity_Leapfrog(deltat);
-      //Particles[i]->Mat2Euler(deltat); //Uses density  
     }
-    
-    
-    double maxT = 0.;
-    double minT =1000.;    
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-			//Particles[i]->T+= dt*Particles[i]->dTdt;
-			Particles[i]->TempCalcLeapfrog(dt);
-			if (Particles[i]->T > maxT)
-				maxT=Particles[i]->T;
-			if (Particles[i]->T < minT)
-				minT=Particles[i]->T;      
-    }
+      Particles[i]->CalcStressStrain(deltat); //Uses density  
+    }    
+
     
 
-		if (thermal_solver){
-			CalcConvHeat();
-			CalcPlasticWorkHeat(deltat);
-			CalcTempInc();
-			CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term	
-		}
-		
 		clock_beg = clock();
 		GeneralAfter(*this);
 		bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -2490,15 +2462,10 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 			cout << "Total Nb search time in this interval: " << neigbour_time_spent_per_interval;
 			cout << "Average Nb search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step)<<endl;
 
-			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
-			std::cout << "Max, Min, Avg temps: "<< maxT << ", " << minT << ", " << (maxT+minT)/2. <<std::endl;      
+			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;  
       cout << "Particle 0 pos and vel "<<endl;
       cout << Particles[0]->x<<endl;
       cout << Particles[0]->v<<endl;
-      
-      // cout << "ghost pair 0" << GhostPairs[0].first<<", "<<GhostPairs[0].second<<endl;
-      // cout << Particles[GhostPairs[0].second]->x<<endl;
-      // cout << Particles[GhostPairs[0].second]->v<<endl;
       
 			first_step=steps;
 			neigbour_time_spent_per_interval=0.;
@@ -2533,27 +2500,8 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
     }
     
     MoveGhost();  //If Symmetry, 
-
-    for (size_t i=0; i<Particles.Size(); i++){
-      //Particles[i]->UpdateDensity_Leapfrog(deltat);
-      Particles[i]->Mat2Euler(deltat); //Uses density  
-    }
-    
     
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		clock_beg = clock();
-		// Update velocity, plane coeff pplane and other things
-		
-    if (contact){
- 		//cout << "checking contact"<<endl;
-      if (contact_mesh_auto_update)
-        trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
-      //cout << "Updating contact particles"<<endl;
-      UpdateContactParticles(); //Updates normal and velocities
-		}
-    //cout << "Done"<<endl;
-
-		trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		
 		Time += deltat;
 		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();

@@ -57,7 +57,7 @@ int main() try{
 	dom.Dimension	= 3;
 	dom.Nproc	= 4;
 	dom.Kernel_Set(Qubic_Spline);
-	dom.Scheme	= 1;	//Mod Verlet
+	dom.Scheme	= 0;	//Mod Verlet
 	//dom.XSPH	= 0.1; //Very important
 
 		double dx,h,rho,K,G,Cs,Fy;
@@ -80,7 +80,7 @@ int main() try{
 	Cs	= sqrt(K/rho);
 
 	double timestep;
-	timestep = (0.3*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+	timestep = (0.2*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
 
 //timestep = 2.5e-6;
 
@@ -141,9 +141,9 @@ int main() try{
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
   dom.auto_ts = false;
-  timestep=1.e-8;
+  //timestep=1.e-8;
 
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

@@ -20,6 +20,8 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include "InteractionAlt.cpp"
+
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -76,7 +78,7 @@ int main(int argc, char **argv) try
 		dom.Dimension	= 3;
 		dom.Nproc	= 4;
 		dom.Kernel_Set(Qubic_Spline);
-		dom.Scheme	= 1;	//Mod Verlet
+		dom.Scheme	= 0;	//Mod Verlet
 		//dom.XSPH	= 0.1; //Very important
 
 			double dx,h,rho,K,G,Cs,Fy;
@@ -92,7 +94,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.03;
+		dx = 0.015;
     h	= dx*1.2; //Very important
     Cs	= sqrt(K/rho);
 
@@ -148,11 +150,10 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
     
-    //dom.auto_ts=false;
+    dom.auto_ts=false;
     
-    //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-    //dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }
