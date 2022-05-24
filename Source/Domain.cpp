@@ -2236,30 +2236,31 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 
 
 	while (Time<=tf && idx_out<=maxidx) {
-
+    
+    cout << "Start acce"<<endl;
 		StartAcceleration(Gravity);
-		
+		cout << "done"<<endl;
 
 		double max = 0;
 		int imax;
-		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
-		for (int i=0; i<Particles.Size(); i++){
-			if (Particles[i]->pl_strain > max){
-        omp_set_lock(&dom_lock);
-				max= Particles[i]->pl_strain;
-        omp_unset_lock(&dom_lock);
-				imax=i;
-			}
-		}
+//		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		// for (int i=0; i<Particles.Size(); i++){
+			// if (Particles[i]->pl_strain > max){
+        // omp_set_lock(&dom_lock);
+				// max= Particles[i]->pl_strain;
+        // omp_unset_lock(&dom_lock);
+				// imax=i;
+			// }
+		// }
 
     Vec3_t max_disp = Vec3_t(0.,0.,0.);
-		for (int i=0; i<Particles.Size(); i++){
-      for (int j=0;j<3;j++)
-        if (Particles[i]->Displacement[j]>max_disp[j]){
-          max_disp[j] = Particles[i]->Displacement [j];
-          imax=i;
-			}
-		}
+		// for (int i=0; i<Particles.Size(); i++){
+      // for (int j=0;j<3;j++)
+        // if (Particles[i]->Displacement[j]>max_disp[j]){
+          // max_disp[j] = Particles[i]->Displacement [j];
+          // imax=i;
+			// }
+		// }
     
     // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
     //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
@@ -2315,7 +2316,7 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 		
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
-    CalcAccel(); //Nor density or neither strain rates
+    //CalcAccel(); //Nor density or neither strain rates
 
 
 		// //Move(deltat); // INCLUDES GHOST PARTICLES
