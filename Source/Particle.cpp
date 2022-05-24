@@ -482,7 +482,7 @@ inline void Particle::Move_Verlet (Mat3_t I, double dt) {
 	Density		= Densityb + 2.0*dt*dDensity;
 	Densityb	= dens;		
 
-	Vec3_t temp = a*dt/2;
+	Vec3_t temp = a*dt/2.0;
 	v += temp;
 	Vec3_t du = (v+VXSPH)*dt;
 	Displacement += du;
