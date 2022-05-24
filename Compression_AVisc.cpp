@@ -92,23 +92,23 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.02;
+		dx = 0.03;
     h	= dx*1.2; //Very important
-        Cs	= sqrt(K/rho);
+    Cs	= sqrt(K/rho);
 
-        double timestep;
-        timestep = (0.2*h/(Cs+VMAX));
-		
-		//timestep = 2.5e-6;
+    double timestep;
+    timestep = (0.2*h/(Cs+VMAX));
 
-        cout<<"t  = "<<timestep<<endl;
-        cout<<"Cs = "<<Cs<<endl;
-        cout<<"K  = "<<K<<endl;
-        cout<<"G  = "<<G<<endl;
-        cout<<"Fy = "<<Fy<<endl;
-    	dom.GeneralAfter = & UserAcc;
-        dom.DomMax(0) = L;
-        dom.DomMin(0) = -L;
+//timestep = 2.5e-6;
+
+    cout<<"t  = "<<timestep<<endl;
+    cout<<"Cs = "<<Cs<<endl;
+    cout<<"K  = "<<K<<endl;
+    cout<<"G  = "<<G<<endl;
+    cout<<"Fy = "<<Fy<<endl;
+  dom.GeneralAfter = & UserAcc;
+    dom.DomMax(0) = L;
+    dom.DomMin(0) = -L;
 
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
@@ -148,11 +148,11 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
     
-    dom.auto_ts=false;
+    //dom.auto_ts=false;
     
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-    dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    //dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }
