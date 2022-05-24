@@ -538,10 +538,11 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
     // else if (va(i)<-v_max(i)) va(i) = -v_max(i);
   // }
 	v = (va + vb)/2.0;
-
-	x += dt*(va+VXSPH);
+  
+  Vec3_t du = dt*(va+VXSPH);
+	x += du;
 	
-	Displacement += dt*va;
+	Displacement += du;
 
     Mat2Leapfrog(dt);
 	if (FirstStep) FirstStep = false;
