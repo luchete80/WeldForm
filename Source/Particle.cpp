@@ -388,18 +388,16 @@ inline void Particle::Move_Verlet (Mat3_t I, double dt) {
 		FirstStep = false;
 	}
 
-	Vec3_t du = dt*(v+VXSPH) + 0.5*dt*dt*a;
-	Displacement += du;
-	x += du;
-
 	double dens	= Density;
 	Density		= Densityb + 2.0*dt*dDensity;
 	Densityb	= dens;		
 
-	Vec3_t temp;
-	temp	= v;
-	v		= vb + 2*dt*a;
-	vb		= temp;	
+	Vec3_t temp = a*dt/2;
+	v += temp;
+	Vec3_t du = (v+VXSPH)*dt;
+	Displacement += du;
+	x += du;
+	v += temp;	
 	
     Mat2Verlet(dt);	//This uses the same as modified verlet as ct always is != 30
 }
@@ -429,7 +427,7 @@ inline void Particle::Move_Euler (Mat3_t I, double dt) {
   //Mat2Euler(dt);	//This uses the same as modified verlet as ct always is != 30
 }
 
-
+//THIS IS THE KICK-DRIF-KICK
 inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 {
 	if (FirstStep) {
