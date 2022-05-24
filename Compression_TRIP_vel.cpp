@@ -77,7 +77,7 @@ int main() try{
   G= E / (2.* (1.+nu));
 	Fy	= 900.e6;
 
-  double Et = (1500-Fy)/0.5*1.e6;
+  double Et = (1500.e6-Fy)/0.5;
   double Ep =  E*Et/(E-Et);
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
