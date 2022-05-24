@@ -59,7 +59,7 @@ int main() try{
 	dom.Dimension	= 3;
 	dom.Nproc	= 4;
 	dom.Kernel_Set(Qubic_Spline);
-	dom.Scheme	= 1;	//Mod Verlet
+	dom.Scheme	= 0;	//Mod Verlet
 	//dom.XSPH	= 0.1; //Very important
 
 		double dx,h,rho,K,G,Cs,Fy;
@@ -77,8 +77,9 @@ int main() try{
   G= E / (2.* (1.+nu));
 	Fy	= 900.e6;
 
-  double Et = (1500.e6-Fy)/0.5;
+  double Et = (1400.e6-Fy)/0.5;
   double Ep =  E*Et/(E-Et);
+  //Ep = 0.;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
 	dx = 0.0008;  //Tenth of radius
@@ -105,7 +106,7 @@ int main() try{
 
 	
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
   
   dom.Particles[3863]->print_history = true;
   
@@ -150,8 +151,8 @@ int main() try{
   dom.auto_ts = false;
   //timestep=1.e-8;
 
-	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-  dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  //dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }
