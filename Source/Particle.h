@@ -208,6 +208,7 @@ namespace SPH {
 		void Mat2MVerlet		(double dt);
 		void TempCalcLeapfrog	(double dt);
 		void Mat2Leapfrog		(double dt);
+    void CalcStressStrain (double dt);
 		void PlasticHeatTest	();
 		void CalcPlasticWorkHeat(const double &dt);
 		void CalcThermalExpStrainRate();

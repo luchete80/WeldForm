@@ -288,7 +288,7 @@ inline void Particle::Mat2Verlet(double dt) {
 
 	// Elastic prediction step (ShearStress_e n+1)
 	Stress			= ShearStress;
-	ShearStress		= 2.0*dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressb;
+	ShearStress		= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressb;
 	ShearStressb	= Stress;
 
 	if (Fail == 1) {
@@ -328,6 +328,7 @@ inline void Particle::Mat2MVerlet(double dt) {
 	Mult(RotationRate,ShearStress,RS);
 
 	double dep = 0.;
+  double sig_trial = 0.;
 
 	// Elastic prediction step (ShearStress_e n+1)
 	Stress			= ShearStress;
@@ -342,15 +343,45 @@ inline void Particle::Mat2MVerlet(double dt) {
 						2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
 						2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
 		//Scale back, Fraser Eqn 3-53
-		double sig_trial = sqrt(3.0*J2);
+		sig_trial = sqrt(3.0*J2);
 		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
+
+		if (Material_model == BILINEAR ){
+			//Sigmay = Fy0 + pl_strain*Et
+		} else if (Material_model == HOLLOMON ){
+			Sigmay = mat->CalcYieldStress(pl_strain); 
+		}
+			
 		if ( sig_trial > Sigmay) {
+			if (Material_model == HOLLOMON ){
+				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
+				Et_m = Et;
+			}
+			else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR				
+				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
+			} else if (Material_model > BILINEAR ) {//Else Ep = 0
+        //cout << "Calculating Ep"<<endl;
+				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+				// if (Ep < 0)
+					// cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
+			}
+			if (Ep<0) Ep = 1.*mat->Elastic().E();
+			//Common for both methods
+			//if (Ep>0) {
+			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			//cout << "dep: "<<dep<<endl;
+			pl_strain += dep;
+			delta_pl_strain = dep; // For heating work calculation
+			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
+			if (Material_model == BILINEAR )
+				Sigmay += dep*Ep;
+   
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
       dep/=2.;
 			pl_strain += dep;
 			Sigmay += dep*Ep;
-		}
-	}
+    } //plastic
+  }//Fail
 
 	Sigma			= -Pressure * OrthoSys::I + ShearStress;	//Fraser, eq 3.32
 	
