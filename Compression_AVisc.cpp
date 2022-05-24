@@ -118,7 +118,7 @@ int main(int argc, char **argv) try
 										
 		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 		
-    dom.gradKernelCorr = true;
+    dom.gradKernelCorr = false;
         
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 

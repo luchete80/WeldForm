@@ -129,6 +129,8 @@ public:
     void CalcForce2233	(Particle * P1, Particle * P2);		//Calculates the contact force between soil-soil/solid-solid particles
     void CalcAccel();		//NEW, ONLY CALCULATES ACCELERATION; IN ORDER TO ALTERNATE AND NOT CALCULATE Density at same place
     void CalcRateTensorsDens();		//NEW, ONLY CALCULATES ACCELERATION; IN ORDER TO ALTERNATE AND NOT CALCULATE Density at same place
+    void CalcDensInc();
+    void CalcRateTensors();
     void CalcForceSOA(int &i,int &j) ;
     void Move						(double dt);										//Move particles
 
