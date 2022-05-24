@@ -2236,28 +2236,30 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 
 
 	while (Time<=tf && idx_out<=maxidx) {
-		StartAcceleration(Gravity);
-	
-		double max = 0;
-		// int imax;
-		// #pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
-		// for (int i=0; i<Particles.Size(); i++){
-			// if (Particles[i]->pl_strain > max){
-        // omp_set_lock(&dom_lock);
-				// max= Particles[i]->pl_strain;
-        // omp_unset_lock(&dom_lock);
-				// imax=i;
-			// }
-		// }
 
-    // Vec3_t max_disp = Vec3_t(0.,0.,0.);
-		// for (int i=0; i<Particles.Size(); i++){
-      // for (int j=0;j<3;j++)
-        // if (Particles[i]->Displacement[j]>max_disp[j]){
-          // max_disp[j] = Particles[i]->Displacement [j];
-          // imax=i;
-			// }
-		// }
+		StartAcceleration(Gravity);
+		
+
+		double max = 0;
+		int imax;
+		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		for (int i=0; i<Particles.Size(); i++){
+			if (Particles[i]->pl_strain > max){
+        omp_set_lock(&dom_lock);
+				max= Particles[i]->pl_strain;
+        omp_unset_lock(&dom_lock);
+				imax=i;
+			}
+		}
+
+    Vec3_t max_disp = Vec3_t(0.,0.,0.);
+		for (int i=0; i<Particles.Size(); i++){
+      for (int j=0;j<3;j++)
+        if (Particles[i]->Displacement[j]>max_disp[j]){
+          max_disp[j] = Particles[i]->Displacement [j];
+          imax=i;
+			}
+		}
     
     // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
     //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
@@ -2271,17 +2273,30 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData();
-
+      
+      // THIS IS IF MAINNBSEARCH INCLUDE SEARCHING CONTACT (NEW)
+      // if (contact){
+				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+				// CalculateSurface(1);				//After Nb search			        
+      // }
+      
 			MainNeighbourSearch/*_Ext*/();
+      
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
-				
-				if (m_isNbDataCleared){
-					MainNeighbourSearch/*_Ext*/();
-			
 
+				if (m_isNbDataCleared){
+
+          // if (contact){
+            // SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+            // CalculateSurface(1);				//After Nb search			        
+          // }
+					MainNeighbourSearch/*_Ext*/();
+          //if (contact) SaveContNeighbourData();
+					
+	
 				}// ts_i == 0				
 				
 			}
@@ -2296,13 +2311,10 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 				cout << "Done."<<endl;
 				isfirst = false;
 			}		
-    
-
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
+		
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
-		//LastComputeAcceleration();
-    cout << "Calc Accel"<<endl;
     CalcAccel(); //Nor density or neither strain rates
 
 
