@@ -94,7 +94,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     float * Sigma		= new float[6*Particles.Size()];
     float * ShearS   	= new float[6*Particles.Size()]; 	//LUCIANO
     float * Strain		= new float[6*Particles.Size()];
-	// float * StrainRate	= new float[6*Particles.Size()];
+    float * StrainRate	= new float[6*Particles.Size()];
 	float * Strain_pl		= new float[6*Particles.Size()];
 	float * Sigma_eq		= new float[  Particles.Size()];	//LUCIANO
 	float * Temp				= new float[  Particles.Size()];	//LUCIANO
@@ -149,12 +149,12 @@ inline void Domain::WriteXDMF (char const * FileKey)
         Strain  [6*i+3] = float(Particles[i]->Strain(0,1));
         Strain  [6*i+4] = float(Particles[i]->Strain(1,2));
         Strain  [6*i+5] = float(Particles[i]->Strain(0,2));
-        // StrainRate  [6*i  ] = float(Particles[i]->StrainRate(0,0));
-        // StrainRate  [6*i+1] = float(Particles[i]->StrainRate(1,1));
-        // StrainRate  [6*i+2] = float(Particles[i]->StrainRate(2,2));
-        // StrainRate  [6*i+3] = float(Particles[i]->StrainRate(0,1));
-        // StrainRate  [6*i+4] = float(Particles[i]->StrainRate(1,2));
-        // StrainRate  [6*i+5] = float(Particles[i]->StrainRate(0,2));
+        StrainRate  [6*i  ] = float(Particles[i]->StrainRate(0,0));
+        StrainRate  [6*i+1] = float(Particles[i]->StrainRate(1,1));
+        StrainRate  [6*i+2] = float(Particles[i]->StrainRate(2,2));
+        StrainRate  [6*i+3] = float(Particles[i]->StrainRate(0,1));
+        StrainRate  [6*i+4] = float(Particles[i]->StrainRate(1,2));
+        StrainRate  [6*i+5] = float(Particles[i]->StrainRate(0,2));
         Strain_pl  [6*i  ] = float(Particles[i]->Strain_pl(0,0));
         Strain_pl  [6*i+1] = float(Particles[i]->Strain_pl(1,1));
         Strain_pl  [6*i+2] = float(Particles[i]->Strain_pl(2,2));
@@ -241,8 +241,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Sigma);
     dsname.Printf("Strain");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain);
-    //dsname.Printf("StrainRate");
-    // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,StrainRate);
+    dsname.Printf("StrainRate");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,StrainRate);
     dsname.Printf("Strain_pl");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Strain_pl);
     dsname.Printf("gradcorrmat");
@@ -286,7 +286,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     delete [] Sigma;
     delete [] ShearS;
     delete [] Strain;
-    // delete [] StrainRate;
+    delete [] StrainRate;
     delete [] Strain_pl;
 	delete [] Temp;
 	delete [] Sigma_eq;
@@ -378,11 +378,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/Strain \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
-    // oss << "     <Attribute Name=\"StrainRate\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
-    // oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
-    // oss << "        " << fn.CStr() <<":/StrainRate \n";
-    // oss << "       </DataItem>\n";
-    // oss << "     </Attribute>\n";
+    oss << "     <Attribute Name=\"StrainRate\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/StrainRate \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Strain_pl\" AttributeType=\"Tensor6\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 6\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     oss << "        " << fn.CStr() <<":/Strain_pl \n";

@@ -1453,14 +1453,6 @@ inline void Domain::LastComputeAcceleration ()
 		for (int i=0; i<FSMPairs[k].Size();i++)
 			CalcForce2233(Particles[FSMPairs[k][i].first],Particles[FSMPairs[k][i].second]);
 	}
-
-	//LUCIANO: THIS SHOULD BE PERFORMED OUTSIDE
-	// for (int i=0 ; i<Nproc ; i++)
-	// {
-		// SMPairs[i].Clear();
-		// FSMPairs[i].Clear();
-		// NSMPairs[i].Clear();
-	// }
 	
   m_clock_begin = clock();
 	// CONTACT FORCES
@@ -2332,50 +2324,15 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 			ClearNbData();
 
 			MainNeighbourSearch/*_Ext*/();
-      
-     // if (contact) SaveContNeighbourData();
-			
-			if (contact) {
-				//TODO: CHANGE CONTACT STIFFNESS!
-				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-				CalculateSurface(1);				//After Nb search			
-				ContactNbSearch();
-				SaveContNeighbourData();	//Again Save Nb data
-			}//contact
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 				clock_beg = clock();
 				if (m_isNbDataCleared){
-
-          // if (contact){
-            // SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-            // CalculateSurface(1);				//After Nb search			        
-          // }
 					MainNeighbourSearch/*_Ext*/();
-          //if (contact) SaveContNeighbourData();
-					
           neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;					
-          
-          // TODO: SEPARATE CONTACT SEARCH STEP INTERVAL
-					// OLD
-          if (contact) {
 
-						//cout << "performing contact search"<<endl
-            clock_beg = clock();
-          //if (update_contact_surface){
-            
-            SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-            CalculateSurface(1);				//After Nb search			
-            contact_surf_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-            if (isfirst)
-              CalcContactInitialGap(); //BEFORE! contactnb
-            ContactNbSearch();
-            SaveContNeighbourData();
-            contact_nb_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-						//}
-					}//contact				
 				}// ts_i == 0				
 				
 			}
@@ -2405,19 +2362,7 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 		//LastComputeAcceleration();
     CalcAccel(); //Nor density or neither strain rates
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		clock_beg = clock();
-    
-    
-    CalcRateTensorsDens();
-    #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->UpdateDensity_Leapfrog(deltat);
-    }
-    #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->CalcStressStrain(deltat); //Uses density  
-    }    
-
+		clock_beg = clock(); 
     
 
 		clock_beg = clock();
@@ -2481,25 +2426,26 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
           contact_force_sum << endl;
 			}
 		}
-		
-		// if (isyielding)
-			// cout << "Current Time Step: "<<deltat<<endl;
-		
-		// for (int i=0; i<Particles.Size(); i++){
-			// if (Particles[i]->contforce>0.)
-		if (auto_ts)
-			AdaptiveTimeStep();
-    //cout << "delta t"<<deltat<<endl;
-    
+ 
 		clock_beg = clock();
 
 		//Move(deltat); // INCLUDES GHOST PARTICLES
-
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->UpdateVelPos_Leapfrog(deltat);
     }
+
+    CalcRateTensorsDens();
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->UpdateDensity_Leapfrog(deltat);
+    }
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->Mat2Leapfrog(deltat); //Uses density  
+    }   
     
-    MoveGhost();  //If Symmetry, 
+    //MoveGhost();  //If Symmetry, 
     
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		

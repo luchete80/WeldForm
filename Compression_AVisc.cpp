@@ -78,7 +78,7 @@ int main(int argc, char **argv) try
 		dom.Dimension	= 3;
 		dom.Nproc	= 4;
 		dom.Kernel_Set(Qubic_Spline);
-		dom.Scheme	= 0;	//Mod Verlet
+		dom.Scheme	= 1;	//Mod Verlet
 		//dom.XSPH	= 0.1; //Very important
 
 			double dx,h,rho,K,G,Cs,Fy;
@@ -94,7 +94,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.015;
+		dx = 0.030;
     h	= dx*1.2; //Very important
     Cs	= sqrt(K/rho);
 

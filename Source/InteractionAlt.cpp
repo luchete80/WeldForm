@@ -15,13 +15,14 @@ inline void Domain::CalcAccel() {
 	for (int k=0; k<Nproc;k++) 
 	#endif	
 	{
-  for (size_t i=0; i<RIGPairs[k].Size();i++) {
-    P1	= SMPairs[k][i].first;
-    P2	= SMPairs[k][i].second;	
+  for (size_t p=0; p<SMPairs[k].Size();p++) {
+    P1	= Particles[SMPairs[k][p].first];
+    P2	= Particles[SMPairs[k][p].second];	
+
     double h	= (P1->h+P2->h)/2;
     Vec3_t xij	= P1->x - P2->x;
 
-    Periodic_X_Correction(xij, h, P1, P2);
+    //Periodic_X_Correction(xij, h, P1, P2);
 
     double rij	= norm(xij);
     
@@ -30,24 +31,20 @@ inline void Domain::CalcAccel() {
 		double Beta	= (P1->Beta + P2->Beta)/2.0;
 
 
-		if (!P1->IsFree) {
-			di = DensitySolid(P2->PresEq, P2->Cs, P2->P0,P1->Pressure, P2->RefDensity);
-			mi = P1->FPMassC * P2->Mass;
-		} else {
+
 			di = P1->Density;
 			mi = P1->Mass;
-		}
-		if (!P2->IsFree) {
-			dj = DensitySolid(P1->PresEq, P1->Cs, P1->P0,P2->Pressure, P1->RefDensity);
-			mj = P2->FPMassC * P1->Mass;
-		} else {
+		// }
+		// if (!P2->IsFree) {
+			// dj = DensitySolid(P1->PresEq, P1->Cs, P1->P0,P2->Pressure, P1->RefDensity);
+			// mj = P2->FPMassC * P1->Mass;
+		// } else {
 			dj = P2->Density;
 			mj = P2->Mass;
-		}
+		//}
 		
 
 		Vec3_t vij	= P1->v - P2->v;
-		
 		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
 		double K	= Kernel(Dimension, KernelType, rij/h, h);
 		
@@ -171,9 +168,9 @@ inline void Domain::CalcRateTensorsDens() {
 	for (int k=0; k<Nproc;k++) 
 	#endif	
 	{
-  for (size_t i=0; i<RIGPairs[k].Size();i++) {
-    P1	= SMPairs[k][i].first;
-    P2	= SMPairs[k][i].second;	
+  for (size_t i=0; i<SMPairs[k].Size();i++) {
+    P1	= Particles[SMPairs[k][i].first];
+    P2	= Particles[SMPairs[k][i].second];	
     
 	double h	= (P1->h+P2->h)/2;
 	Vec3_t xij	= P1->x - P2->x;
@@ -207,21 +204,7 @@ inline void Domain::CalcRateTensorsDens() {
 		Sigmaj = P2->Sigma;
 
 		// NoSlip BC velocity correction
-		Vec3_t vab = 0.0;
-		if (P1->IsFree*P2->IsFree) {
-			vab = vij;
-		} 
-    // else {
-			// if (P1->NoSlip || P2->NoSlip) {
-				// // No-Slip velocity correction
-				// if (P1->IsFree)	vab = P1->v - (2.0*P2->v-P2->NSv); else vab = (2.0*P1->v-P1->NSv) - P2->v;
-			// }
-			// // Please check
-			// if (!(P1->NoSlip || P2->NoSlip)) {
-				// if (P1->IsFree) vab = P1->v - P2->vb; else vab = P1->vb - P2->v;
-// //				if (P1->IsFree) vab(0) = P1->v(0) + P2->vb(0); else vab(0) = -P1->vb(0) - P2->v(0);
-			// }
-		// }
+		Vec3_t vab = vij;
 
 		Mat3_t StrainRate,RotationRate;
 		set_to_zero(StrainRate);
