@@ -480,7 +480,7 @@ inline void Domain::CalcRateTensors() {
 		omp_unset_lock(&P1->my_lock);
 
 		// Locking the particle 2 for updating the properties
-		// omp_set_lock(&P2->my_lock);
+		omp_set_lock(&P2->my_lock);
 			// if (!gradKernelCorr){
 				// P2->dDensity	+= mi * (dj/di) * temp1;							
 			// }else {

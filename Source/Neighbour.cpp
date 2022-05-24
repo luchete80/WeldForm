@@ -381,14 +381,14 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 				{
 					if (Particles[temp1]->IsFree*Particles[temp2]->IsFree) {//Both free, most common
 						SMPairs[T].Push(std::make_pair(temp1, temp2));
-            #ifdef NONLOCK_SUM
-            i = std::min(temp1,temp2);
-            j = std::max(temp1,temp2);
-            ilist_SM[T].Push(i); //THIS COULD BE DONE AFTER 
-            jlist_SM[T].Push(j);
-            ipair_SM[T][i]++;
-            jpair_SM[T][j]++;
-            #endif
+            // #ifdef NONLOCK_SUM
+            // i = std::min(temp1,temp2);
+            // j = std::max(temp1,temp2);
+            // ilist_SM[T].Push(i); //THIS COULD BE DONE AFTER 
+            // jlist_SM[T].Push(j);
+            // ipair_SM[T][i]++;
+            // jpair_SM[T][j]++;
+            // #endif
           }
 					else
 						FSMPairs[T].Push(std::make_pair(temp1, temp2)); //TEMPORARY

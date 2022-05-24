@@ -2219,8 +2219,14 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 
 	bool isfirst = true;
 	bool isyielding = false;
-
-
+  
+  cout << "Nb search"<<endl;
+  ClearNbData();
+  cout << "cleared"<<endl;
+  MainNeighbourSearch();
+  //SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+  cout << "Done"<<endl;
+  //CalculateSurface(1);				//After Nb search	
 	//ClearNbData();
 	
 	//Print history
@@ -2229,12 +2235,11 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
   
   bool check_nb_every_time = false;
 
-
+  cout << "Main Loop"<<endl;
+  
 	while (Time<=tf && idx_out<=maxidx) {
     
-    cout << "Start acce"<<endl;
 		StartAcceleration(Gravity);
-		cout << "done"<<endl;
 
 		double max = 0;
 		int imax;
@@ -2289,41 +2294,45 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 		// //NEW, gradient correction
 			if (isfirst) {
 				if (gradKernelCorr){
-          cout << "Calculating gradient correction matrix"<<endl;
           CalcGradCorrMatrix();	}
-				cout << "Done."<<endl;
 				isfirst = false;
 			}		
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
 		
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
+    
+    
     CalcAccel(); //Nor density or neither strain rates
-
-
-		//Move(deltat); // INCLUDES GHOST PARTICLES
+    
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*dt/2.;
     }
-
+		GeneralAfter(*this);//Reinforce BC vel
+    
     CalcDensInc(); //TODO: USE SAME KERNEL?
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->UpdateDensity_Leapfrog(deltat);
+      //Particles[i]->UpdateDensity_Leapfrog(deltat);
+      Particles[i]->Density += dt*Particles[i]->dDensity;
     }    
     
     //BEFORE
-    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    Vec3_t du;
+    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->x += Particles[i]->v*dt;
+      du = Particles[i]->v*dt;
+      Particles[i]->Displacement += du;
+      Particles[i]->x += du;
     }   
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*dt/2.;
     }
-    cout << "calc rate tensors"<<endl;
+    GeneralAfter(*this);
+    
     CalcRateTensors();  //With v and xn+1
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
@@ -2331,8 +2340,6 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     }   
     
-		GeneralAfter(*this);
-
 		steps++;
 		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
 		// output
@@ -2356,21 +2363,21 @@ inline void Domain::SolveChgOrderUpdate (double tf, double dt, double dtOut, cha
 		Time += deltat;
 
 		
-		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
-			if ( ts_i == (ts_nb_inc - 1) ){
-				ClearNbData();
-			}
+		// if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
+			// if ( ts_i == (ts_nb_inc - 1) ){
+				// ClearNbData();
+			// }
 
-			ts_i ++;
-			if ( ts_i > (ts_nb_inc - 1) ) 
-				ts_i = 0;
+			// ts_i ++;
+			// if ( ts_i > (ts_nb_inc - 1) ) 
+				// ts_i = 0;
 		
-		}
+		// }
     
-    if (Particles[0]->FirstStep)
-    for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->FirstStep = false;
-    }
+    // if (Particles[0]->FirstStep)
+    // for (size_t i=0; i<Particles.Size(); i++){
+      // Particles[i]->FirstStep = false;
+    // }
 		
 	
 	}
