@@ -27,3 +27,7 @@
 20220524  -   Working on New order update Solver. Not working.
               ERROR found in verlet, added a new kick-drift verlet-leapfrog integrator
               Error found at XSPH in leapfrog.
+              Working on #271. For THE FIRST TIME IS CONVERGING WITH A CFL LARGER THAN Modified >Verlet
+              A kick-drift based solver updating on different times.
+              Still wrong at displacements and velocities, but not in accelerations.
+              THIS SHOULD BE DONE ALSO WITH MOD VERLET IN ORDER TO ACHIEVE EVEN BETTER TIME STEP

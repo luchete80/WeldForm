@@ -87,7 +87,8 @@ int main() try{
 	Cs	= sqrt(K/rho);
 
 	double timestep;
-	timestep = (0.2*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  //WITH ALTERNATE SOLVER, CFL IS ABOUT 0.4 VS 0.2 OF MOD VERLET ALL IN ONE ITER
+	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
 
 //timestep = 2.5e-6;
 
@@ -151,9 +152,9 @@ int main() try{
   dom.auto_ts = false;
   //timestep=1.e-8;
 
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-  //dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
-	
+	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+	//dom.SolveDiffUpdateModEuler(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	dom.WriteXDMF("ContactTest");
 }
 MECHSYS_CATCH

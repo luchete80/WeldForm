@@ -26,13 +26,13 @@
 #define TAU		0.005
 #define VMAX	10.0
 
-	double vcompress;
+
   
 
 void UserAcc(SPH::Domain & domi)
 {
 
-
+	double vcompress;
 	if (domi.getTime() < TAU ) 
 		vcompress = VMAX/TAU * domi.getTime();
 	else
@@ -78,7 +78,7 @@ int main(int argc, char **argv) try
 		dom.Dimension	= 3;
 		dom.Nproc	= 4;
 		dom.Kernel_Set(Qubic_Spline);
-		dom.Scheme	= 1;	//Mod Verlet
+		dom.Scheme	= 0;	//Mod Verlet
 		//dom.XSPH	= 0.1; //Very important
 
 			double dx,h,rho,K,G,Cs,Fy;
@@ -99,7 +99,7 @@ int main(int argc, char **argv) try
     Cs	= sqrt(K/rho);
 
     double timestep;
-    timestep = (0.2*h/(Cs+VMAX));
+    timestep = (0.3*h/(Cs+VMAX));
 
 //timestep = 2.5e-6;
 
@@ -152,8 +152,9 @@ int main(int argc, char **argv) try
     
     dom.auto_ts=false;
     
-		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-    //dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    dom.SolveChgOrderUpdate(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    //dom.SolveChgOrderUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
 		return 0;
 }
