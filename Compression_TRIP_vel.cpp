@@ -88,7 +88,7 @@ int main() try{
 
 	double timestep;
   //WITH ALTERNATE SOLVER, CFL IS ABOUT 0.4 VS 0.2 OF MOD VERLET ALL IN ONE ITER
-	timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
 
 //timestep = 2.5e-6;
 
@@ -155,6 +155,7 @@ int main() try{
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	dom.SolveDiffUpdateModEuler(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+  //dom.SolveDiffUpdateModVerlet(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	dom.WriteXDMF("ContactTest");
 }
 MECHSYS_CATCH

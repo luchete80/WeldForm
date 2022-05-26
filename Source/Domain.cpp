@@ -2389,7 +2389,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
 
 }
-// THIS IS LIKE THE FRASER ALGORITHM
+// THIS IS LIKE THE FRASER ALGORITHM, LIKE STANDARD VERLET BUT X IS CALCULATED AFTER V
 inline void Domain::SolveDiffUpdateModEuler (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
@@ -2525,11 +2525,6 @@ inline void Domain::SolveDiffUpdateModEuler (double tf, double dt, double dtOut,
     
     //BEFORE
     Vec3_t du,dv;
-    #pragma omp parallel for schedule (static) private(du,dv) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
-      dv = Particles[i]->a*dt;
-    }   
-    GeneralAfter(*this);
     
     #pragma omp parallel for schedule (static) private(du,dv) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
@@ -2539,6 +2534,11 @@ inline void Domain::SolveDiffUpdateModEuler (double tf, double dt, double dtOut,
       Particles[i]->x += du + dv*dt/2.;
     }      
 
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->v += Particles[i]->a*dt;
+    }   
+    GeneralAfter(*this);
     
 		steps++;
 		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
@@ -2641,7 +2641,7 @@ inline void Domain::SolveDiffUpdateModVerlet (double tf, double dt, double dtOut
   bool check_nb_every_time = false;
 
   cout << "Main Loop"<<endl;
-  
+  int ct =30;
 	while (Time<=tf && idx_out<=maxidx) {
     
 		StartAcceleration(Gravity);
@@ -2713,7 +2713,15 @@ inline void Domain::SolveDiffUpdateModVerlet (double tf, double dt, double dtOut
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
-      Particles[i]->Density += dt*Particles[i]->dDensity;
+      if (ct==30){
+        Particles[i]->Densityb		= Particles[i]->Density;
+        Particles[i]->Density			+=dt*Particles[i]->dDensity;
+      } else {
+        //Particles[i]->Density += dt*Particles[i]->dDensity;
+        double dens	= Particles[i]->Density;
+        Particles[i]->Density		= Particles[i]->Densityb + 2.0*dt*Particles[i]->dDensity;
+        Particles[i]->Densityb	= dens;
+      }
     }    
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
@@ -2724,23 +2732,34 @@ inline void Domain::SolveDiffUpdateModVerlet (double tf, double dt, double dtOut
     CalcAccel(); //Nor density or neither strain rates    
     
     //BEFORE
-    Vec3_t du,dv;
-    #pragma omp parallel for schedule (static) private(du,dv) num_threads(Nproc)
+    Vec3_t du;
+    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      dv = Particles[i]->a*dt;
+      du = (Particles[i]->v+Particles[i]->VXSPH) * dt + Particles[i]->a*dt*dt*0.5;
+      Particles[i]->Displacement += du;
+      Particles[i]->x += du;
+    }      
+    GeneralAfter(*this);
+    
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      if (ct == 30){
+        Particles[i]->vb	= Particles[i]->v;
+        Particles[i]->v	+=dt*Particles[i]->a;
+      } else {
+        Vec3_t temp;
+        temp	= Particles[i]->v;
+        Particles[i]->v		= Particles[i]->vb + 2*dt*Particles[i]->a;
+        Particles[i]->vb		= temp;        
+      }
     }   
     GeneralAfter(*this);
     
-    #pragma omp parallel for schedule (static) private(du,dv) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
-      dv = Particles[i]->a*dt;
-      du = Particles[i]->v*dt;
-      Particles[i]->Displacement += du + dv*dt/2.;
-      Particles[i]->x += du + dv*dt/2.;
-    }      
+
 
     
 		steps++;
+    if (ct==30) ct=0; else ct++;
 		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
 		// output
 		if (Time>=tout){
