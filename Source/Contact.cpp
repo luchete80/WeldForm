@@ -258,7 +258,7 @@ inline void Domain::CalcContactForces(){
   
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
-	//#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 

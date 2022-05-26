@@ -2319,6 +2319,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     
     
     CalcAccel(); //Nor density or neither strain rates
+    if (contact) CalcContactForces();
+		
     double factor = 1.;
     // if (ct==30) factor = 1.;
     // else        factor = 2.;

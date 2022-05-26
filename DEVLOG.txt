@@ -38,3 +38,5 @@
               It also converges at cfl 0.4 but results are strange 
 20220526  -   Added different untegral algortithms, all with Added MoveGhost to KickDrift.
               Added plastic deformation Neghbour update, NOW WORKING PLASTIC.
+              Contact WORKING on kick-drift algorithm. Fraser compression test works ok up until 5ms.
+              Then diverges. 
