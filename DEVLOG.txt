@@ -31,3 +31,8 @@
               A kick-drift based solver updating on different times.
               Still wrong at displacements and velocities, but not in accelerations.
               THIS SHOULD BE DONE ALSO WITH MOD VERLET IN ORDER TO ACHIEVE EVEN BETTER TIME STEP
+              FIRST SOLVER FASTER THAN MODIFIED VERLET. 
+              Succesful "Differential order kick-drift solver. Can solve TRIP benchmark with CFL 0.4 
+              whereas mod verlet runs at 0.2 and greater is diverging.
+20220525  -   Added mod euler Differential update like Kirk Fraser method.
+              It also converges at cfl 0.4 but results are strange 
