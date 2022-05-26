@@ -2184,6 +2184,12 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 }
 
+void ContactNbUpdate(){
+  SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+  CalculateSurface(1);				//After Nb search			
+  ContactNbSearch();
+  SaveContNeighbourData();	//Again Save Nb data
+}
 
 inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
@@ -2219,16 +2225,24 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 	bool isfirst = true;
 	bool isyielding = false;
-  
-  cout << "Nb search"<<endl;
+
+
+
+	if (contact) { //Calculate particle Stiffness
+		for (int i=0; i<Particles.Size(); i++){
+			double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
+			double dS = pow(Particles[i]->Mass/Particles[i]->Density,0.33333); //Fraser 3-119
+			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS;  //Fraser Thesis, Eqn. 3-153
+		}		
+		cout << "dS, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " << Particles [0] -> cont_stiff <<endl;
+		min_force_ts = deltat;
+		MainNeighbourSearch();
+		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+		CalculateSurface(1);				//After Nb search	
+	}
+
   ClearNbData();
-  cout << "cleared"<<endl;
-  MainNeighbourSearch();
-  //SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-  cout << "Done"<<endl;
-  //CalculateSurface(1);				//After Nb search	
-	//ClearNbData();
-	
+
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
   of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
@@ -2278,6 +2292,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
 			MainNeighbourSearch/*_Ext*/();
+			if (contact) ContactNbUpdate();
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
@@ -2285,11 +2300,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 				if (m_isNbDataCleared){
 					MainNeighbourSearch/*_Ext*/();
-          //if (contact) SaveContNeighbourData();
-					
-	
+          if (contact) ContactNbUpdate();
 				}// ts_i == 0				
-				
 			}
 		
     } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
@@ -2351,8 +2363,34 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		steps++;
     if (ct == 30) ct = 0; else ct++;
     
-		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
-		// output
+
+
+		Time += deltat;
+    if (contact){
+ 		//cout << "checking contact"<<endl;
+      if (contact_mesh_auto_update)
+        trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
+      //cout << "Updating contact particles"<<endl;
+      UpdateContactParticles(); //Updates normal and velocities
+		}
+		
+		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
+			if ( ts_i == (ts_nb_inc - 1) ){
+				ClearNbData();
+			}
+
+			ts_i ++;
+			if ( ts_i > (ts_nb_inc - 1) ) 
+				ts_i = 0;
+		
+		}
+    
+    if (Particles[0]->FirstStep)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->FirstStep = false;
+    }
+		if (isfirst) isfirst = false;
+
 		if (Time>=tout){
 			if (TheFileKey!=NULL) {
 				String fn;
@@ -2372,26 +2410,6 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
 			cout << "Max Displacements: "<<max_disp<<endl;
 		}
-
-		Time += deltat;
-
-		
-		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
-			if ( ts_i == (ts_nb_inc - 1) ){
-				ClearNbData();
-			}
-
-			ts_i ++;
-			if ( ts_i > (ts_nb_inc - 1) ) 
-				ts_i = 0;
-		
-		}
-    
-    if (Particles[0]->FirstStep)
-    for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->FirstStep = false;
-    }
-		if (isfirst) isfirst = false;
 	
 	}
 	

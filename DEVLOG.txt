@@ -36,4 +36,5 @@
               whereas mod verlet runs at 0.2 and greater is diverging.
 20220525  -   Added mod euler Differential update like Kirk Fraser method.
               It also converges at cfl 0.4 but results are strange 
-20220526  -   
+20220526  -   Added different untegral algortithms, all with Added MoveGhost to KickDrift.
+              Added plastic deformation Neghbour update, NOW WORKING PLASTIC.
