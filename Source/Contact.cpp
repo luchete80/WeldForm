@@ -214,7 +214,7 @@ inline void Domain::CalcContactForces(){
 	int inside_part_count = 0;
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
-	int inside_time;
+	int inside_time,inside_geom;
 	
   //#pragma omp parallel for num_threads(Nproc)
   for (int i = 0;i<Particles.Size();i++){
@@ -224,7 +224,7 @@ inline void Domain::CalcContactForces(){
 		Particles[i] -> tgdir = 0.;				//TODO: DELETE (DEBUG) 
 		omp_unset_lock(&Particles[i]->my_lock);
 		inside_part[i] = 0;
-		inside_time=0;
+		inside_time=inside_geom=0;
   }
  
 	
@@ -258,7 +258,7 @@ inline void Domain::CalcContactForces(){
   
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -328,7 +328,7 @@ inline void Domain::CalcContactForces(){
 					}
 					
 					if (inside ) { //Contact point inside element, contact proceeds
-			
+            inside_geom++;
             //cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
 						// cout << "/////////////////////////////////////////" <<endl;
 						// cout << " vr: "<< vr<<endl;

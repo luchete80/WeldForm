@@ -2264,8 +2264,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			}
 		}
     
-    // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
-    //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
+    // // // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
+    // // // EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
     // if (norm(max_disp) > 0.1 * hmax){
       // if (!check_nb_every_time)
         // cout << "Checking Nb Every step now."<<endl;
@@ -2330,7 +2330,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
       du = Particles[i]->v*dt*factor;
       Particles[i]->Displacement += du;
       Particles[i]->x += du;
-    }   
+    }
+    MoveGhost();
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
@@ -2370,21 +2371,21 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		Time += deltat;
 
 		
-		// if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
-			// if ( ts_i == (ts_nb_inc - 1) ){
-				// ClearNbData();
-			// }
+		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
+			if ( ts_i == (ts_nb_inc - 1) ){
+				ClearNbData();
+			}
 
-			// ts_i ++;
-			// if ( ts_i > (ts_nb_inc - 1) ) 
-				// ts_i = 0;
+			ts_i ++;
+			if ( ts_i > (ts_nb_inc - 1) ) 
+				ts_i = 0;
 		
-		// }
+		}
     
-    // if (Particles[0]->FirstStep)
-    // for (size_t i=0; i<Particles.Size(); i++){
-      // Particles[i]->FirstStep = false;
-    // }
+    if (Particles[0]->FirstStep)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->FirstStep = false;
+    }
 		if (isfirst) isfirst = false;
 	
 	}
