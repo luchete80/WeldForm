@@ -2184,11 +2184,11 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 }
 
-void ContactNbUpdate(){
-  SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-  CalculateSurface(1);				//After Nb search			
-  ContactNbSearch();
-  SaveContNeighbourData();	//Again Save Nb data
+void ContactNbUpdate(SPH::Domain *dom){
+  dom->SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+  dom->CalculateSurface(1);				//After Nb search			
+  dom->ContactNbSearch();
+  dom->SaveContNeighbourData();	//Again Save Nb data
 }
 
 inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
@@ -2292,7 +2292,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
 			MainNeighbourSearch/*_Ext*/();
-			if (contact) ContactNbUpdate();
+			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
@@ -2300,7 +2300,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 				if (m_isNbDataCleared){
 					MainNeighbourSearch/*_Ext*/();
-          if (contact) ContactNbUpdate();
+          if (contact) ContactNbUpdate(this);
 				}// ts_i == 0				
 			}
 		

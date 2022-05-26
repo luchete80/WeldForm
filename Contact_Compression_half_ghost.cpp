@@ -1,6 +1,7 @@
 
 #include "Mesh.h"
 #include "Domain.h"
+#include "InteractionAlt.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -221,8 +222,13 @@ int main(int argc, char **argv) try
 											//Not for any force calc in contact formulation
 	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
     
-  //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+
+  //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+  
+  
+  timestep = (0.4 *h/(Cs));
+  dom.auto_ts=false;
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   
   return 0;
 }
