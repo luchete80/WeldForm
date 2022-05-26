@@ -472,23 +472,25 @@ inline void Particle::Mat2MVerlet(double dt) {
 //LUCIANO
 inline void Particle::Move_Verlet (Mat3_t I, double dt) {
 
-	if (FirstStep) {
-		Densityb		= Density;
-		Density			+=dt*dDensity;
-		FirstStep = false;
-	}
+	// if (FirstStep) {
+		// Densityb		= Density;
+		// Density			+=dt*dDensity;
+		// FirstStep = false;
+	// }
+//else {
+	//double dens	= Density;
+	Density		+= dt*dDensity;
+	//Densityb	= dens;		
 
-	double dens	= Density;
-	Density		= Densityb + 2.0*dt*dDensity;
-	Densityb	= dens;		
-
-	Vec3_t temp = a*dt/2.0;
-	v += temp;
-	Vec3_t du = (v+VXSPH)*dt;
+	Vec3_t temp = a*dt;
+	Vec3_t du = (v+VXSPH)*dt+temp*dt/2.;
 	Displacement += du;
 	x += du;
-	v += temp;	
-	
+  
+	v += temp;
+
+  
+	//}
     Mat2Verlet(dt);	//This uses the same as modified verlet as ct always is != 30
 }
 

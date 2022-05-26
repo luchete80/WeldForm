@@ -59,7 +59,7 @@ int main() try{
 	dom.Dimension	= 3;
 	dom.Nproc	= 4;
 	dom.Kernel_Set(Qubic_Spline);
-	dom.Scheme	= 0;	//Mod Verlet
+	dom.Scheme	= 2;	//Mod Verlet
 	//dom.XSPH	= 0.1; //Very important
 
 		double dx,h,rho,K,G,Cs,Fy;
@@ -88,7 +88,7 @@ int main() try{
 
 	double timestep;
   //WITH ALTERNATE SOLVER, CFL IS ABOUT 0.4 VS 0.2 OF MOD VERLET ALL IN ONE ITER
-	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+	timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
 
 //timestep = 2.5e-6;
 
@@ -153,8 +153,8 @@ int main() try{
   //timestep=1.e-8;
 
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
-	//dom.SolveDiffUpdateModEuler(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+	dom.SolveDiffUpdateModEuler(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	dom.WriteXDMF("ContactTest");
 }
 MECHSYS_CATCH
