@@ -2328,9 +2328,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*dt/2.*factor;
     }
-    MoveGhost();
-    
+    MoveGhost();   
     GeneralAfter(*this);//Reinforce BC vel    
+    
+    //If density is calculated AFTER displacements, it fails
     CalcDensInc(); //TODO: USE SAME KERNEL?
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
