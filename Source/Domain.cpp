@@ -2238,7 +2238,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
   cout << "Main Loop"<<endl;
   
   int ct=30;
-  
+  std::chrono::duration<double> total_time;
+	auto start_whole = std::chrono::steady_clock::now();  
 	while (Time<=tf && idx_out<=maxidx) {
     
 		StartAcceleration(Gravity);
@@ -2266,32 +2267,32 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     
     // // // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
     // // // EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
-    // if (norm(max_disp) > 0.1 * hmax){
-      // if (!check_nb_every_time)
-        // cout << "Checking Nb Every step now."<<endl;
-      // check_nb_every_time = true;
-    // }
-    // else 
-      // check_nb_every_time = false;
+    if (norm(max_disp) > 0.1 * hmax){
+      if (!check_nb_every_time)
+        cout << "Checking Nb Every step now."<<endl;
+      check_nb_every_time = true;
+    }
+    else 
+      check_nb_every_time = false;
 		
-		// if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
-			// ClearNbData(); 
-			// MainNeighbourSearch/*_Ext*/();
-			// isyielding  = true ;
-		// }
-		// if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
-			// if ( ts_i == 0 ){
+		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
+			ClearNbData(); 
+			MainNeighbourSearch/*_Ext*/();
+			isyielding  = true ;
+		}
+		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
+			if ( ts_i == 0 ){
 
-				// if (m_isNbDataCleared){
-					// MainNeighbourSearch/*_Ext*/();
-          // //if (contact) SaveContNeighbourData();
+				if (m_isNbDataCleared){
+					MainNeighbourSearch/*_Ext*/();
+          //if (contact) SaveContNeighbourData();
 					
 	
-				// }// ts_i == 0				
+				}// ts_i == 0				
 				
-			// }
+			}
 		
-    // } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+    } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 
 		// //NEW, gradient correction
 			if (isfirst) {
@@ -2363,6 +2364,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			}
 			idx_out++;
 			tout += dtOut;
+			total_time = std::chrono::steady_clock::now() - start_whole;		
+			std::cout << "Total CPU time: "<<total_time.count() << endl;
+      
 			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
