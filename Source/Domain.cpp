@@ -2237,6 +2237,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
   cout << "Main Loop"<<endl;
   
+  int ct=30;
+  
 	while (Time<=tf && idx_out<=maxidx) {
     
 		StartAcceleration(Gravity);
@@ -2304,10 +2306,12 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     
     
     CalcAccel(); //Nor density or neither strain rates
-     
+    double factor = 1.;
+    // if (ct==30) factor = 1.;
+    // else        factor = 2.;
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->v += Particles[i]->a*dt/2.;
+      Particles[i]->v += Particles[i]->a*dt/2.*factor;
     }
 
     
@@ -2316,21 +2320,21 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
-      Particles[i]->Density += dt*Particles[i]->dDensity;
+      Particles[i]->Density += dt*Particles[i]->dDensity*factor;
     }    
     
     //BEFORE
     Vec3_t du;
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      du = Particles[i]->v*dt;
+      du = Particles[i]->v*dt*factor;
       Particles[i]->Displacement += du;
       Particles[i]->x += du;
     }   
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->v += Particles[i]->a*dt/2.;
+      Particles[i]->v += Particles[i]->a*dt/2.*factor;
     }
     GeneralAfter(*this);
     
@@ -2342,6 +2346,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     }   
     
 		steps++;
+    if (ct == 30) ct = 0; else ct++;
+    
 		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
 		// output
 		if (Time>=tout){
