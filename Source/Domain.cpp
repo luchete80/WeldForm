@@ -2313,7 +2313,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*dt/2.*factor;
     }
-
+    MoveGhost();
     
     GeneralAfter(*this);//Reinforce BC vel    
     CalcDensInc(); //TODO: USE SAME KERNEL?
@@ -2331,12 +2331,13 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
       Particles[i]->Displacement += du;
       Particles[i]->x += du;
     }
-    MoveGhost();
+
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*dt/2.*factor;
     }
+    MoveGhost();
     GeneralAfter(*this);
     
     CalcRateTensors();  //With v and xn+1
