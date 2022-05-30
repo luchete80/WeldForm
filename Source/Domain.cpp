@@ -138,6 +138,8 @@ inline Domain::Domain ()
   m_forces_tensors_time = 0.;
   m_forces_update_time = 0.;
   m_scalar_prop = 0.;
+  
+  kin_energy_sum = int_energy_sum = 0.;
 	
 	thermal_solver = false;
   contact_mesh_auto_update = true;
@@ -692,6 +694,20 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	R = r;
 }
 
+void Domain::AddFixedMassScaling(const double &factor){
+  mass_scaling_factor = factor;
+ 
+  #pragma omp parallel for num_threads(Nproc)
+  #ifdef __GNUC__
+  for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+  #else
+  for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+  #endif
+  {
+    Particles[i]->Mass *= factor;
+    Particles[i]->Density *= factor;
+  } 
+}
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
 void Domain::AddQuarterCylinderLength(int tag, double Rxy, double Lz, 
@@ -1493,7 +1509,8 @@ inline void Domain::LastComputeAcceleration ()
 		}
   //cout << "deltatmin "<<deltatmin<<endl;
 }
-
+//
+// First term of Eqn 3-68 kirk Fraser
 void Domain::CalcKinEnergyEqn(){
 	#pragma omp parallel for schedule(static) num_threads(Nproc)
 	#ifdef __GNUC__
@@ -1503,25 +1520,24 @@ void Domain::CalcKinEnergyEqn(){
 	#endif
 	{
 		Particles[i]->dkin_energy_dt = 0.;
-		
 	}
-	
+
+  size_t P1,P2;	
 	double temp;
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
 	for (int k=0; k<Nproc;k++) 
 	#endif
 	{
-		size_t P1,P2;
 		Vec3_t xij,vij;
 		double mi,mj,di,dj,GK;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		for (size_t a=0; a<SMPairs[k].Size();a++) {
-			P1	= FSMPairs[k][a].first;
-			P2	= FSMPairs[k][a].second;
+			P1	= SMPairs[k][a].first;
+			P2	= SMPairs[k][a].second;
 			xij	= Particles[P1]->x-Particles[P2]->x;
 			vij	= Particles[P1]->v-Particles[P2]->v;
 			mi = Particles[P1]->Mass; mj = Particles[P2]->Mass;
@@ -1530,14 +1546,45 @@ void Domain::CalcKinEnergyEqn(){
 			h	= (Particles[P1]->h + Particles[P2]->h)/2.0;
 			GK	= GradKernel(Dimension, KernelType, norm(xij)/h, h);	
 			
-			temp = mj*(Particles[P1]->Pressure/(di*di)+Particles[P2]->Pressure/(dj*dj))*
+			temp = 0.5 * mj*(Particles[P1]->Pressure/(di*di)+Particles[P2]->Pressure/(dj*dj))*
 							dot(vij,GK*xij);
 			 
 			Particles[P1]->dkin_energy_dt +=temp; 
-			Particles[P2]->dkin_energy_dt -=temp;			
+			Particles[P2]->dkin_energy_dt -=temp;			 
 		}
 	}
-	
+  double inc = 0.;
+	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif
+	{
+    //omp_set_lock(&dom_lock);
+    inc += Particles[i]->dkin_energy_dt;
+    //omp_unset_lock(&dom_lock);		
+	}	
+  kin_energy_sum += inc * deltat;
+}
+
+void Domain::CalcIntEnergyEqn(){
+  int_energy_sum = 0.;
+  double inc = 0.;
+	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif
+	{
+    Particles[i]->CalcIntEnergyEqn();
+    //omp_set_lock(&dom_lock);
+    inc += Particles[i]->dint_energy_dt;
+    //omp_unset_lock(&dom_lock);		
+	}
+  
+	int_energy_sum += inc * deltat;
 }
 
 //New, for Bonet gradient correction
@@ -2363,7 +2410,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     for (size_t i=0; i<Particles.Size(); i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
       Particles[i]->CalcStressStrain(deltat); //Uses density  
-    }   
+    } 
+
+    CalcKinEnergyEqn();    
+    CalcIntEnergyEqn();    
     
 		steps++;
     if (ct == 30) ct = 0; else ct++;
@@ -2414,6 +2464,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
 			cout << "Max Displacements: "<<max_disp<<endl;
+      cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
+
 		}
 	
 	}

@@ -143,11 +143,13 @@ public:
 	void ThermalSolve			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
 	void ThermalStructSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); //Coupled Thermal Structural
 	void ThermalSolve_wo_init	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
+  void AddFixedMassScaling (const double &factor);
 	
 	inline void CalcThermalExpStrainRate();
 	inline void CalcPlasticWorkHeat(const double &dt);
 
 	inline void CalcKinEnergyEqn();
+  inline void CalcIntEnergyEqn();
 
     void Solve_wo_init (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function	
 	//void Step(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
@@ -191,7 +193,9 @@ public:
   inline void UpdateContactParticles();  //Update position, velocity and normals FROM MESH
   
   
-  
+  //////////////////////////// ENERGY
+  double kin_energy_sum, int_energy_sum;
+  double mass_scaling_factor;
   
   bool contact_mesh_auto_update;
   inline void ContactNbSearch();	//Performed AFTER neighbour search

@@ -40,3 +40,4 @@
               Added plastic deformation Neghbour update, NOW WORKING PLASTIC.
               Contact WORKING on kick-drift algorithm. Fraser compression test works ok up until 5ms.
               Then diverges. 
+20220530  -   Working on Internal and Kinetic Energy. 

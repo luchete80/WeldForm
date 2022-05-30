@@ -916,13 +916,14 @@ inline void Particle::CalcPlasticWorkHeat(const double &dt){
 }
 
 inline void Particle::CalcIntEnergyEqn(){
-			dint_energy_dt 	= (
-						ShearStress(0,0)*StrainRate(0,0) + 
-						2.0*ShearStress(0,1)*StrainRate(1,0) + 2.0*ShearStress(0,2)*StrainRate(2,0) + 
-						ShearStress(1,1)*StrainRate(1,1) +
-						2.0*ShearStress(1,2)*StrainRate(2,1) + 
-						ShearStress(2,2)*StrainRate(2,2)
-						);
+  dint_energy_dt 	= 1./Density * (
+        ShearStress(0,0)*StrainRate(0,0) + 
+        2.0*ShearStress(0,1)*StrainRate(1,0) + 2.0*ShearStress(0,2)*StrainRate(2,0) + 
+        ShearStress(1,1)*StrainRate(1,1) +
+        2.0*ShearStress(1,2)*StrainRate(2,1) + 
+        ShearStress(2,2)*StrainRate(2,2)
+        );
+
 }
 
 //THIS SHOULD BE CALLED AFTER CalcForces2233
