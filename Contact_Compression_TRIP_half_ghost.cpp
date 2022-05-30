@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "Domain.h"
 #include <iostream>
+#include "InteractionAlt.cpp"
 
 #define TAU		0.005
 #define VMAX	0.1
