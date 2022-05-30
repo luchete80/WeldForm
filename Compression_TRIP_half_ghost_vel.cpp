@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "Domain.h"
 #include <iostream>
+#include "InteractionAlt.cpp"
 
 #define TAU		0.005
 #define VMAX	0.1
@@ -127,9 +128,12 @@ int main() try{
   	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
-  //dom.auto_ts = false;
+  dom.auto_ts = false;
 
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+
+	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }
