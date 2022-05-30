@@ -3,7 +3,7 @@
 #include <iostream>
 
 #define TAU		0.005
-#define VMAX	1.
+#define VMAX	0.1
 
 using namespace SPH;
 using namespace std;
@@ -24,11 +24,12 @@ void UserAcc(SPH::Domain & domi) {
   
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
-	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
-  for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
-    domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
-  }
+	// domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
+  // for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
+    // domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
+    // domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
+  // }
+  domi.trimesh->SetVel(Vec3_t(0.0,0.,-vcompress));
 }
 
 
@@ -135,10 +136,12 @@ int main() try{
 	dom.friction_dyn = 0.1;
   dom.friction_sta = 0.0;
   
+  dom.friction = 0.1;
+  
 	//dom.friction = 0.0;
 	dom.PFAC = 0.3;
 	dom.DFAC = 0.2;
-	dom.update_contact_surface = false;
+  //dom.update_contact_surface = false;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
@@ -154,7 +157,11 @@ int main() try{
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
+  dom.auto_ts = false;
 	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+  
+	//timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }
