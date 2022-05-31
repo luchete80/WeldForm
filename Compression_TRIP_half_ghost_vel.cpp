@@ -4,7 +4,7 @@
 #include "InteractionAlt.cpp"
 
 #define TAU		0.005
-#define VMAX	0.1
+#define VMAX	0.01 
 
 using namespace SPH;
 using namespace std;
@@ -133,7 +133,7 @@ int main() try{
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 
 	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",10000);
 	
 	dom.WriteXDMF("ContactTest");
 }
