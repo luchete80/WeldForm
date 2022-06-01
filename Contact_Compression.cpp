@@ -46,7 +46,7 @@ void UserAcc(SPH::Domain & domi) {
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  domi.trimesh->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
 }
 
 
@@ -111,7 +111,7 @@ int main(){
 	cout << "Creating Spheres.."<<endl;
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
-	
+	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
 			
@@ -158,12 +158,14 @@ int main(){
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
-	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  cout << "Adding mesh particles ...";
+	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  cout << "done."<<endl;
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-  dom.auto_ts = false;
-	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  //dom.auto_ts = false;
+	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

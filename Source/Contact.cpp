@@ -7,8 +7,10 @@ namespace SPH {
 
 	
 void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id){
-	
-	first_fem_particle_idx[meshcount] = Particles.Size();
+	if (meshcount==0)
+    first_fem_particle_idx.push_back(Particles.Size());
+	// else
+    // first_fem_particle_idx[meshcount] = Particles.Size();
 	double Density =0.;
 	double h;
 	bool Fixed = false;	//Always are fixed ...
