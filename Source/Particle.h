@@ -217,6 +217,7 @@ namespace SPH {
 		void Move_Euler (Mat3_t I, double dt);
 		void Mat2Euler(double dt);
 		void CalcIntEnergyEqn();
+    inline void LimitVel();
 		
 		
 

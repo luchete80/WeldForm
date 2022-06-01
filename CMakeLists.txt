@@ -74,6 +74,7 @@ SET(EXES
 	#Plate-Yield
 	#Compression_XSPH
   #Compression_AVisc
+  #Compression_half_ghost_vel
 	#Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
@@ -89,12 +90,12 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	Contact_Compression
+	#Contact_Compression
+  Contact_Compression_2surf
   #Contact_Compression_vel
   #Contact_Compression_test
   #Contact_Compression_half_ghost
   #Contact_Compression_half_ghost_debug
-  #Compression_half_ghost_vel
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
   #Contact_Compression_TRIP_half_ghost

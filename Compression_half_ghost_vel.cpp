@@ -143,7 +143,7 @@ int main(int argc, char **argv) try
     		double x = dom.Particles[a]->x(0);
     		double y = dom.Particles[a]->x(1);
     		double z = dom.Particles[a]->x(2);
-        
+        dom.Particles[a]->v_max = Vec3_t(VMAX,VMAX,VMAX);
         
         //BOTTOM PLANE
         // if ( z < dx  && z > -dx/2. )

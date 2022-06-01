@@ -119,6 +119,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
   not_write_surf_ID = false;
   is_ghost = false;
   mesh = 0;
+  v_max = Vec3_t(1.e10,1.e10,1.e10);
 
     set_to_zero(Strainb);
     set_to_zero(Strain);
@@ -520,6 +521,12 @@ inline void Particle::Move_Euler (Mat3_t I, double dt) {
   //Mat2Euler(dt);	//This uses the same as modified verlet as ct always is != 30
 }
 
+inline void Particle::LimitVel(){
+  for (int i=0;i<3;i++) { 
+    if (va(i)>v_max(i)) va(i) = v_max(i);
+    else if (va(i)<-v_max(i)) va(i) = -v_max(i);
+  }
+}
 //THIS IS THE KICK-DRIF-KICK
 inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 {
@@ -532,10 +539,6 @@ inline void Particle::Move_Leapfrog(Mat3_t I, double dt)
 	Density = (Densitya+Densityb)/2.0;
 	vb = va;
 	va += dt*a;
-  // for (int i=0;i<3;i++) { 
-    // if (va(i)>v_max(i)) va(i) = v_max(i);
-    // else if (va(i)<-v_max(i)) va(i) = -v_max(i);
-  // }
 	v = (va + vb)/2.0;
   
   Vec3_t du = dt*(va+VXSPH);

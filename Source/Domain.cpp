@@ -2379,6 +2379,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*dt/2.*factor;
+      //Particles[i]->LimitVel();
     }
     MoveGhost();   
     GeneralAfter(*this);//Reinforce BC vel    
@@ -2404,6 +2405,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*dt/2.*factor;
+      //Particles[i]->LimitVel();
     }
     MoveGhost();
     GeneralAfter(*this);
