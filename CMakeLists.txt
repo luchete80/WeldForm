@@ -83,8 +83,8 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-  #Compression_TRIP_half_ghost_vel
-  Compression_TRIP_vel
+  Compression_TRIP_half_ghost_vel
+  #Compression_TRIP_vel
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
