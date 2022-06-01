@@ -186,7 +186,7 @@ public:
 	
 	
 	/////////////////////// CONTACT /////////////////////////////
-	void AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const int &id);
+	void AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id);
   void CalculateSurface(const int &id = 1);
 	inline void CalcContactForces();
   inline void CalcContactInitialGap();
@@ -315,7 +315,7 @@ public:
 	bool					m_isNbDataCleared;
 	bool						auto_ts;				//LUCIANO: Auto Time Stepping
 	
-	TriMesh*			trimesh;
+  std::vector <TriMesh*> trimesh; //ORIGINALLY
 	//CONTACT 
 	double PFAC, DFAC;		// Penalty and damping factors
 	bool 		contact;

@@ -41,3 +41,5 @@
               Contact WORKING on kick-drift algorithm. Fraser compression test works ok up until 5ms.
               Then diverges. 
 20220530  -   Working on Internal and Kinetic Energy. 
+20220601  -   Found ERROR in ghost symmetry at high strains. Velocities are extremely high. (#280)
+              Begining to work on allowance of more than 1 contact surface.

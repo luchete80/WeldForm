@@ -2197,8 +2197,10 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		
     if (contact){
  		//cout << "checking contact"<<endl;
-      if (contact_mesh_auto_update)
-        trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
+      if (contact_mesh_auto_update){
+        for (int m=0; m<trimesh.size();m++)
+          trimesh[m]->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals        
+      }
       //cout << "Updating contact particles"<<endl;
       UpdateContactParticles(); //Updates normal and velocities
 		}
@@ -2423,8 +2425,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		Time += deltat;
     if (contact){
  		//cout << "checking contact"<<endl;
-      if (contact_mesh_auto_update)
-        trimesh->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals
+      if (contact_mesh_auto_update) {
+        for (int m=0; m<trimesh.size();m++)
+          trimesh[m]->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals        
+      }
       //cout << "Updating contact particles"<<endl;
       UpdateContactParticles(); //Updates normal and velocities
 		}

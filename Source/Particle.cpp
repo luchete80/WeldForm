@@ -118,6 +118,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
   
   not_write_surf_ID = false;
   is_ghost = false;
+  mesh = 0;
 
     set_to_zero(Strainb);
     set_to_zero(Strain);

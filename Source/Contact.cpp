@@ -6,20 +6,21 @@
 namespace SPH {
 
 	
-void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const int &id){
+void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id){
 	
 	first_fem_particle_idx = Particles.Size();
 	double Density =0.;
 	double h;
 	bool Fixed = false;	//Always are fixed ...
 	contact_surf_id = id;
-	trimesh = &mesh;
+	//trimesh[m] = &mesh;
+  trimesh.push_back(mesh);
 	
-	for ( int e = 0; e < mesh.element.Size(); e++ ){
-		Vec3_t pos = mesh.element[e]->centroid;
-		h = hfac * mesh.element[e]->radius;
+	for ( int e = 0; e < mesh->element.Size(); e++ ){
+		Vec3_t pos = mesh->element[e]->centroid;
+		h = hfac * mesh->element[e]->radius;
 		Particles.Push(new Particle(id,pos,Vec3_t(0,0,0),0.0,Density,h,Fixed));
-		Particles[first_fem_particle_idx + e] -> normal  = mesh.element[e] -> normal;
+		Particles[first_fem_particle_idx + e] -> normal  = mesh->element[e] -> normal;
 		Particles[first_fem_particle_idx + e] -> element = e; 
 	}
 	cout << Particles.Size() - first_fem_particle_idx << "particles added with ID " << contact_surf_id <<endl;
@@ -28,17 +29,19 @@ void Domain::AddTrimeshParticles(const TriMesh &mesh, const float &hfac, const i
 
 //PARTICLES POSITIONS IS USED IN MOVE!
 inline void Domain::UpdateContactParticles(){
- 	for ( int e = 0; e < trimesh->element.Size(); e++ ){
-    Vec3_t v = 0.;
-    for (int en = 0;en<3;en++)
-      v += *trimesh -> node_v[trimesh->element[e] ->node[en]];
-		Particles[first_fem_particle_idx + e] -> v = 
-    Particles[first_fem_particle_idx + e] -> va = 
-    Particles[first_fem_particle_idx + e] -> vb = v/3.;
-    Particles[first_fem_particle_idx + e] -> a = 0.; 
-		Particles[first_fem_particle_idx + e] -> normal  = trimesh->element[e] -> normal;
-    //cout << "v "<< v/3.<<", n "<<Particles[first_fem_particle_idx + e] -> normal<<endl;
-	} 
+  for (int m=0; m<trimesh.size();m++){
+    for ( int e = 0; e < trimesh[m]->element.Size(); e++ ){
+      Vec3_t v = 0.;
+      for (int en = 0;en<3;en++)
+        v += *trimesh[m] -> node_v[trimesh[m]->element[e] ->node[en]];
+      Particles[first_fem_particle_idx + e] -> v = 
+      Particles[first_fem_particle_idx + e] -> va = 
+      Particles[first_fem_particle_idx + e] -> vb = v/3.;
+      Particles[first_fem_particle_idx + e] -> a = 0.; 
+      Particles[first_fem_particle_idx + e] -> normal  = trimesh[m]->element[e] -> normal;
+      //cout << "v "<< v/3.<<", n "<<Particles[first_fem_particle_idx + e] -> normal<<endl;
+    } 
+  }
 }
 
 inline void Domain::ContactNbSearch(){
@@ -130,6 +133,7 @@ inline void Domain::CalcContactInitialGap(){
   int i,j;  //For inside testing
 	
 	int P1,P2;
+  int m;
 
   //Vec3_t vr[Particles.Size()];
   Vec3_t vr;
@@ -141,7 +145,7 @@ inline void Domain::CalcContactInitialGap(){
   double maxdist = -1000.;
   double delta_;
   
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,distance, e) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,m,distance, e) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -168,10 +172,10 @@ inline void Domain::CalcContactInitialGap(){
       // cout << "distance "<< Particles[P1]->x - Particles[P2]->x<<endl;
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
-        
-        e = trimesh-> element[Particles[P2]->element];
+        m = Particles[P1]->mesh;
+        e = trimesh[m]-> element[Particles[P2]->element];
               
-        distance = -( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
+        distance = -( Particles[P1]->h + trimesh[m]-> element[Particles[P2]->element] -> pplane 
                       - dot (Particles[P2]->normal,	Particles[P1]->x) ) ;								//Eq 3-142 
         //cout << "pplane: "<<trimesh-> element[Particles[P2]->element] -> pplane <<endl;        
         if (distance  < mindist){
@@ -251,6 +255,7 @@ inline void Domain::CalcContactForces(){
   Vec3_t tgvr, tgdir;
   double norm_tgvr;
   double max_vr = 0.;
+  int m;
  
   Vec3_t atg;
   
@@ -258,7 +263,7 @@ inline void Domain::CalcContactForces(){
   
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, m, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -290,11 +295,12 @@ inline void Domain::CalcContactForces(){
       // cout << "distance "<< Particles[P1]->x - Particles[P2]->x<<endl;
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
-				e = trimesh-> element[Particles[P2]->element];
+        m = Particles[P1]->mesh;
+				e = trimesh[m]-> element[Particles[P2]->element];
 				//double pplane = trimesh-> element[Particles[P2]->element] -> pplane; 
 				//cout<< "contact distance"<<Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
       				
-				deltat_cont = ( Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane 
+				deltat_cont = ( Particles[P1]->h + trimesh[m]-> element[Particles[P2]->element] -> pplane 
                       - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (- delta_);								//Eq 3-142 
 				//Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
 
@@ -319,9 +325,9 @@ inline void Domain::CalcContactForces(){
 					i=0;		
 					while (i<3 && inside){
 						j = i+1;	if (j>2) j = 0;
-						crit = dot (cross ( *trimesh->node[e -> node[j]] 
-                                        - *trimesh->node[e -> node[i]],
-                                        Qj[P1]  - *trimesh->node[e -> node[i]]),
+						crit = dot (cross ( *trimesh[m]->node[e -> node[j]] 
+                                        - *trimesh[m]->node[e -> node[i]],
+                                        Qj[P1]  - *trimesh[m]->node[e -> node[i]]),
 															Particles[P2]->normal);
 						if (crit < 0.0) inside = false;
 						i++;
