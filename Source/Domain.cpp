@@ -2412,8 +2412,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     } 
 
-    CalcKinEnergyEqn();    
-    CalcIntEnergyEqn();    
+    //CalcKinEnergyEqn();    
+    //CalcIntEnergyEqn();    
     
 		steps++;
     if (ct == 30) ct = 0; else ct++;
