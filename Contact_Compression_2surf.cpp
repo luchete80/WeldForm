@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "Domain.h"
 #include <iostream>
+#include "InteractionAlt.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -102,11 +103,11 @@ int main(){
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.005 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.25,-0.25, cyl_zmax),Vec3_t(0.25,0.25, cyl_zmax),20);
-  mesh2.AxisPlaneMesh(2,false,Vec3_t(-0.25,-0.25, -dx),Vec3_t(0.25,0.25, -dx),20);
+  mesh2.AxisPlaneMesh(2,true,Vec3_t(-0.25,-0.25, -dx/2.),Vec3_t(0.25,0.25, -dx/2.),20);
 	
   cout << "Plane z" << *mesh.node[0]<<endl;
 	
@@ -166,14 +167,18 @@ int main(){
 											//Not for any force calc in contact formulation
   cout << "Adding mesh particles ...";
 	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-  dom.AddTrimeshParticles(&mesh2, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  dom.AddTrimeshParticles(&mesh2, hfac, 11); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
   
   cout << "done."<<endl;
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
   //dom.auto_ts = false;
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  
+    timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
+    dom.auto_ts=false;  
+    dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }
