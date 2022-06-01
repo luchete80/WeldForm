@@ -7,18 +7,18 @@ namespace SPH {
 
 	
 void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id){
-	if (meshcount==0)
+	//if (meshcount==0)
     first_fem_particle_idx.push_back(Particles.Size());
-	else
-    first_fem_particle_idx.push_back(trimesh[meshcount-1]->element.Size());
+	// else
+    // first_fem_particle_idx.push_back(trimesh[meshcount-1]->element.Size());
   
 	double Density =0.;
 	double h;
 	bool Fixed = false;	//Always are fixed ...
-	contact_surf_id = id;
+	contact_surf_id.push_back(id);
 	//trimesh[m] = &mesh;
   trimesh.push_back(mesh);
-	
+	cout << "Adding particles"<<endl;
 	for ( int e = 0; e < mesh->element.Size(); e++ ){
 		Vec3_t pos = mesh->element[e]->centroid;
 		h = hfac * mesh->element[e]->radius;
@@ -27,7 +27,7 @@ void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id
 		Particles[first_fem_particle_idx[meshcount] + e] -> element = e; 
     Particles[first_fem_particle_idx[meshcount] + e] -> mesh = meshcount;
 	}
-	cout << Particles.Size() - first_fem_particle_idx[meshcount] << "particles added with ID " << contact_surf_id <<endl;
+	cout << Particles.Size() - first_fem_particle_idx[meshcount] << "particles added with ID " << contact_surf_id[meshcount] <<endl;
 	cout << first_fem_particle_idx[meshcount] << " is the first solid particle index."<<endl;
   meshcount++;
 }
@@ -71,25 +71,31 @@ inline void Domain::ContactNbSearch(){
 			P2	= RIGPairs[k][a].second;	
 			// cout << "Fist Particle index, ID: "<<P1 << ", " << Particles[P1]->ID  <<endl;
 			// cout << "Sec Particle index, ID: "<<P2 << ", " << Particles[P2]->ID  <<endl;
-			if (Particles[P1]->ID == contact_surf_id || Particles[P2]->ID == contact_surf_id ) {
-				if (Particles[P1]->ID == id_free_surf || Particles[P2]->ID == id_free_surf ) {
-					Vec3_t xij	= Particles[P1]->x - Particles[P2]->x;
+      bool is_contact = false;
+      for (int m=0;m<meshcount;m++){
+        if (Particles[P1]->ID == contact_surf_id[m] || Particles[P2]->ID == contact_surf_id[m] )
+          is_contact = true;
+      }
+      if (is_contact) {
+        if (Particles[P1]->ID == id_free_surf || Particles[P2]->ID == id_free_surf ) {
+          Vec3_t xij	= Particles[P1]->x - Particles[P2]->x;
 
-					//cout << "r, rcutoff, h1, h2"<< r << ", "<< rcutoff << ", "<< Particles[P1]->h <<", "<<Particles[P2]->h<<endl;
-					if ( norm (Particles[P1]->x - Particles[P2]->x) < ( Particles[P1]->h + Particles[P2]->h ) ){ //2* cutoff being cutoff (h1+h2)/2
-					//cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
-					//ContPairs[k].Push(std::make_pair(P1, P2));
-					ContPairs[k].Push(RIGPairs[k][a]);
-					cont_pairs++;
-					//If the problem is not thermal (only mechanic)
-					//Could be deleted this pair in Whole Pairs
-					}	//belongs to free surf
-				}
-				// Pair is removed either way is inside cutoff radius or is or in!
-				
+          //cout << "r, rcutoff, h1, h2"<< r << ", "<< rcutoff << ", "<< Particles[P1]->h <<", "<<Particles[P2]->h<<endl;
+          if ( norm (Particles[P1]->x - Particles[P2]->x) < ( Particles[P1]->h + Particles[P2]->h ) ){ //2* cutoff being cutoff (h1+h2)/2
+          //cout << "Found contact pair: "<< P1 << ", " << P2 << endl;
+          //ContPairs[k].Push(std::make_pair(P1, P2));
+          ContPairs[k].Push(RIGPairs[k][a]);
+          cont_pairs++;
+          //If the problem is not thermal (only mechanic)
+          //Could be deleted this pair in Whole Pairs
+          }	//belongs to free surf
+        }
+        // Pair is removed either way is inside cutoff radius or is or in!
+        
         //RIGPairs[k].DelItem(a);//Erase, NOT EFFICIENT
-				//a--;
-			}
+        //a--;
+      }
+      
 		}
 		//cout << "Found "<<cont_pairs<< " contact pairs."<<endl;
 		
@@ -121,7 +127,7 @@ inline void Domain::ContactNbSearch(){
 }
 
 inline void Domain::CalcContactInitialGap(){
-
+  cout << "Calculaint initial gap"<<endl;
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time;
@@ -165,11 +171,12 @@ inline void Domain::CalcContactInitialGap(){
 		//cout << "Contact pair size: "<<RIGPairs[k].Size()<<endl;
 		for (size_t a = 0; a < RIGPairs[k].Size();a++) {
 			//P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
-			if (Particles[RIGPairs[k][a].first]->ID == contact_surf_id ) 	{ 	//Cont Surf is partcicles from FEM
-				P1 = RIGPairs[k][a].second; P2 = RIGPairs[k][a].first; 	}
-			else {
-				P1 = RIGPairs[k][a].first; P2 = RIGPairs[k][a].second; } 
-      
+      for (int m=0;m<meshcount;m++){
+        if (Particles[RIGPairs[k][a].first]->ID == contact_surf_id[m] ) 	{ 	//Cont Surf is partcicles from FEM
+          P1 = RIGPairs[k][a].second; P2 = RIGPairs[k][a].first; 	}
+        else {
+          P1 = RIGPairs[k][a].first; P2 = RIGPairs[k][a].second; } 
+      } 
 			vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
 			delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
       
@@ -178,6 +185,8 @@ inline void Domain::CalcContactInitialGap(){
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
         m = Particles[P2]->mesh;
+        //cout << "particle Mesh "<< m<<endl;
+        //if (m!=-1){
         e = trimesh[m]-> element[Particles[P2]->element];
               
         distance = -( Particles[P1]->h + trimesh[m]-> element[Particles[P2]->element] -> pplane 
@@ -283,10 +292,17 @@ inline void Domain::CalcContactForces(){
 		//cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
 		for (size_t a = 0; a < ContPairs[k].Size();a++) {
 			//P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
-			if (Particles[ContPairs[k][a].first]->ID == contact_surf_id ) 	{ 	//Cont Surf is partcicles from FEM
-				P1 = ContPairs[k][a].second; P2 = ContPairs[k][a].first; 	}
-			else {
-				P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
+      bool is_first = false;
+      for (int m=0;m<meshcount;m++){
+        if (Particles[ContPairs[k][a].first]->ID == contact_surf_id[m])
+          is_first = true;
+      }
+      
+
+      if (is_first) 	{ 	//Cont Surf is partcicles from FEM
+        P1 = ContPairs[k][a].second; P2 = ContPairs[k][a].first; 	}
+      else {
+        P1 = ContPairs[k][a].first; P2 = ContPairs[k][a].second; } 
       
 			vr = Particles[P1]->v - Particles[P2]->v;		//Fraser 3-137
 			//cout << "Particle P1v: "<<Particles[P1]->v<<endl;
@@ -300,7 +316,8 @@ inline void Domain::CalcContactForces(){
       // cout << "distance "<< Particles[P1]->x - Particles[P2]->x<<endl;
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
-        m = Particles[P1]->mesh;
+        m = Particles[P2]->mesh;
+        //cout << "particle Mesh "<< m<<", " <<"particle " << P2<<endl;
 				e = trimesh[m]-> element[Particles[P2]->element];
 				//double pplane = trimesh-> element[Particles[P2]->element] -> pplane; 
 				//cout<< "contact distance"<<Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
@@ -511,5 +528,6 @@ inline void Domain::CalcContactForces(){
 	//Correct time step!
 //	std::min(deltat,dt_fext)
 }
+
 
 }; //SPH

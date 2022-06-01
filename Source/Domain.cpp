@@ -1412,7 +1412,9 @@ inline void Domain::PrimaryComputeAcceleration () {
 	#else
 	for (int i=0; i<FixedParticles.Size(); i++)
 	#endif
-		if (Particles[FixedParticles[i]]-> ID != contact_surf_id)  //ADDED TO Prevent adding surface (rigid contact) particles
+  { 
+    //for (int m=0;m<meshcount;m++)
+    if (Particles[FixedParticles[i]]-> ID != contact_surf_id[0])  //ADDED TO Prevent adding surface (rigid contact) particles
 		if (Particles[FixedParticles[i]]->SumKernel!= 0.0) {
 			size_t a = FixedParticles[i];
 			Particles[a]->Pressure	= Particles[a]->Pressure/Particles[a]->SumKernel;
@@ -1457,7 +1459,7 @@ inline void Domain::PrimaryComputeAcceleration () {
 			}
 		}
 
-
+  } 
 }
 
 inline void Domain::LastComputeAcceleration ()
@@ -1942,12 +1944,13 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 
 	//In case of contact this must be SURFACE particles
 	//TODO, REMOVE so many nb search
+  cout << "Calculating Nbs.."<<endl;
 	if (contact){
 		MainNeighbourSearch();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search	
 	}
-	
+  cout << "done."<<endl;
 	//IF GRADCORR IS CALCULATED HERE; INVERSE IS NOT FOUND (ERROR)
 	// TO BE CHECK
 	// if (gradKernelCorr)
@@ -2195,7 +2198,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
 		// Update velocity, plane coeff pplane and other things
-		
     if (contact){
  		//cout << "checking contact"<<endl;
       if (contact_mesh_auto_update){

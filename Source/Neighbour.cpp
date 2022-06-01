@@ -359,20 +359,26 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 
 		if (contact) { //ONLY PAIRS WITH ONE PARTICLE ON THE SURFACE AND ONE PARTICLE ON THE RIGID SURFACE
 			// if (  (Particles[temp1]->ID == contact_surf_id && Particles[temp2]->ID == id_free_surf ) || 
-						// (Particles[temp1]->ID == id_free_surf && Particles[temp2]->ID == contact_surf_id )) {	
-			if (Particles[temp1]->ID == contact_surf_id || Particles[temp2]->ID == contact_surf_id ) {
-				if (Particles[temp1]->ID == id_free_surf || Particles[temp2]->ID == id_free_surf ) {
+              // (Particles[temp1]->ID == id_free_surf && Particles[temp2]->ID == contact_surf_id )) {
+      bool is_contact = false;
+      for (int m=0;m<meshcount;m++){
+        if (Particles[temp1]->ID == contact_surf_id[m] || Particles[temp2]->ID == contact_surf_id[m] )
+          is_contact = true;
+      }
+      if (is_contact)  {
+        if (Particles[temp1]->ID == id_free_surf || Particles[temp2]->ID == id_free_surf ) {
             //ORIGINAL OLD
-						RIGPairs[T].Push(std::make_pair(temp1, temp2));
+            RIGPairs[T].Push(std::make_pair(temp1, temp2));
             
             //NEW
             // if ( dot(Particles[temp1]->x - Particles[temp2]->x,Particles[temp1]->x - Particles[temp2]->x) < 
                   // ( Particles[temp1]->h + Particles[temp2]->h ) *( Particles[temp1]->h + Particles[temp2]->h ))
               // ContPairs[T].Push(std::make_pair(temp1, temp2));
 
-				}
-				return;	//If either one particle or another is in the surface 
-			}				
+        }
+        return;	//If either one particle or another is in the surface 
+      } 
+      
 		}
 		int i,j;
 		if ( CheckRadius(Particles[temp1],Particles[temp2])){
