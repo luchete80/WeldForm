@@ -143,6 +143,7 @@ inline Domain::Domain ()
 	
 	thermal_solver = false;
   contact_mesh_auto_update = true;
+  meshcount = 0;
 }
 
 inline Domain::~Domain ()
@@ -1211,9 +1212,9 @@ void Domain::CalculateSurface(const int &id){
 	
 	int maxid;
 	if (contact)
-		maxid = first_fem_particle_idx;
+		maxid = first_fem_particle_idx[0];
 	else 
-		first_fem_particle_idx = Particles.Size();
+		first_fem_particle_idx[0] = Particles.Size();
 	
 
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
@@ -1657,7 +1658,7 @@ inline void Domain::CalcGradCorrMatrix () {
 	//cout << "Inverting"<<endl;
 	int max_id = Particles.Size();
 	if (contact)
-		max_id = first_fem_particle_idx;
+		max_id = first_fem_particle_idx[0];
 		
 	for (int i=0; i<max_id; i++){
 		// cout << "part "<<i<<endl;

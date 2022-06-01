@@ -8,7 +8,7 @@ namespace SPH {
 	
 void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id){
 	
-	first_fem_particle_idx = Particles.Size();
+	first_fem_particle_idx[meshcount] = Particles.Size();
 	double Density =0.;
 	double h;
 	bool Fixed = false;	//Always are fixed ...
@@ -20,11 +20,12 @@ void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id
 		Vec3_t pos = mesh->element[e]->centroid;
 		h = hfac * mesh->element[e]->radius;
 		Particles.Push(new Particle(id,pos,Vec3_t(0,0,0),0.0,Density,h,Fixed));
-		Particles[first_fem_particle_idx + e] -> normal  = mesh->element[e] -> normal;
-		Particles[first_fem_particle_idx + e] -> element = e; 
+		Particles[first_fem_particle_idx[meshcount] + e] -> normal  = mesh->element[e] -> normal;
+		Particles[first_fem_particle_idx[meshcount] + e] -> element = e; 
 	}
-	cout << Particles.Size() - first_fem_particle_idx << "particles added with ID " << contact_surf_id <<endl;
-	cout << first_fem_particle_idx << " is the first solid particle index."<<endl;
+	cout << Particles.Size() - first_fem_particle_idx[meshcount] << "particles added with ID " << contact_surf_id <<endl;
+	cout << first_fem_particle_idx[meshcount] << " is the first solid particle index."<<endl;
+  meshcount++;
 }
 
 //PARTICLES POSITIONS IS USED IN MOVE!
@@ -34,11 +35,11 @@ inline void Domain::UpdateContactParticles(){
       Vec3_t v = 0.;
       for (int en = 0;en<3;en++)
         v += *trimesh[m] -> node_v[trimesh[m]->element[e] ->node[en]];
-      Particles[first_fem_particle_idx + e] -> v = 
-      Particles[first_fem_particle_idx + e] -> va = 
-      Particles[first_fem_particle_idx + e] -> vb = v/3.;
-      Particles[first_fem_particle_idx + e] -> a = 0.; 
-      Particles[first_fem_particle_idx + e] -> normal  = trimesh[m]->element[e] -> normal;
+      Particles[first_fem_particle_idx[meshcount] + e] -> v = 
+      Particles[first_fem_particle_idx[meshcount] + e] -> va = 
+      Particles[first_fem_particle_idx[meshcount] + e] -> vb = v/3.;
+      Particles[first_fem_particle_idx[meshcount] + e] -> a = 0.; 
+      Particles[first_fem_particle_idx[meshcount] + e] -> normal  = trimesh[m]->element[e] -> normal;
       //cout << "v "<< v/3.<<", n "<<Particles[first_fem_particle_idx + e] -> normal<<endl;
     } 
   }

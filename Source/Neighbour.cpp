@@ -522,7 +522,7 @@ inline void Domain::SaveContNeighbourData(){
 		}
 		
 		for (int p=0;p<Particles.Size();p++){
-			if (p < first_fem_particle_idx)
+			if (p < first_fem_particle_idx[0])
 				Particles[p]->ContNb = contnb[p];
 		}
 }

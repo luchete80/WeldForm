@@ -240,9 +240,11 @@ public:
 	
 		bool cont_heat_gen;
 	
-		int 						first_fem_particle_idx;			//The rest are ridig bodies
-		/*Array<*/int/*>*/ 			id_free_surf;								//TODO: 
-    Vec3_t					Gravity;       	///< Gravity acceleration
+		std::vector <int> 			first_fem_particle_idx;			//The rest are ridig bodies
+    int                     meshcount;
+		
+    /*Array<*/int/*>*/ 			id_free_surf;								//TODO: 
+    Vec3_t					        Gravity;       	///< Gravity acceleration
 
 
     Vec3_t                 			TRPR;		///< Top right-hand point at rear of the domain as a cube
