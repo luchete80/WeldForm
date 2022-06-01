@@ -47,12 +47,14 @@ void UserAcc(SPH::Domain & domi) {
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., 0.));
 }
 
 
 int main(){
 	//
 	TriMesh mesh;
+  TriMesh mesh2;
 
 	cout << "Creating Mesh" << endl;
 
@@ -97,21 +99,24 @@ int main(){
 	dom.DomMin(0) = -L;
 
 									
-	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
-  //mesh.AxisPlaneMesh(3,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
-	cout << "Plane z" << *mesh.node[0]<<endl;
+	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.25,-0.25, cyl_zmax),Vec3_t(0.25,0.25, cyl_zmax),20);
+  mesh2.AxisPlaneMesh(2,false,Vec3_t(-0.25,-0.25, -dx),Vec3_t(0.25,0.25, -dx),20);
+	
+  cout << "Plane z" << *mesh.node[0]<<endl;
 	
 	
 	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
 	cout << "Creating Spheres.."<<endl;
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
+  mesh2.CalcSpheres();
+  
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
@@ -132,12 +137,12 @@ int main(){
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
-		if ( z < 0 ){
-			dom.Particles[a]->ID=2;
-			dom.Particles[a]->IsFree=false;
-			dom.Particles[a]->NoSlip=true;			
+		// if ( z < 0 ){
+			// dom.Particles[a]->ID=2;
+			// dom.Particles[a]->IsFree=false;
+			// dom.Particles[a]->NoSlip=true;			
 		
-		}
+		// }
 		// if ( z > L )
 			// dom.Particles[a]->ID=3;
 	}
@@ -161,6 +166,8 @@ int main(){
 											//Not for any force calc in contact formulation
   cout << "Adding mesh particles ...";
 	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  dom.AddTrimeshParticles(&mesh2, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  
   cout << "done."<<endl;
 	//ID 	0 Internal
 	//		1	Outer Surface

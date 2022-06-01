@@ -25,6 +25,7 @@ void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id
 		Particles.Push(new Particle(id,pos,Vec3_t(0,0,0),0.0,Density,h,Fixed));
 		Particles[first_fem_particle_idx[meshcount] + e] -> normal  = mesh->element[e] -> normal;
 		Particles[first_fem_particle_idx[meshcount] + e] -> element = e; 
+    Particles[first_fem_particle_idx[meshcount] + e] -> mesh = meshcount;
 	}
 	cout << Particles.Size() - first_fem_particle_idx[meshcount] << "particles added with ID " << contact_surf_id <<endl;
 	cout << first_fem_particle_idx[meshcount] << " is the first solid particle index."<<endl;
@@ -176,7 +177,7 @@ inline void Domain::CalcContactInitialGap(){
       // cout << "distance "<< Particles[P1]->x - Particles[P2]->x<<endl;
 			//Check if SPH and fem particles are approaching each other
 			if (delta_ > 0 ){
-        m = Particles[P1]->mesh;
+        m = Particles[P2]->mesh;
         e = trimesh[m]-> element[Particles[P2]->element];
               
         distance = -( Particles[P1]->h + trimesh[m]-> element[Particles[P2]->element] -> pplane 
