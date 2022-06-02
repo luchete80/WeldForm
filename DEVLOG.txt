@@ -1,5 +1,5 @@
 
-20220509 - Woeking on SOA version. Same solver response for thermal.
+20220509 - Working on SOA version. Same solver response for thermal.
 20220510 - Working on FSW example. Working on Thermal SOA version.
             Working on FSW example. Working on Thermal SOA version.
               Checking Johnson Cook Traction example. 
@@ -41,5 +41,10 @@
               Contact WORKING on kick-drift algorithm. Fraser compression test works ok up until 5ms.
               Then diverges. 
 20220530  -   Working on Internal and Kinetic Energy. 
+------------------------------------------------------
 20220601  -   Found ERROR in ghost symmetry at high strains. Velocities are extremely high. (#280)
               Begining to work on allowance of more than 1 contact surface.
+20220602  -  Working on 2 surface contact. DONE. WORKING OK.
+             Should be corrected:
+               -  Contact forces still uneven
+               -  Autoadjust initial gap. 
