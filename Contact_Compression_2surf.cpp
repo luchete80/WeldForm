@@ -106,8 +106,8 @@ int main(){
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.005 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	
-	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.25,-0.25, cyl_zmax),Vec3_t(0.25,0.25, cyl_zmax),20);
-  mesh2.AxisPlaneMesh(2,true,Vec3_t(-0.25,-0.25, -dx/2.),Vec3_t(0.25,0.25, -dx/2.),20);
+	mesh.AxisPlaneMesh (2,false,Vec3_t(-0.25,-0.25, cyl_zmax),Vec3_t(0.25,0.25, cyl_zmax),20);
+  mesh2.AxisPlaneMesh(2,true,Vec3_t(-0.25,-0.25, -h),Vec3_t(0.25,0.25, -h),20);
 	
   cout << "Plane z" << *mesh.node[0]<<endl;
 	
@@ -151,7 +151,8 @@ int main(){
 	dom.contact = true;
   dom.fric_type = Fr_Dyn;
 	//dom.friction = 0.15;
-	dom.friction = 0.1;
+	dom.friction_dyn = 0.3;
+	dom.friction_sta = 0.3;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 	
