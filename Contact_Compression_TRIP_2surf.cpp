@@ -10,6 +10,8 @@
 using namespace SPH;
 using namespace std;
 
+std::ofstream of;
+
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 		vcompress = VMAX;
@@ -32,6 +34,8 @@ void UserAcc(SPH::Domain & domi) {
   }
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
   domi.trimesh[1]->SetVel(Vec3_t(0.0,0., 0.));
+  of << domi.getTime() << ", "<<domi.Particles[7451]->contforce(2)<<endl;
+  //cout << "Position "<<domi.Particles[7451]->x<<endl;
 }
 
 
@@ -152,11 +156,18 @@ int main() try{
         
 	}
 
+	//type definition to shorten coding
+	std::ostringstream oss;
+	of = std::ofstream ("cf.csv", std::ios::out);
+  of << "Time, cfpart7451"<<endl;
+	//of << oss.str();
+
+  
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.1;
-	dom.friction_sta = 0.1;
-	dom.PFAC = 0.5;
+	dom.friction_dyn = 0.15;
+	dom.friction_sta = 0.15;
+	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 
   cout << top<< " Top particles, "<<bottom << " bottom particles"<<endl; 
