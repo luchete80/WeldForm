@@ -229,7 +229,6 @@ inline void Domain::CalcContactForces(){
 	////////////////////////
 	// DEBUG THINGS //////
 	int inside_part[Particles.Size()];
-	int inside_part_count = 0;
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
@@ -277,6 +276,7 @@ inline void Domain::CalcContactForces(){
   
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
+  int stra_restr = 0; //restricted static
 	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, m, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
@@ -376,7 +376,6 @@ inline void Domain::CalcContactForces(){
 						double delta = (deltat - deltat_cont) * delta_;
 						// DEBUG THINGS, REMOVE ////////////
 						inside_part[P1] ++;
-						inside_part_count++;
 						// if (delta > max_delta) max_delta = delta;
 						// if (delta < min_delta) min_delta = delta;
 					///////////////////////////
@@ -428,11 +427,12 @@ inline void Domain::CalcContactForces(){
                 //cout << "atg "<<atg<<endl;
                 Particles[P1] -> tgdir = atg;
                 Particles[P1] -> a -= atg; 
-                
+                stra_restr++;
                 // THIS CRASHES
-                Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; 
+                //Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; //This is changed at integration
                 
-                
+                cout << "applied force "<<(norm(atg) * Particles[P1] -> Mass)<<endl;
+                cout << "cont force "<<norm(Particles[P1] -> contforce)<<endl;
                 //cout << "particle 2 vel "<<Particles[P2] -> v<<endl;
                 //cout << "particle accel x and y after"<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
                 //cout << "particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> a[1] <<endl;
@@ -501,8 +501,7 @@ inline void Domain::CalcContactForces(){
   //cout << "END CONTACT----------------------"<<endl;
 	max_contact_force = sqrt (max_contact_force);
 	//min_contact_force = sqrt (min_contact_force);
-	//cout << "Inside pairs count: "<<inside_part_count<<", Inside time: "<<inside_time<<", Total cont pairs" << cont_pairs <<endl;
-	inside_part_count = 0;
+	//cout << "Inside pairs count: "<<inside_geom<<", Inside time: "<<inside_time<<", statically restricted " << stra_restr<<endl;
 	int cont_force_count = 0;
 	// for (int i = 0;i<Particles.Size();i++){
 		// //DO THIS IN SERIAL (NOT PARALLEL) MODE OR BLOCK THIS IN PRAGMA

@@ -103,7 +103,7 @@ int main(){
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.005 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + /*1.005 * */dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	
 	mesh.AxisPlaneMesh (2,false,Vec3_t(-0.25,-0.25, cyl_zmax),Vec3_t(0.25,0.25, cyl_zmax),20);
@@ -151,8 +151,8 @@ int main(){
 	dom.contact = true;
   dom.fric_type = Fr_Dyn;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.3;
-	dom.friction_sta = 0.3;
+	dom.friction_dyn = 0.0;
+	dom.friction_sta = 1.0;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 	
