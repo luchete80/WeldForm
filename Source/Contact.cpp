@@ -431,8 +431,8 @@ inline void Domain::CalcContactForces(){
                 // THIS CRASHES
                 //Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; //This is changed at integration
                 
-                cout << "applied force "<<(norm(atg) * Particles[P1] -> Mass)<<endl;
-                cout << "cont force "<<norm(Particles[P1] -> contforce)<<endl;
+                //cout << "applied force "<<(norm(atg) * Particles[P1] -> Mass)<<endl;
+                //cout << "cont force "<<norm(Particles[P1] -> contforce)<<endl;
                 //cout << "particle 2 vel "<<Particles[P2] -> v<<endl;
                 //cout << "particle accel x and y after"<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
                 //cout << "particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> a[1] <<endl;
