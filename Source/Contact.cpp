@@ -271,13 +271,13 @@ inline void Domain::CalcContactForces(){
   int m;
  
   Vec3_t atg;
-  
+  bool end;
   contact_force_sum = 0.;
   
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
   int stra_restr = 0; //restricted static
-	#pragma omp parallel for schedule (static) private(P1,P2,vr,delta_,deltat_cont, m, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) private(P1,P2,a,end,vr,delta_,deltat_cont, m, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -291,7 +291,12 @@ inline void Domain::CalcContactForces(){
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
 		//cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
 		for (size_t a = 0; a < ContPairs[k].Size();a++) {
-			//P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
+    // TODO: DO THIS ONCE PER PARTICLE
+    // int a = 0;
+    // end = false;
+    // while (!end){ //Per particle
+    
+    //P1 is SPH particle, P2 is CONTACT SURFACE (FEM) Particle
       bool is_first = false;
       for (int m=0;m<meshcount;m++){
         if (Particles[ContPairs[k][a].first]->ID == contact_surf_id[m])
@@ -357,6 +362,7 @@ inline void Domain::CalcContactForces(){
 					
 					if (inside ) { //Contact point inside element, contact proceeds
             inside_geom++;
+            end=true;
             //cout << "Particle Normal: "<<Particles[P2]->normal<<endl;
 						// cout << "/////////////////////////////////////////" <<endl;
 						// cout << " vr: "<< vr<<endl;
@@ -441,7 +447,7 @@ inline void Domain::CalcContactForces(){
                 //cout << "after adj: accel: "<< Particles[P1] -> a<<endl;
                 //cout << "atg: "<< atg<<endl;
                 omp_unset_lock(&Particles[P1]->my_lock);
-                //break;
+                
               
             } else {
               if (friction_sta > 0.) { 
@@ -466,6 +472,7 @@ inline void Domain::CalcContactForces(){
                   // omp_set_lock(&dom_lock);
                       // sta_frict_particles++;
                   // omp_unset_lock(&dom_lock);
+                  
                 }
                 else {
                   // omp_set_lock(&dom_lock);
@@ -503,16 +510,21 @@ inline void Domain::CalcContactForces(){
 						if   (force2 > max_contact_force ) max_contact_force = force2;
 						else if (force2 < min_contact_force ) min_contact_force = force2;
 						inside_pairs++;
+            
 					}// if inside
 				} //deltat <min
 
 			}//delta_ > 0 : PARTICLES ARE APPROACHING EACH OTHER
-		}//Contact Pairs
+		
+      // a++;
+      // if (a==ContPairs[k].Size())
+        // end=true;
+    }//Contact Pairs
 	}//Nproc
   //cout << "END CONTACT----------------------"<<endl;
 	max_contact_force = sqrt (max_contact_force);
 	//min_contact_force = sqrt (min_contact_force);
-	//cout << "Inside pairs count: "<<inside_geom<<", Inside time: "<<inside_time<<", statically restricted " << stra_restr<<endl;
+	cout << "Inside pairs count: "<<inside_geom<<", Inside time: "<<inside_time<<", statically restricted " << stra_restr<<endl;
 	int cont_force_count = 0;
 	// for (int i = 0;i<Particles.Size();i++){
 		// //DO THIS IN SERIAL (NOT PARALLEL) MODE OR BLOCK THIS IN PRAGMA
