@@ -169,6 +169,7 @@ int main() try{
 	dom.friction_sta = 0.15;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
+  dom.fric_type = Fr_Bound;
 
   cout << top<< " Top particles, "<<bottom << " bottom particles"<<endl; 
   	
