@@ -48,3 +48,4 @@
              Should be corrected:
                -  Contact forces still uneven
                -  Autoadjust initial gap. 
+             Added bonded contact type.

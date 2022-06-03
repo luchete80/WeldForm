@@ -165,8 +165,8 @@ int main() try{
   
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.1;
-	dom.friction_sta = 0.1;
+	dom.friction_dyn = 0.15;
+	dom.friction_sta = 0.15;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 
