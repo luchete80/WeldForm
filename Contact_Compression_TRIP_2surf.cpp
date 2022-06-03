@@ -32,6 +32,16 @@ void UserAcc(SPH::Domain & domi) {
 	{
 
   }
+  //To avoid spurious slide
+  int id = domi.Particles.Size()-1;
+  domi.Particles[id]->v [0]  =   domi.Particles[id]->v[1]  = 0.;
+  domi.Particles[id]->va[0] =   domi.Particles[id]->va[1] = 0.;
+  domi.Particles[id]->vb[0] =   domi.Particles[id]->vb[1] = 0.;
+
+  domi.Particles[0]->v[0]  =   domi.Particles[0]->v[1]  = 0.;
+  domi.Particles[0]->va[0] =   domi.Particles[0]->va[1] = 0.;
+  domi.Particles[0]->vb[0] =   domi.Particles[0]->vb[1] = 0.;
+  
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
   domi.trimesh[1]->SetVel(Vec3_t(0.0,0., 0.));
   of << domi.getTime() << ", "<<domi.Particles[7451]->contforce(2)<<endl;
