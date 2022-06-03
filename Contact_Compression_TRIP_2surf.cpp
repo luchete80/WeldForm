@@ -137,8 +137,8 @@ int main() try{
 		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
-		dom.Particles[a]->Alpha		= 3.;
-		dom.Particles[a]->Beta		= 3.;
+		dom.Particles[a]->Alpha		= 2.5;
+		dom.Particles[a]->Beta		= 2.5;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
@@ -165,8 +165,8 @@ int main() try{
   
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.15;
-	dom.friction_sta = 0.15;
+	dom.friction_dyn = 0.1;
+	dom.friction_sta = 0.1;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.2;
 
