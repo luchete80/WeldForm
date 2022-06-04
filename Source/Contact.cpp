@@ -614,11 +614,11 @@ inline void Domain::CalcContactForces2(){
   Vec3_t atg;
   bool end;
   contact_force_sum = 0.;
-  
+  double dist;
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
   int stra_restr = 0; //restricted static
-	//#pragma omp parallel for schedule (static) private(P1,P2,a,end,vr,delta_,deltat_cont, m, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) private(P1,P2,a,end,vr,dist, delta_,deltat_cont, m, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -672,7 +672,8 @@ inline void Domain::CalcContactForces2(){
                       - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (- delta_);								//Eq 3-142 
 
 					Qj[P1] = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
-          if (norm(Qj[P1])<Particles[P1]->h) {
+                     dist =  dot (Particles[P2]->normal, Particles[P1]->x ) - trimesh[m]-> element[Particles[P2]->element] -> pplane;
+                      if( norm( dist ) < Particles[P1]->h) {
 					//Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
