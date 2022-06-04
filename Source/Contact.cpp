@@ -671,10 +671,11 @@ inline void Domain::CalcContactForces2(){
 				deltat_cont = ( Particles[P1]->h + trimesh[m]-> element[Particles[P2]->element] -> pplane 
                       - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (- delta_);								//Eq 3-142 
 
-					Qj[P1] = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
+					//Qj[P1] = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
                      dist =  dot (Particles[P2]->normal, Particles[P1]->x ) - trimesh[m]-> element[Particles[P2]->element] -> pplane;
                       if( norm( dist ) < Particles[P1]->h) {
-					//Check if it is inside triangular element
+				Qj[P1] = Particles[P1]->x - dist * Particles[P2]->normal;
+                                 //Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
 					inside = true;
