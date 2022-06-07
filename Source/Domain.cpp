@@ -2260,7 +2260,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 	TimestepCheck();
 	WholeVelocity();
 	
-
+  ofstream ofprop("Prop.csv", std::ios::out);
 	//Initial model output
 	if (TheFileKey!=NULL) {
 		String fn;
@@ -2479,13 +2479,16 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			cout << "Max Displacements: "<<max_disp<<endl;
       if (contact) cout<<"Contact Force Sum "<<contact_force_sum<<endl;
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
+      
+      ofprop <<getTime() << ", "<<m_scalar_prop<<endl;
 
 		}
 	
 	}
 	
 
-	of.close();
+	of.close(); //History 
+  ofprop.close(); //Scalar prop
 	
 	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
 
