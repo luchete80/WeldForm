@@ -49,3 +49,6 @@
                -  Contact forces still uneven
                -  Autoadjust initial gap. 
              Added bonded contact type.
+20220607  -  Added SEO contact algorithm (which looks for penetration only and not velocity direction).
+             Added displacement constraint to double side contact TRIP example. 
+             Found error in ID 

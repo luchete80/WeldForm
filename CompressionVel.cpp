@@ -20,6 +20,7 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include "InteractionAlt.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -76,45 +77,45 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
-		 SPH::Domain	dom;
+  SPH::Domain	dom;
 
-		dom.Dimension	= 3;
-		dom.Nproc	= 4;
-		dom.Kernel_Set(Qubic_Spline);
-		//dom.Kernel_Set(Hyperbolic_Spline);
-		dom.Scheme	= 1;	//Mod Verlet
-		dom.XSPH	= 0.5; //Very important
+  dom.Dimension	= 3;
+  dom.Nproc	= 4;
+  dom.Kernel_Set(Qubic_Spline);
+  //dom.Kernel_Set(Hyperbolic_Spline);
+  dom.Scheme	= 1;	//Mod Verlet
+  dom.XSPH	= 0.5; //Very important
 
-			double dx,h,rho,K,G,Cs,Fy;
-		double R,L,n;
+  double dx,h,rho,K,G,Cs,Fy;
+  double R,L,n;
 
-		R	= 0.15;
-		L	= 0.56;
-		n	= 30.0;		//in length, radius is same distance
-		
-		rho	= 2700.0;
-		K	= 6.7549e10;
-		G	= 2.5902e10;
-		Fy	= 300.e6;
-    	//dx	= L / (n-1);
-		//dx = L/(n-1);
-		dx = 0.015;
-    h	= dx*1.2; //Very important
-        Cs	= sqrt(K/rho);
+  R	= 0.15;
+  L	= 0.56;
+  n	= 30.0;		//in length, radius is same distance
 
-        double timestep;
-        timestep = (0.2*h/(Cs));
-		
-		//timestep = 2.5e-6;
+  rho	= 2700.0;
+  K	= 6.7549e10;
+  G	= 2.5902e10;
+  Fy	= 300.e6;
+  //dx	= L / (n-1);
+  //dx = L/(n-1);
+  dx = 0.015;
+  h	= dx*1.2; //Very important
+    Cs	= sqrt(K/rho);
 
-        cout<<"t  = "<<timestep<<endl;
-        cout<<"Cs = "<<Cs<<endl;
-        cout<<"K  = "<<K<<endl;
-        cout<<"G  = "<<G<<endl;
-        cout<<"Fy = "<<Fy<<endl;
-    	dom.GeneralAfter = & UserAcc;
-        dom.DomMax(0) = L;
-        dom.DomMin(0) = -L;
+    double timestep;
+    timestep = (0.2*h/(Cs));
+
+  //timestep = 2.5e-6;
+
+  cout<<"t  = "<<timestep<<endl;
+  cout<<"Cs = "<<Cs<<endl;
+  cout<<"K  = "<<K<<endl;
+  cout<<"G  = "<<G<<endl;
+  cout<<"Fy = "<<Fy<<endl;
+  dom.GeneralAfter = & UserAcc;
+  dom.DomMax(0) = L;
+  dom.DomMin(0) = -L;
 
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
@@ -160,8 +161,12 @@ int main(int argc, char **argv) try
 		dom.BC.InOutFlow = 0;
 
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
+    timestep = (0.4*h/(Cs+VMAX));
+    dom.auto_ts = false;
+    dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+  
 		return 0;
 }
 MECHSYS_CATCH

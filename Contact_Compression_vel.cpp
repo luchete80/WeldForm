@@ -134,6 +134,7 @@ int main(){
 		double z = dom.Particles[a]->x(2);
 		if ( z < 0 ){
 			dom.Particles[a]->ID=2;
+      dom.Particles[a]->not_write_surf_ID = true;
 			// dom.Particles[a]->IsFree=false;
 			// dom.Particles[a]->NoSlip=true;			
 		
@@ -165,6 +166,7 @@ int main(){
 	//		2,3 //Boundaries
   dom.auto_ts = false;
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	timestep = (0.4*h/(Cs));
   dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
 	
   dom.WriteXDMF("ContactTest");

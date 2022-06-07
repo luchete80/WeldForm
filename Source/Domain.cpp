@@ -2277,8 +2277,12 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 	bool isfirst = true;
 	bool isyielding = false;
-
-
+  
+  //BEFORE CONTACT SURFACE SEARCH
+	if (contact){
+		for (int i=0; i<Particles.Size(); i++)
+			Particles [i] -> ID_orig = Particles [i] -> ID;
+	}
 
 	if (contact) { //Calculate particle Stiffness
 		for (int i=0; i<Particles.Size(); i++){
@@ -2292,7 +2296,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search	
 	}
-
+  
   ClearNbData();
 
 	//Print history
@@ -2307,7 +2311,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
   std::chrono::duration<double> total_time;
 	auto start_whole = std::chrono::steady_clock::now();  
 	while (Time<=tf && idx_out<=maxidx) {
-    
+  
 		StartAcceleration(Gravity);
 
 		double max = 0;
@@ -2368,8 +2372,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
-    
-    
+       
     CalcAccel(); //Nor density or neither strain rates
     GeneralAfter(*this); //Fix free accel
     
@@ -2412,7 +2415,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     }
     MoveGhost();
     GeneralAfter(*this);
-    
+
     CalcRateTensors();  //With v and xn+1
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){

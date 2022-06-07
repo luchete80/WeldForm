@@ -23,6 +23,8 @@ void UserAcc(SPH::Domain & domi) {
   for (int i = first;i<=last;i++){
     domi.m_scalar_prop += domi.Particles[i]->Sigma (2,2) * dS;
   }
+  int center = 0;
+  int side = 0;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 	#ifdef __GNUC__
 	for (size_t i=0; i<domi.Particles.Size(); i++)
@@ -30,8 +32,26 @@ void UserAcc(SPH::Domain & domi) {
 	for (int i=0; i<domi.Particles.Size(); i++)
 	#endif	
 	{
-
+    //Center particles
+		if (domi.Particles[i]->ID == 2) {
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+      center++;
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+    //zcenter, x=R, y=0 particles
+		if (domi.Particles[i]->ID == 3) {
+			domi.Particles[i]->a[1] = domi.Particles[i]->a[2] = 0.;
+			domi.Particles[i]->v[1] = domi.Particles[i]->v[2] = 0.;
+			domi.Particles[i]->va[1] = domi.Particles[i]->va[2] = 0.;
+			domi.Particles[i]->vb[1] = domi.Particles[i]->vb[2] = 0.;
+      side++;
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}    
   }
+  //cout << "center particles, "<<center<< ", side particles"<<side<<endl;
   //To avoid spurious slide
   int id = domi.Particles.Size()-1;
   domi.Particles[id]->v [0]  =   domi.Particles[id]->v[1]  = 0.;
@@ -151,19 +171,26 @@ int main() try{
 		dom.Particles[a]->Beta		= 2.5;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
+    double x = dom.Particles[a]->x(0);
+    double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
     
 		// if ( z > L )
 			// dom.Particles[a]->ID=3;
-
-    // if ( z > L - 2.*dx ){
-      // dom.Particles[a]->ID=2;	  
-      // top++;      
-    // } else if (z < dx){
-      // dom.Particles[a]->ID=1;	
-      // bottom++;
-    // }
-        
+    
+    //If friction is null, the cylinder not slide
+    if ( abs (z - (L/2.)) < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=2;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      top++;      
+    } 
+    //x=R, y=0
+    if ( abs (z - (L/2.)) < dx/2. && abs(x - R) < 1.5*dx && abs(y) < 1.1*dx){
+      dom.Particles[a]->ID=3;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      bottom++;      
+    } 
+    
 	}
 
 	//type definition to shorten coding
@@ -194,8 +221,13 @@ int main() try{
   dom.AddTrimeshParticles(&mesh2, hfac, 11); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
     
   timestep = (0.4*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
-	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);
+	
+  for (size_t a=0; a<dom.Particles.Size(); a++) {
+    if (dom.Particles[a]->ID == 2)
+      cout << endl<<"ID 2"<<endl;
+  }
+  //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",10000);
 	//dom.SolveDiffUpdateModEuler(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //dom.SolveDiffUpdateModVerlet(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	dom.WriteXDMF("ContactTest");
