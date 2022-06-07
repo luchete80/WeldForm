@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#define TAU		0.005
+#define TAU		0.001
 #define VMAX	0.1 
 
 using namespace SPH;
@@ -15,6 +15,10 @@ std::ofstream of;
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
+
+	if (domi.getTime() < TAU ) 
+		vcompress = VMAX/TAU * domi.getTime();
+	else
 		vcompress = VMAX;
 
   int first = 6000;
@@ -220,7 +224,7 @@ int main() try{
       cout << endl<<"ID 2"<<endl;
   }
   //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",10000);
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);
 	//dom.SolveDiffUpdateModEuler(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //dom.SolveDiffUpdateModVerlet(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	dom.WriteXDMF("ContactTest");
