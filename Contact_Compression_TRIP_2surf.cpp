@@ -32,21 +32,21 @@ void UserAcc(SPH::Domain & domi) {
 	for (int i=0; i<domi.Particles.Size(); i++)
 	#endif	
 	{
-    //Center particles
-		if (domi.Particles[i]->ID == 2) {
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-      center++;
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
     //zcenter, x=R, y=0 particles
-		if (domi.Particles[i]->ID == 3) {
+		if (domi.Particles[i]->ID == 2) {
 			domi.Particles[i]->a[1] = domi.Particles[i]->a[2] = 0.;
 			domi.Particles[i]->v[1] = domi.Particles[i]->v[2] = 0.;
 			domi.Particles[i]->va[1] = domi.Particles[i]->va[2] = 0.;
 			domi.Particles[i]->vb[1] = domi.Particles[i]->vb[2] = 0.;
+      side++;
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}    
+    //zcenter, x=0, y=R particles
+		if (domi.Particles[i]->ID == 3) {
+			domi.Particles[i]->a[0] = domi.Particles[i]->a[2] = 0.;
+			domi.Particles[i]->v[0] = domi.Particles[i]->v[2] = 0.;
+			domi.Particles[i]->va[0] = domi.Particles[i]->va[2] = 0.;
+			domi.Particles[i]->vb[0] = domi.Particles[i]->vb[2] = 0.;
       side++;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}    
@@ -62,8 +62,8 @@ void UserAcc(SPH::Domain & domi) {
   domi.Particles[0]->va[0] =   domi.Particles[0]->va[1] = 0.;
   domi.Particles[0]->vb[0] =   domi.Particles[0]->vb[1] = 0.;
   
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
-  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., 0.));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
+  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., vcompress/2.));
   of << domi.getTime() << ", "<<domi.Particles[7451]->contforce(2)<<endl;
   //cout << "Position "<<domi.Particles[7451]->x<<endl;
 }
@@ -179,13 +179,13 @@ int main() try{
 			// dom.Particles[a]->ID=3;
     
     //If friction is null, the cylinder not slide
-    if ( abs (z - (L/2.)) < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
+    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x - R) < 1.5*dx && abs(y) < 1.1*dx){
       dom.Particles[a]->ID=2;	  
       dom.Particles[a]->not_write_surf_ID = true;
       top++;      
     } 
     //x=R, y=0
-    if ( abs (z - (L/2.)) < dx/2. && abs(x - R) < 1.5*dx && abs(y) < 1.1*dx){
+    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < 1.1*dx && abs(y-R) < 1.5*dx){
       dom.Particles[a]->ID=3;	  
       dom.Particles[a]->not_write_surf_ID = true;
       bottom++;      
