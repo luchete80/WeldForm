@@ -65,6 +65,7 @@ namespace SPH {
 		Vec3_t	vb;		///< Velocity of the particle n-1 (Modified Verlet)
 		Vec3_t	va;		///< Velocity of the particle n+1/2 (Leapfrog)
 		Vec3_t	v;		///< Velocity of the particle n+1
+    Vec3_t	vc;   ///Contact velocity, for bonded contact
 		Vec3_t	NSv;		///< Velocity of the fixed particle for no-slip BC
 		Vec3_t	VXSPH;		///< Mean Velocity of neighbor particles for updating the particle position (XSPH)
     Vec3_t  v_max;
@@ -190,7 +191,7 @@ namespace SPH {
     int     inner_mirr_part;       //NEW: SYMMETRIC PARTICLE 
     bool    is_ghost;      
     int     ghost_plane_axis;      //Assuming is cartesian
-		
+		bool    impose_vel;
 			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);

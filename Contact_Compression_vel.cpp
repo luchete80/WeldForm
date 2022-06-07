@@ -47,7 +47,7 @@ void UserAcc(SPH::Domain & domi) {
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  domi.trimesh->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
 }
 
 
@@ -159,7 +159,7 @@ int main(){
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
-	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries

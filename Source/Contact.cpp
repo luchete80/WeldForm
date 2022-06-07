@@ -726,6 +726,8 @@ inline void Domain::CalcContactForces2(){
             if (fric_type == Fr_Bound){
                 omp_set_lock(&Particles[P1]->my_lock);
                 Particles[P1] -> a -= atg; 
+                Particles[P1] -> impose_vel = true;
+                Particles[P1] -> vc = Particles[P2]->vc; //Only tg vel?
                 //cout << "after adj: accel: "<< Particles[P1] -> a<<endl;
                 //cout << "atg: "<< atg<<endl;
                 omp_unset_lock(&Particles[P1]->my_lock);

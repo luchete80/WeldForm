@@ -135,7 +135,9 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     omp_init_lock(&my_lock);
 		
   for (int i=0;i<6;i++) strrate[i] = 0.;
-  for (int i=0;i<3;i++) rotrate[i] = 0.;
+  for (int i=0;i<3;i++) rotrate[i] = 0 ;
+  
+  impose_vel = false; //For bonded contact
 }
 
 inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin, size_t Scheme, Mat3_t I)
