@@ -98,8 +98,8 @@ SET(EXES
   #Contact_Compression_half_ghost_debug
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
-  #Contact_Compression_TRIP_half_ghost
-  Contact_Compression_TRIP_2surf
+  Contact_Compression_TRIP_half_ghost
+  #Contact_Compression_TRIP_2surf
 	#NastranReader_test
 	#CompressionForces
 	#CompressionVel
