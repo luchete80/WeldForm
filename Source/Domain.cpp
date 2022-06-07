@@ -2374,6 +2374,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     GeneralAfter(*this); //Fix free accel
     
     if (contact) CalcContactForces();
+    //if (contact) CalcContactForces2();
 		
     double factor = 1.;
     // if (ct==30) factor = 1.;

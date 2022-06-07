@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "Domain.h"
 #include <iostream>
+#include "InteractionAlt.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -144,8 +145,10 @@ int main(){
 	dom.contact = true;
   dom.fric_type = Fr_Dyn;
 	//dom.friction = 0.15;
-	dom.friction = 0.1;
-	dom.PFAC = 0.8;
+	dom.friction = 0.1
+  //dom.friction_dyn = 0.1;
+  //dom.friction_sta = 0.1;
+	dom.PFAC = 0.5;
 	dom.DFAC = 0.2;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
@@ -165,7 +168,12 @@ int main(){
 	//		1	Outer Surface
 	//		2,3 //Boundaries
   //dom.auto_ts = false;
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+    // timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
+    // dom.auto_ts=false;  
+    
+	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+  //THIS DOES NOT WORK WITH FIXED PARTICLES
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }
