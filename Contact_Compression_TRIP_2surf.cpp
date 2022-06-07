@@ -11,13 +11,14 @@ using namespace SPH;
 using namespace std;
 
 std::ofstream of;
+std::ofstream ofsum;
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 		vcompress = VMAX;
 
-  int first = 3588;
-  int last = 3863;
+  int first = 6000;
+  int last = 7451;
   double dS = 0.0008*0.0008;
   domi.m_scalar_prop = 0.;
   for (int i = first;i<=last;i++){
@@ -55,6 +56,7 @@ void UserAcc(SPH::Domain & domi) {
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
   domi.trimesh[1]->SetVel(Vec3_t(0.0,0., vcompress/2.));
   of << domi.getTime() << ", "<<domi.Particles[7451]->contforce(2)<<endl;
+  ofsum << domi.getTime() << ", "<<domi.m_scalar_prop<<endl;
   //cout << "Position "<<domi.Particles[7451]->x<<endl;
 }
 
@@ -187,6 +189,10 @@ int main() try{
 	std::ostringstream oss;
 	of = std::ofstream ("cf.csv", std::ios::out);
   of << "Time, cfpart7451"<<endl;
+	
+  ofsum = std::ofstream ("cfsum.csv", std::ios::out);
+  ofsum << "Time, cfsum"<<endl;
+  
 	//of << oss.str();
 
   
@@ -221,5 +227,7 @@ int main() try{
 	//dom.SolveDiffUpdateModEuler(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //dom.SolveDiffUpdateModVerlet(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 	dom.WriteXDMF("ContactTest");
+  
+  ofsum.close();
 }
 MECHSYS_CATCH
