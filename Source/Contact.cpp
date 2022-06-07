@@ -524,6 +524,7 @@ inline void Domain::CalcContactForces(){
 	}//Nproc
   //cout << "END CONTACT----------------------"<<endl;
 	max_contact_force = sqrt (max_contact_force);
+  //cout << "contact_force_sum "<<contact_force_sum<<endl;
 	//min_contact_force = sqrt (min_contact_force);
 	//cout << "Inside pairs count: "<<inside_geom<<", Inside time: "<<inside_time<<", statically restricted " << stra_restr<<endl;
 	int cont_force_count = 0;

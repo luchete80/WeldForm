@@ -163,8 +163,8 @@ int main(){
   //dom.fric_type = Fr_Bound;
 
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.5;
-	dom.friction_sta = 0.5;
+	dom.friction_dyn = 0.0;
+	dom.friction_sta = 1.0;
 	dom.PFAC = 0.5;
 	dom.DFAC = 0.5;
 	

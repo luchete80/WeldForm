@@ -2477,6 +2477,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
 			cout << "Max Displacements: "<<max_disp<<endl;
+      if (contact) cout<<"Contact Force Sum "<<contact_force_sum<<endl;
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
 
 		}
