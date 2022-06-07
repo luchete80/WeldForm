@@ -55,7 +55,7 @@ void UserAcc(SPH::Domain & domi) {
   
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
   domi.trimesh[1]->SetVel(Vec3_t(0.0,0., vcompress/2.));
-  //of << domi.getTime() << ", "<<domi.Particles[7451]->contforce(2)<<endl;
+  of << domi.getTime() << ", "<<domi.Particles[7451]->contforce(2)<< ", " << domi.Particles[7451]->v(2)<<endl;
   
   //cout << "Position "<<domi.Particles[7451]->x<<endl;
 }
@@ -188,7 +188,7 @@ int main() try{
 	//type definition to shorten coding
 	std::ostringstream oss;
 	of = std::ofstream ("cf.csv", std::ios::out);
-  of << "Time, cfpart7451"<<endl;
+  of << "Time, cfpart7451, vypart7451"<<endl;
 
 	//of << oss.str();
 
