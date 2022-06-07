@@ -404,6 +404,9 @@ inline void Domain::CalcContactForces(){
 						kij = PFAC * Particles[P1]-> cont_stiff;
 						omega = sqrt (kij/Particles[P1]->Mass);
 						psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
+            
+            //psi_cont = Particles[i]->Cs *Particles[i]->Density;
+            //cout << "psi_cont "<<psi_cont/DFAC<<endl; 
 
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159

@@ -1902,7 +1902,8 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			//Fraser Thesis, Eqn. 3-153
 			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
 		}		
-		cout << "dS, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " << Particles [0] -> cont_stiff <<endl;
+		cout << "dS, Cs, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " 
+    << Particles[0]->Cs << ", " << Particles [0] -> cont_stiff <<endl;
 		min_force_ts = deltat;
 	}
 	cout << "Fixed Particles Size: "<<FixedParticles.Size()<<endl;
@@ -2284,13 +2285,16 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			Particles [i] -> ID_orig = Particles [i] -> ID;
 	}
 
+  double dS;
 	if (contact) { //Calculate particle Stiffness
 		for (int i=0; i<Particles.Size(); i++){
 			double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
-			double dS = pow(Particles[i]->Mass/Particles[i]->Density,0.33333); //Fraser 3-119
+			dS = pow(Particles[i]->Mass/Particles[i]->Density,0.33333); //Fraser 3-119
 			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS;  //Fraser Thesis, Eqn. 3-153
 		}		
-		cout << "dS, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " << Particles [0] -> cont_stiff <<endl;
+    dS = pow(Particles[0]->Mass/Particles[0]->Density,0.33333);
+		cout << "dS, psi_cont, Contact Stiffness" << dS << ", " 
+    << Particles[0]->Cs * Particles [0] ->Mass / dS << ", " << Particles [0] -> cont_stiff <<endl;
 		min_force_ts = deltat;
 		MainNeighbourSearch();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search

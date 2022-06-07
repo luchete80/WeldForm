@@ -54,7 +54,15 @@ void UserAcc(SPH::Domain & domi) {
 			domi.Particles[i]->vb[0] = domi.Particles[i]->vb[2] = 0.;
       side++;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}    
+		}  
+		if (domi.Particles[i]->ID == 4) {
+			domi.Particles[i]->a = 0.;
+			domi.Particles[i]->v = 0.;
+      domi.Particles[i]->va = 0.;
+      domi.Particles[i]->vb = 0.;
+      side++;
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}        
   }
   
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
@@ -149,8 +157,8 @@ int main() try{
   
   cout << "Particle 3589 coords xyz "<<dom.Particles[3863]->x<<endl;
   //dom.Particles[3863]->print_history = true;
-	int top, bottom;
-  top = bottom =0;  
+	int top, bottom, center;
+  top = bottom = center = 0;  
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -175,16 +183,21 @@ int main() try{
 			// dom.Particles[a]->ID=3;
     
     //If friction is null, the cylinder not slide
-    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x - R) < 1.5*dx && abs(y) < 1.1*dx){
+    if ( abs (z - (L/2.-dx)) < dx/2. && (abs(x - R) < 1.5*dx  || abs(x + R) < 1.5*dx ) && abs(y) < 1.1*dx){
       dom.Particles[a]->ID=2;	  
       dom.Particles[a]->not_write_surf_ID = true;
       top++;      
     } 
     //x=R, y=0
-    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < 1.1*dx && abs(y-R) < 1.5*dx){
+    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < 1.1*dx && (abs(y-R) < 1.5 *dx || abs(y+R) < 1.5*dx)){
       dom.Particles[a]->ID=3;	  
       dom.Particles[a]->not_write_surf_ID = true;
       bottom++;      
+    } 
+    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=4;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center++;      
     } 
     
 	}
@@ -205,7 +218,7 @@ int main() try{
 	dom.DFAC = 0.2;
   dom.fric_type = Fr_Bound;
 
-  cout << top<< " Top particles, "<<bottom << " bottom particles"<<endl; 
+  cout << top<< " Top particles, "<<bottom << " bottom particles, "<<center << " center particles" <<endl; 
   	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
