@@ -50,8 +50,8 @@ void UserAcc(SPH::Domain & domi) {
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
-  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., 0.));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
+  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., vcompress/2.));
 }
 
 
@@ -160,7 +160,7 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-  dom.fric_type = Fr_Bound;
+  //dom.fric_type = Fr_Bound;
 
 	//dom.friction = 0.15;
 	dom.friction_dyn = 0.5;
