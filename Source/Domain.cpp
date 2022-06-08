@@ -966,7 +966,9 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
           Particles[id_part+1]->ghost_plane_axis = 0;
           Particles[id_part  ]->is_ghost = true;
           Particles[id_part+1]->is_ghost = true;
-
+          
+          Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
+          Particles[id_part+1]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
           //ONLY FOR TESTING SYMMETRY PLANES!
           //Particles[id_part  ]->ID = 1; //ONLY FOR TESTING IN PARAVIEW!  
           //Particles[id_part+1]->ID = 0; //ONLY FOR TESTING IN PARAVIEW!   
