@@ -2406,7 +2406,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     Vec3_t du;
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      du = Particles[i]->v*dt*factor;
+      du = (Particles[i]->v + Particles[i]->VXSPH)*dt*factor;
       Particles[i]->Displacement += du;
       Particles[i]->x += du;
     }
