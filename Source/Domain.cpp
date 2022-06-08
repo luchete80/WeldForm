@@ -985,7 +985,7 @@ void Domain::AddDoubleSymCylinderLength(int tag, double Rxy, double Lz,
 		
     //// Z PLANE, BOTTOM COORDINATE /////
     cout << "inserting z particles"<<endl;
-    zp = z0 - r;
+    zp = z0 - 2.0*r;
 		//Insert ghost pairs relation
 		if (symlength){
       //// Z PLANE, BOTTOM COORDINATE /////

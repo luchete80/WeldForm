@@ -84,7 +84,7 @@ SET(EXES
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
-  Compression_TRIP_half_ghost_vel
+  #Compression_TRIP_half_ghost_vel
   #Compression_TRIP_vel
 	#Cantilever
 	#Cantilever2
@@ -107,7 +107,7 @@ SET(EXES
 	#Compression_Free
   #Compression_Free_GPU_v1
   #Compression_qt
-	#Compression_qt_ghost
+	Compression_qt_ghost
   #Compression_half  
   #Compression_half_ghost_vel
   #CompressionVel_2sides
