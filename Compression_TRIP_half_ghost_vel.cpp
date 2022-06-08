@@ -52,7 +52,7 @@ int main() try{
 	dom.Nproc	= 4;
 	dom.Kernel_Set(Qubic_Spline);
 	dom.Scheme	= 1;	//Mod Verlet
-	//dom.XSPH	= 0.1; //Very important
+	//dom.XSPH	= 0.5; //Very important
 
 		double dx,h,rho,K,G,Cs,Fy;
 	double R,L,n;
@@ -67,6 +67,10 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 	Fy	= 900.e6;
+
+  double Et = (1400.e6-Fy)/0.5;
+  double Ep =  E*Et/(E-Et);
+  
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
 	dx = 0.0008;  //Tenth of radius
@@ -107,6 +111,7 @@ int main() try{
 		dom.Particles[a]->Cs		= Cs;
 		dom.Particles[a]->Shepard	= false;
 		dom.Particles[a]->Material	= 2;
+    dom.Particles[a]->Ep		= Ep;
 		//dom.Particles[a]->Et_m = 0.01 * 68.9e9;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
@@ -115,15 +120,17 @@ int main() try{
 		dom.Particles[a]->Beta		= 5.;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
-		double z = dom.Particles[a]->x(2);
     
-		// if ( z > L )
-			// dom.Particles[a]->ID=3;
+    if (dom.Particles[a]->is_ghost){
+      dom.Particles[a]->Alpha		= 10.;
+      dom.Particles[a]->Beta		= 10.;
+    }
+		double z = dom.Particles[a]->x(2);
 
-    		if ( z > L/2. - dx ){
-    			dom.Particles[a]->ID=11;	         
-        }
-        
+    if ( z > L/2. - dx ){
+      dom.Particles[a]->ID=11;	         
+    }
+    
 	}
   	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	

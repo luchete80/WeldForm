@@ -84,7 +84,7 @@ int main(int argc, char **argv) try
   dom.Kernel_Set(Qubic_Spline);
   //dom.Kernel_Set(Hyperbolic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
-  dom.XSPH	= 0.5; //Very important
+  dom.XSPH	= 0.1; //Very important
 
   double dx,h,rho,K,G,Cs,Fy;
   double R,L,n;

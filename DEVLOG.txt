@@ -53,3 +53,6 @@
              Added displacement constraint to double side contact TRIP example. 
              Found error in ID assignment of KickDrift Solver.
              Changed TRIP example to be Symmetric in Length Axis 
+             Implemented higher Artif. Visc. constants on TRIP example. 
+             Added XSPH on new KickDrift Solver.
+             
