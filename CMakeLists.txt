@@ -85,12 +85,12 @@ SET(EXES
 	#Compression_Elastic_CNS_10ts
 	#Compression_Elastic_CNS
   #Compression_TRIP_half_ghost_vel
-  #Compression_TRIP_vel
+  Compression_TRIP_vel
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	Contact_Compression
+	#Contact_Compression
   #Contact_Compression_2surf
   #Contact_Compression_vel
   #Contact_Compression_test

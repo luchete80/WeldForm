@@ -2240,7 +2240,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 }
 
 void ContactNbUpdate(SPH::Domain *dom){
-  dom->SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
   dom->CalculateSurface(1);				//After Nb search			
   dom->ContactNbSearch();
   dom->SaveContNeighbourData();	//Again Save Nb data
@@ -2361,6 +2360,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
 			MainNeighbourSearch/*_Ext*/();
+      SaveNeighbourData();
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
 		}
@@ -2370,6 +2370,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 				if (m_isNbDataCleared){
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
+          SaveNeighbourData();
+          //cout << "nb search"<<endl;
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
           if (contact) {
             clock_beg = clock();
@@ -2424,7 +2426,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
       Particles[i]->Density += dt*Particles[i]->dDensity*factor;
     }    
-    
+    dens_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //BEFORE
     Vec3_t du;
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
