@@ -2408,12 +2408,12 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     double factor = 1.;
     // if (ct==30) factor = 1.;
     // else        factor = 2.;
+    clock_beg = clock();
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*dt/2.*factor;
       //Particles[i]->LimitVel();
     }
-    clock_beg = clock();
     MoveGhost();   
     GeneralAfter(*this);//Reinforce BC vel   
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
@@ -2429,13 +2429,14 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     dens_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //BEFORE
     Vec3_t du;
+    
+    clock_beg = clock();   
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       du = (Particles[i]->v + Particles[i]->VXSPH)*dt*factor;
       Particles[i]->Displacement += du;
       Particles[i]->x += du;
     }
-
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
@@ -2444,7 +2445,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     }
     MoveGhost();
     GeneralAfter(*this);
-
+    mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
+    
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
     #pragma omp parallel for schedule (static) num_threads(Nproc)
@@ -2510,7 +2512,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
       double acc_time_spent_perc = acc_time_spent/total_time.count();
       std::cout << std::setprecision(2);
       cout << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
-      cout << "Stress: "  <<stress_time_spent/total_time.count()<<"%,  ";
+      cout << "Density: "<<dens_time_spent/total_time.count()<<"%,  ";
+      cout << "Stress: "  <<stress_time_spent/total_time.count()<<"%,  "<<endl;
       cout << "Energy: "  <<energy_time_spent/total_time.count()<<"%,  ";
       cout << "Contact: " <<contact_time_spent/total_time.count()<<"%,  ";
       cout << "Nb: "      <<nb_time_spent/total_time.count()<<"%,  ";
