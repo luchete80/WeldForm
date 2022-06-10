@@ -2254,7 +2254,13 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 	//Initializing adaptive time step variables
 	deltat = deltatint = deltatmin	= dt;
-	
+
+	clock_t clock_beg;
+  double clock_time_spent,start_acc_time_spent, nb_time_spent ,pr_acc_time_spent,acc_time_spent, 
+          contact_time_spent, trimesh_time_spent, bc_time_spent,
+          mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent;
+          
+  clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = 0.;	
 
 	InitialChecks();
 	CellInitiate();
@@ -2305,6 +2311,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
   
   ClearNbData();
 
+        
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
   of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
@@ -2361,8 +2368,14 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			if ( ts_i == 0 ){
 
 				if (m_isNbDataCleared){
+          clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
-          if (contact) ContactNbUpdate(this);
+          nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+          if (contact) {
+            clock_beg = clock();
+            ContactNbUpdate(this);
+            contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+          }
 				}// ts_i == 0				
 			}
 		
@@ -2378,11 +2391,16 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
-       
+
+		clock_beg = clock();
     CalcAccel(); //Nor density or neither strain rates
+		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+    
     GeneralAfter(*this); //Fix free accel
     
+    clock_beg = clock();
     if (contact) CalcContactForces();
+    contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 		
     double factor = 1.;
@@ -2396,6 +2414,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     MoveGhost();   
     GeneralAfter(*this);//Reinforce BC vel    
     
+    clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
     CalcDensInc(); //TODO: USE SAME KERNEL?
     #pragma omp parallel for schedule (static) num_threads(Nproc)
@@ -2422,15 +2441,19 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     MoveGhost();
     GeneralAfter(*this);
 
+		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     } 
+    stress_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
+		clock_beg = clock();        
     CalcKinEnergyEqn();    
     CalcIntEnergyEqn();    
+    energy_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     
 		steps++;
     if (ct == 30) ct = 0; else ct++;
@@ -2438,6 +2461,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 
 		Time += deltat;
+    clock_beg = clock();      
     if (contact){
  		//cout << "checking contact"<<endl;
       if (contact_mesh_auto_update) {
@@ -2447,6 +2471,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
       //cout << "Updating contact particles"<<endl;
       UpdateContactParticles(); //Updates normal and velocities
 		}
+    contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		
 		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
 			if ( ts_i == (ts_nb_inc - 1) ){
@@ -2477,9 +2502,17 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			idx_out++;
 			tout += dtOut;
 			total_time = std::chrono::steady_clock::now() - start_whole;		
-			std::cout << "Total CPU time: "<<total_time.count() << endl;
+			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
+      double acc_time_spent_perc = acc_time_spent/total_time.count();
+      std::cout << std::setprecision(2);
+      cout << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%, ";
+      cout << "Stress: "  <<stress_time_spent/total_time.count()<<"%, ";
+      cout << "Energy: "  <<energy_time_spent/total_time.count();
+      cout << "Contact: " <<contact_time_spent/total_time.count();
+      cout << "Nb: "      <<nb_time_spent/total_time.count();
+      cout <<endl;
       
-			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+			std::cout << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
 			cout << "Max Displacements: "<<max_disp<<endl;

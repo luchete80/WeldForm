@@ -99,7 +99,7 @@ SET(EXES
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
   #Contact_Compression_TRIP_half_ghost
-  #Contact_Compression_TRIP_2surf
+  Contact_Compression_TRIP_2surf
 	#NastranReader_test
 	#CompressionForces
 	#CompressionVel
@@ -107,7 +107,7 @@ SET(EXES
 	#Compression_Free
   #Compression_Free_GPU_v1
   #Compression_qt
-	Compression_qt_ghost
+	#Compression_qt_ghost
   #Compression_half  
   #Compression_half_ghost_vel
   #CompressionVel_2sides

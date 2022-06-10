@@ -128,8 +128,8 @@ int main() try{
 		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
-		dom.Particles[a]->Alpha		= 2.5;
-		dom.Particles[a]->Beta		= 2.5;
+		dom.Particles[a]->Alpha		= 3.0;
+		dom.Particles[a]->Beta		= 3.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
