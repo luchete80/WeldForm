@@ -2260,7 +2260,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
           contact_time_spent, trimesh_time_spent, bc_time_spent,
           mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent;
           
-  clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = 0.;	
+  clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = mov_time_spent = 0.;	
 
 	InitialChecks();
 	CellInitiate();
@@ -2411,8 +2411,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
       Particles[i]->v += Particles[i]->a*dt/2.*factor;
       //Particles[i]->LimitVel();
     }
+    clock_beg = clock();
     MoveGhost();   
-    GeneralAfter(*this);//Reinforce BC vel    
+    GeneralAfter(*this);//Reinforce BC vel   
+    mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
     
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
@@ -2505,11 +2507,12 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
       std::cout << std::setprecision(2);
-      cout << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%, ";
-      cout << "Stress: "  <<stress_time_spent/total_time.count()<<"%, ";
-      cout << "Energy: "  <<energy_time_spent/total_time.count();
-      cout << "Contact: " <<contact_time_spent/total_time.count();
-      cout << "Nb: "      <<nb_time_spent/total_time.count();
+      cout << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
+      cout << "Stress: "  <<stress_time_spent/total_time.count()<<"%,  ";
+      cout << "Energy: "  <<energy_time_spent/total_time.count()<<"%,  ";
+      cout << "Contact: " <<contact_time_spent/total_time.count()<<"%,  ";
+      cout << "Nb: "      <<nb_time_spent/total_time.count()<<"%,  ";
+      cout << "Update: " <<mov_time_spent/total_time.count()<<"%,  ";
       cout <<endl;
       
 			std::cout << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;
