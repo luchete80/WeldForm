@@ -9,6 +9,8 @@
 using namespace SPH;
 using namespace std;
 
+std::ofstream of;
+
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 
@@ -48,6 +50,7 @@ void UserAcc(SPH::Domain & domi) {
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
 }
 
 
@@ -143,18 +146,20 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-  dom.fric_type = Fr_Dyn;
-	//dom.friction = 0.15;
-	dom.friction = 0.1
-  //dom.friction_dyn = 0.1;
-  //dom.friction_sta = 0.1;
-	dom.PFAC = 0.5;
-	dom.DFAC = 0.2;
+	dom.friction_dyn = 0.15;
+	dom.friction_sta = 0.15;
+	dom.PFAC = 0.3;
+	dom.DFAC = 0.0;
+  dom.fric_type = Fr_Bound;
+
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
 
-	
+
+	of = std::ofstream ("cf.csv", std::ios::out);
+  of << "Time, cf, vypart"<<endl;
+  
 	//////////////////////
 
 	//ALWAYS AFTER SPH PARTICLES
