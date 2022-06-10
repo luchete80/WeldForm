@@ -2,6 +2,7 @@
 #define VMIN_FOR_FRICTION	1.e-3
 
 #define VMAX_FOR_STA_FRICTION	1.e-3
+#include "Plane.h"
 
 namespace SPH {
 
@@ -557,7 +558,7 @@ inline void Domain::CalcContactForces(){
 }
 
 
-
+//THIS IS THE SEO2006 METHOD, WHICH CHECKS ONLY PENETRATION (NON VELOCITY DIRECTION)
 inline void Domain::CalcContactForces2(){
 
 	double min_force_ts_=1000.;
@@ -758,6 +759,157 @@ inline void Domain::CalcContactForces2(){
 			// deltat = min_force_ts;
 	}
 	//Correct time step!
+//	std::min(deltat,dt_fext)
+}
+
+// FOR ANALYTIC PLANES
+inline void Domain::CalcContactForcesAnalytic(){
+
+	double min_force_ts_=1000.;
+// https://stackoverflow.com/questions/10850155/whats-the-difference-between-static-and-dynamic-schedule-in-openmp
+
+	////////////////////////
+	// DEBUG THINGS //////
+	int inside_part[Particles.Size()];
+	double min_delta,max_delta;
+	min_delta = 1000.; max_delta = 0.;
+	int inside_time,inside_geom;
+	
+  //#pragma omp parallel for num_threads(Nproc)
+  for (int i = 0;i<Particles.Size();i++){
+		omp_set_lock(&Particles[i]->my_lock);
+		Particles[i] -> contforce = 0.; //RESET    
+		Particles[i] -> delta_cont = 0.; //RESET    
+		Particles[i] -> tgdir = 0.;				//TODO: DELETE (DEBUG) 
+		omp_unset_lock(&Particles[i]->my_lock);
+		inside_part[i] = 0;
+		inside_time=inside_geom=0;
+  }
+ 
+	
+	max_contact_force = 0.;
+	double min_contact_force = 1000.;
+	int inside_pairs = 0;
+	double force2 = 0.;
+	double delta_ = 0.;
+	double deltat_cont;
+  double crit;
+  
+  double kij, omega,psi_cont;
+  int i,j;  //For inside testing
+	
+	int P1,P2;
+  Vec3_t tgforce;
+  Vec3_t Qj[Particles.Size()]; //Things not allowed
+  //Vec3_t vr[Particles.Size()];
+  Vec3_t vr;
+  double dt_fext;
+  Element* e;
+  bool inside;
+  
+  Vec3_t tgvr, tgdir;
+  double norm_tgvr;
+  double max_vr = 0.;
+  int m;
+ 
+  Vec3_t atg;
+  bool end;
+  contact_force_sum = 0.;
+  double delta;
+  
+  int max_reached_part = 0; //TEST
+  int sta_frict_particles = 0;
+  int stra_restr = 0; //restricted static
+  #pragma omp parallel for schedule (static) num_threads(Nproc)
+  for (int p=0; p<Particles.Size(); p++) {
+		Vec3_t xij;
+		double h,K;
+		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
+		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
+		//cout << "Contact pair size: "<<ContPairs[k].Size()<<endl;
+
+      
+    vr = Particles[p]->v - Particles[P2]->v;		//Fraser 3-137
+    delta_ = - dot( Particles[P2]->normal , vr);	//Penetration rate, Fraser 3-138
+    
+    //cout << "p vel "<<Particles[p]->v << "p2 vel "<< Particles[P2]->v <<endl;
+    // cout << "distance "<< Particles[p]->x - Particles[P2]->x<<endl;
+    //Check if SPH and fem particles are approaching each other
+    if (delta_ > 0 ){
+      m = Particles[P2]->mesh;
+      //cout << "particle Mesh "<< m<<", " <<"particle " << P2<<endl;
+      e = trimesh[m]-> element[Particles[P2]->element];
+      //double pplane = trimesh-> element[Particles[P2]->element] -> pplane; 
+      //cout<< "contact distance"<<Particles[p]->h + trimesh-> element[Particles[P2]->element] -> pplane - dot (Particles[P2]->normal,	Particles[p]->x)<<endl;
+            
+      deltat_cont = ( Particles[p]->h + trimesh[m]-> element[Particles[P2]->element] -> pplane 
+                    - dot (Particles[P2]->normal,	Particles[p]->x) ) / (- delta_);								//Eq 3-142 
+
+      if (deltat_cont < deltat){ //Originaly //	if (deltat_cont < std::min(deltat,dt_fext) 
+        inside_time++;
+        //cout << "Inside dt contact" <<endl;
+        //Find point of contact Qj
+        Qj[p] = Particles[p]->x + (Particles[p]->v * deltat_cont) - ( Particles[p]->h * Particles[P2]->normal); //Fraser 3-146
+        
+        //Calculate penetration depth (Fraser 3-49)
+        delta = (deltat - deltat_cont) * delta_;
+
+        // DAMPING
+        //Calculate SPH and FEM elements stiffness (series)
+        //Since FEM is assumed as rigid, stiffness is simply the SPH one 
+        kij = PFAC * Particles[p]-> cont_stiff;
+        omega = sqrt (kij/Particles[p]->Mass);
+        psi_cont = 2. * Particles[p]->Mass * omega * DFAC; // Fraser Eqn 3-158
+
+        omp_set_lock(&Particles[p]->my_lock);
+        Particles[p] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
+        Particles[p] -> delta_cont = delta;
+        omp_unset_lock(&Particles[p]->my_lock);
+        
+        contact_force_sum += norm(Particles[p] ->contforce);
+        
+        force2 = dot(Particles[p] -> contforce,Particles[p] -> contforce);
+        
+        // TANGENTIAL COMPONENNT DIRECTION
+        // Fraser Eqn 3-167
+        // TODO - recalculate vr here too!
+        tgvr = vr + delta_ * Particles[P2]->normal;  // -dot(vr,normal) * normal, FRASER 3-168
+        norm_tgvr = norm(tgvr);  
+        tgdir = tgvr / norm_tgvr;              
+        atg = Particles[p] -> a - dot (Particles[p] -> a,Particles[P2]->normal)*Particles[P2]->normal;
+        //ONCE SAVED atg, now can change acceleration by contact!
+
+        // if (force2 > (1.e10))
+          // Particles[p] -> contforce = 1.e5;
+        dt_fext = contact_force_factor * (Particles[p]->Mass * 2. * norm(Particles[p]->v) / norm (Particles[p] -> contforce));
+
+        if (dt_fext < min_force_ts_){
+          min_force_ts_ = dt_fext;
+          if (dt_fext > 0)
+            this -> min_force_ts = min_force_ts_;
+        }
+        Particles[p] -> a += Particles[p] -> contforce / Particles[p] -> Mass; 
+        
+        if (fric_type == Fr_Bound){
+            Particles[p] -> a -= atg;             
+        }//Friction type
+
+      } //deltat <min
+
+    }//delta_ > 0 : PARTICLES ARE APPROACHING EACH OTHER
+  
+    // a++;
+    // if (a==ContPairs[k].Size())
+      // end=true;
+
+	}//for particles
+  //cout << "END CONTACT----------------------"<<endl;
+	max_contact_force = sqrt (max_contact_force);
+  //cout << "contact_force_sum "<<contact_force_sum<<endl;
+	//min_contact_force = sqrt (min_contact_force);
+  //cout << "Inside pairs count: "<<inside_geom<<", Inside time: "<<inside_time<<", statically restricted " << stra_restr<<endl;
+	int cont_force_count = 0;
+
 //	std::min(deltat,dt_fext)
 }
 

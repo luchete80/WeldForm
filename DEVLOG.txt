@@ -55,4 +55,5 @@
              Changed TRIP example to be Symmetric in Length Axis 
              Implemented higher Artif. Visc. constants on TRIP example. 
              Added XSPH on new KickDrift Solver.
-             
+20220610  -  Added some calculation time logs to KickDrift solver. 
+             Begining to add a algebraic (non discrete) surface contact algorithm for calc time reduction.
