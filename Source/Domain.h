@@ -189,6 +189,7 @@ public:
 	void AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id);
   void CalculateSurface(const int &id = 1);
 	inline void CalcContactForces();
+  inline void CalcContactForcesAnalytic();
   inline void CalcContactForces2(); //Position criteria
   inline void CalcContactInitialGap();
   inline void UpdateContactParticles();  //Update position, velocity and normals FROM MESH
