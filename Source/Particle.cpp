@@ -1026,4 +1026,13 @@ inline void Particle::CalcStressStrain(double dt) {
 	}
 }
 
+/// IMPLICIT SOLVER
+inline void Particle::AddBMat(const Vec3_t &d_dx){
+  for (int i=0;i<3;i++)
+    m_B.Add(i,i, d_dx(i));
+  m_B.Add(3,1, d_dx(2));        m_B.Add(3,2, d_dx(1));
+  m_B.Add(4,0, d_dx(2));        m_B.Add(4,1, d_dx(2));
+  m_B.Add(5,0, d_dx(2));        m_B.Add(5,1, d_dx(0)); 
+}
+
 }; // namespace SPH

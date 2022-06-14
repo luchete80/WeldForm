@@ -41,11 +41,7 @@ inline void Domain::CalcBMat  (){
       
       omp_set_lock(&P1->my_lock);
       //Like Fraser 11 22 33 23 13 12
-      for (int i=0;i<3;i++)
-        P1->m_B.Add(i,i, d_dx(i));
-      P1->m_B.Add(3,1, d_dx(2));        P1->m_B.Add(3,2, d_dx(1));
-      P1->m_B.Add(4,0, d_dx(2));        P1->m_B.Add(4,1, d_dx(2));
-      P1->m_B.Add(5,0, d_dx(2));        P1->m_B.Add(5,1, d_dx(0));
+        P1->AddBMat(d_dx);
       omp_unset_lock(&P1->my_lock);
     }//Pairs
     

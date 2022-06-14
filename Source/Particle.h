@@ -225,6 +225,9 @@ namespace SPH {
 		void Mat2Euler(double dt);
 		void CalcIntEnergyEqn();
     inline void LimitVel();
+    
+    //Implicit Solver
+    inline void AddBMat(const Vec3_t &);
 		
 		
 
