@@ -348,6 +348,7 @@ public:
     //////////////////////// NEW: IMPLICIT SOLVER FOR QUASI STATIC 
     inline void InitImplicitSolver();
     inline void CalcBMat();
+    inline void CalcStiffMat();
   
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);

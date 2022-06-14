@@ -43,6 +43,11 @@ inline void Domain::CalcBMat  (){
       //Like Fraser 11 22 33 23 13 12
         P1->AddBMat(d_dx);
       omp_unset_lock(&P1->my_lock);
+
+      omp_set_lock(&P2->my_lock);
+      //Like Fraser 11 22 33 23 13 12
+        P2->AddBMat(-d_dx);
+      omp_unset_lock(&P2->my_lock);
     }//Pairs
     
   }//For pairs
