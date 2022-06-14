@@ -63,6 +63,15 @@ void UserAcc(SPH::Domain & domi) {
       side++;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}        
+    //CENTER TOP AND BOTTOM, IN ORDER TO NOT TO SLIDE IF CONTACT IS UNSTABLE 
+		if (domi.Particles[i]->ID == 5) {
+			domi.Particles[i]->a[0] = domi.Particles[i]->a[1] = 0.;
+			domi.Particles[i]->v[0] = domi.Particles[i]->v[1] = 0.;
+			domi.Particles[i]->va[0] = domi.Particles[i]->va[1] = 0.;
+			domi.Particles[i]->vb[0] = domi.Particles[i]->vb[1] = 0.;
+      side++;
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}  
   }
   
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
@@ -203,13 +212,13 @@ int main() try{
     } 
 
     if ( z < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
-      dom.Particles[a]->ID=4;	  
+      dom.Particles[a]->ID=5;	  
       dom.Particles[a]->not_write_surf_ID = true;
       center_bottom++;      
     } 
 
-    if ( z > (L/2.-dx) && abs(x) < dx/2. && abs(y) < dx/2.){
-      dom.Particles[a]->ID=4;	  
+    if ( z > (L - 1.5*dx) && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=5;	  
       dom.Particles[a]->not_write_surf_ID = true;
       center_top++;      
     } 
@@ -233,7 +242,7 @@ int main() try{
   dom.fric_type = Fr_Bound;
 
   cout << top<< " Top particles, "<<bottom << " side1 particles, "<<center << " side 2 particles" <<endl; 
-  cout << "center bottom: " << center_bottom, ", center top: "<<center_top<<endl;
+  cout << "center bottom: " << center_bottom << ", center top: "<<center_top<<endl;
   	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
