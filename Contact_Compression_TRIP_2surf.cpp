@@ -159,6 +159,8 @@ int main() try{
   //dom.Particles[3863]->print_history = true;
 	int top, bottom, center;
   top = bottom = center = 0;  
+  int center_top, center_bottom;
+  center_top = center_bottom = 0;
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -199,6 +201,18 @@ int main() try{
       dom.Particles[a]->not_write_surf_ID = true;
       center++;      
     } 
+
+    if ( z < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=4;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center_bottom++;      
+    } 
+
+    if ( z > (L/2.-dx) && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=4;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center_top++;      
+    } 
     
 	}
 
@@ -218,7 +232,8 @@ int main() try{
 	dom.DFAC = 0.2;
   dom.fric_type = Fr_Bound;
 
-  cout << top<< " Top particles, "<<bottom << " bottom particles, "<<center << " center particles" <<endl; 
+  cout << top<< " Top particles, "<<bottom << " side1 particles, "<<center << " side 2 particles" <<endl; 
+  cout << "center bottom: " << center_bottom, ", center top: "<<center_top<<endl;
   	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;

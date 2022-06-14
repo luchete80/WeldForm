@@ -345,7 +345,9 @@ public:
 	double *shearstress,*shearstressa,*shearstressb;
 	double *strain,*straina,*strainb;
 	
-
+    //////////////////////// NEW: IMPLICIT SOLVER FOR QUASI STATIC 
+    inline void InitImplicitSolver();
+    inline void CalcBMat();
   
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
@@ -370,6 +372,9 @@ public:
 		bool enable_th_exp;
 		bool enable_plastic_heat_gen;
 		void AllocateNbPair(const int &temp1, const int &temp2, const int &T);
+    
+    
+
 		
 
 };
@@ -386,5 +391,7 @@ public:
 #include "Thermal.cpp"
 #include "ThermalStuct.cpp"
 #include "Contact.cpp"
+
+#include "ImplicitSolver.cpp"
 
 #endif // SPH_DOMAIN_H

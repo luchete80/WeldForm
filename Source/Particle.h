@@ -34,6 +34,8 @@
 #define HOLLOMON				1 //POWER LAW
 #define JOHNSON_COOK		2
 
+#include "Matrix.h"  /////ONLY FOR IMPLICIT SOLVER
+
 //#define 	FLAT_TENSORS
 
 class Plane;    //For analytical contact 
@@ -112,6 +114,8 @@ namespace SPH {
 		Mat3_t	Strainb;					///< Total Strain n-1 (Modified Verlet)
 		Mat3_t  Strain_pl;				//// Plastic Strain
 		Mat3_t  Strain_pl_incr;		//// Plastic Strain - INTERNAL, JUST FOR PLASTIC THERMAL HEAT GEN CALCULATION
+    
+    Matrix  m_B;              //B matrix for strain (IMPLICIT SOLVER)
 		
     Plane  *plane;
 		
