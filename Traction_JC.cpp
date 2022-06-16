@@ -36,7 +36,7 @@ void UserAcc(SPH::Domain & domi)
 	else
 		vtraction = VMAX;
 	
-  //vtraction = 1.0;
+  vtraction = 1.0;
   
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
   

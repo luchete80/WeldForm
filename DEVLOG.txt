@@ -59,3 +59,6 @@
              Begining to add a algebraic (non discrete) surface contact algorithm for calc time reduction.
 20220614  -  Begining to add Full Implicit SPH.
              Add fixes in top and bottom for 2 side compression TRIP test 
+20220616  -  Fixed Internal Energy calculation.
+             KickDrift Solver now calculates all material models. (Strange results in Johnson Cook).
+             
