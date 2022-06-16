@@ -24,6 +24,7 @@
 #define TAU		0.005
 #define VMAX	1.0
 
+std::ofstream of;
 
 
 void UserAcc(SPH::Domain & domi)
@@ -63,6 +64,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
+  of << domi.getTime() << ", " << domi.int_energy_sum << ", "<< kin_energy_sum<<endl;
 }
 
 
@@ -188,6 +190,9 @@ int main(int argc, char **argv) try
 				if ( z > L )
     			dom.Particles[a]->ID=3;
     	}
+	of = std::ofstream ("cf.csv", std::ios::out);
+  of << "Time, int energy, kin energy"<<endl;
+
 //		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
