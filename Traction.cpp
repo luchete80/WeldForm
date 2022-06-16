@@ -95,6 +95,7 @@ int main(int argc, char **argv) try
 		
 		double E  = 210.e9;
 		double Et = 0.1 * E;
+    double Et = 0.0 * E;
 		
 		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
 				
