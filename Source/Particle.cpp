@@ -967,39 +967,39 @@ inline void Particle::CalcStressStrain(double dt) {
 		sig_trial = sqrt(3.0*J2);
 		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
 
-		// if (Material_model == BILINEAR ){
-			// //Sigmay = Fy0 + pl_strain*Et
-		// } else if (Material_model == HOLLOMON ){
-			// Sigmay = mat->CalcYieldStress(pl_strain); 
-		// }
+      // if (Material_model == BILINEAR ){
+        // //Sigmay = Fy0 + pl_strain*Et
+      // } else if (Material_model == HOLLOMON ){
+        // Sigmay = mat->CalcYieldStress(pl_strain); 
+      // }
 			
 		if ( sig_trial > Sigmay) {
-			// if (Material_model == HOLLOMON ){
-				// Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
-				// Et_m = Et;
-			// }
-			// else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR				
-				// Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
-			// } else if (Material_model > BILINEAR ) {//Else Ep = 0
-        // //cout << "Calculating Ep"<<endl;
-				// Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
-				// // if (Ep < 0)
-					// // cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
-			// }
-			// if (Ep<0) Ep = 1.*mat->Elastic().E();
-			// //Common for both methods
-			// //if (Ep>0) {
-			// dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
-			// //cout << "dep: "<<dep<<endl;
-			// pl_strain += dep;
-			// delta_pl_strain = dep; // For heating work calculation
-			// //if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
-			// if (Material_model == BILINEAR )
-				// Sigmay += dep*Ep;
-   
+			if (Material_model == HOLLOMON ){
+				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
+				Et_m = Et;
+			}
+			else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR				
+				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
+			} else if (Material_model > BILINEAR ) {//Else Ep = 0
+        //cout << "Calculating Ep"<<endl;
+				Ep = mat->Elastic().E()*Et/(mat->Elastic().E()-Et);
+				// if (Ep < 0)
+					// cout << "ATTENTION Material Ep <0 "<<Ep<<", Et" << Et <<", platrain"<<pl_strain<<"effstrrate"<<eff_strain_rate<<endl;
+			}
+			if (Ep<0) Ep = 1.*mat->Elastic().E();
+			//Common for both methods
+			//if (Ep>0) {
 			dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			//cout << "dep: "<<dep<<endl;
 			pl_strain += dep;
-			Sigmay += dep*Ep;
+			delta_pl_strain = dep; // For heating work calculation
+			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
+			if (Material_model == BILINEAR )
+				Sigmay += dep*Ep;
+   
+			// dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
+			// pl_strain += dep;
+			// Sigmay += dep*Ep;
     } //plastic
   }//Fail
 

@@ -385,6 +385,7 @@ public:
 
 #include "Interaction.cpp"
 #include "Domain.cpp"
+#include "KickDriftSolver.cpp"
 #include "Neighbour.cpp"
 #include "Output.cpp"
 #include "InOutFlow.cpp"

@@ -99,7 +99,7 @@ SET(EXES
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
   #Contact_Compression_TRIP_half_ghost
-  Contact_Compression_TRIP_2surf
+  #Contact_Compression_TRIP_2surf
 	#NastranReader_test
 	#CompressionForces
 	#CompressionVel
@@ -129,7 +129,7 @@ SET(EXES
 	#Traction
 	#traction_app
 	#Traction_Hollomon
-	#Traction_JC
+	Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D

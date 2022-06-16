@@ -19,6 +19,7 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include "InteractionAlt.cpp"
 
 #define TAU		0.005
 #define VMAX	1.0
@@ -55,10 +56,11 @@ void UserAcc(SPH::Domain & domi)
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
 }
@@ -180,8 +182,8 @@ int main(int argc, char **argv) try
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-    			dom.Particles[a]->IsFree=false;
-    			dom.Particles[a]->NoSlip=true;    		
+    			// dom.Particles[a]->IsFree=false;
+    			// dom.Particles[a]->NoSlip=true;    		
 				}
 				if ( z > L )
     			dom.Particles[a]->ID=3;
@@ -189,8 +191,10 @@ int main(int argc, char **argv) try
 //		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
-
-    	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+      timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
+      dom.auto_ts=false; 
+    	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+      dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
         return 0;
 }
 MECHSYS_CATCH
