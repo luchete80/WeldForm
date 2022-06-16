@@ -24,7 +24,9 @@
 #define TAU		0.005
 #define VMAX	1.0
 
+#define DX 0.012
 
+std::ofstream of;
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -35,8 +37,9 @@ void UserAcc(SPH::Domain & domi)
 	else
 		vtraction = VMAX;
 	
+  double ext_work = 0.;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-
+  
 	#ifdef __GNUC__
 	for (size_t i=0; i<domi.Particles.Size(); i++)
 	#else
@@ -50,6 +53,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vtraction);
 			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vtraction);
 			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vtraction);
+      ext_work += domi.Particles[i]->Sigma (2,2) * DX * DX * domi.Particles[i]->Displacement(2);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -60,6 +64,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
+  of << domi.getTime() << ", " << domi.int_energy_sum << ", "<< domi.kin_energy_sum<<", "<<ext_work<<endl;
 }
 
 
@@ -101,7 +106,7 @@ int main(int argc, char **argv) try
 		Fy	= 350.e6;
 
 		//dx = 0.0085;
-		dx = 0.012;
+		dx = DX;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -139,6 +144,7 @@ int main(int argc, char **argv) try
 		dom.Particles[2421]->print_history = true;	//Particle 2421, 3 [     -0.006    -0.006     0.242 ]	
 		dom.ts_nb_inc = 1.;
 		cout << "Ep: " <<Ep<<endl;
+    int traction_part = 0;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				dom.Particles[a]->Ep 			= Ep;//HARDENING
@@ -158,12 +164,16 @@ int main(int argc, char **argv) try
     			// dom.Particles[a]->IsFree=false;
     			// dom.Particles[a]->NoSlip=true;    		
 				}
-				if ( z > L )
+				if ( z > L  + Lz_side/5. -dx )
+          traction_part++;
     			dom.Particles[a]->ID=3;
     	}
 		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
-
+  cout << "traction_part "<<traction_part<<endl;
+	of = std::ofstream ("cf.csv", std::ios::out);
+  of << "Time, int_energy, kin_energy, ext_work"<<endl;
+  
 
    //dom.Solve(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
