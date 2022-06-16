@@ -60,6 +60,7 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
@@ -94,7 +95,7 @@ int main(int argc, char **argv) try
 		L = 2. * Lz_side + Lz_necktot;
 		
 		double E  = 210.e9;
-		double Et = 0.1 * E;
+		//double Et = 0.1 * E;
     double Et = 0.0 * E;
 		
 		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
