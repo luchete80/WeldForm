@@ -53,7 +53,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vtraction);
 			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vtraction);
 			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vtraction);
-      ext_work += domi.Particles[i]->Sigma (2,2) * DX * DX * domi.Particles[i]->Displacement(2)/3.;
+      ext_work += domi.Particles[i]->Sigma (2,2) * DX * DX * domi.Particles[i]->Displacement(2);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
