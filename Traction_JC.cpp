@@ -36,7 +36,7 @@ void UserAcc(SPH::Domain & domi)
 	else
 		vtraction = VMAX;
 	
-  vtraction = 1.0;
+  //vtraction = 1.0;
   
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
   
@@ -64,7 +64,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
-  of << domi.getTime() << ", " << domi.int_energy_sum << ", "<< kin_energy_sum<<endl;
+  of << domi.getTime() << ", " << domi.int_energy_sum << ", "<< domi.kin_energy_sum<<endl;
 }
 
 

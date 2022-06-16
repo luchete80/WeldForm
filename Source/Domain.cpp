@@ -1574,7 +1574,6 @@ void Domain::CalcKinEnergyEqn(){
 }
 
 void Domain::CalcIntEnergyEqn(){
-  int_energy_sum = 0.;
   double inc = 0.;
   int max;
   if (!contact) max = Particles.Size();
