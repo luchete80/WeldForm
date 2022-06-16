@@ -1576,11 +1576,14 @@ void Domain::CalcKinEnergyEqn(){
 void Domain::CalcIntEnergyEqn(){
   int_energy_sum = 0.;
   double inc = 0.;
+  int max;
+  if (!contact) max = Particles.Size();
+  else          max = first_fem_particle_idx[0];
 	#pragma omp parallel for schedule(static) num_threads(Nproc)
 	#ifdef __GNUC__
-	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	for (size_t i=0; i<max; i++)	//Like in Domain::Move
 	#else
-	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	for (int i=0; i<max; i++)//Like in Domain::Move
 	#endif
 	{
     Particles[i]->CalcIntEnergyEqn();
