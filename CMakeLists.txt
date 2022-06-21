@@ -90,7 +90,7 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	#Contact_Compression
+	Contact_Compression
   #Contact_Compression_2surf
   #Contact_Compression_vel
   #Contact_Compression_test
@@ -126,7 +126,7 @@ SET(EXES
   #Kernel_Test
 	#Kernel_Test_2D
 	#Kernel_Test_2D_vel
-	Traction
+	#Traction
 	#traction_app
 	#Traction_Hollomon
 	#Traction_JC
