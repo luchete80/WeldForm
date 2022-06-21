@@ -184,7 +184,7 @@ int main(int argc, char **argv) try
  
     timestep = (0.2*h/(Cs)); //Standard modified Verlet do not accept such step
     dom.auto_ts=false;
-		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
     // timestep = (0.4 *h/(Cs));
     // dom.auto_ts=false;

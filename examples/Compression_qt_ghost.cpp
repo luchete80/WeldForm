@@ -4,7 +4,7 @@
 
 #define TAU		0.005
 #define VMAX	10.0
-
+#include "InteractionAlt.cpp"
 
 
 void UserAcc(SPH::Domain & domi)
@@ -166,7 +166,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
     		dom.Particles[a]->Alpha		= 1.0;
-    		//dom.Particles[a]->Beta		= 1.0;
+    		dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double x = dom.Particles[a]->x(0);
@@ -211,9 +211,11 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
+  timestep = (0.4*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
+  dom.auto_ts = false;
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-    
+		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);    
 		return 0;
 }
 MECHSYS_CATCH
