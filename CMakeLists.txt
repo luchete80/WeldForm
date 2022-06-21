@@ -126,10 +126,10 @@ SET(EXES
   #Kernel_Test
 	#Kernel_Test_2D
 	#Kernel_Test_2D_vel
-	#Traction
+	Traction
 	#traction_app
 	#Traction_Hollomon
-	Traction_JC
+	#Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
 	#4-DamBreak3D
