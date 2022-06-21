@@ -408,7 +408,7 @@ inline void Domain::CalcContactForces(){
             
             //psi_cont = Particles[i]->Cs *Particles[i]->Density;
             //cout << "psi_cont "<<psi_cont/DFAC<<endl; 
-
+            
 						omp_set_lock(&Particles[P1]->my_lock);
 						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
             Particles[P1] -> delta_cont = delta;
@@ -733,12 +733,50 @@ inline void Domain::CalcContactForces2(){
                 Particles[P1] -> a -= atg; 
                 Particles[P1] -> impose_vel = true;
                 Particles[P1] -> vc = Particles[P2]->vc; //Only tg vel?
-                //cout << "after adj: accel: "<< Particles[P1] -> a<<endl;
-                //cout << "atg: "<< atg<<endl;
+
                 omp_unset_lock(&Particles[P1]->my_lock);
                 
               
-            } 
+            } else {
+
+             if (friction_sta > 0.) { 
+                if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
+                  && norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                  omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> tgdir = atg;
+                    Particles[P1] -> a -= atg; 
+                    stra_restr++;
+
+                  omp_unset_lock(&Particles[P1]->my_lock);
+                  
+                }               
+              }
+              
+              if (friction_dyn > 0.) {
+                //if (fric_type==Fr_Dyn){
+                  if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
+
+                  // //TG DIRECTION
+                    tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                    //cout << "tg force "<< tgforce <<endl;
+                    
+                    if (cont_heat_gen) {
+                    //Fraser Eqns 3.109 to 3.111
+                    //lambda is fraction passed to 
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+                    //cout<< Particles[P1]->q_fric_work<<endl;
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                    }
+                  
+                  }
+                //}
+              }              
+              
+            }
             
 					}// if inside
         } //If distance is less than h
@@ -747,7 +785,7 @@ inline void Domain::CalcContactForces2(){
   //cout << "END CONTACT----------------------"<<endl;
 	max_contact_force = sqrt (max_contact_force);
 	//min_contact_force = sqrt (min_contact_force);
-	//cout << "Inside pairs count: "<<inside_geom<<", Inside time: "<<inside_time<<", statically restricted " << stra_restr<<endl;
+	cout << "Inside pairs count: "<<inside_geom<<", Inside time: "<<inside_time<<", statically restricted " << stra_restr<<endl;
 	int cont_force_count = 0;
 	
 	if (max_contact_force > 0.){

@@ -1478,7 +1478,7 @@ inline void Domain::LastComputeAcceleration ()
   m_clock_begin = clock();
 	// CONTACT FORCES
 	if (contact) {
-		CalcContactForces();
+		CalcContactForces2();
 		
 	}
   m_contact_forces_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
