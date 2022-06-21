@@ -3,7 +3,7 @@
 WeldForm SPH is a CPU based Smooth Particle Hydrodynamics solver applied to high deformation model metal forming and processes.
 GPU Version is under development [here](https://github.com/luchete80/WeldFormGPU)
 
-Has been adapted to work on both Linux Windows system (both on MinGW and MSVC compilers).
+Has been adapted to work on both Linux and Windows system (both on MinGW and MSVC compilers).
 
 ![alt text](https://github.com/luchete80/WeldForm/blob/master/compression.PNG)
 
