@@ -114,7 +114,7 @@ int main(){
 	mesh.CalcSpheres(); //DONE ONCE
 	
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
@@ -147,8 +147,8 @@ int main(){
   //dom.fric_type = Fr_Bound;
   dom.fric_type = Fr_Dyn;
 	//dom.friction = 0.15;
-	dom.friction_sta = 0.5;
-  dom.friction_dyn = 0.0;
+	dom.friction_sta = 0.1;
+  dom.friction_dyn = 0.1;
 	dom.PFAC = 0.5;
 	dom.DFAC = 0.0;
 	
@@ -166,10 +166,10 @@ int main(){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-  dom.auto_ts = false;
-	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-	timestep = (0.4*h/(Cs));
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+  dom.auto_ts = true;
+	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	//timestep = (0.4*h/(Cs));
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
 	
   dom.WriteXDMF("ContactTest");
 }

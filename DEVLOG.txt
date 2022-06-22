@@ -61,4 +61,5 @@
              Add fixes in top and bottom for 2 side compression TRIP test 
 20220616  -  Fixed Internal Energy calculation.
              KickDrift Solver now calculates all material models. (Strange results in Johnson Cook).
-             
+20220621  -  Solved Finally uneven contact forces, second contact algorithm seems to be even.
+             FIRST CASE WITH STATIC FRICTION WORKS. Issue #275 closed.
