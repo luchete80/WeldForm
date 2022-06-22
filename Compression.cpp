@@ -140,8 +140,8 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Sigmay	= Fy;
     		dom.Particles[a]->Alpha		= 1.0;
     		//dom.Particles[a]->Beta		= 1.0;
-    		//dom.Particles[a]->TI		= 0.3;
-    		//dom.Particles[a]->TIInitDist	= dx;
+    		dom.Particles[a]->TI		= 0.3;
+    		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
