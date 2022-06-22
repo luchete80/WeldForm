@@ -39,9 +39,9 @@ void UserAcc(SPH::Domain & domi) {
 		// }
 		if (domi.Particles[i]->ID == 2)
 		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -139,7 +139,7 @@ int main(){
 			dom.Particles[a]->ID=2;
 			// dom.Particles[a]->IsFree=false;
 			// dom.Particles[a]->NoSlip=true;			
-		
+      dom.Particles[a]->not_write_surf_ID = true;		
 		}
 		// if ( z > L )
 			// dom.Particles[a]->ID=3;
@@ -148,7 +148,7 @@ int main(){
 	dom.contact = true;
 	dom.friction_dyn = 0.15;
 	dom.friction_sta = 0.15;
-	dom.PFAC = 1.0;
+	dom.PFAC = 0.8;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Bound;
 
@@ -174,9 +174,9 @@ int main(){
 	//		2,3 //Boundaries
   //dom.auto_ts = false;
   timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
-  dom.auto_ts=false;
+  //dom.auto_ts=false;
 
-  //dom.auto_ts=true;
+  dom.auto_ts=true;
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
