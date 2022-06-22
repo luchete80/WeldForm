@@ -155,7 +155,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     GeneralAfter(*this); //Fix free accel
     
     clock_beg = clock();
-    if (contact) CalcContactForces2();
+    if (contact) CalcContactForces();
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 		
@@ -165,7 +165,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     clock_beg = clock();
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->v += Particles[i]->a*dt/2.*factor;
+      Particles[i]->v += Particles[i]->a*deltat/2.*factor;
       //Particles[i]->LimitVel();
     }
     MoveGhost();   
@@ -178,7 +178,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
-      Particles[i]->Density += dt*Particles[i]->dDensity*factor;
+      Particles[i]->Density += deltat*Particles[i]->dDensity*factor;
     }    
     dens_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //BEFORE
@@ -187,14 +187,14 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     clock_beg = clock();   
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      du = (Particles[i]->v + Particles[i]->VXSPH)*dt*factor;
+      du = (Particles[i]->v + Particles[i]->VXSPH)*deltat*factor;
       Particles[i]->Displacement += du;
       Particles[i]->x += du;
     }
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->v += Particles[i]->a*dt/2.*factor;
+      Particles[i]->v += Particles[i]->a*deltat/2.*factor;
       //Particles[i]->LimitVel();
     }
     MoveGhost();
