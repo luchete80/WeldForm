@@ -39,9 +39,9 @@ void UserAcc(SPH::Domain & domi) {
 		// }
 		if (domi.Particles[i]->ID == 2)
 		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -117,7 +117,7 @@ int main(){
 	mesh.CalcSpheres(); //DONE ONCE
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
@@ -148,7 +148,7 @@ int main(){
 	dom.contact = true;
 	dom.friction_dyn = 0.15;
 	dom.friction_sta = 0.15;
-	dom.PFAC = 0.5;
+	dom.PFAC = 0.8;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Bound;
 
