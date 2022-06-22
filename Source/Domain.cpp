@@ -198,9 +198,9 @@ inline void Domain::AdaptiveTimeStep()
 		deltat = min_force_ts;
 	}
 
-	if (deltat<(deltatint/1.0e5))
-		//cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
-		throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
+	// if (deltat<(deltatint/1.0e5))
+		// //cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
+		// throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
 }
 
 inline void Domain::CheckMinTSVel() {
