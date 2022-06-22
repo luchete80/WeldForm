@@ -148,7 +148,7 @@ int main(){
   dom.fric_type = Fr_Dyn;
 	//dom.friction = 0.15;
 	dom.friction_sta = 0.1;
-  dom.friction_dyn = 0.1;
+  dom.friction_dyn = 0.0;
 	dom.PFAC = 0.5;
 	dom.DFAC = 0.0;
 	
@@ -167,9 +167,9 @@ int main(){
 	//		1	Outer Surface
 	//		2,3 //Boundaries
   dom.auto_ts = true;
-	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
 	//timestep = (0.4*h/(Cs));
-  //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
 	
   dom.WriteXDMF("ContactTest");
 }
