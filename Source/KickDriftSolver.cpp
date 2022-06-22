@@ -293,7 +293,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     
 	
 	}
-	
+  if (auto_ts)
+    AdaptiveTimeStep();	
 
 	of.close(); //History 
   ofprop.close(); //Scalar prop

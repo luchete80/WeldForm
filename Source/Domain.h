@@ -345,15 +345,16 @@ public:
 	double *shearstress,*shearstressa,*shearstressb;
 	double *strain,*straina,*strainb;
 	
-    //////////////////////// NEW: IMPLICIT SOLVER FOR QUASI STATIC 
-    inline void InitImplicitSolver();
-    inline void CalcBMat();
-    inline void CalcStiffMat();
-  
+  //////////////////////// NEW: IMPLICIT SOLVER FOR QUASI STATIC 
+  inline void InitImplicitSolver();
+  inline void CalcBMat();
+  inline void CalcStiffMat();
+  inline void CheckMinTSVel();
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
 		void Periodic_X_Correction	(Vec3_t & x, double const & h, Particle * P1, Particle * P2);		//Corrects xij for the periodic boundary condition
 		void AdaptiveTimeStep				();		//Uses the minimum time step to smoothly vary the time step
+    
 
 		void PrintInput			(char const * FileKey);		//Print out some initial parameters as a file
 		void InitialChecks	();		//Checks some parameter before proceeding to the solution
