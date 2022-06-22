@@ -204,30 +204,16 @@ inline void Domain::AdaptiveTimeStep()
 }
 
 inline void Domain::CheckMinTSVel() {
-  Min time step check based on the acceleration
+  //Min time step check based on velocity
   double test	= 0.0;
-  double test1 = 1000.;
-  double test2 = 1000.;
 
   deltatmin	= deltatint;
-  #pragma omp parallel for schedule (static) private(test,test1,test2) num_threads(Nproc)
+  #pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
   for (int i=0; i<Particles.Size(); i++) {
     if (Particles[i]->IsFree) {
-      //test = sqrt(Particles[i]->h/norm(Particles[i]->a));
-      //test1 = 1000.;
-      //test1 = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
-      //cout << "time step with a criteria"<< test1<<endl;
-      //test = 0.1 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
-      //if (norm(Particles[i]->v) != 0.){
-      //test2 = 1000.;
-      test2 = 0.4 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
-        //cout << "time step with v criteria"<< test2<<endl;
-      //} else
-      test = std::min(test1,test2);
-      //if (deltatmin > (sqrt_h_a*test)) {
+      test = 0.4 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
       if (deltatmin > test ) {
         omp_set_lock(&dom_lock);
-          //deltatmin = sqrt_h_a*test
           deltatmin = test;
         omp_unset_lock(&dom_lock);
       }
@@ -1510,7 +1496,7 @@ inline void Domain::LastComputeAcceleration ()
   m_clock_begin = clock();
 	// CONTACT FORCES
 	if (contact) {
-		CalcContactForces2();
+		CalcContactForces();
 		
 	}
   m_contact_forces_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;

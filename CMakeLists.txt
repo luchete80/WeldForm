@@ -92,7 +92,7 @@ SET(EXES
 	#Contact_Neighbours
 	#Contact_Compression
   #Contact_Compression_2surf
-  #Contact_Compression_vel
+  Contact_Compression_vel
   #Contact_Compression_test
   #Contact_Compression_half_ghost
   #Contact_Compression_half_ghost_debug
@@ -102,7 +102,7 @@ SET(EXES
   #Contact_Compression_TRIP_2surf
 	#NastranReader_test
 	#CompressionForces
-  Compression
+  #Compression
 	#CompressionVel
   #CompressionVel_Implicit
 	#CompressionForces_Ghost
