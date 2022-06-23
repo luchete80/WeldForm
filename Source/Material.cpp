@@ -37,6 +37,9 @@ Material_(el),K(k_), m(m_) {
   sy0  = sy0_;
   eps1 = pow(sy0_/k_, 1./m);
   cout << "eps_0 "<<eps0 << ", eps_1 "<<eps1<<endl;
+  if (eps0 > eps1){
+    throw new Fatal("ERROR, Hollomon material bad definition, please correct Yield Stress, Elastic Modulus or Material hardening constants.");
+  }
 }  
   
 inline double Hollomon::CalcYieldStress(const double &strain)	{

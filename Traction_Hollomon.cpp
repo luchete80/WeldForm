@@ -103,8 +103,8 @@ int main(int argc, char **argv) try
   Fy=350e6;
   Hollomon mat(el,Fy,1220.e6,0.195);
 	//////NEW
-  //Fy	= 260.e6;
-  //Hollomon mat(el,Fy,7.1568e8,0.22);
+  // // Fy	= 260.e6;
+  // // Hollomon mat(el,Fy,7.1568e8,0.22);
 			
 
 		dx = 0.010;
@@ -173,13 +173,13 @@ int main(int argc, char **argv) try
 		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
-
-    //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-
-  timestep = (0.15*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
-  //dom.auto_ts=false;
   dom.auto_ts=true;
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-        return 0;
+  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+
+  // timestep = (0.4*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
+  // //dom.auto_ts=false;
+  // dom.auto_ts=true;
+  // dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  return 0;
 }
 MECHSYS_CATCH
