@@ -70,6 +70,8 @@ class Hollomon:
 public Material_{
 	double K, m;
 	double eps0;
+  double eps1;  //if has a perfectly plastic algoritm
+  double sy0;
 	
 	public:
 	Hollomon(){}
@@ -79,12 +81,33 @@ public Material_{
 	//ASSUMING AT FIRST COEFFICIENTS ARE GIVEN TO TOTAL STRAIN-STRESS
 	Hollomon(const double eps0_, const double &k_, const double &m_):
 	K(k_), m(m_){ eps0 = eps0_;}
-	Hollomon(const Elastic_ &el, const double eps0_, const double &k_, const double &m_):
-	Material_(el),K(k_), m(m_){ eps0 = eps0_;}
+	Hollomon(const Elastic_ &el, const double sy0_, const double &k_, const double &m_);
+  
 	inline double CalcTangentModulus(const double &strain);
 	inline double CalcYieldStress(){}	
 	inline double CalcYieldStress(const double &strain);	
 };
+
+// class Bilinear_Hollomon:
+// public Material_{
+	// double K, m;
+	// double eps0;
+  // double eps1;  //if has a perfectly plastic algoritm
+	
+	// public:
+	// Hollomon(){}
+	// //You provide the values of A, B, n, m, 
+	// //θmelt, and  θ_transition
+	// //as part of the metal plasticity material definition.
+	// //ASSUMING AT FIRST COEFFICIENTS ARE GIVEN TO TOTAL STRAIN-STRESS
+	// Hollomon(const double eps0_, const double &k_, const double &m_):
+	// K(k_), m(m_){ eps0 = eps0_;}
+	// Hollomon(const Elastic_ &el, const double eps0_, const double &k_, const double &m_):
+	// Material_(el),K(k_), m(m_){ eps0 = eps0_;}
+	// inline double CalcTangentModulus(const double &strain);
+	// inline double CalcYieldStress(){}	
+	// inline double CalcYieldStress(const double &strain);	
+// };
 
 #include "Material.cpp"
 

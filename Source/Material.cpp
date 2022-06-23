@@ -30,14 +30,26 @@ inline double JohnsonCook::CalcTangentModulus(const double &plstrain, const doub
     Et = Elastic().E()*0.1; //ARBITRARY! TODO: CHECK MATHEMATICALLY
   return Et;
 }	
-
+//Case with plastic plateau 
+Hollomon::Hollomon(const Elastic_ &el, const double sy0_, const double &k_, const double &m_):
+Material_(el),K(k_), m(m_) {
+  eps0 = sy0_/el.E(); 
+  sy0  = sy0_;
+  eps1 = pow(sy0_/k_, 1./m);
+  cout << "eps 1 "<<eps1<<endl;
+}  
+  
 inline double Hollomon::CalcYieldStress(const double &strain)	{
-	double sy = K*pow(strain + eps0, m);
+  double sy;
+  if (strain + eps0 > eps1) sy = K*pow(strain + eps1, m); //plateau surpassed. If no plateau, eps1=eps0 so 
+  else                      sy = sy0; 
 	return sy;
 }	
 
 inline double Hollomon::CalcTangentModulus(const double &strain) {
-	double Et = K*m*pow(strain + eps0, (m-1.0));
+	double Et;
+  if (strain + eps0 > eps1) Et = K*m*pow(strain + eps0, (m-1.0));
+  else                      Et = 0.;
 	//cout << "ET: "<<Et<<endl;
 	return Et;
 }

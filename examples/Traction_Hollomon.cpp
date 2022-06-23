@@ -98,7 +98,7 @@ int main(int argc, char **argv) try
 	
 	Elastic_ el(E,nu);
 	//Hollomon(const double eps0_, const double &k_, const double &m_):
-	Hollomon mat(el,Fy/E,1220.e6,0.195);
+	Hollomon mat(el,Fy,1220.e6,0.195);
 			
 
 		dx = 0.010;
