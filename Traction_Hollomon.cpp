@@ -24,7 +24,7 @@
 #define TAU		0.005
 #define VMAX	1.0
 
-
+#define DX 0.010
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -50,6 +50,7 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vtraction);
 			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vtraction);
 			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vtraction);
+      //ext_work += domi.Particles[i]->Sigma (2,2) * DX * DX * domi.Particles[i]->Displacement(2);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -100,11 +101,11 @@ int main(int argc, char **argv) try
 	Elastic_ el(E,nu);
 	//Hollomon(const double eps0_, const double &k_, const double &m_):
   /////ORIGINALLY 
-  Fy=350e6;
-  Hollomon mat(el,Fy,1220.e6,0.195);
+  // Fy=350e6;
+  // Hollomon mat(el,Fy,1220.e6,0.195);
 	//////NEW
-  // // Fy	= 260.e6;
-  // // Hollomon mat(el,Fy,7.1568e8,0.22);
+  Fy	= 260.e6;
+  Hollomon mat(el,Fy,7.1568e8,0.22);
 			
 
 		dx = 0.010;
@@ -142,8 +143,16 @@ int main(int argc, char **argv) try
 		//2421 if dx=12mm
 		
 		//dom.Particles[6777]->print_history = true;
-		dom.Particles[4081]->print_history = true;
+		//dom.Particles[4081]->print_history = true;
 		//dom.Particles[6777]->ID = 1;
+
+		//dom.Particles[6777]->print_history = true;
+		// dom.Particles[4081]->print_history = true; //If dx=10mm
+		// dom.Particles[4081]->ID = 4;
+		//If dx=12mm
+		dom.Particles[4081]->print_history = true;	//Particle 2421, 3 [     -0.006    -0.006     0.242 ]	
+    cout << "Particle History position: "<<endl;
+    cout << dom.Particles[4081]->x(0)<<", "<<dom.Particles[4081]->x(1)<<", "<<dom.Particles[4081]->x(2)<<endl;
 		
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
@@ -176,10 +185,10 @@ int main(int argc, char **argv) try
   dom.auto_ts=true;
   dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
 
-  // timestep = (0.4*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
-  // //dom.auto_ts=false;
-  // dom.auto_ts=true;
-  // dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  // // timestep = (0.4*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
+  // // dom.auto_ts=false;
+  // // // dom.auto_ts=true;
+  // // dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   return 0;
 }
 MECHSYS_CATCH

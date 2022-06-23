@@ -44,7 +44,7 @@ Material_(el),K(k_), m(m_) {
   
 inline double Hollomon::CalcYieldStress(const double &strain)	{
   double sy;
-  if (strain + eps0 > eps1) sy = K*pow(strain + eps1, m); //plateau surpassed. If no plateau, eps1=eps0 so 
+  if (strain + eps0 > eps1) sy = K*pow(strain + eps0, m); //plateau surpassed. If no plateau, eps1=eps0 so 
   else                      sy = sy0; 
 	return sy;
 }	
