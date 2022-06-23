@@ -36,7 +36,7 @@ Material_(el),K(k_), m(m_) {
   eps0 = sy0_/el.E(); 
   sy0  = sy0_;
   eps1 = pow(sy0_/k_, 1./m);
-  cout << "eps 1 "<<eps1<<endl;
+  cout << "eps_0 "<<eps0 << ", eps_1 "<<eps1<<endl;
 }  
   
 inline double Hollomon::CalcYieldStress(const double &strain)	{

@@ -24,7 +24,9 @@
 #define TAU		0.005
 #define VMAX	1.0
 
+#define DX 0.012
 
+std::ofstream of;
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -35,8 +37,9 @@ void UserAcc(SPH::Domain & domi)
 	else
 		vtraction = VMAX;
 	
+  double ext_work = 0.;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-
+  
 	#ifdef __GNUC__
 	for (size_t i=0; i<domi.Particles.Size(); i++)
 	#else
@@ -50,16 +53,19 @@ void UserAcc(SPH::Domain & domi)
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,vtraction);
 			domi.Particles[i]->va		= Vec3_t(0.0,0.0,vtraction);
 			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,vtraction);
+      ext_work += domi.Particles[i]->Sigma (2,2) * DX * DX * domi.Particles[i]->Displacement(2);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
+    of << domi.getTime() << ", " << domi.int_energy_sum << ", "<< domi.kin_energy_sum<<", "<<ext_work<<endl;
 }
 
 
@@ -75,39 +81,34 @@ int main(int argc, char **argv) try
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 1;	//Mod Verlet
 			//dom.XSPH	= 0.5; //Very important
-			
 
         double dx,h,rho,K,G,Cs,Fy;
     	double R,L,n;
 		double Lz_side,Lz_neckmin,Lz_necktot,Rxy_center;
 		
-	R	= 0.075;
+    	R	= 0.075;
 
-	Lz_side =0.2;
-	Lz_neckmin = 0.050;
-	Lz_necktot = 0.100;
-	Rxy_center = 0.050;
-	L = 2. * Lz_side + Lz_necktot;
+		Lz_side =0.2;
+		Lz_neckmin = 0.050;
+		Lz_necktot = 0.100;
+		Rxy_center = 0.050;
+		L = 2. * Lz_side + Lz_necktot;
+		
+		double E  = 210.e9;
+		//double Et = 0.1 * E;
+    double Et = 0.0 * E;
+		
+		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
+				
+		double nu = 0.3;
+		
+    	rho	= 7850.0;
+		K= E / ( 3.*(1.-2*nu) );
+		G= E / (2.* (1.+nu));
+		Fy	= 350.e6;
 
-	double E  = 200.e9;
-	double nu = 0.3;
-
-	rho	= 7850.0;
-	K= E / ( 3.*(1.-2*nu) );
-	G= E / (2.* (1.+nu));
-	
-	
-	Elastic_ el(E,nu);
-	//Hollomon(const double eps0_, const double &k_, const double &m_):
-  /////ORIGINALLY 
-  Fy=350e6;
-  Hollomon mat(el,Fy,1220.e6,0.195);
-	//////NEW
-  //Fy	= 260.e6;
-  //Hollomon mat(el,Fy,7.1568e8,0.22);
-			
-
-		dx = 0.010;
+		//dx = 0.0085;
+		dx = DX;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -137,23 +138,20 @@ int main(int argc, char **argv) try
 
 
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
-		//6777 if dx=8.5
-		//4081 if dx=10mm
-		//2421 if dx=12mm
 		
 		//dom.Particles[6777]->print_history = true;
-		dom.Particles[4081]->print_history = true;
-		//dom.Particles[6777]->ID = 1;
-		
+		// dom.Particles[4081]->print_history = true; //If dx=10mm
+		// dom.Particles[4081]->ID = 4;
+		//If dx=12mm
+		dom.Particles[2421]->print_history = true;	//Particle 2421, 3 [     -0.006    -0.006     0.242 ]	
+		dom.ts_nb_inc = 1.;
+		cout << "Ep: " <<Ep<<endl;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-				
-				dom.Particles[a]-> Material_model = HOLLOMON;
-				dom.Particles[a]->mat = &mat;
-				
-				dom.Particles[a]->G		= G;
+				dom.Particles[a]->Ep 			= Ep;//HARDENING
+    		dom.Particles[a]->G				= G;
     		dom.Particles[a]->PresEq	= 0;
-    		dom.Particles[a]->Cs		= Cs;
+    		dom.Particles[a]->Cs			= Cs;
     		dom.Particles[a]->Shepard	= false;
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
@@ -173,13 +171,29 @@ int main(int argc, char **argv) try
 		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
+	of = std::ofstream ("cf.csv", std::ios::out);
+  of << "Time, int_energy, kin_energy, ext_work"<<endl;
 
+   //dom.Solve(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+    timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
+    dom.auto_ts=false; 
     //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-
-  timestep = (0.15*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
-  //dom.auto_ts=false;
-  dom.auto_ts=true;
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+    dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);        
+        
         return 0;
 }
+
+// // IF dx = 0.0085 (about 12k particles)
+
+// // Particle 6106, 3 [   -0.00425  -0.00425   0.23925 ]
+// // Particle 6107, 3 [    0.00425  -0.00425   0.23925 ]
+// // Particle 6116, 3 [   -0.00425   0.00425   0.23925 ]
+// // Particle 6117, 3 [    0.00425   0.00425   0.23925 ]
+
+// // Particle 6194, 3 [   -0.00425  -0.00425   0.24775 ]
+// // Particle 6195, 3 [    0.00425  -0.00425   0.24775 ]
+// // Particle 6204, 3 [   -0.00425   0.00425   0.24775 ]
+// // Particle 6205, 3 [    0.00425   0.00425   0.24775 ]
+
+
 MECHSYS_CATCH

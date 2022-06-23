@@ -1160,7 +1160,7 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					//	else   
 				if (center){
-					cout << "Particle "<<part<<", "<< Vec3_t(xp,yp,zp) <<endl;
+					//cout << "Particle "<<part<<", "<< Vec3_t(xp,yp,zp) <<endl;
 				}						
 					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					part++;
