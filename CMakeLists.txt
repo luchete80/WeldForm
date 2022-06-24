@@ -101,8 +101,8 @@ SET(EXES
   #Contact_Compression_TRIP_half_ghost
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
-  #Compression_1010
-  Contact_Compression_1010
+  Compression_1010
+  #Contact_Compression_1010
   #Compression_1010_half_ghost
 	#NastranReader_test
 	#CompressionForces
@@ -170,7 +170,9 @@ FOREACH(var ${EXES})
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 ENDFOREACH(var)
 
-	
+ADD_EXECUTABLE        (WeldForm "${PROJECT_SOURCE_DIR}/Source/WeldForm.cpp" )
+TARGET_LINK_LIBRARIES (WeldForm ${LIBS} blitz)
+SET_TARGET_PROPERTIES (WeldForm PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")	
     # ADD_EXECUTABLE        (${EXES} "Plate-Yield.cpp")
     # TARGET_LINK_LIBRARIES (${EXES} ${LIBS} blitz)
     # SET_TARGET_PROPERTIES (${EXES} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")

@@ -1,4 +1,5 @@
 #include "Input.h"
+#include "InteractionAlt.cpp"
 /***********************************************************************************
 * PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
 *             and soils) using Smoothed Particle Hydrodynamics method              *   
@@ -282,8 +283,9 @@ int main(int argc, char **argv) try {
     //Add fixed particles, these have priority
     
     //TODO: CHECK IF DIFFERENT ZONES ARE INTERF
+    //Generate Domain
     
-		
+		dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 		
 		dom.WriteXDMF("maz");
 		// dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
