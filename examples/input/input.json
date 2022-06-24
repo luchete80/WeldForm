@@ -8,7 +8,7 @@
 "Material": 
 {
 	"id": "Solid",
-	"type": Hollomon, 
+	"type": "Hollomon", 
 	"density0": 2700.0, 
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.33,

@@ -80,18 +80,11 @@ int main(int argc, char **argv) try {
 		
 		SPH::Domain	dom;
 		
-		bool sim2D;
-		double ts;
-		
-		readValue(config["sim2D"], sim2D);
-		
-		if (sim2D)
-			dom.Dimension	= 2;
-        else
-			dom.Dimension	= 3;
+		dom.Dimension	= 3;
 		
 		dom.Nproc	= 4;
 		string kernel;
+    double ts;
 		readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
     	dom.Kernel_Set(Qubic_Spline);
     
@@ -114,12 +107,15 @@ int main(int argc, char **argv) try {
 		// MATERIAL //
 		//////////////
 		double rho,E,nu,K,G,Cs,Fy;
+    string mattype;
     cout << "Reading Material.."<<endl;
+    readValue(material[0]["type"], 		mattype);
     readValue(material[0]["density0"], 		rho);
     readValue(material[0]["youngsModulus"], 	E);
     readValue(material[0]["poissonsRatio"], 	nu);
     readValue(material[0]["yieldStress0"], 	Fy);
-		cout << "Done. "<<endl;
+		cout << "Mat type  "<<mattype<<endl;
+    cout << "Done. "<<endl;
        
 		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
@@ -166,8 +162,6 @@ int main(int argc, char **argv) try {
 		cout << "Dimensions: "<<endl;
 		PRINTVEC(L)
 		if (domtype == 0){
-			if (sim2D)
-				L[2]=0.;	
       cout << "Adding Box Length..."<<endl;      
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 		}
@@ -185,33 +179,6 @@ int main(int argc, char **argv) try {
 		cout <<	"Dim: "<<dom.Dimension<<endl;				
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
-    	for (size_t a=0; a<dom.Particles.Size(); a++)
-    	{
-    		dom.Particles[a]->G				= G;
-    		dom.Particles[a]->PresEq		= 0;
-    		dom.Particles[a]->Cs			= Cs;
-    		dom.Particles[a]->Shepard		= false;
-    		dom.Particles[a]->Material		= 2;
-    		dom.Particles[a]->Fail			= 1;
-    		dom.Particles[a]->Sigmay		= Fy;
-    		dom.Particles[a]->Alpha			= 0.0;
-			dom.Particles[a]->Beta			= 0.0;
-    		dom.Particles[a]->TI			= 0.3;
-    		dom.Particles[a]->TIInitDist	= dx;
-			
-		
-			
-    		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 ){
-    			dom.Particles[a]->ID=2;
-				dom.Particles[a]->IsFree=false;
-				dom.Particles[a]->NoSlip=true;
-			} else if ( z > L[2] ){
-    			dom.Particles[a]->ID=3;
-				// dom.Particles[a]->IsFree=false;
-				// dom.Particles[a]->NoSlip=true;
-			}
-    	}
 
 
     cout << "Domain Zones "<<domzones.size()<<endl;		
@@ -284,9 +251,37 @@ int main(int argc, char **argv) try {
     
     //TODO: CHECK IF DIFFERENT ZONES ARE INTERF
     //Generate Domain
+    if (dom.Particles.Size()>0){
+    for (size_t a=0; a<dom.Particles.Size(); a++){
+      dom.Particles[a]->G				= G;
+      dom.Particles[a]->PresEq		= 0;
+      dom.Particles[a]->Cs			= Cs;
+      dom.Particles[a]->Shepard		= false;
+      dom.Particles[a]->Material		= 2;
+      dom.Particles[a]->Fail			= 1;
+      dom.Particles[a]->Sigmay		= Fy;
+      dom.Particles[a]->Alpha			= 0.0;
+    dom.Particles[a]->Beta			= 0.0;
+      dom.Particles[a]->TI			= 0.3;
+      dom.Particles[a]->TIInitDist	= dx;
     
+  
+    
+      double z = dom.Particles[a]->x(2);
+      if ( z < 0 ){
+        dom.Particles[a]->ID=2;
+      dom.Particles[a]->IsFree=false;
+      dom.Particles[a]->NoSlip=true;
+    } else if ( z > L[2] ){
+        dom.Particles[a]->ID=3;
+      // dom.Particles[a]->IsFree=false;
+      // dom.Particles[a]->NoSlip=true;
+    }
+    }
 		dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
-		
+		} else {
+      throw new Fatal("Particle Count is Null. Please Check Radius and Domain Dimensions.");
+    }
 		dom.WriteXDMF("maz");
 		// dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		// dom.BC.InOutFlow = 0;
