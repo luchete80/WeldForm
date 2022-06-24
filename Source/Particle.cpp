@@ -994,8 +994,8 @@ inline void Particle::CalcStressStrain(double dt) {
 			pl_strain += dep;
 			delta_pl_strain = dep; // For heating work calculation
 			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
-			//if (Material_model == BILINEAR )
-			Sigmay += dep*Ep;
+			if (Material_model == BILINEAR )
+			  Sigmay += dep*Ep;
    
 			// dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			// pl_strain += dep;
