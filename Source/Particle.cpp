@@ -966,7 +966,9 @@ inline void Particle::CalcStressStrain(double dt) {
 		//Scale back, Fraser Eqn 3-53
 		sig_trial = sqrt(3.0*J2);
 		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
-
+    
+    if      (Material_model == HOLLOMON )       Sigmay = mat->CalcYieldStress(pl_strain); 
+		else if  (Material_model == JOHNSON_COOK )  Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
       // if (Material_model == BILINEAR ){
         // //Sigmay = Fy0 + pl_strain*Et
       // } else if (Material_model == HOLLOMON ){
