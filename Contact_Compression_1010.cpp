@@ -35,7 +35,24 @@ void UserAcc(SPH::Domain & domi) {
 			domi.Particles[i]->vb[0] = domi.Particles[i]->vb[2] = 0.;
 
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}    
+		}  
+		if (domi.Particles[i]->ID == 4) {
+			domi.Particles[i]->a = 0.;
+			domi.Particles[i]->v = 0.;
+      domi.Particles[i]->va = 0.;
+      domi.Particles[i]->vb = 0.;
+
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}        
+    //CENTER TOP AND BOTTOM, IN ORDER TO NOT TO SLIDE IF CONTACT IS UNSTABLE 
+		if (domi.Particles[i]->ID == 5) {
+			domi.Particles[i]->a[0] = domi.Particles[i]->a[1] = 0.;
+			domi.Particles[i]->v[0] = domi.Particles[i]->v[1] = 0.;
+			domi.Particles[i]->va[0] = domi.Particles[i]->va[1] = 0.;
+			domi.Particles[i]->vb[0] = domi.Particles[i]->vb[1] = 0.;
+
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}     
 	}
   
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
@@ -114,9 +131,11 @@ int main() try{
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
-	int top, bottom;
-  top = bottom =0;   
-			
+	int top, bottom, center;
+  top = bottom = center = 0;   
+  int center_top = 0;			
+    int center_bottom = 0;
+    
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -137,19 +156,39 @@ int main() try{
     double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
 
-    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x - R) < 1.5*dx && abs(y) < 1.1*dx){
+    //If friction is null, the cylinder not slide
+    if ( abs (z - (L/2.-dx)) < dx/2. && (abs(x - R) < 1.5*dx  || abs(x + R) < 1.5*dx ) && abs(y) < 1.1*dx){
       dom.Particles[a]->ID=2;	  
       dom.Particles[a]->not_write_surf_ID = true;
       top++;      
     } 
     //x=R, y=0
-    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < 1.1*dx && abs(y-R) < 1.5*dx){
+    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < 1.1*dx && (abs(y-R) < 1.5 *dx || abs(y+R) < 1.5*dx)){
       dom.Particles[a]->ID=3;	  
       dom.Particles[a]->not_write_surf_ID = true;
       bottom++;      
     } 
-    
+    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=4;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center++;      
+    }     
+
+    if ( z < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=5;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center_bottom++;      
+    } 
+
+    if ( z > (L - 1.5*dx) && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=5;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center_top++;      
+    }   
 	}
+  cout << top<< " Side 1 particles, "<<bottom << " side 2 particles, "<<center << " center particles" <<endl; 
+  cout << "Center Top: " <<center_top <<endl;
+  cout << "Center Bottom: " <<center_bottom <<endl;  
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction_dyn = 0.2;
