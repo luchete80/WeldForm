@@ -3,7 +3,7 @@
 #include <iostream>
 #include "InteractionAlt.cpp"
 
-#define VMAX	0.06
+#define VMAX	0.1
 
 using namespace SPH;
 using namespace std;
@@ -76,13 +76,14 @@ int main() try{
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-	bool ghost = true;								
+	bool ghost = false;								
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
 	dom.gradKernelCorr = true;
 
 	int top_part = 0;
+  int bottom_part = 0;
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -100,17 +101,18 @@ int main() try{
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
     
-		if ( z > L){
+		if ( z > L- 2*dx){
       top_part++;
 			dom.Particles[a]->ID=3;
     }
-    else if ( z < 0){
-      top_part++;
+    else if ( z < dx){
+      bottom_part++;
 			dom.Particles[a]->ID=2;
     }
 	}
   cout << "top_part: "<<top_part<<endl;
-
+  cout << "bottom_part: "<<bottom_part<<endl;
+  
   dom.auto_ts = false;
 //  	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   
