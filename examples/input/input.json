@@ -5,7 +5,7 @@
 	"hFactor": 1.2
 }
 ,
-"Material": 
+"Materials":[ 
 {
 	"id": "Solid",
 	"type": "Hollomon", 
@@ -13,10 +13,10 @@
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.33,
 	"yieldStress0": 3.0E6
-},
+}],
 
-"DomainBlock": 
-{
+"DomainBlocks": 
+[{
 	"type": 1,
 	"zoneId": 1,
 	"denseMode": 0,
@@ -24,7 +24,7 @@
 	"dim": [0.3, 0.0, 0.672],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
-},
+}],
 
 "DomainZones": [
 {
@@ -62,7 +62,7 @@
 	"ZoneId": 		2,
 	"valuetype": 	"Constant",
 	"value": 		[ 0.0, 0.0, 0.0],
-	"free": 		[true,true,true]
+	"free": 		true
 }
 ]
 

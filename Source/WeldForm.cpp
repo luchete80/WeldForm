@@ -104,6 +104,7 @@ int main(int argc, char **argv) try {
 		// MATERIAL //
 		//////////////
 		double rho,E,nu,K,G,Cs,Fy;
+    double c[6];
     string mattype;
     cout << "Reading Material.."<<endl;
     readValue(material[0]["type"], 		mattype);
@@ -111,9 +112,11 @@ int main(int argc, char **argv) try {
     readValue(material[0]["youngsModulus"], 	E);
     readValue(material[0]["poissonsRatio"], 	nu);
     readValue(material[0]["yieldStress0"], 	Fy);
+    readValue(material[0]["const1"], 		c[0]);
+    readValue(material[0]["const1"], 		c[1]);
     Material_ *mat;
     Elastic_ el(E,nu);
-    if (mattype == "Hollomon") mat = new Hollomon(el,Fy,7.1568e8,0.22);
+    if (mattype == "Hollomon") mat = new Hollomon(el,Fy,c[0],c[1]);
     //else if (mattype == "JohnsonCook") mat = 
 		cout << "Mat type  "<<mattype<<endl;
     cout << "Done. "<<endl;

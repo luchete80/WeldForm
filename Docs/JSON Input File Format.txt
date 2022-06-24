@@ -1,0 +1,5 @@
+
+
+
+  bcon.type = 0;        //DEFAULT: VELOCITY
+  bcon.valueType = 0;   //DEFAULT: CONSTANT

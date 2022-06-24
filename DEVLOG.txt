@@ -65,3 +65,7 @@
              FIRST CASE WITH STATIC FRICTION WORKS. Issue #275 closed.
 20220622  -  Added auto time stepping to KickDrift solver.
 20220623  -  Added plastic plateau to Hollomon material.
+20220624  -  Added SAE 1010 Compression example. 
+             Fixed hardening for Hollomon and Johnson Cook for KickDrift Integrator
+             Begining to Work with generic executable input file reader.
+             This should be priority, adding and compiling each example is nonsense.
