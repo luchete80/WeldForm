@@ -62,10 +62,10 @@ namespace SPH {
 
 struct boundaryCondition {
 	int 	zoneId;
-	int 	type;	// ENUM TYPE Fixity, Velocity, Force, Temperature
+	int 	type;	// ENUM TYPE Velocity, Force, Temperature
 	bool 	free;	//is necessary??
 	int 	valueType;		//0: Constant, 1 amplitude table
-	
+	Vec3_t value;       //If constant
 	int 	ampId;			//if valuetype == 1
 	double 	ampFactor;		//if valuetype == 1
 };
@@ -350,6 +350,7 @@ public:
   inline void CalcBMat();
   inline void CalcStiffMat();
   inline void CheckMinTSVel();
+  int AssignZone(Vec3_t &start, Vec3_t &end, int &id);
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
 		void Periodic_X_Correction	(Vec3_t & x, double const & h, Particle * P1, Particle * P2);		//Corrects xij for the periodic boundary condition

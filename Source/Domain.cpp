@@ -562,6 +562,22 @@ int calcHalfPartCount(const double &r, const double &R, const int xinc){
 	return ypartcount;
 }
 
+int Domain::AssignZone(Vec3_t &start, Vec3_t &end, int &id){
+  int partcount = 0;
+  for (size_t a=0; a<Particles.Size(); a++){
+    bool included=true;
+    for (int i=0;i<3;i++){
+      if (Particles[a]->x(i) < start[i] || Particles[a]->x(i) > end[i])
+        included = false;
+    }
+    if (included){
+      Particles[a]->ID=id; 
+      partcount++;
+    }
+  }
+  return partcount;
+}
+
 inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									double r, double Density, double h, bool Fixed, bool ghost) { //ghost refers to symmetry at bottom z coordinate
 

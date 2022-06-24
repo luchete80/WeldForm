@@ -41,7 +41,6 @@ void UserAcc(SPH::Domain & domi)
 		vcompress = VMAX;
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-
 	#ifdef __GNUC__
 	for (size_t i=0; i<domi.Particles.Size(); i++)
 	#else
@@ -51,11 +50,9 @@ void UserAcc(SPH::Domain & domi)
 	{
 		for (int bc=0;bc<domi.bConds.size();bc++){
 			if (domi.Particles[i]->ID == domi.bConds[bc].zoneId ) {
-				if (domi.bConds[bc].type == 0 ){
+				if (domi.bConds[bc].type == 0 ){ //VELOCITY
 					domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-					domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-					domi.Particles[i]->va		= Vec3_t(0.0,0.0,0.0);
-					domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+					domi.Particles[i]->v		= domi.bConds[bc].value;
 				}
 			}
 			
@@ -114,6 +111,10 @@ int main(int argc, char **argv) try {
     readValue(material[0]["youngsModulus"], 	E);
     readValue(material[0]["poissonsRatio"], 	nu);
     readValue(material[0]["yieldStress0"], 	Fy);
+    Material_ *mat;
+    Elastic_ el(E,nu);
+    if (mattype == "Hollomon") mat = new Hollomon(el,Fy,7.1568e8,0.22);
+    //else if (mattype == "JohnsonCook") mat = 
 		cout << "Mat type  "<<mattype<<endl;
     cout << "Done. "<<endl;
        
@@ -121,8 +122,8 @@ int main(int argc, char **argv) try {
 		G= E / (2.* (1.+nu));
 
 		dx 	= 2.*r;
-    	h	= dx*hfactor; //Very important
-        Cs	= sqrt(K/rho);
+    h	= dx*hfactor; //Very important
+    Cs	= sqrt(K/rho);
 
         double timestep,cflFactor;
 		int cflMethod;
@@ -139,7 +140,7 @@ int main(int argc, char **argv) try {
 		////////////
 		Vec3_t start,L;
     int id;
-		int domtype=0;
+		string domtype = "Box";
     int matID;
 		readValue(domblock[0]["id"], 	id);
 		readVector(domblock[0]["start"], 	start);
@@ -161,12 +162,12 @@ int main(int argc, char **argv) try {
 		
 		cout << "Dimensions: "<<endl;
 		PRINTVEC(L)
-		if (domtype == 0){
+		if (domtype == "Box"){
       cout << "Adding Box Length..."<<endl;      
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 		}
-		else
-			dom.AddCylinderLength(1, start, L[0]/2., L[2], r, rho, h, false); 
+		else if (domtype == "Cylinder")
+			dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false); 
 
         cout <<"t  			= "<<timestep<<endl;
         cout <<"Cs 			= "<<Cs<<endl;
@@ -193,19 +194,8 @@ int main(int argc, char **argv) try {
 			// cout << "Dimensions: "<<endl;
 			// PRINTVEC(start)
 			// PRINTVEC(end)
-			int partcount=0;
-			for (size_t a=0; a<dom.Particles.Size(); a++){
-				bool included=true;
-				for (int i=0;i<3;i++){
-					if (dom.Particles[a]->x(i) < start[i] || dom.Particles[a]->x(i) > end[i])
-						included = false;
-				}
-				if (included){
-					dom.Particles[a]->ID=zoneid; 
-					partcount++;
-				}
-			}
-			std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
+			int partcount =dom.AssignZone(start,end,zoneid);
+      std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
 		
 		std::vector <SPH::amplitude> amps;
@@ -230,13 +220,19 @@ int main(int argc, char **argv) try {
 		for (auto& bc : bcs) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
 			int zoneid,valuetype,var,ampid;
+
 			double ampfactor;
 			bool free=true;
 			SPH::boundaryCondition bcon;
+      bcon.type = 0;        //DEFAULT: VELOCITY
+      bcon.valueType = 0;   //DEFAULT: CONSTANT
 			readValue(bc["zoneId"], 	bcon.zoneId);
       //type 0 means velocity vc
 			readValue(bc["valueType"], 	bcon.valueType);
-			if ( valuetype == 1){ //Amplitude
+			if (bcon.valueType == 0){//Constant
+        readVector(bc["value"], 	  bcon.value);
+      } else 
+        if ( bcon.valueType == 1){ //Amplitude
 				readValue(bc["amplitudeId"], 		bcon.ampId);
 				readValue(bc["amplitudeFactor"], 	bcon.ampFactor);
 			}
@@ -257,26 +253,16 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->PresEq		= 0;
       dom.Particles[a]->Cs			= Cs;
       dom.Particles[a]->Shepard		= false;
-      dom.Particles[a]->Material		= 2;
+      
+      if ( mattype == "Hollomon" )  dom.Particles[a]->Material_model  = HOLLOMON;
+			dom.Particles[a]->mat             = mat;
+      dom.Particles[a]->Sigmay		      = Fy;
+            
       dom.Particles[a]->Fail			= 1;
-      dom.Particles[a]->Sigmay		= Fy;
-      dom.Particles[a]->Alpha			= 0.0;
-    dom.Particles[a]->Beta			= 0.0;
+      dom.Particles[a]->Alpha			= 1.0;
+      //dom.Particles[a]->Beta			= 0.0;
       dom.Particles[a]->TI			= 0.3;
       dom.Particles[a]->TIInitDist	= dx;
-    
-  
-    
-      double z = dom.Particles[a]->x(2);
-      if ( z < 0 ){
-        dom.Particles[a]->ID=2;
-      dom.Particles[a]->IsFree=false;
-      dom.Particles[a]->NoSlip=true;
-    } else if ( z > L[2] ){
-        dom.Particles[a]->ID=3;
-      // dom.Particles[a]->IsFree=false;
-      // dom.Particles[a]->NoSlip=true;
-    }
     }
 		dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
 		} else {
