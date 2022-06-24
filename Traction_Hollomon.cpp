@@ -75,7 +75,7 @@ int main(int argc, char **argv) try
       dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 1;	//Mod Verlet
-			//dom.XSPH	= 0.5; //Very important
+			//dom.XSPH	= 0.1; //Very important
 			
 
         double dx,h,rho,K,G,Cs,Fy;
@@ -182,13 +182,13 @@ int main(int argc, char **argv) try
 		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
-  dom.auto_ts=true;
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-
-  // // timestep = (0.4*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
-  // // dom.auto_ts=false;
   // // // dom.auto_ts=true;
-  // // dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  // // // dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+
+  timestep = (0.4*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
+  //dom.auto_ts=false;
+  dom.auto_ts=true;
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   return 0;
 }
 MECHSYS_CATCH

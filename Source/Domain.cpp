@@ -192,11 +192,11 @@ inline void Domain::AdaptiveTimeStep()
 			deltat		= deltatint;
 	}
 	
-	if (contact){
-		if (min_force_ts < deltat)
-		//cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
-		deltat = min_force_ts;
-	}
+	// if (contact){
+		// if (min_force_ts < deltat)
+		// //cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
+		// deltat = min_force_ts;
+	// }
 
 	// if (deltat<(deltatint/1.0e5))
 		// //cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
