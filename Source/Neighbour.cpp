@@ -1,6 +1,6 @@
 #include "Domain.h"
 
-#include <CompactNSearch> //NEW WAY
+//#include <CompactNSearch> //NEW WAY
 
 using namespace std;
 namespace SPH {
@@ -269,65 +269,65 @@ inline void Domain::CellReset ()
     FixedParticles.Clear();
 }
 
-using namespace CompactNSearch;
+//using namespace CompactNSearch;
 
-inline void Domain::MainNeighbourSearch_CNS(const double &radius){
+// inline void Domain::MainNeighbourSearch_CNS(const double &radius){
   
-  std::vector<std::array<Real, 3>> positions;
+  // std::vector<std::array<Real, 3>> positions;
 
 
-	for (unsigned int p = 0; p < Particles.Size(); p++){
+	// for (unsigned int p = 0; p < Particles.Size(); p++){
 		
-		std::array<Real, 3> x = {{
-			static_cast<Real>(Particles[p]->x[0]),
-			static_cast<Real>(Particles[p]->x[1]),
-			static_cast<Real>(Particles[p]->x[2])
-		}};
-		positions.push_back(x);
-
-	}
-		
-	//std::random_shuffle(positions.begin(), positions.end());
-	cout << "Finding NEighbours"<<endl;
-	NeighborhoodSearch nsearch(radius, true);
-	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
-	nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
-	nsearch.find_neighbors();
-
-	nsearch.update_point_sets();
-	std::vector<std::vector<unsigned int>> neighbors2;
-	nsearch.find_neighbors(0, 1, neighbors2);
-	std::vector<std::vector<unsigned int>> neighbors3;
-	nsearch.find_neighbors(1, 2, neighbors3);
-
-
-	ofstream outfind2; // outdata is like cin
-	outfind2.open("find2_part.txt"); // opens the file
-	//Pass to domain
-	std::set< std:: pair<int,int> > neigbours_set;
-	auto const& d = nsearch.point_set(0);
-	for (int i = 0; i < d.n_points(); ++i){
-		const std::vector<unsigned int>& nbs = d.neighbor_list(0, i);
-		//res += static_cast<unsigned long>(d.n_neighbors(0, i));		
-
-		for (int k=0;k< nbs.size();k++) {
-			outfind2<< i << ", "<<nbs[k]<<endl;
-			neigbours_set.insert(std::make_pair( std::min(i,int(nbs[k])), std::max(i,int(nbs[k]))) );
-			
-		}
-	}
-  
-    //TEST
-	// nsearch.z_sort();
-	// for (auto i = 0u; i < nsearch.n_point_sets(); ++i)
-	// {
-		// auto const& d = nsearch.point_set(i);
-		// d.sort_field(positions.data());
+		// std::array<Real, 3> x = {{
+			// static_cast<Real>(Particles[p]->x[0]),
+			// static_cast<Real>(Particles[p]->x[1]),
+			// static_cast<Real>(Particles[p]->x[2])
+		// }};
+		// positions.push_back(x);
 
 	// }
+		
+	// //std::random_shuffle(positions.begin(), positions.end());
+	// cout << "Finding NEighbours"<<endl;
+	// NeighborhoodSearch nsearch(radius, true);
+	// nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
+	// nsearch.add_point_set(positions.front().data(), positions.size(), true, true);
 	// nsearch.find_neighbors();
+
+	// nsearch.update_point_sets();
+	// std::vector<std::vector<unsigned int>> neighbors2;
+	// nsearch.find_neighbors(0, 1, neighbors2);
+	// std::vector<std::vector<unsigned int>> neighbors3;
+	// nsearch.find_neighbors(1, 2, neighbors3);
+
+
+	// ofstream outfind2; // outdata is like cin
+	// outfind2.open("find2_part.txt"); // opens the file
+	// //Pass to domain
+	// std::set< std:: pair<int,int> > neigbours_set;
+	// auto const& d = nsearch.point_set(0);
+	// for (int i = 0; i < d.n_points(); ++i){
+		// const std::vector<unsigned int>& nbs = d.neighbor_list(0, i);
+		// //res += static_cast<unsigned long>(d.n_neighbors(0, i));		
+
+		// for (int k=0;k< nbs.size();k++) {
+			// outfind2<< i << ", "<<nbs[k]<<endl;
+			// neigbours_set.insert(std::make_pair( std::min(i,int(nbs[k])), std::max(i,int(nbs[k]))) );
+			
+		// }
+	// }
+  
+    // //TEST
+	// // nsearch.z_sort();
+	// // for (auto i = 0u; i < nsearch.n_point_sets(); ++i)
+	// // {
+		// // auto const& d = nsearch.point_set(i);
+		// // d.sort_field(positions.data());
+
+	// // }
+	// // nsearch.find_neighbors();
 	
-}
+// }
 
 inline void Domain::MainNeighbourSearch() {
     int q1;
@@ -593,8 +593,8 @@ inline void Domain::CalcRefTable(){
   for (int p=0;p<Nproc;p++){
     for (int i = 0;i<Particles.Size();i++){
     size_t T = omp_get_thread_num();
-      for (int n=0;n<ipl_SM[T][i];n++){
-        //Aref = ipl_SM
+      for (int n=0;n < ipl_SM[T][i];n++){ //ipl is called 
+        Aref [i,][]= ipl_SM
       }//nb
     }//particle
   } //Thread
