@@ -594,7 +594,7 @@ inline void Domain::CalcRefTable(){
     for (int i = 0;i<Particles.Size();i++){
     size_t T = omp_get_thread_num();
       for (int n=0;n < ipl_SM[T][i];n++){ //ipl is called 
-        Aref [i,][]= ipl_SM
+        //Aref [i,][]= ipl_SM
       }//nb
     }//particle
   } //Thread
