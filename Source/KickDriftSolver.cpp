@@ -77,6 +77,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
   cout << "Main Loop"<<endl;
   
+
   int ct=30;
   std::chrono::duration<double> total_time;
 	auto start_whole = std::chrono::steady_clock::now();  
@@ -120,7 +121,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			MainNeighbourSearch/*_Ext*/();
       #ifdef NONLOCK_SUM
       CalcPairPosList();  
-      CalcRefTable();
+      //CalcRefTable();
       #endif
       SaveNeighbourData();
 			if (contact) ContactNbUpdate(this);
@@ -134,7 +135,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 					MainNeighbourSearch/*_Ext*/();
           #ifdef NONLOCK_SUM
           CalcPairPosList();    
-          CalcRefTable();
+          //CalcRefTable();
+           CheckParticlePairs(10);
           #endif
           SaveNeighbourData();
           //cout << "nb search"<<endl;

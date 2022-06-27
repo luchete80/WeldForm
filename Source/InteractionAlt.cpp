@@ -166,13 +166,11 @@ inline void Domain::CalcAccel() {
 inline void Domain::AccelReduction(){
   //#pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int i=0; i<Particles.Size();i++){
-
-    for (int n=0;n<ipair_SM[i];n++){
+    for (int n=0;n<ipair_SM[i];n++)
       Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];
-    }
-    for (int n=ipair_SM[i];n<ipair_SM[i]+jpair_SM[i];n++){
-      Particles[i]->a -= Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];
-    }
+    for (int n=0;n<jpair_SM[i];n++)
+      Particles[i]->a -= Particles[Anei[i][n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];
+    
   }
 }
 
