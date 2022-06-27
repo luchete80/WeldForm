@@ -130,6 +130,11 @@ inline void Domain::CalcAccel() {
 			}
 		}
     
+    #ifdef NONLOCK_SUM
+    int pair = first_pair_perproc[k] + p;
+    pair_force[pair] = temp; //SHOULD ALSO MULTIPLY ACCEL AFTER
+    #else
+    
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
@@ -152,11 +157,33 @@ inline void Domain::CalcAccel() {
 				//P2->dDensity	+= mi * (dj/di) * temp1_c[1];
 			}
 		omp_unset_lock(&P2->my_lock);
+    #endif
   }//MAIN FOR IN PAIR
   }//MAIN FOR PROC
 
 }
 
+inline void Domain::AccelReduction(){
+  //#pragma omp parallel for schedule (static) num_threads(Nproc)
+  for (int i=0; i<Particles.Size();i++){
+
+    for (int n=0;n<ipair_SM[i];n++){
+      if (Aref[i][n]<pair_count)
+      Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];
+      else { cout << "ERROR PAIR INDEX > "<<pair_count<<endl;
+            cout << "aref i n "<<i <<" " <<n <<"  "<< Aref[i][n]<<endl;
+            }
+    }
+    for (int n=ipair_SM[i];n<ipair_SM[i]+jpair_SM[i];n++)
+      if (Aref[i][n]<pair_count)
+      Particles[i]->a -= Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];
+      else { cout << "ERROR 2 PAIR INDEX > "<<pair_count<<endl;
+            cout << "aref i n "<<i <<" " <<n <<"  "<< Aref[i][n]<<endl;
+            cout << "ipair_SM[i] jpair "<< ipair_SM[i]<< ", "<<jpair_SM[i]<<endl; 
+            cout << "Particles[p]->Nb"<<Particles[i]->Nb<<endl;
+            }    
+  }
+}
 
 inline void Domain::CalcRateTensorsDens() {
   Particle *P1, *P2;

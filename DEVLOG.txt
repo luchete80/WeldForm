@@ -69,3 +69,6 @@
              Fixed hardening for Hollomon and Johnson Cook for KickDrift Integrator
              Begining to Work with generic executable input file reader.
              This should be priority, adding and compiling each example is nonsense.
+20220626  -  Working with new parallel reduction without particle locking
+20220627  -  Working with new parallel reduction without particle locking, flattening arrays.
+             ATTENTION: ARRAYS COULD BE DIMENSIONED BY NProc

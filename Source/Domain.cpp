@@ -2002,13 +2002,6 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
   
   bool check_nb_every_time = false;
   
-  //TODO: Move to a function, AND HAS TO BE ZEROED EVERY NB SEARCH
-  for(size_t i=0 ; i<Nproc ; i++) {
-    std::vector<size_t> v(Particles.Size());
-    ipair_SM.push_back(v); 
-    jpair_SM.push_back(v); 
-  }
-  
 
 	while (Time<=tf && idx_out<=maxidx) {
 		clock_beg = clock();

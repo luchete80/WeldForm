@@ -31,7 +31,11 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		std::cout << "\nInitial Condition has been generated\n" << std::endl;
 	}
 	
-
+  #ifdef NONLOCK_SUM
+  InitReductionArraysOnce();
+  #endif
+  //cout << "aref "<< Aref[0][0]<<endl;
+  
 	unsigned long steps=0;
 	unsigned int first_step;
 	
@@ -114,6 +118,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
 			MainNeighbourSearch/*_Ext*/();
+      #ifdef NONLOCK_SUM
+      CalcPairPosList();  
+      CalcRefTable();
+      #endif
       SaveNeighbourData();
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
@@ -124,6 +132,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 				if (m_isNbDataCleared){
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
+          #ifdef NONLOCK_SUM
+          CalcPairPosList();    
+          CalcRefTable();
+          #endif
           SaveNeighbourData();
           //cout << "nb search"<<endl;
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -150,8 +162,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 		clock_beg = clock();
     CalcAccel(); //Nor density or neither strain rates
+    #ifdef NONLOCK_SUM
+    AccelReduction();
+    #endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-    
     GeneralAfter(*this); //Fix free accel
     
     clock_beg = clock();
