@@ -609,8 +609,8 @@ inline void Domain::CalcRefTable(){
         Aref [T][i][n] = pair;
         int j = ilist_SM[T][n];
         for (int k=0;k<jpair_SM[T][j]){
-          if ( == i)
-            Aref [T][ipair_SM[T][i]+k][MAX_NB_PER_PART-1-k]= pair;
+          if ( Anei[T][j][MAX_NB_PER_PART-1-k] == i)
+            Aref [T][j][ipair_SM[T][i]+k]= pair;
         }
       }//nb
     }//particle

@@ -307,7 +307,7 @@ public:
     std::vector < std::vector <size_t> > ipair_SM,jpair_SM; //[Proc][Particles]// This is nb count for each particle i<j and j>i (called njgi)
     std::vector < std::vector <size_t> > ipl_SM,jpl_SM;            // [Proc][Particles] position of list (nb sum), called s_jgi in 1991 paper
     std::vector < std::vector < std::vector <size_t> > > Aref;                      // Entry[Particle ,nb], indicates link
-    std::vector < std::vector <size_t> > Anei;          //[Particles][MAX_NB_PER_PART] neighbiour list for j > i
+    std::vector < std::vector < std::vector <size_t> > > Anei;          //[Particles][MAX_NB_PER_PART] neighbiour list for j > i
     
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;
