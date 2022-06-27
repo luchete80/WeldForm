@@ -168,20 +168,11 @@ inline void Domain::AccelReduction(){
   for (int i=0; i<Particles.Size();i++){
 
     for (int n=0;n<ipair_SM[i];n++){
-      if (Aref[i][n]<pair_count)
       Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];
-      else { cout << "ERROR PAIR INDEX > "<<pair_count<<endl;
-            cout << "aref i n "<<i <<" " <<n <<"  "<< Aref[i][n]<<endl;
-            }
     }
-    for (int n=ipair_SM[i];n<ipair_SM[i]+jpair_SM[i];n++)
-      if (Aref[i][n]<pair_count)
+    for (int n=ipair_SM[i];n<ipair_SM[i]+jpair_SM[i];n++){
       Particles[i]->a -= Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];
-      else { cout << "ERROR 2 PAIR INDEX > "<<pair_count<<endl;
-            cout << "aref i n "<<i <<" " <<n <<"  "<< Aref[i][n]<<endl;
-            cout << "ipair_SM[i] jpair "<< ipair_SM[i]<< ", "<<jpair_SM[i]<<endl; 
-            cout << "Particles[p]->Nb"<<Particles[i]->Nb<<endl;
-            }    
+    }
   }
 }
 

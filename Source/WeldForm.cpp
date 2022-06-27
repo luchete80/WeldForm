@@ -131,6 +131,7 @@ int main(int argc, char **argv) try {
         double timestep,cflFactor;
 		int cflMethod;
     double output_time;
+    double sim_time;
 		readValue(config["cflMethod"], cflMethod);
 		if (cflMethod == 0)
 			readValue(config["timeStepSize"], timestep);
@@ -138,8 +139,9 @@ int main(int argc, char **argv) try {
 			readValue(config["cflFactor"], cflFactor);
 			timestep = (cflFactor*h/(Cs));
 		}
-    readValue(config["outputTime"], output_time);
-
+    readValue(config["outTime"], output_time);
+    readValue(config["simTime"], sim_time);
+    
 		////////////
 		// DOMAIN //
 		////////////
@@ -269,7 +271,7 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->TI			= 0.3;
       dom.Particles[a]->TIInitDist	= dx;
     }
-		dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+		dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
 		} else {
       throw new Fatal("Particle Count is Null. Please Check Radius and Domain Dimensions.");
     }

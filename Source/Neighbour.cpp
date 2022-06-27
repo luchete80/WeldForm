@@ -603,6 +603,13 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
     for (int j=0; j<i;j++)
       ipl_SM[i] += ipair_SM[j];//Nisimura 2015 Eqn 6
   }
+  
+  int max_nb=0;
+  for (int i=0; i<Particles.Size();i++){
+    if (ipair_SM[i]+jpair_SM[i]>max_nb)
+      max_nb = ipair_SM[i]+jpair_SM[i];
+  }
+  cout << "Max nb"<<max_nb<<endl;
 }
 
 // Nishimura (2011)
