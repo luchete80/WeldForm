@@ -136,7 +136,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
           #ifdef NONLOCK_SUM
           CalcPairPosList();    
           //CalcRefTable();
-           CheckParticlePairs(10);
+          CheckParticlePairs(2000);
           #endif
           SaveNeighbourData();
           //cout << "nb search"<<endl;
