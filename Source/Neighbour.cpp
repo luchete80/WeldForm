@@ -121,7 +121,7 @@ inline void Domain::CellInitiate () {
       Array <size_t> a;
       ilist_SM.Push(a);jlist_SM.Push(a);
       //ipair_SM.Push(a);jpair_SM.Push(a);
-      first_pair_perproc.Push(0);
+      //first_pair_perproc.Push(0);
     }
 }
 
