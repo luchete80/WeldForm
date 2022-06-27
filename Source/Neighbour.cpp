@@ -399,11 +399,11 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
             #ifdef NONLOCK_SUM
             i = std::min(temp1,temp2);
             j = std::max(temp1,temp2);
-            ilist_SM[T].Push(i); //THIS COULD BE DONE AFTER 
-            jlist_SM[T].Push(j);
+            ilist_temp_SM[T].Push(i); //THIS COULD BE DONE AFTER 
+            jlist_temp_SM[T].Push(j);
             //Anei[i][ipair_SM[T][i]] = j;
-            ipair_SM[T][i]++;
-            jpair_SM[T][j]++;
+            ipair_temp_SM[T][i]++;
+            jpair_temp_SM[T][j]++;
             
             #endif
           }
@@ -561,18 +561,24 @@ int Domain::AvgNeighbourCount(){
 
 }
 
-// Calculate position ipl
+// Calculate All things for new reduction
 inline void Domain::CalcPairPosList(){                             //Calculate position list for every particle
   
   int icount[Nproc],jcount[Nproc];
+  int pair_count[Nproc];
+  first_pair_perproc[0] = 0;
   for (int p=0;p<Nproc;p++) {
     icount[p]=jcount[p]=0;
+    pair_count[p]=SMPairs[p].Size();
+    if (p > 0 && < Nproc-1 )
+      first_pair_perproc[p]=SMPairs[p+1].Size();
   }
+  
   
   #pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int p=0;p<Nproc;p++){
     for (int i=0;i<Particles.Size();i++){
-      ipl_SM[p][i] = icount[p];
+      ipl_SM[i] = icount[p];
       icount[p]    += ipair_SM[p][i];
       jpl_SM[p][i] = jcount[p];
       jcount[p]    += jpair_SM[p][i];

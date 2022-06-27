@@ -304,6 +304,7 @@ public:
     //NEW: For parallel sum/reduction
     Array<size_t> first_pair_perproc;                   // Almost like pair count            
     Array< Array <size_t> > ilist_SM,jlist_SM;          // Size [Proc][Pairs] i and j particles of pair list [l]
+     std::vector < std::vector <size_t> > ipair_temp_SM,jpair_temp_SM; //[Proc][Particles]// This is nb count for each particle i<j and j>i (called njgi)
     std::vector < std::vector <size_t> > ipair_SM,jpair_SM; //[Proc][Particles]// This is nb count for each particle i<j and j>i (called njgi)
     std::vector < std::vector <size_t> > ipl_SM,jpl_SM;            // [Proc][Particles] position of list (nb sum), called s_jgi in 1991 paper
     std::vector < std::vector < std::vector <size_t> > > Aref;                      // Entry[Particle ,nb], indicates link
