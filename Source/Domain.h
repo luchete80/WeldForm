@@ -43,6 +43,7 @@
 #include "Mesh.h"
 
 #define NONLOCK_SUM
+#define MAX_NB_PER_PART 70
 
 //C++ Enum used for easiness of coding in the input files
 enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spline=3};
@@ -301,10 +302,11 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	ContPairs;
     
     //NEW: For parallel sum/reduction
+    Array<size_t> first_pair_perproc;                   // Almost like pair count            
     Array< Array <size_t> > ilist_SM,jlist_SM;          // Size [Proc][Pairs] i and j particles of pair list [l]
-    std::vector < std::vector <size_t> > ipair_SM,jpair_SM; //[Proc][Particles]// This is nb count for each particle i<j and j>i
+    std::vector < std::vector <size_t> > ipair_SM,jpair_SM; //[Proc][Particles]// This is nb count for each particle i<j and j>i (called njgi)
     std::vector < std::vector <size_t> > ipl_SM,jpl_SM;            // [Proc][Particles] position of list (nb sum), called s_jgi in 1991 paper
-    std::vector < std::vector <size_t> > Aref;                      // Entry[Particle ,nb], indicates link
+    std::vector < std::vector < std::vector <size_t> > > Aref;                      // Entry[Particle ,nb], indicates link
     
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;

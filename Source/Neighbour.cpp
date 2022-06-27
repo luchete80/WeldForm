@@ -121,6 +121,7 @@ inline void Domain::CellInitiate () {
       Array <size_t> a;
       ilist_SM.Push(a);jlist_SM.Push(a);
       //ipair_SM.Push(a);jpair_SM.Push(a);
+      first_pair_perproc.Push(0);
     }
 }
 
@@ -339,7 +340,15 @@ inline void Domain::MainNeighbourSearch() {
 	#pragma omp parallel for schedule (dynamic) num_threads(Nproc)
     	for (q1=0;q1<CellNo[0]; q1++)	YZPlaneCellsNeighbourSearch(q1);
     }
-	m_isNbDataCleared = false;
+  
+  //For new integration sum scheme
+  #ifdef NONLOCK_SUM
+  for (int k =0;k<Nproc-1;k++) 
+    first_pair_perproc[k+1] =SMPairs[T].Size();
+  
+  #endif
+	
+  m_isNbDataCleared = false;
 }
 
 inline bool  Domain::CheckRadius(Particle* P1, Particle *P2){
@@ -387,14 +396,14 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 				{
 					if (Particles[temp1]->IsFree*Particles[temp2]->IsFree) {//Both free, most common
 						SMPairs[T].Push(std::make_pair(temp1, temp2));
-            // #ifdef NONLOCK_SUM
-            // i = std::min(temp1,temp2);
-            // j = std::max(temp1,temp2);
-            // ilist_SM[T].Push(i); //THIS COULD BE DONE AFTER 
-            // jlist_SM[T].Push(j);
-            // ipair_SM[T][i]++;
-            // jpair_SM[T][j]++;
-            // #endif
+            #ifdef NONLOCK_SUM
+            i = std::min(temp1,temp2);
+            j = std::max(temp1,temp2);
+            ilist_SM[T].Push(i); //THIS COULD BE DONE AFTER 
+            jlist_SM[T].Push(j);
+            ipair_SM[T][i]++;
+            jpair_SM[T][j]++;
+            #endif
           }
 					else
 						FSMPairs[T].Push(std::make_pair(temp1, temp2)); //TEMPORARY
@@ -593,12 +602,16 @@ inline void Domain::CalcRefTable(){
   for (int p=0;p<Nproc;p++){
     for (int i = 0;i<Particles.Size();i++){
     size_t T = omp_get_thread_num();
-      for (int n=0;n < ipl_SM[T][i];n++){ //ipl is called 
-        //Aref [i,][]= ipl_SM
+      for (int n=0;n < ipair_SM[T][i];n++){ //neighbour i < j count 
+        int pair = ipl_SM[T][n];
+        Aref [T][i][n] = pair;
+        int j = ilist_SM[T][n];
+        for (int k=0;k<jpair_SM[T][j]){
+          Aref [T][ipair_SM[T][i]+k][MAX_NB_PER_PART-1-k]= pair;
+        }
       }//nb
     }//particle
-  } //Thread
-  
+  } //Thread  
 }
 
 }; //SPH
