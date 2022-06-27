@@ -401,8 +401,10 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
             j = std::max(temp1,temp2);
             ilist_SM[T].Push(i); //THIS COULD BE DONE AFTER 
             jlist_SM[T].Push(j);
+            //Anei[i][ipair_SM[T][i]] = j;
             ipair_SM[T][i]++;
             jpair_SM[T][j]++;
+            
             #endif
           }
 					else
