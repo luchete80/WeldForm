@@ -248,7 +248,7 @@ int main(int argc, char **argv) try {
 			readValue(bc["free"], 	bcon.free);
 			dom.bConds.push_back(bcon);
 			
-//			std::cout<< "BCs "<<bc<< ", particle count: "<<partcount<<std::	endl;
+      std::cout<< "BCs "<<  ", Zone ID: "<<bcon.zoneId<<", Value :" <<bcon.value<<std::endl;
 		}
     
     //Add fixed particles, these have priority
