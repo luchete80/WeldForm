@@ -1107,7 +1107,6 @@ inline void Domain::MoveGhost(){
 	}
 }
 
-
 inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,
 											double r, double Density, double h, bool Fixed) {

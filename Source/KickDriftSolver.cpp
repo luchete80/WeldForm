@@ -163,7 +163,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		PrimaryComputeAcceleration();
 
 		clock_beg = clock();
-    cout << "Particle 0 accel " << Particles[0]->a<<endl;
+    //cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
     #ifdef NONLOCK_SUM
     AccelReduction();

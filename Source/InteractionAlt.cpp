@@ -123,15 +123,15 @@ inline void Domain::CalcAccel() {
 			}
 		}
     
-    //#ifdef NONLOCK_SUM
+    #ifdef NONLOCK_SUM
     //if (!gradKernelCorr) 
     pair_force[first_pair_perproc[k] + p] = temp; //SHOULD ALSO MULTIPLY ACCEL AFTER
     
-    if (SMPairs[k][p].first == 1000 || SMPairs[k][p].second == 1000)
-      cout << "i j temp mj: "<<SMPairs[k][p].first<<", "<<SMPairs[k][p].second<<", "<< temp;
-    if (SMPairs[k][p].first == 1000) cout << mj<<endl;
-    else if (SMPairs[k][p].second == 1000) cout << mi<<endl;
-    //#else
+    // if (SMPairs[k][p].first == 1000 || SMPairs[k][p].second == 1000)
+      // cout << "i j temp mj: "<<SMPairs[k][p].first<<", "<<SMPairs[k][p].second<<", "<< temp;
+    // if (SMPairs[k][p].first == 1000) cout << mj<<endl;
+    // else if (SMPairs[k][p].second == 1000) cout << mi<<endl;
+    #else
     
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
@@ -153,7 +153,7 @@ inline void Domain::CalcAccel() {
 				P2->a					-= mi * temp_c[1];
 			}
 		omp_unset_lock(&P2->my_lock);
-    //#endif
+    #endif
   }//MAIN FOR IN PAIR
   }//MAIN FOR PROC
 

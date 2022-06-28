@@ -149,16 +149,17 @@ int main(int argc, char **argv) try {
     int id;
 		string domtype = "Box";
     int matID;
+    bool sym = false;
 		readValue(domblock[0]["id"], 	id);
 		readVector(domblock[0]["start"], 	start);
 		readVector(domblock[0]["dim"], 	L);
 		readValue(domblock[0]["type"], 	domtype); //0: Box
     readValue(domblock[0]["matID"], 	matID); //0: Box
+    readValue(domblock[0]["sym"], 	sym); //0: Box
         for (int i=0;i<3;i++) {//TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
 			dom.DomMin(0) = -L[i];
 		}		
-    
 
 
 		
@@ -174,7 +175,7 @@ int main(int argc, char **argv) try {
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 		}
 		else if (domtype == "Cylinder")
-			dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false); 
+			dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym); 
 
         cout <<"t  			= "<<timestep<<endl;
         cout <<"Cs 			= "<<Cs<<endl;
