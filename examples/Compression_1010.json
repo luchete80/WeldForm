@@ -5,7 +5,9 @@
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.4,
-  "autoTS": true
+  "autoTS": true,
+  "simTime": 0.01,
+  "outTime": 1.0e-5
 }
 ,
 "Materials":[ 

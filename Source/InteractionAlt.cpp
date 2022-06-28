@@ -8,7 +8,7 @@ namespace SPH{
 inline void Domain::CalcAccel() {
   Particle *P1, *P2;
   
-	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -30,18 +30,11 @@ inline void Domain::CalcAccel() {
 		double Alpha	= (P1->Alpha + P2->Alpha)/2.0;
 		double Beta	= (P1->Beta + P2->Beta)/2.0;
 
+    di = P1->Density;
+    mi = P1->Mass;
 
-
-			di = P1->Density;
-			mi = P1->Mass;
-		// }
-		// if (!P2->IsFree) {
-			// dj = DensitySolid(P1->PresEq, P1->Cs, P1->P0,P2->Pressure, P1->RefDensity);
-			// mj = P2->FPMassC * P1->Mass;
-		// } else {
-			dj = P2->Density;
-			mj = P2->Mass;
-		//}
+    dj = P2->Density;
+    mj = P2->Mass;
 		
 
 		Vec3_t vij	= P1->v - P2->v;
@@ -130,10 +123,15 @@ inline void Domain::CalcAccel() {
 			}
 		}
     
-    #ifdef NONLOCK_SUM
-    int pair = first_pair_perproc[k] + p;
-    pair_force[pair] = temp; //SHOULD ALSO MULTIPLY ACCEL AFTER
-    #else
+    //#ifdef NONLOCK_SUM
+    //if (!gradKernelCorr) 
+    pair_force[first_pair_perproc[k] + p] = temp; //SHOULD ALSO MULTIPLY ACCEL AFTER
+    
+    if (SMPairs[k][p].first == 1000 || SMPairs[k][p].second == 1000)
+      cout << "i j temp mj: "<<SMPairs[k][p].first<<", "<<SMPairs[k][p].second<<", "<< temp;
+    if (SMPairs[k][p].first == 1000) cout << mj<<endl;
+    else if (SMPairs[k][p].second == 1000) cout << mi<<endl;
+    //#else
     
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
@@ -150,28 +148,39 @@ inline void Domain::CalcAccel() {
 		// Locking the particle 2 for updating the properties
 		omp_set_lock(&P2->my_lock);
 			if (!gradKernelCorr){
-				P2->a					-= mi * temp;
-				//P2->dDensity	+= mi * (dj/di) * temp1;							
+				P2->a					-= mi * temp;				
 			}else {
 				P2->a					-= mi * temp_c[1];
-				//P2->dDensity	+= mi * (dj/di) * temp1_c[1];
 			}
 		omp_unset_lock(&P2->my_lock);
-    #endif
+    //#endif
   }//MAIN FOR IN PAIR
   }//MAIN FOR PROC
 
 }
 
 inline void Domain::AccelReduction(){
+
+    cout << "Particle 0 accel orig"<<endl;
+    cout << Particles[1000]->a<<endl;
+    for (int i=0; i<Particles.Size();i++)
+      Particles[i]->a = 0.;
   //#pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int i=0; i<Particles.Size();i++){
-    for (int n=0;n<ipair_SM[i];n++)
-      Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];
-    for (int n=0;n<jpair_SM[i];n++)
-      Particles[i]->a -= Particles[Anei[i][n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];
+
+    for (int n=0;n<ipair_SM[i];n++){ 
+      if (i==1000) 
+      cout << "j temp mneib "<<Anei[i][n]<<", " <<pair_force[Aref[i][n]]<<", "<<Particles[Anei[i][n]]->Mass<<endl;
+      
+      Particles[i]->a -= Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
+    for (int n=0;n<jpair_SM[i];n++){
+      if (i==1000) 
+      cout << "j temp mneib "<<Anei[i][MAX_NB_PER_PART-1-n]<<", " <<pair_force[Aref[i][MAX_NB_PER_PART-1-n]]<<", "<<Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass<<endl;      
+      Particles[i]->a += Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}
     
   }
+    cout << "Particle 0 accel new "<<endl;
+    cout << Particles[1000]->a<<endl;
 }
 
 inline void Domain::CalcRateTensorsDens() {

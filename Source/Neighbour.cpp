@@ -588,7 +588,8 @@ void Domain::CheckParticlePairs(const int &i){
 
 // Calculate All things for new reduction
 inline void Domain::CalcPairPosList(){                             //Calculate position list for every particle
-
+  
+  //pair_test.clear();
   first_pair_perproc[0] = 0;
   pair_count = 0;
   for (int p=0;p<Nproc;p++)first_pair_perproc[p] = 0;
@@ -600,11 +601,11 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
     }
     pair_count += SMPairs[p].Size();
   }
-  cout << "Pairs per proc"<<endl;
-  for (int p=0;p<Nproc;p++)
-    cout << SMPairs[p].Size()<<endl;
-   cout << "First index per proc "<<endl;
-  for (int p=0;p<Nproc;p++) cout << first_pair_perproc[p]<<endl;
+  // cout << "Pairs per proc"<<endl;
+  // for (int p=0;p<Nproc;p++)
+    // cout << SMPairs[p].Size()<<endl;
+   // cout << "First index per proc "<<endl;
+  // for (int p=0;p<Nproc;p++) cout << first_pair_perproc[p]<<endl;
 
   pair_force.resize(pair_count);
   //cout << "Pair Count: " << pair_count << endl;
@@ -612,7 +613,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
   #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i = 0;i<Particles.Size();i++){
       ipair_SM[i]=0;jpair_SM[i]=0;
-      ipl_SM[i]=0;  
+      //ipl_SM[i]=0;  
       for (int n=0;n<MAX_NB_PER_PART;n++){
         Anei[i][n]=0;
         Aref[i][n]=0;
@@ -628,11 +629,11 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
 
       int i = std::min(SMPairs[k][pp].first,SMPairs[k][pp].second);
       int j = std::max(SMPairs[k][pp].first,SMPairs[k][pp].second);
-      pair_test.push_back(std::make_pair(i,j)); //ONLY FOR TEST
-      if (i==2000||j==2000){ 
-        cout << "Pair i j "<< i << ", "<<j<<", "<<first_pair_perproc[k]+pp<<endl;
-        cout << "k pp "<<k <<", "<<pp<<endl;
-      }
+      //pair_test.push_back(std::make_pair(i,j)); //ONLY FOR TEST
+      // if (i==2000||j==2000){ 
+        // cout << "Pair i j "<< i << ", "<<j<<", "<<first_pair_perproc[k]+pp<<endl;
+        // cout << "k pp "<<k <<", "<<pp<<endl;
+      // }
       Anei[i][ipair_SM[i]] = j; //Only stores j>i
       Anei[j][MAX_NB_PER_PART - 1 - jpair_SM[j]] = i; //Only stores j>i
       Aref[i][ipair_SM[i]] = first_pair_perproc[k]+pp;
@@ -642,12 +643,12 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
     }//Pairs
   }//Proc
   
-  ipl_SM[0] = 0;
-  #pragma omp parallel for schedule (static) num_threads(Nproc)
-  for (int i=0; i<Particles.Size();i++){
-    for (int j=0; j<i;j++)
-      ipl_SM[i] += ipair_SM[j];//Nisimura 2015 Eqn 6
-  }
+  // ipl_SM[0] = 0;
+  // #pragma omp parallel for schedule (static) num_threads(Nproc)
+  // for (int i=0; i<Particles.Size();i++){
+    // for (int j=0; j<i;j++)
+      // ipl_SM[i] += ipair_SM[j];//Nisimura 2015 Eqn 6
+  // }
   
   int max_nb=0;
   for (int i=0; i<Particles.Size();i++){

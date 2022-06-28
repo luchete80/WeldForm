@@ -83,7 +83,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 	auto start_whole = std::chrono::steady_clock::now();  
 	while (Time<=tf && idx_out<=maxidx) {
   
-		StartAcceleration(Gravity);
+		StartAcceleration(0.);
 
 		double max = 0;
 		int imax;
@@ -136,7 +136,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
           #ifdef NONLOCK_SUM
           CalcPairPosList();    
           //CalcRefTable();
-          CheckParticlePairs(2000);
+          //CheckParticlePairs(2000);
           #endif
           SaveNeighbourData();
           //cout << "nb search"<<endl;
@@ -163,6 +163,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		PrimaryComputeAcceleration();
 
 		clock_beg = clock();
+    cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
     #ifdef NONLOCK_SUM
     AccelReduction();
