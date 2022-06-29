@@ -28,17 +28,17 @@
 	"zoneId": 1,
 	"denseMode": 0,
 	"start": [ 0.0, 0.0, 0.0],
-	"dim": [0.0254, 0.0, 0.015],
+	"dim": [0.0254, 0.0, 0.030],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1],
-  "sym": true
+  "sym": [false,false,true] 
 }],
 
 "DomainZones": [
 {
 	"id": 2,
 	"denseMode": 0,
-	"start":[-1.0,-1.0, 0.01425],
+	"start":[-1.0,-1.0, 0.029],
 	"end": 	[ 1.0, 1.0, 1.0]
 }
 ],

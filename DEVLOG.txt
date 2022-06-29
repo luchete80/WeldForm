@@ -74,3 +74,5 @@
              ATTENTION: ARRAYS COULD BE DIMENSIONED BY NProc
 20220628  -  Fixed error in new reduction algorithm. 
              Working on Input. Added symmetry case.
+20220629  -  Working with Symmetry. Cleaning old quarter mesh and adding 
+             double symm (now XY symm) to input reading
