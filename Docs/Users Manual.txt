@@ -1,7 +1,0 @@
-
-
-
-// Contact 
-
-// Particle Domain should be generated with ID != 1
-// (Should perform internal check to decide external_surface_number, could be negative) 

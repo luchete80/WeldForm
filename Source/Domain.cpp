@@ -123,7 +123,7 @@ inline Domain::Domain ()
 	
 	Vol=0.;
 		auto_ts = true;
-		
+		auto_ts_acc = false; //Only vel criteria
 	
 	gradKernelCorr = false;
 	contact = false;
@@ -210,15 +210,33 @@ inline void Domain::CheckMinTSVel() {
   deltatmin	= deltatint;
   #pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
   for (int i=0; i<Particles.Size(); i++) {
-    if (Particles[i]->IsFree) {
+    //if (Particles[i]->IsFree) {
       test = 0.4 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
       if (deltatmin > test ) {
         omp_set_lock(&dom_lock);
           deltatmin = test;
         omp_unset_lock(&dom_lock);
       }
-    }
+    //}
   }
+  //cout << "deltatmin " << deltatmin<<endl;
+}
+
+
+inline void Domain::CheckMinTSAccel () {
+		double test	= 0.0;
+		deltatmin	= deltatint;
+		#pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
+		for (int i=0; i<Particles.Size(); i++) {
+        test = sqrt_h_a * sqrt(Particles[i]->h/norm(Particles[i]->a));
+					if (deltatmin > test ) {
+					omp_set_lock(&dom_lock);
+						deltatmin = test;
+					omp_unset_lock(&dom_lock);
+				
+        }
+		}
+  //cout << "deltatmin "<<deltatmin<<endl;
 }
 
 inline void Domain::AddSingleParticle(int tag, Vec3_t const & x, double Mass, double Density, double h, bool Fixed)

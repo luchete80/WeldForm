@@ -132,6 +132,7 @@ int main(int argc, char **argv) try {
 		int cflMethod;
     double output_time;
     double sim_time;
+    bool auto_ts[] = {true, false}; //ONLY VEL CRITERIA
 		readValue(config["cflMethod"], cflMethod);
 		if (cflMethod == 0)
 			readValue(config["timeStepSize"], timestep);
@@ -141,11 +142,13 @@ int main(int argc, char **argv) try {
 		}
     readValue(config["outTime"], output_time);
     readValue(config["simTime"], sim_time);
+    readBoolVector(config["autoTS"], auto_ts);
     double alpha = 1.;
     double beta = 0.;
     readValue(config["artifViscAlpha"],alpha);
     readValue(config["artifViscBeta"],beta);
-    
+    dom.auto_ts = auto_ts[0];
+    dom.auto_ts_acc = auto_ts[1];
 		////////////
 		// DOMAIN //
 		////////////

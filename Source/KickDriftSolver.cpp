@@ -307,10 +307,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
           contact_force_sum << endl;
 			}
 		}
-    if (auto_ts){
-      CheckMinTSVel();
-      AdaptiveTimeStep();
-    }    
+    if (auto_ts)      CheckMinTSVel();
+    if (auto_ts_acc)  CheckMinTSAccel();
+    if (auto_ts || auto_ts_acc)  AdaptiveTimeStep();
+    
 	
 	}
 

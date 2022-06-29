@@ -325,8 +325,8 @@ public:
 	
 	iKernel m_kernel;
 	bool					m_isNbDataCleared;
-	bool						auto_ts;				//LUCIANO: Auto Time Stepping
-	
+	bool						auto_ts;				//LUCIANO: Auto Time Stepping: VEL CRITERIA
+	bool            auto_ts_acc;    
   std::vector <TriMesh*> trimesh; //ORIGINALLY
 	//CONTACT 
 	double PFAC, DFAC;		// Penalty and damping factors
@@ -358,6 +358,7 @@ public:
   inline void CalcBMat();
   inline void CalcStiffMat();
   inline void CheckMinTSVel();
+  inline void CheckMinTSAccel();
   int AssignZone(Vec3_t &start, Vec3_t &end, int &id);
 	private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
