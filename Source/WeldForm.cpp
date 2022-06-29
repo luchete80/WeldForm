@@ -73,6 +73,7 @@ int main(int argc, char **argv) try {
 		nlohmann::json domblock 	= j["DomainBlocks"];
 		nlohmann::json domzones 	= j["DomainZones"];
 		nlohmann::json amplitudes 	= j["Amplitudes"];
+		nlohmann::json rigbodies 		= j["RigidBodies"];
 		nlohmann::json bcs 			= j["BoundaryConditions"];
 		
 		SPH::Domain	dom;
@@ -219,6 +220,15 @@ int main(int argc, char **argv) try {
 			int partcount =dom.AssignZone(start,end,zoneid);
       std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
+    
+    //////////////////////////////////////////////////////////
+    ////////////////// RIGID BODIES //////////////////////////
+    string rigbody_type;
+    readValue(rigbodies[0]["type"],rigbody_type);
+		readVector(rigbodies[0]["start"], 	start);   
+
+
+    
 		
 		std::vector <SPH::amplitude> amps;
 		
@@ -264,6 +274,7 @@ int main(int argc, char **argv) try {
 			
       std::cout<< "BCs "<<  ", Zone ID: "<<bcon.zoneId<<", Value :" <<bcon.value<<std::endl;
 		}
+    
     
     //Add fixed particles, these have priority
     
