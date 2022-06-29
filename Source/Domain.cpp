@@ -124,6 +124,7 @@ inline Domain::Domain ()
 	Vol=0.;
 		auto_ts = true;
 		auto_ts_acc = false; //Only vel criteria
+    auto_ts_cont = false;
 	
 	gradKernelCorr = false;
 	contact = false;
@@ -192,11 +193,13 @@ inline void Domain::AdaptiveTimeStep()
 			deltat		= deltatint;
 	}
 	
-	// if (contact){
-		// if (min_force_ts < deltat)
-		// //cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
-		// deltat = min_force_ts;
-	// }
+	if (contact){
+    if (auto_ts_cont){
+      if (min_force_ts < deltat)
+      //cout << "Step size changed minimum Contact Forcess time: " << 	min_force_ts<<endl;
+      deltat = min_force_ts;
+    }
+	}
 
 	// if (deltat<(deltatint/1.0e5))
 		// //cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;

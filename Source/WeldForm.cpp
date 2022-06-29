@@ -132,7 +132,8 @@ int main(int argc, char **argv) try {
 		int cflMethod;
     double output_time;
     double sim_time;
-    bool auto_ts[] = {true, false}; //ONLY VEL CRITERIA
+    string cont_alg = "Fraser";
+    bool auto_ts[] = {true, false, false}; //ONLY VEL CRITERIA
 		readValue(config["cflMethod"], cflMethod);
 		if (cflMethod == 0)
 			readValue(config["timeStepSize"], timestep);
@@ -147,8 +148,10 @@ int main(int argc, char **argv) try {
     double beta = 0.;
     readValue(config["artifViscAlpha"],alpha);
     readValue(config["artifViscBeta"],beta);
+    readValue(config["contAlgorithm"],cont_alg);
     dom.auto_ts = auto_ts[0];
     dom.auto_ts_acc = auto_ts[1];
+    dom.auto_ts_cont = auto_ts[2];
 		////////////
 		// DOMAIN //
 		////////////

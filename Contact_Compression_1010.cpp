@@ -207,7 +207,8 @@ int main() try{
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-  dom.auto_ts = true;
+  dom.auto_ts     = false;
+  //dom.auto_ts_acc = true;
 //  	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   
 	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY

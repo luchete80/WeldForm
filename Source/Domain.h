@@ -327,6 +327,7 @@ public:
 	bool					m_isNbDataCleared;
 	bool						auto_ts;				//LUCIANO: Auto Time Stepping: VEL CRITERIA
 	bool            auto_ts_acc;    
+  bool            auto_ts_cont; 
   std::vector <TriMesh*> trimesh; //ORIGINALLY
 	//CONTACT 
 	double PFAC, DFAC;		// Penalty and damping factors
