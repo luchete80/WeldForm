@@ -793,7 +793,7 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 	int xinc,yinc;
 	
 	int id_part=0;
-	int ghost_rows = 3;
+	int ghost_rows = 4;
 	
 	double z0;
 	if (symlength) 	z0 = r;
@@ -1000,18 +1000,20 @@ inline void Domain::MoveGhost(){
 		Particles[gi]-> vb = Particles[i]-> vb;
     
     int axis = Particles[gi]-> ghost_plane_axis;
-    
+    //ORIG
 		Particles[gi]-> v[axis]  = - Particles[i]-> v[axis];
+    //NEW
+		// Particles[gi]-> v[axis]  = Particles[i]-> v[axis] = 0.;
+		// Particles[gi]-> a[axis]  = Particles[i]-> a[axis] = 0.;
+    
 		Particles[gi]-> va[axis] = - Particles[i]-> va[axis];
 		Particles[gi]-> vb[axis] = - Particles[i]-> vb[axis];
 
 		Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
 		
-		// Particles[gi]-> v[axis] = 	-Particles[gi]-> v[axis]		
-		// Particles[gi]-> va[axis] = 	-Particles[gi]-> va[axis];
-		// Particles[gi]-> vb[axis] = - Particles[gi]-> vb[axis];
-		
-		//Position (xghost + xi )/2 = x wall 
+
+
+
 	}
 }
 

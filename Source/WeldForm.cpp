@@ -225,10 +225,7 @@ int main(int argc, char **argv) try {
     ////////////////// RIGID BODIES //////////////////////////
     string rigbody_type;
     readValue(rigbodies[0]["type"],rigbody_type);
-		readVector(rigbodies[0]["start"], 	start);   
-
-
-    
+		readVector(rigbodies[0]["start"], 	start);       
 		
 		std::vector <SPH::amplitude> amps;
 		

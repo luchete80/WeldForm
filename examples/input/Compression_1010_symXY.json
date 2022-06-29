@@ -1,0 +1,74 @@
+{
+"Configuration":
+{
+	"particleRadius": 0.0006, 
+	"hFactor": 1.2,
+  "cflMethod": 1,
+  "cflFactor": 0.4,
+  "simTime": 0.01,
+  "outTime": 1.0e-5,
+  "autoTS": [true,true],
+  "artifViscAlpha": 2.5,
+  "artifViscBeta": 2.5
+}
+,
+"Materials":[ 
+{
+	"id": "Solid",
+	"type": "Hollomon",
+  "const1": 7.18e8,
+  "const2": 0.22,
+	"density0": 7850.0, 
+	"youngsModulus": 200.0E9, 
+	"poissonsRatio": 0.3,
+	"yieldStress0": 260.0E6
+}],
+
+"DomainBlocks": 
+[{
+	"type": "Cylinder",
+	"zoneId": 1,
+	"denseMode": 0,
+	"start": [ 0.0, 0.0, 0.0],
+	"dim": [0.0254, 0.0, 0.030],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1],
+  "sym": [true,true,false]
+}],
+
+"DomainZones": [
+{
+	"id": 1,
+	"denseMode": 0,
+	"start":[-1.0,-1.0, -1.0],
+	"end": 	[ 1.0, 1.0, -0.014]
+},
+{
+	"id": 2,
+	"denseMode": 0,
+	"start":[-1.0,-1.0, 0.014],
+	"end": 	[ 1.0, 1.0, 1.0]
+}
+],
+"Amplitudes": [
+{
+	"id": 1,
+	"valueType": 1,
+	"time": 	[ 0.0, 0.0, 0.0],
+	"value": 	[ 0.0, 0.0, 0.0]
+}
+],
+"BoundaryConditions": [
+{
+	"zoneId": 1,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, 0.0]
+},
+{
+	"zoneId": 2,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, -0.1]
+}
+]
+
+}
