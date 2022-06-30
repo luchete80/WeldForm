@@ -1,5 +1,3 @@
-#include "Input.h"
-#include "InteractionAlt.cpp"
 /***********************************************************************************
 * PersianSPH - A C++ library to simulate Mechanical Systems (solids, fluids        * 
 *             and soils) using Smoothed Particle Hydrodynamics method              *   
@@ -23,13 +21,17 @@
 #include "Domain.h"
 #include "Input.h"
 
+#include "Input.h"
+#include "InteractionAlt.cpp"
+#include "Mesh.h"
+
 #define TAU		0.005
 #define VMAX	10.0
 
 #define PRINTVEC(v)	cout << v[0]<<", "<<v[1]<<", "<<v[2]<<endl;
 
-using std::cout;
-using std::endl;
+using namespace std;
+using namespace SPH;
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -224,9 +226,24 @@ int main(int argc, char **argv) try {
     //////////////////////////////////////////////////////////
     ////////////////// RIGID BODIES //////////////////////////
     string rigbody_type;
-    readValue(rigbodies[0]["type"],rigbody_type);
+    bool contact = false;
+    if (readValue(rigbodies[0]["type"],rigbody_type))
+      contact = true;
+    Vec3_t dim;
+    
 		readVector(rigbodies[0]["start"], 	start);       
-		
+		readVector(rigbodies[0]["dim"], 	dim); 
+    if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
+      std::cout << "ERROR: Contact Plane Surface should have one null dimension"<<std::endl;
+    
+    std::vector<TriMesh *> mesh;
+    
+    if (contact){
+      mesh.push_back(new TriMesh);
+      mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), dim(2)),40);
+      
+		}
+    
 		std::vector <SPH::amplitude> amps;
 		
 		for (auto& ampl : amplitudes) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
