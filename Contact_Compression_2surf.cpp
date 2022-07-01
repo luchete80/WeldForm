@@ -153,8 +153,8 @@ int main(){
 	//dom.friction = 0.15;
 	dom.friction_dyn = 0.1;
 	dom.friction_sta = 0.1;
-	dom.PFAC = 0.8;
-	dom.DFAC = 0.2;
+	dom.PFAC = 0.6;
+	dom.DFAC = 0.0;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
