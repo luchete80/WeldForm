@@ -62,8 +62,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     << Particles[0]->Cs * Particles [0] ->Mass / dS << ", " << Particles [0] -> cont_stiff <<endl;
 		min_force_ts = deltat;
 		MainNeighbourSearch();
-    CalcPairPosList();          //Only for h update
-    UpdateSmoothingLength();
+    //CalcPairPosList();          //Only for h update
+    //UpdateSmoothingLength();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search	
 	}

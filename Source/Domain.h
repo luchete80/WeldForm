@@ -306,7 +306,7 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	ContPairs;
     
     //NEW: For parallel sum/reduction
-    Array<size_t> first_pair_perproc;                   // Almost like pair count        
+    std::vector<size_t> first_pair_perproc;                   // Almost like pair count        
     int pair_count;                                                   //var names as stated as Nishimura (2015) ipl is njgi 
     std::vector < std::pair<int,int> >     pair_test,pair_ord;                    //OLY FOR TESTING
     //Array< Array <size_t> >               ilist_SM,jlist_SM;          // Size [Pairs] i and j particles of pair list [l], already flattened

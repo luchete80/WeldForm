@@ -551,6 +551,7 @@ void Domain::InitReductionArraysOnce(){
   ipair_SM.resize(Particles.Size());
   jpair_SM.resize(Particles.Size());
   pair_force.resize(Particles.Size());
+  first_pair_perproc.resize(Nproc);
   std::vector<size_t> nei(MAX_NB_PER_PART);
   for (int i=0;i<Particles.Size();i++){
     Anei.push_back(nei);
@@ -620,7 +621,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
       }
     }
  
-
+  cout << "calc tables "<<endl;
   //TODO: parallelize?
   //#pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int k=0;k<Nproc;k++){
