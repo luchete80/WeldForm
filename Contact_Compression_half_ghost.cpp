@@ -206,9 +206,9 @@ int main(int argc, char **argv) try
   dom.fric_type = Fr_Dyn;
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.0;
-  dom.friction_sta = 0.15;
-	dom.PFAC = 0.8;
+	dom.friction_dyn = 0.1;
+  dom.friction_sta = 0.1;
+	dom.PFAC = 0.6;
 	dom.DFAC = 0.;
 	dom.update_contact_surface = false;
 
@@ -228,7 +228,9 @@ int main(int argc, char **argv) try
   
   timestep = (0.4 *h/(Cs+VMAX));
   dom.auto_ts=true;
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  dom.auto_ts_acc=true;
+  dom.sqrt_h_a = 0.005;
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   
   return 0;
 }

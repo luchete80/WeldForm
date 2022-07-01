@@ -345,7 +345,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"h\" AttributeType=\"Scalar\" Center=\"Node\">\n";
     oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
-    oss << "        " << fn.CStr() <<":/Density \n";
+    oss << "        " << fn.CStr() <<":/h \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
     oss << "     <Attribute Name=\"Pressure\" AttributeType=\"Scalar\" Center=\"Node\">\n";

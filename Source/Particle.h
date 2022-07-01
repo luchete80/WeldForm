@@ -74,7 +74,7 @@ namespace SPH {
     Vec3_t  v_max;
 		Vec3_t	a;		///< Acceleration of the particle n
 		bool		update;	/// UPDATE KERNELS AND NEIGHBOURS (IF DEP IS INCREMENTING IN LAST STEP IS SET TO TRUE)
-		
+		double  hfac;      //For smoothing length particle update
 
 		size_t	PresEq;		///< Selecting variable to choose an equation of state
 		double	Cs;		///< Speed of sound

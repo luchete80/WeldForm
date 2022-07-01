@@ -235,6 +235,7 @@ inline void Domain::CheckMinTSAccel () {
 					if (deltatmin > test ) {
 					omp_set_lock(&dom_lock);
 						deltatmin = test;
+            min_ts_acc_part_id = i;
 					omp_unset_lock(&dom_lock);
 				
         }
@@ -2383,31 +2384,45 @@ inline void Domain::SolveDiffUpdateModEuler (double tf, double dt, double dtOut,
 
 }
 
+// inline void Domain::UpdateSmoothingLength_Pairs(){
+  // double dx = 0.;
+  // neibcount = 0;
+  // #pragma omp parallel for schedule (static) private (dx, neibcount) num_threads(Nproc)
+  // for (size_t i=0; i<Particles.Size(); i++){
+    // if (Particles[i]->delta_pl_strain > DELTA_PL_STRAIN ){
+      // #ifdef __GNUC__
+      // for (size_t k=0; k<Nproc;k++) 
+      // #else
+      // for (int k=0; k<Nproc;k++) 
+      // #endif	
+      // {
+        // //TODO: USE NEW NEIB ARRAYS
+        // for (size_t p=0; p<SMPairs[k].Size();p++) {
+          // if (SMPairs[k][p].first == i || SMPairs[k][p].first == i){
+            // dx+= norm(Particles[SMPairs[k][p].first]->x - Particles[SMPairs[k][p].first]]->x);
+            // neibcount++;
+          // }          
+        // }//pairs
+      // }//NProc
+      // Particles[i]->h = dx/neibcount;
+    // }
+  // }
+// }
 inline void Domain::UpdateSmoothingLength(){
   double dx = 0.;
-  neibcount = 0;
-  #pragma omp parallel for schedule (static) private (dx, neibcount) num_threads(Nproc)
+  #pragma omp parallel for schedule (static) private (dx) num_threads(Nproc)
   for (size_t i=0; i<Particles.Size(); i++){
-    if (Particles[i]->delta_pl_strain > DELTA_PL_STRAIN ){
-      #ifdef __GNUC__
-      for (size_t k=0; k<Nproc;k++) 
-      #else
-      for (int k=0; k<Nproc;k++) 
-      #endif	
-      {
-        //TODO: USE NEW NEIB ARRAYS
-        for (size_t p=0; p<SMPairs[k].Size();p++) {
-          if (SMPairs[k][p].first == i || SMPairs[k][p].first == i){
-            dx+= norm(Particles[SMPairs[k][p].first]->x - Particles[SMPairs[k][p].first]]->x);
-            neibcount++;
-          }          
-        }//pairs
-      }//NProc
-      Particles[i]->h = dx/neibcount;
+    //if (Particles[i]->delta_pl_strain > DELTA_PL_STRAIN ){
+      if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
+      for (int n=0;n<ipair_SM[i];n++)
+        dx += norm(Particles[Anei[i][n]]->x - Particles[i]->x);
+      for (int n=0;n<jpair_SM[i];n++) 
+        dx += norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
+    
+      Particles[i]->h = dx/(ipair_SM[i]+jpair_SM[i]);    
     }
   }
 }
-
 // THIS IS LIKE THE FRASER ALGORITHM
 inline void Domain::SolveDiffUpdateModVerlet (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;

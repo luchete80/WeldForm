@@ -31,9 +31,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		std::cout << "\nInitial Condition has been generated\n" << std::endl;
 	}
 	
-  #ifdef NONLOCK_SUM
+  //#ifdef NONLOCK_SUM
   InitReductionArraysOnce();
-  #endif
+  //#endif
   //cout << "aref "<< Aref[0][0]<<endl;
   
 	unsigned long steps=0;
@@ -62,6 +62,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     << Particles[0]->Cs * Particles [0] ->Mass / dS << ", " << Particles [0] -> cont_stiff <<endl;
 		min_force_ts = deltat;
 		MainNeighbourSearch();
+    CalcPairPosList();          //Only for h update
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search	
 	}
@@ -119,10 +120,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
 			MainNeighbourSearch/*_Ext*/();
-      #ifdef NONLOCK_SUM
+      //#ifdef NONLOCK_SUM
       CalcPairPosList();  
       //CalcRefTable();
-      #endif
+      //#endif
       SaveNeighbourData();
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
@@ -133,11 +134,11 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 				if (m_isNbDataCleared){
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
-          #ifdef NONLOCK_SUM
-          CalcPairPosList();    
+          //#ifdef NONLOCK_SUM
+          //CalcPairPosList();    
           //CalcRefTable();
           //CheckParticlePairs(2000);
-          #endif
+          //#endif
           SaveNeighbourData();
           //cout << "nb search"<<endl;
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;

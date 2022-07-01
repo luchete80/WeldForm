@@ -42,7 +42,7 @@
 
 #include "Mesh.h"
 
-//#define NONLOCK_SUM
+#define NONLOCK_SUM
 #define MAX_NB_PER_PART 100
 
 //C++ Enum used for easiness of coding in the input files
@@ -147,6 +147,7 @@ public:
 	void ThermalSolve_wo_init	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
   void AddFixedMassScaling (const double &factor);
   inline void UpdateSmoothingLength();
+  //inline void UpdateSmoothingLength_Pairs();
 	
 	inline void CalcThermalExpStrainRate();
 	inline void CalcPlasticWorkHeat(const double &dt);
@@ -236,6 +237,7 @@ public:
 
 		double					sqrt_h_a;				//Coefficient for determining Time Step based on acceleration (can be defined by user)
 		double 					min_force_ts;		//min time step size due to contact forces
+    int             min_ts_acc_part_id;
 		
     int 					Dimension;    	///< Dimension of the problem
 
