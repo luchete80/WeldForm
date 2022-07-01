@@ -145,6 +145,7 @@ inline Domain::Domain ()
 	thermal_solver = false;
   contact_mesh_auto_update = true;
   meshcount = 0;
+  h_update = false;
 }
 
 inline Domain::~Domain ()
@@ -206,25 +207,60 @@ inline void Domain::AdaptiveTimeStep()
 		// throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
 }
 
+// inline void Domain::CheckMinTSVel() {
+  // //Min time step check based on velocity
+  // double test	= 0.0;
+
+  // deltatmin	= deltatint;
+  // #pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
+  // for (int i=0; i<Particles.Size(); i++) {
+    // //if (Particles[i]->IsFree) {
+      // test = 0.4 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
+      // if (deltatmin > test ) {
+        // omp_set_lock(&dom_lock);
+          // deltatmin = test;
+        // omp_unset_lock(&dom_lock);
+      // }
+    // //}
+  // }
+  // //cout << "deltatmin " << deltatmin<<endl;
+// }
+
 inline void Domain::CheckMinTSVel() {
   //Min time step check based on velocity
   double test	= 0.0;
+  double d,min;
 
   deltatmin	= deltatint;
-  #pragma omp parallel for schedule (static) private(test) num_threads(Nproc)
+  #pragma omp parallel for schedule (static) private(test,d,min) num_threads(Nproc)
   for (int i=0; i<Particles.Size(); i++) {
-    //if (Particles[i]->IsFree) {
-      test = 0.4 * Particles[i]->h/(Particles[i]->Cs + norm(Particles[i]->v));
-      if (deltatmin > test ) {
-        omp_set_lock(&dom_lock);
-          deltatmin = test;
-        omp_unset_lock(&dom_lock);
-      }
-    //}
+    min = 1000.;
+    for (int n=0;n<ipair_SM[i];n++){
+      d = norm(Particles[Anei[i][n]]->x - Particles[i]->x);
+      //sum +=d;
+      if (  d<  min)
+        min = d;
+      // if (d>max)
+        // max=d;
+    }
+    for (int n=0;n<jpair_SM[i];n++) {
+      d = norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
+      //sum +=d;
+      if ( d <  min)
+        min = d;
+      // if (d>max)
+        // max = d;
+    }
+    test = 0.4 * min/(Particles[i]->Cs + norm(Particles[i]->v));
+    if (deltatmin > test ) {
+      omp_set_lock(&dom_lock);
+        deltatmin = test;
+      omp_unset_lock(&dom_lock);
+    }
+
   }
   //cout << "deltatmin " << deltatmin<<endl;
 }
-
 
 inline void Domain::CheckMinTSAccel () {
 		double test	= 0.0;
@@ -2384,30 +2420,6 @@ inline void Domain::SolveDiffUpdateModEuler (double tf, double dt, double dtOut,
 
 }
 
-// inline void Domain::UpdateSmoothingLength_Pairs(){
-  // double dx = 0.;
-  // neibcount = 0;
-  // #pragma omp parallel for schedule (static) private (dx, neibcount) num_threads(Nproc)
-  // for (size_t i=0; i<Particles.Size(); i++){
-    // if (Particles[i]->delta_pl_strain > DELTA_PL_STRAIN ){
-      // #ifdef __GNUC__
-      // for (size_t k=0; k<Nproc;k++) 
-      // #else
-      // for (int k=0; k<Nproc;k++) 
-      // #endif	
-      // {
-        // //TODO: USE NEW NEIB ARRAYS
-        // for (size_t p=0; p<SMPairs[k].Size();p++) {
-          // if (SMPairs[k][p].first == i || SMPairs[k][p].first == i){
-            // dx+= norm(Particles[SMPairs[k][p].first]->x - Particles[SMPairs[k][p].first]]->x);
-            // neibcount++;
-          // }          
-        // }//pairs
-      // }//NProc
-      // Particles[i]->h = dx/neibcount;
-    // }
-  // }
-// }
 inline void Domain::UpdateSmoothingLength(){
   double min;
   double max;
@@ -2422,19 +2434,19 @@ inline void Domain::UpdateSmoothingLength(){
       //if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
       for (int n=0;n<ipair_SM[i];n++){
         d = norm(Particles[Anei[i][n]]->x - Particles[i]->x);
-        sum +=d;
+        //sum +=d;
         if (  d<  min)
           min = d;
-        if (d>max)
-          max=d;
+        // if (d>max)
+          // max=d;
       }
       for (int n=0;n<jpair_SM[i];n++) {
         d = norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
-        sum +=d;
+        //sum +=d;
         if ( d <  min)
           min = d;
-        if (d>max)
-          max = d;
+        // if (d>max)
+          // max = d;
       }
       Particles[i]->h = min*Particles[i]->hfac;  
       //Particles[i]->h = sum/(ipair_SM[i]+jpair_SM[i])*Particles[i]->hfac;       

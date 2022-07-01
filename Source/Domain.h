@@ -252,7 +252,8 @@ public:
 		
     /*Array<*/int/*>*/ 			id_free_surf;								//TODO: 
     Vec3_t					        Gravity;       	///< Gravity acceleration
-
+    
+    bool                    h_update;
 
     Vec3_t                 			TRPR;		///< Top right-hand point at rear of the domain as a cube
     Vec3_t                  			BLPF;           ///< Bottom left-hand point at front of the domain as a cube

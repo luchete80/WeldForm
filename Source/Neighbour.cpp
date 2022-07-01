@@ -656,7 +656,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
     if (ipair_SM[i]+jpair_SM[i]>max_nb)
       max_nb = ipair_SM[i]+jpair_SM[i];
   }
-  cout << "Max nb"<<max_nb<<endl;
+  //cout << "Max nb"<<max_nb<<endl;
 }
 
 // Nishimura (2011)

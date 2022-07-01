@@ -135,9 +135,11 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 				if (m_isNbDataCleared){
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
-          //#ifdef NONLOCK_SUM
-          CalcPairPosList();   
-          UpdateSmoothingLength();          
+          //#ifdef NONLOCK_SUM 
+          CalcPairPosList(); //For min TS Vel
+          // if (h_update){                
+            // UpdateSmoothingLength();          
+          // }
           //CalcRefTable();
           //CheckParticlePairs(2000);
           //#endif

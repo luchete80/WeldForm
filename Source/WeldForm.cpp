@@ -99,8 +99,8 @@ int main(int argc, char **argv) try {
 		readValue(config["particleRadius"], r);
 		double hfactor;
 		readValue(config["hFactor"], hfactor);
-
-    	dom.GeneralAfter = & UserAcc;
+    bool h_update = false;
+    dom.GeneralAfter = & UserAcc;
 		
 	
 		//////////////
