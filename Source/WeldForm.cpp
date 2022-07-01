@@ -149,9 +149,11 @@ int main(int argc, char **argv) try {
     readBoolVector(config["autoTS"], auto_ts);
     double alpha = 1.;
     double beta = 0.;
+    bool kernel_grad_corr = false;
     readValue(config["artifViscAlpha"],alpha);
     readValue(config["artifViscBeta"],beta);
     readValue(config["contAlgorithm"],cont_alg);
+    readValue(config["kernelGradCorr"],kernel_grad_corr);
     dom.auto_ts = auto_ts[0];
     dom.auto_ts_acc = auto_ts[1];
     dom.auto_ts_cont = auto_ts[2];
@@ -294,7 +296,7 @@ int main(int argc, char **argv) try {
     
     //TODO: CHECK IF DIFFERENT ZONES ARE INTERF
     //Generate Domain
-    dom.gradKernelCorr = false;
+    dom.gradKernelCorr = kernel_grad_corr;
     if (dom.Particles.Size()>0){
     for (size_t a=0; a<dom.Particles.Size(); a++){
       dom.Particles[a]->G				= G;
