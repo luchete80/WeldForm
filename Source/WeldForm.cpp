@@ -311,6 +311,7 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->Beta			= beta;
       dom.Particles[a]->TI			= 0.3;
       dom.Particles[a]->TIInitDist	= dx;
+      dom.Particles[a]->hfac = 1.2;
     }
 		dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
 		} else {

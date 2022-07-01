@@ -63,6 +63,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		min_force_ts = deltat;
 		MainNeighbourSearch();
     CalcPairPosList();          //Only for h update
+    UpdateSmoothingLength();
 		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
 		CalculateSurface(1);				//After Nb search	
 	}
@@ -135,7 +136,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
           //#ifdef NONLOCK_SUM
-          //CalcPairPosList();    
+          CalcPairPosList();   
+          UpdateSmoothingLength();          
           //CalcRefTable();
           //CheckParticlePairs(2000);
           //#endif

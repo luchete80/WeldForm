@@ -42,7 +42,7 @@
 
 #include "Mesh.h"
 
-#define NONLOCK_SUM
+//#define NONLOCK_SUM
 #define MAX_NB_PER_PART 100
 
 //C++ Enum used for easiness of coding in the input files

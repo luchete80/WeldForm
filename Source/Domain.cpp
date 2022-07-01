@@ -2409,17 +2409,24 @@ inline void Domain::SolveDiffUpdateModEuler (double tf, double dt, double dtOut,
   // }
 // }
 inline void Domain::UpdateSmoothingLength(){
-  double dx = 0.;
-  #pragma omp parallel for schedule (static) private (dx) num_threads(Nproc)
+  double max = 0.;
+  double d;
+  #pragma omp parallel for schedule (static) private (max, d) num_threads(Nproc)
   for (size_t i=0; i<Particles.Size(); i++){
-    //if (Particles[i]->delta_pl_strain > DELTA_PL_STRAIN ){
-      if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
-      for (int n=0;n<ipair_SM[i];n++)
-        dx += norm(Particles[Anei[i][n]]->x - Particles[i]->x);
-      for (int n=0;n<jpair_SM[i];n++) 
-        dx += norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
-    
-      Particles[i]->h = dx/(ipair_SM[i]+jpair_SM[i]);    
+    if (Particles[i]->delta_pl_strain > DELTA_PL_STRAIN ){
+      //if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
+      for (int n=0;n<ipair_SM[i];n++){
+        d = norm(Particles[Anei[i][n]]->x - Particles[i]->x);
+        if (  d>  max)
+          max = d;
+      }
+      for (int n=0;n<jpair_SM[i];n++) {
+        d = norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
+        if ( d >  max)
+          max = d;
+      }
+      Particles[i]->h = max*0.707/2.*Particles[i]->hfac;   
+      //cout << "max dist " <<max<<endl;      
     }
   }
 }

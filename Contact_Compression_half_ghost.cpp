@@ -156,6 +156,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
     		dom.Particles[a]->Alpha		= 1.0;
+        dom.Particles[a]->hfac		= 1.2;
     		//dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
@@ -228,7 +229,7 @@ int main(int argc, char **argv) try
   
   timestep = (0.4 *h/(Cs+VMAX));
   dom.auto_ts=true;
-  dom.auto_ts_acc=true;
+  //dom.auto_ts_acc=true;
   dom.sqrt_h_a = 0.005;
   dom.SolveDiffUpdateKickDrift(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   

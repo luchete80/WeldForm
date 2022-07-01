@@ -607,7 +607,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
    // cout << "First index per proc "<<endl;
   // for (int p=0;p<Nproc;p++) cout << first_pair_perproc[p]<<endl;
 
-  pair_force.resize(pair_count);
+  //pair_force.resize(pair_count);
   //cout << "Pair Count: " << pair_count << endl;
 
   #pragma omp parallel for schedule (static) num_threads(Nproc)
