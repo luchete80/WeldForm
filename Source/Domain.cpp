@@ -26,7 +26,7 @@
 #include <vector>
 
 #define MIN_PS_FOR_NBSEARCH		1.e-6//TODO: MOVE TO CLASS MEMBER
-
+#define DELTA_PL_STRAIN 1.e-3
 #include <set>
 
 //https://stackoverflow.com/questions/19240540/dynamically-allocating-array-explain/19240932#19240932
@@ -2381,6 +2381,31 @@ inline void Domain::SolveDiffUpdateModEuler (double tf, double dt, double dtOut,
 	
 	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
 
+}
+
+inline void Domain::UpdateSmoothingLength(){
+  double dx = 0.;
+  neibcount = 0;
+  #pragma omp parallel for schedule (static) private (dx, neibcount) num_threads(Nproc)
+  for (size_t i=0; i<Particles.Size(); i++){
+    if (Particles[i]->delta_pl_strain > DELTA_PL_STRAIN ){
+      #ifdef __GNUC__
+      for (size_t k=0; k<Nproc;k++) 
+      #else
+      for (int k=0; k<Nproc;k++) 
+      #endif	
+      {
+        //TODO: USE NEW NEIB ARRAYS
+        for (size_t p=0; p<SMPairs[k].Size();p++) {
+          if (SMPairs[k][p].first == i || SMPairs[k][p].first == i){
+            dx+= norm(Particles[SMPairs[k][p].first]->x - Particles[SMPairs[k][p].first]]->x);
+            neibcount++;
+          }          
+        }//pairs
+      }//NProc
+      Particles[i]->h = dx/neibcount;
+    }
+  }
 }
 
 // THIS IS LIKE THE FRASER ALGORITHM
