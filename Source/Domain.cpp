@@ -2426,6 +2426,7 @@ inline void Domain::UpdateSmoothingLength(){
       }
       for (int n=0;n<jpair_SM[i];n++) {
         d = norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
+        sum +=d;
         if ( d <  min)
           min = d;
       }

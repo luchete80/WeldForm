@@ -621,7 +621,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
       }
     }
  
-  cout << "calc tables "<<endl;
+  //cout << "calc tables "<<endl;
   //TODO: parallelize?
   //#pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int k=0;k<Nproc;k++){
