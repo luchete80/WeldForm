@@ -2409,23 +2409,23 @@ inline void Domain::SolveDiffUpdateModEuler (double tf, double dt, double dtOut,
   // }
 // }
 inline void Domain::UpdateSmoothingLength(){
-  double max = 0.;
+  double min = 10000.;
   double d;
-  #pragma omp parallel for schedule (static) private (max, d) num_threads(Nproc)
+  #pragma omp parallel for schedule (static) private (min, d) num_threads(Nproc)
   for (size_t i=0; i<Particles.Size(); i++){
     if (Particles[i]->delta_pl_strain > DELTA_PL_STRAIN ){
       //if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
       for (int n=0;n<ipair_SM[i];n++){
         d = norm(Particles[Anei[i][n]]->x - Particles[i]->x);
-        if (  d>  max)
-          max = d;
+        if (  d<  min)
+          min = d;
       }
       for (int n=0;n<jpair_SM[i];n++) {
         d = norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
-        if ( d >  max)
-          max = d;
+        if ( d <  min)
+          min = d;
       }
-      Particles[i]->h = max*0.707/2.*Particles[i]->hfac;   
+      Particles[i]->h = min*Particles[i]->hfac;   
       //cout << "max dist " <<max<<endl;      
     }
   }
