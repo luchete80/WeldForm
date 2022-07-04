@@ -48,7 +48,6 @@ void UserAcc(SPH::Domain & domi)
 	#else
 	for (int i=0; i<domi.Particles.Size(); i++)
 	#endif
-	
 	{
 		for (int bc=0;bc<domi.bConds.size();bc++){
 			if (domi.Particles[i]->ID == domi.bConds[bc].zoneId ) {
@@ -60,6 +59,15 @@ void UserAcc(SPH::Domain & domi)
 			
 		}
 	}
+  
+  if (domi.contact){
+    for (int bc=0;bc<domi.bConds.size();bc++){
+      for (int m=0;m<domi.trimesh.size();m++){
+        if (domi.trimesh[m]->id == domi.bConds[bc].zoneId)
+          domi.trimesh[m]->SetVel(domi.bConds[bc].value);
+      }//mesh
+    }//bcs
+  }//contact
 }
 
 int main(int argc, char **argv) try {
@@ -242,7 +250,23 @@ int main(int argc, char **argv) try {
     
     if (contact){
       mesh.push_back(new TriMesh);
-      mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), dim(2)),40);
+      //TODO: CHANGE TO EVERY DIRECTION
+      int dens = 10;
+      readValue(rigbodies[0]["partSide"],dens);
+      mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);
+      cout << "Creating Spheres.."<<endl;
+      //mesh.v = Vec3_t(0.,0.,);
+      mesh[0]->CalcSpheres(); //DONE ONCE
+      double hfac = 1.1;	//Used only for Neighbour search radius cutoff
+      cout << "Adding mesh particles ...";
+      int id;
+      readValue(rigbodies[0]["zoneId"],id);
+      dom.AddTrimeshParticles(mesh[0], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+
+      dom.friction_dyn = 0.15;
+      dom.friction_sta = 0.15;
+      dom.PFAC = 0.8;
+      dom.DFAC = 0.0;
       
 		}
     
@@ -297,6 +321,8 @@ int main(int argc, char **argv) try {
     //TODO: CHECK IF DIFFERENT ZONES ARE INTERF
     //Generate Domain
     dom.gradKernelCorr = kernel_grad_corr;
+    dom.ts_nb_inc = 5;
+    
     if (dom.Particles.Size()>0){
     for (size_t a=0; a<dom.Particles.Size(); a++){
       dom.Particles[a]->G				= G;
@@ -313,7 +339,7 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->Beta			= beta;
       dom.Particles[a]->TI			= 0.3;
       dom.Particles[a]->TIInitDist	= dx;
-      dom.Particles[a]->hfac = 1.2;
+      dom.Particles[a]->hfac = 1.2; //Only for h update, not used
     }
 		dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
 		} else {

@@ -76,3 +76,4 @@
              Working on Input. Added symmetry case.
 20220629  -  Working with Symmetry. Cleaning old quarter mesh and adding 
              double symm (now XY symm) to input reading
+20220704  -  Working on Input file, contact cases

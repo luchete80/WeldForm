@@ -195,8 +195,8 @@ int main(int argc, char **argv) try
         //TOP
     		// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
     			// dom.Particles[a]->ID=8;           
-     		// if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
-    			// dom.Particles[a]->ID=9;         
+     		if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
+    			dom.Particles[a]->ID=9;         
         // if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
     			// dom.Particles[a]->ID=10;         
     	}
@@ -207,8 +207,9 @@ int main(int argc, char **argv) try
   dom.fric_type = Fr_Dyn;
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.1;
-  dom.friction_sta = 0.1;
+	dom.friction = 0.0;
+	dom.friction_dyn = 0.2;
+  dom.friction_sta = 0.0;
 	dom.PFAC = 0.6;
 	dom.DFAC = 0.;
 	dom.update_contact_surface = false;

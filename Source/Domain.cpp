@@ -682,6 +682,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
       zp += 2.*r;      
 		}
 		cout << "Particle Row count: "<< k << endl;
+    cout << "Max z particle: "<<zp - 2.*r<<endl;
 		int last_nonghostrow = k;
 		
 		k = 0;zp = V(2)/*+r*/;

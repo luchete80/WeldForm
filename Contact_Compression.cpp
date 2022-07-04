@@ -106,7 +106,7 @@ int main(){
 
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
-	
+	cout << "Plane z " <<cyl_zmax<<endl;
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
 	cout << "Plane z" << *mesh.node[0]<<endl;
 	
@@ -115,6 +115,17 @@ int main(){
 	cout << "Creating Spheres.."<<endl;
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
+
+	//////////////////////
+
+	//ALWAYS AFTER SPH PARTICLES
+	//TODO: DO THIS INSIDE SOLVER CHECKS
+	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
+											//Not for any force calc in contact formulation
+  cout << "Adding mesh particles ...";
+	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  cout << "done."<<endl;
+  
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = true;
@@ -160,15 +171,7 @@ int main(){
 	of = std::ofstream ("cf.csv", std::ios::out);
   of << "Time, cf, vypart"<<endl;
   
-	//////////////////////
 
-	//ALWAYS AFTER SPH PARTICLES
-	//TODO: DO THIS INSIDE SOLVER CHECKS
-	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
-											//Not for any force calc in contact formulation
-  cout << "Adding mesh particles ...";
-	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-  cout << "done."<<endl;
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries

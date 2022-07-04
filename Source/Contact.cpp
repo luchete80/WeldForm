@@ -19,6 +19,7 @@ void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id
 	contact_surf_id.push_back(id);
 	//trimesh[m] = &mesh;
   trimesh.push_back(mesh);
+  mesh->id = id;
 	cout << "Adding particles"<<endl;
 	for ( int e = 0; e < mesh->element.Size(); e++ ){
 		Vec3_t pos = mesh->element[e]->centroid;
@@ -738,15 +739,34 @@ inline void Domain::CalcContactForces2(){
                 
               
             } else {
-
+              //ORIGINAL
+             // if (friction > 0.) { 
+                // //if ( (norm(atg) * Particles[P1] -> Mass) < friction * norm(Particles[P1] -> contforce)) {
+                  // // cout << "acc " <<norm(atg) * Particles[P1] -> Mass<<endl;
+                  // // cout << "tg cont f "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
+                  // tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
+                  // omp_set_lock(&Particles[P1]->my_lock);
+                    // Particles[P1] -> tgdir = atg;
+                    // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    // stra_restr++;
+                  // // cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                  // // cout << "atg "<<atg<<endl;
+                  // omp_unset_lock(&Particles[P1]->my_lock);
+                  
+                // //}               
+              // }
+              
              if (friction_sta > 0.) { 
                 if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
                   && norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                  // cout << "acc " <<norm(atg) * Particles[P1] -> Mass<<endl;
+                  // cout << "tg cont f "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
                   omp_set_lock(&Particles[P1]->my_lock);
                     Particles[P1] -> tgdir = atg;
                     Particles[P1] -> a -= atg; 
                     stra_restr++;
-
+                  // cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                  // cout << "atg "<<atg<<endl;
                   omp_unset_lock(&Particles[P1]->my_lock);
                   
                 }               

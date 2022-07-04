@@ -94,7 +94,7 @@ SET(EXES
   #Contact_Compression_2surf
   #Contact_Compression_vel
   #Contact_Compression_test
-  Contact_Compression_half_ghost
+  #Contact_Compression_half_ghost
   #Contact_Compression_half_ghost_debug
   #Contact_Compression_qt_ghost
   #Contact_Compression_TRIP
