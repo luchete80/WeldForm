@@ -740,61 +740,61 @@ inline void Domain::CalcContactForces2(){
               
             } else {
               //ORIGINAL
-             if (friction > 0.) { 
-                //if ( (norm(atg) * Particles[P1] -> Mass) < friction * norm(Particles[P1] -> contforce)) {
-                  // cout << "acc " <<norm(atg) * Particles[P1] -> Mass<<endl;
-                  // cout << "tg cont f "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
-                  tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
-                  omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1] -> tgdir = atg;
-                    Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-                    stra_restr++;
-                  // cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
-                  // cout << "atg "<<atg<<endl;
-                  omp_unset_lock(&Particles[P1]->my_lock);
-                  
-                //}               
-              }
-              
-             // if (friction_sta > 0.) { 
-                // if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
-                  // && norm_tgvr < VMAX_FOR_STA_FRICTION) {
+             // if (friction > 0.) { 
+                // //if ( (norm(atg) * Particles[P1] -> Mass) < friction * norm(Particles[P1] -> contforce)) {
                   // // cout << "acc " <<norm(atg) * Particles[P1] -> Mass<<endl;
                   // // cout << "tg cont f "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
+                  // tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
                   // omp_set_lock(&Particles[P1]->my_lock);
                     // Particles[P1] -> tgdir = atg;
-                    // Particles[P1] -> a -= atg; 
+                    // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
                     // stra_restr++;
                   // // cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
                   // // cout << "atg "<<atg<<endl;
                   // omp_unset_lock(&Particles[P1]->my_lock);
                   
-                // }               
+                // //}               
               // }
               
-              // if (friction_dyn > 0.) {
-                // //if (fric_type==Fr_Dyn){
-                  // if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
-
-                  // // //TG DIRECTION
-                    // tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
-                    // omp_set_lock(&Particles[P1]->my_lock);
-                    // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-                    // omp_unset_lock(&Particles[P1]->my_lock);
-                    // //cout << "tg force "<< tgforce <<endl;
-                    
-                    // if (cont_heat_gen) {
-                    // //Fraser Eqns 3.109 to 3.111
-                    // //lambda is fraction passed to 
-                    // omp_set_lock(&Particles[P1]->my_lock);
-                    // Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
-                    // //cout<< Particles[P1]->q_fric_work<<endl;
-                    // omp_unset_lock(&Particles[P1]->my_lock);
-                    // }
+             if (friction_sta > 0.) { 
+                if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
+                  && norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                  // cout << "acc " <<norm(atg) * Particles[P1] -> Mass<<endl;
+                  // cout << "tg cont f "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
+                  omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> tgdir = atg;
+                    Particles[P1] -> a -= atg; 
+                    stra_restr++;
+                  // cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                  // cout << "atg "<<atg<<endl;
+                  omp_unset_lock(&Particles[P1]->my_lock);
                   
-                  // }
-                // //}
-              // }              
+                }               
+              }
+              
+              if (friction_dyn > 0.) {
+                //if (fric_type==Fr_Dyn){
+                  if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
+
+                  // //TG DIRECTION
+                    tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                    //cout << "tg force "<< tgforce <<endl;
+                    
+                    if (cont_heat_gen) {
+                    //Fraser Eqns 3.109 to 3.111
+                    //lambda is fraction passed to 
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+                    //cout<< Particles[P1]->q_fric_work<<endl;
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                    }
+                  
+                  }
+                //}
+              }              
               
             }
             
