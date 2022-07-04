@@ -10,6 +10,7 @@ using namespace SPH;
 using namespace std;
 
 std::ofstream of;
+#define TWO_SURF 1
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress = VMAX;
@@ -50,13 +51,16 @@ void UserAcc(SPH::Domain & domi) {
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  //#ifdef TWO_SURF
+  domi.trimesh[1]->SetVel(Vec3_t(0.0,0.,0));
+  //#endif
   of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
 }
 
 
-int main(){
+int main() try{
 	//
-	TriMesh mesh;
+	TriMesh mesh,mesh2;
 
 	cout << "Creating Mesh" << endl;
 
@@ -116,13 +120,19 @@ int main(){
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.15,-0.15, cyl_zmax),Vec3_t(0.15,0.15, cyl_zmax),20);
 	cout << "Plane z" << *mesh.node[0]<<endl;
 	
-	
+  //#ifdef TWO_SURF
+  mesh2.AxisPlaneMesh(2,false,Vec3_t(-0.15,-0.15, -h),Vec3_t(0.15,0.15, -h),20);
+	//#endif
 	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
 	cout << "Creating Spheres.."<<endl;
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
-
-	cout << "Done."<<endl;
+  
+  //#ifdef TWO_SURF
+  mesh2.CalcSpheres();
+  //#endif
+	
+  cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = true;
 			
@@ -145,12 +155,14 @@ int main(){
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
+    #ifndef TWO_SURF
 		if ( z < dx ){
 			dom.Particles[a]->ID=2;
 			// dom.Particles[a]->IsFree=false;
 			// dom.Particles[a]->NoSlip=true;			
       dom.Particles[a]->not_write_surf_ID = true;		
 		}
+    #endif
 		// if ( z > L )
 			// dom.Particles[a]->ID=3;
 	}
@@ -178,6 +190,9 @@ int main(){
 											//Not for any force calc in contact formulation
   cout << "Adding mesh particles ...";
 	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  //#ifdef TWO_SURF
+  dom.AddTrimeshParticles(&mesh2, hfac, 11); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  //#endif
   cout << "done."<<endl;
     
 
@@ -196,3 +211,5 @@ int main(){
 	
 	dom.WriteXDMF("ContactTest");
 }
+
+MECHSYS_CATCH
