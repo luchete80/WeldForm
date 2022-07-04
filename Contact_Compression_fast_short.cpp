@@ -157,9 +157,7 @@ int main() try{
 		double z = dom.Particles[a]->x(2);
     #ifndef TWO_SURF
 		if ( z < dx ){
-			dom.Particles[a]->ID=2;
-			// dom.Particles[a]->IsFree=false;
-			// dom.Particles[a]->NoSlip=true;			
+			dom.Particles[a]->ID=2;	
       dom.Particles[a]->not_write_surf_ID = true;		
 		}
     #endif
