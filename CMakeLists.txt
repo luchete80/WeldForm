@@ -91,6 +91,7 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
+  Contact_Compression_fast_short
   #Contact_Compression_2surf
   #Contact_Compression_vel
   #Contact_Compression_test
