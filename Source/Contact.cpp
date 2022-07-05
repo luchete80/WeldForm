@@ -973,3 +973,5 @@ inline void Domain::CalcContactForcesAnalytic(){
 
 
 }; //SPH
+
+#include "Contact_Zhan.cpp"

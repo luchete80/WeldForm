@@ -185,6 +185,7 @@ namespace SPH {
 		double 	cont_stiff;
     double  delta_cont; // penetration
 		Vec3_t	contforce;
+    Vec3_t	tgforce;
     int     mesh;       //Corresponding rigid mesh
 		
 		Vec3_t	tgdir;			//TEMP: FO DEBUG
