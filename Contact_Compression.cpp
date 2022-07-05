@@ -145,6 +145,8 @@ int main(){
 		//dom.Particles[a]->Beta		= 1.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
+    double x = dom.Particles[a]->x(0);
+    double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
 		if ( z < 0 ){
 			dom.Particles[a]->ID=2;
@@ -152,8 +154,9 @@ int main(){
 			// dom.Particles[a]->NoSlip=true;			
       dom.Particles[a]->not_write_surf_ID = true;		
 		}
-		// if ( z > L )
-			// dom.Particles[a]->ID=3;
+		if ( z > L - dx/2.  && abs(x) < 2*dx && y > R - 2*dx && a < dom.first_fem_particle_idx[0]){
+      cout << "CONTROL, particle "<< a << "x "<<x<< ", y " << y<<", z "<<z<<endl;
+    }
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
@@ -183,7 +186,7 @@ int main(){
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

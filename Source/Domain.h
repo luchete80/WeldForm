@@ -195,7 +195,7 @@ public:
 	inline void CalcContactForces();
   inline void CalcContactForcesAnalytic();
   inline void CalcContactForces2(); //Position criteria, SEO Contact detection
-  inline void CalcContactForcesZhan();
+  inline void CalcContactForcesWang();
   inline void CalcContactInitialGap();
   inline void UpdateContactParticles();  //Update position, velocity and normals FROM MESH
   

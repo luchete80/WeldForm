@@ -271,16 +271,16 @@ inline void Domain::CalcContactForces(){
   double norm_tgvr;
   double max_vr = 0.;
   int m;
- 
+  double normal_cf;
   Vec3_t atg;
   bool end;
   contact_force_sum = 0.;
   double delta;
-  
+  Vec3_t delta_tg;
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
   int stra_restr = 0; //restricted static
-	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,delta_,delta, deltat_cont, m, inside,i,j,crit,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,delta_,delta, deltat_cont, m, inside,delta_tg,i,j,crit,normal_cf,force2,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -329,7 +329,8 @@ inline void Domain::CalcContactForces(){
 				e = trimesh[m]-> element[Particles[P2]->element];
 				//double pplane = trimesh-> element[Particles[P2]->element] -> pplane; 
 				//cout<< "contact distance"<<Particles[P1]->h + trimesh-> element[Particles[P2]->element] -> pplane - dot (Particles[P2]->normal,	Particles[P1]->x)<<endl;
-      				
+      	//  Distance plane to point: 
+        //xi . n - d = pplane  (Point at side of normal)	
 				deltat_cont = ( Particles[P1]->h + trimesh[m]-> element[Particles[P2]->element] -> pplane 
                       - dot (Particles[P2]->normal,	Particles[P1]->x) ) / (- delta_);								//Eq 3-142 
 				//Vec3_t Ri = Particles[P1]->x + deltat_cont * vr;	//Eq 3-139 Ray from SPH particle in the rel velocity direction
@@ -342,7 +343,6 @@ inline void Domain::CalcContactForces(){
 				// omp_unset_lock(&Particles[P1]->my_lock);
 				// if (dt_fext > deltat)
 					// cout << "Time step size ("<<deltat<<" is larger than max allowable contact forces step ("<<dt_fext<<")"<<endl;
-        //cout << "deltat_cont "<<deltat_cont<< "deltat" << deltat <<endl; 
 				if (deltat_cont < deltat){ //Originaly //	if (deltat_cont < std::min(deltat,dt_fext) 
 					inside_time++;
 					//cout << "Inside dt contact" <<endl;
@@ -409,9 +409,9 @@ inline void Domain::CalcContactForces(){
             
             //psi_cont = Particles[i]->Cs *Particles[i]->Density;
             //cout << "psi_cont "<<psi_cont/DFAC<<endl; 
-            
+            normal_cf = (kij * delta - psi_cont * delta_);
 						omp_set_lock(&Particles[P1]->my_lock);
-						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
+						Particles[P1] -> contforce = normal_cf * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
             Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
 
@@ -457,61 +457,62 @@ inline void Domain::CalcContactForces(){
               
             } else {
               if (friction_sta > 0.) { 
-
-                if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
-                  && norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
+                tgforce = (kij * delta_tg - psi_cont * delta_);
+                if (P1 == 12415){
+                  //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
+                cout << "delta tg 1 "<<delta_tg<<endl;
+                delta_tg = (vr - dot(vr,Particles[P2]->normal)*Particles[P2]->normal)* (deltat - deltat_cont); //Viewed from P1
+                cout << "delta tg 2 "<<delta_tg<<endl;
+                }
+                
+                if (norm(tgforce) < friction_sta * normal_cf ){
                   omp_set_lock(&Particles[P1]->my_lock);
-                  //cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
-                  //cout << "atg "<<atg<<endl;
-                  Particles[P1] -> tgdir = atg;
-                  Particles[P1] -> a -= atg; 
-                  stra_restr++;
-                  // THIS CRASHES
-                  //Particles[P1] -> v = Particles[P1] -> va = Particles[P1] -> vb = Particles[P2] -> v; //This is changed at integration
-                  
-                  //cout << "applied force "<<(norm(atg) * Particles[P1] -> Mass)<<endl;
-                  //cout << "cont force "<<norm(Particles[P1] -> contforce)<<endl;
-                  //cout << "particle 2 vel "<<Particles[P2] -> v<<endl;
-                  //cout << "particle accel x and y after"<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
-                  //cout << "particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                    Particles[P1] -> contforce += tgforce;
+                    Particles[P1] -> a += tgforce / Particles[P1]->Mass;  // //Eqn 30. Zhan
                   omp_unset_lock(&Particles[P1]->my_lock);
-                  // omp_set_lock(&dom_lock);
-                      // sta_frict_particles++;
-                  // omp_unset_lock(&dom_lock);
+                }
+                // if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
+                  // && norm_tgvr < VMAX_FOR_STA_FRICTION) {
+                  // omp_set_lock(&Particles[P1]->my_lock);
+                  // //cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                  // //cout << "atg "<<atg<<endl;
+                  // Particles[P1] -> tgdir = atg;
+                  // Particles[P1] -> a -= atg; 
+                  // stra_restr++;
+                  // // THIS CRASHES
+                  // omp_unset_lock(&Particles[P1]->my_lock);
+                  // // omp_set_lock(&dom_lock);
+                      // // sta_frict_particles++;
+                  // // omp_unset_lock(&dom_lock);
                   
-                }
-                else {
-                  // omp_set_lock(&dom_lock);
-                    // max_reached_part++;
-                  // omp_unset_lock(&dom_lock);
-                  //cout << "Max force reached! particle vx vy "<< Particles[P1] -> v[0]<<", "<<Particles[P1] -> v[1] <<endl;
-                }
+                // }
                 
               }
               
-              if (friction_dyn > 0.) {
-                //if (fric_type==Fr_Dyn){
-                  if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
+              // if (friction_dyn > 0.) {
+                // //if (fric_type==Fr_Dyn){
+                  // if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
 
-                  // //TG DIRECTION
-                    tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
-                    omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-                    omp_unset_lock(&Particles[P1]->my_lock);
-                    //cout << "tg force "<< tgforce <<endl;
+                  // // //TG DIRECTION
+                    // tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
+                    // omp_set_lock(&Particles[P1]->my_lock);
+                    // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    // omp_unset_lock(&Particles[P1]->my_lock);
+                    // //cout << "tg force "<< tgforce <<endl;
                     
-                    if (cont_heat_gen) {
-                    //Fraser Eqns 3.109 to 3.111
-                    //lambda is fraction passed to 
-                    omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
-                    //cout<< Particles[P1]->q_fric_work<<endl;
-                    omp_unset_lock(&Particles[P1]->my_lock);
-                    }
+                    // if (cont_heat_gen) {
+                    // //Fraser Eqns 3.109 to 3.111
+                    // //lambda is fraction passed to 
+                    // omp_set_lock(&Particles[P1]->my_lock);
+                    // Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+                    // //cout<< Particles[P1]->q_fric_work<<endl;
+                    // omp_unset_lock(&Particles[P1]->my_lock);
+                    // }
                   
-                  }
-                //}
-              }
+                  // }
+                // //}
+              // }
 						}//Friction type
 						if   (force2 > max_contact_force ) max_contact_force = force2;
 						else if (force2 < min_contact_force ) min_contact_force = force2;
@@ -607,6 +608,7 @@ inline void Domain::CalcContactForces2(){
   double norm_tgvr;
   double max_vr = 0.;
   int m;
+  double normal_cf;
  
   Vec3_t atg;
   bool end;
@@ -615,7 +617,7 @@ inline void Domain::CalcContactForces2(){
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
   int stra_restr = 0; //restricted static
-	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_,delta, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_,delta, normal_cf, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -694,16 +696,19 @@ inline void Domain::CalcContactForces2(){
 						kij = PFAC * Particles[P1]-> cont_stiff;
 						omega = sqrt (kij/Particles[P1]->Mass);
 						psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
+            
+            //normal_cf = 2.0 * Particles[P1]->Mass /(deltat*deltat )*delta;
 
 						omp_set_lock(&Particles[P1]->my_lock);
-						Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
+						//Particles[P1] -> contforce = normal_cf *  Particles[P2]->normal; 
+            Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159
             Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
 
             omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);
             omp_unset_lock(&dom_lock);	
-            
+            //inside_pairs++;
 						
 						// TANGENTIAL COMPONENNT DIRECTION
 						// Fraser Eqn 3-167
@@ -729,74 +734,74 @@ inline void Domain::CalcContactForces2(){
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 
             
-            if (fric_type == Fr_Bound){
-                omp_set_lock(&Particles[P1]->my_lock);
-                Particles[P1] -> a -= atg; 
-                Particles[P1] -> impose_vel = true;
-                Particles[P1] -> vc = Particles[P2]->vc; //Only tg vel?
+            // if (fric_type == Fr_Bound){
+                // omp_set_lock(&Particles[P1]->my_lock);
+                // Particles[P1] -> a -= atg; 
+                // Particles[P1] -> impose_vel = true;
+                // Particles[P1] -> vc = Particles[P2]->vc; //Only tg vel?
 
-                omp_unset_lock(&Particles[P1]->my_lock);
+                // omp_unset_lock(&Particles[P1]->my_lock);
                 
               
-            } else {
-              //ORIGINAL
-             // if (friction > 0.) { 
-                // //if ( (norm(atg) * Particles[P1] -> Mass) < friction * norm(Particles[P1] -> contforce)) {
+            // } else {
+              // //ORIGINAL
+             // // if (friction > 0.) { 
+                // // //if ( (norm(atg) * Particles[P1] -> Mass) < friction * norm(Particles[P1] -> contforce)) {
+                  // // // cout << "acc " <<norm(atg) * Particles[P1] -> Mass<<endl;
+                  // // // cout << "tg cont f "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
+                  // // tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
+                  // // omp_set_lock(&Particles[P1]->my_lock);
+                    // // Particles[P1] -> tgdir = atg;
+                    // // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    // // stra_restr++;
+                  // // // cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
+                  // // // cout << "atg "<<atg<<endl;
+                  // // omp_unset_lock(&Particles[P1]->my_lock);
+                  
+                // // //}               
+              // // }
+              
+             // if (friction_sta > 0.) { 
+                // if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
+                  // && norm_tgvr < VMAX_FOR_STA_FRICTION) {
                   // // cout << "acc " <<norm(atg) * Particles[P1] -> Mass<<endl;
                   // // cout << "tg cont f "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
-                  // tgforce = friction * norm(Particles[P1] -> contforce) * tgdir;
                   // omp_set_lock(&Particles[P1]->my_lock);
                     // Particles[P1] -> tgdir = atg;
-                    // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    // Particles[P1] -> a -= atg; 
                     // stra_restr++;
                   // // cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
                   // // cout << "atg "<<atg<<endl;
                   // omp_unset_lock(&Particles[P1]->my_lock);
                   
-                // //}               
+                // }               
               // }
               
-             if (friction_sta > 0.) { 
-                if ( (norm(atg) * Particles[P1] -> Mass) < friction_sta * norm(Particles[P1] -> contforce)
-                  && norm_tgvr < VMAX_FOR_STA_FRICTION) {
-                  // cout << "acc " <<norm(atg) * Particles[P1] -> Mass<<endl;
-                  // cout << "tg cont f "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
-                  omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1] -> tgdir = atg;
-                    Particles[P1] -> a -= atg; 
-                    stra_restr++;
-                  // cout << "particle accel x and y before "<<Particles[P1] -> a[0]<<", "<<Particles[P1] -> a[1] <<endl;
-                  // cout << "atg "<<atg<<endl;
-                  omp_unset_lock(&Particles[P1]->my_lock);
-                  
-                }               
-              }
-              
-              if (friction_dyn > 0.) {
-                //if (fric_type==Fr_Dyn){
-                  if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
+              // if (friction_dyn > 0.) {
+                // //if (fric_type==Fr_Dyn){
+                  // if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
 
-                  // //TG DIRECTION
-                    tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
-                    omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-                    omp_unset_lock(&Particles[P1]->my_lock);
-                    //cout << "tg force "<< tgforce <<endl;
+                  // // //TG DIRECTION
+                    // tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
+                    // omp_set_lock(&Particles[P1]->my_lock);
+                    // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    // omp_unset_lock(&Particles[P1]->my_lock);
+                    // //cout << "tg force "<< tgforce <<endl;
                     
-                    if (cont_heat_gen) {
-                    //Fraser Eqns 3.109 to 3.111
-                    //lambda is fraction passed to 
-                    omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
-                    //cout<< Particles[P1]->q_fric_work<<endl;
-                    omp_unset_lock(&Particles[P1]->my_lock);
-                    }
+                    // if (cont_heat_gen) {
+                    // //Fraser Eqns 3.109 to 3.111
+                    // //lambda is fraction passed to 
+                    // omp_set_lock(&Particles[P1]->my_lock);
+                    // Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+                    // //cout<< Particles[P1]->q_fric_work<<endl;
+                    // omp_unset_lock(&Particles[P1]->my_lock);
+                    // }
                   
-                  }
-                //}
-              }              
+                  // }
+                // //}
+              // }              
               
-            }
+            // }//!else Fr Bound
             
 					}// if inside
         } //If distance is less than h
@@ -810,7 +815,7 @@ inline void Domain::CalcContactForces2(){
 	
 	//if (max_contact_force > 0.){
     //cout << "particles surpassed max fr force"<<max_reached_part<< ", below force: " <<sta_frict_particles<<endl;
-		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP
 		// if (min_force_ts> 0)
@@ -974,4 +979,4 @@ inline void Domain::CalcContactForcesAnalytic(){
 
 }; //SPH
 
-#include "Contact_Zhan.cpp"
+//#include "Contact_Wang.cpp"

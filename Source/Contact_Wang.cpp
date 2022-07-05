@@ -11,7 +11,7 @@ namespace SPH {
 ////            rigid body system with hybrid contact method
 //// HERE PREDICTED VELOCITY IS CURRENT VELOCITY
 ////////////////////////////////
-inline void Domain::CalcContactForcesZhan(){
+inline void Domain::CalcContactForcesWang(){
 	
 	// #pragma omp parallel for num_threads(Nproc)
 	// #ifdef __GNUC__
@@ -63,11 +63,13 @@ inline void Domain::CalcContactForcesZhan(){
   double dt_fext;
   Element* e;
   bool inside;
+  Vec3_t delta_tg;
   
-  Vec3_t tgvr, tgdir;
+  Vec3_t tgforce, tgdir;
   double norm_tgvr;
   double max_vr = 0.;
   int m;
+  double ffac;
  
   Vec3_t atg;
   bool end;
@@ -78,7 +80,7 @@ inline void Domain::CalcContactForcesZhan(){
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
   int stra_restr = 0; //restricted static
-	//#pragma omp parallel for schedule (static) private(P1,P2,end,vr,vp,delta_,delta, deltat_cont, m, inside,i,j,crit,stick_cf,normal_cf,dt_fext,kij,omega,psi_cont,e,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) private(P1,P2,end,vr,vp,delta_,delta, deltat_cont, m, inside,i,j,ffac, crit,stick_cf,normal_cf,dt_fext,kij,omega,psi_cont,e,tgvr,tgforce,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -167,7 +169,8 @@ inline void Domain::CalcContactForcesZhan(){
             delta = (deltat - deltat_cont) * delta_;
             //POSITION CRITERIA (WANG 2013)
             //normal_cf = 2.0 * Particles[P1]->Mass /((deltat - deltat_cont)*(deltat - deltat_cont))*delta;
-            normal_cf = 2.0 * Particles[P1]->Mass /(deltat*deltat )*delta;
+            ffac = PFAC * 2.0 * Particles[P1]->Mass /(deltat*deltat );
+            normal_cf = ffac * delta;
             if ((deltat_cont) < 0)
             //cout << "deltat_cont" <<deltat_cont<<", deltat "<<deltat<<endl;
             
@@ -179,6 +182,27 @@ inline void Domain::CalcContactForcesZhan(){
             omp_set_lock(&dom_lock);            
               contact_force_sum += normal_cf;
             omp_unset_lock(&dom_lock);	
+            
+            //Normal disp = (v1-v2) * n
+            //delta tg + delta normal = total 
+            //is viewed from P2, hence the minus vr
+            // -vr = -vr tg  - vr * normal
+            //Where -vr * n = + delta
+            delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal); 
+            if (P1 == 12415){
+              //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
+            cout << "delta tg 1 "<<delta_tg<<endl;
+            delta_tg = (vr - dot(vr,Particles[P2]->normal)*Particles[P2]->normal)* (deltat - deltat_cont); //Viewed from P1
+            cout << "delta tg 2 "<<delta_tg<<endl;
+            }
+            tgforce = - ffac * delta_tg;
+            //cout << tgforce << 
+            //if ( norm(tgforce) < friction_sta * normal_cf ) {
+              omp_set_lock(&Particles[P1]->my_lock);
+                Particles[P1] -> contforce += tgforce;
+                Particles[P1] -> a += tgforce / Particles[P1]->Mass;  // //Eqn 30. Zhan
+              omp_unset_lock(&Particles[P1]->my_lock);
+            //}
             
             //VELOCITY CRITERIA
             //stick_cf = (vp - Particles[P2]->v) * Particles[P1]->Mass / (deltat - deltat_cont) - Particles[P1] -> contforce; //Eqn 31 Zhan
