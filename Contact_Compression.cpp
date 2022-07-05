@@ -160,11 +160,11 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction_dyn = 0.15;
-	dom.friction_sta = 0.15;
+	dom.friction_dyn = 0.0;
+	dom.friction_sta = 0.2;
 	dom.PFAC = 0.8;
-	dom.DFAC = 0.0;
-  dom.fric_type = Fr_Bound;
+	dom.DFAC = 0.2;
+  dom.fric_type = Fr_Dyn;
 
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
@@ -186,7 +186,7 @@ int main(){
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

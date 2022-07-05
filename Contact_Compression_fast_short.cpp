@@ -167,7 +167,7 @@ int main() try{
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction_dyn = 0.15;
-	dom.friction_sta = 0.15;
+	dom.friction_sta = 0.2;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Bound;
@@ -189,7 +189,7 @@ int main() try{
   cout << "Adding mesh particles ...";
 	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
   //#ifdef TWO_SURF
-  dom.AddTrimeshParticles(&mesh2, hfac, 11); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  //dom.AddTrimeshParticles(&mesh2, hfac, 11); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
   //#endif
   cout << "done."<<endl;
     
