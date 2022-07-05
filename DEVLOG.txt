@@ -77,3 +77,7 @@
 20220629  -  Working with Symmetry. Cleaning old quarter mesh and adding 
              double symm (now XY symm) to input reading
 20220704  -  Working on Input file, contact cases
+20220705  -  Begining to add wang and Zhan static friction coeff criteria
+             IMPORTANT. Velocity criteria is not working well.
+             Try to do wag ceiteria as seo but with dist in future time: i.e. 
+             Instead of xi for dist, use xi+v*dt
