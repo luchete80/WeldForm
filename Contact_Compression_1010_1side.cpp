@@ -199,12 +199,12 @@ int main() try{
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
   //dom.friction = 0.2;
-	dom.friction_dyn = 0.2;
-  dom.friction_sta = 0.2;
+	dom.friction_dyn = 0.0;
+  dom.friction_sta = 0.0;
   dom.fric_type = Fr_Dyn;
  
-	dom.PFAC = 0.8;
-	dom.DFAC = 0.2;
+	dom.PFAC = 0.6;
+	dom.DFAC = 0.0;
 
 	//ALWAYS AFTER SPH PARTICLES
 	//TODO: DO THIS INSIDE SOLVER CHECKS

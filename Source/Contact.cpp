@@ -734,7 +734,24 @@ inline void Domain::CalcContactForces2(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 
-            
+              // if (friction_sta > 0.) { 
+                // //delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
+                
+                // if (P1 == 12415){
+                  // //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
+                // cout << "delta tg 1 "<<delta_tg<<endl;
+                // delta_tg = (vr - dot(vr,Particles[P2]->normal)*Particles[P2]->normal)* (deltat - deltat_cont); //Viewed from P1
+                // tgforce = (kij * delta_tg - psi_cont * delta_);
+                // cout << "delta tg 2 "<<delta_tg<<endl;
+                // }
+                
+                // if (norm(tgforce) < friction_sta * normal_cf ){
+                  // omp_set_lock(&Particles[P1]->my_lock);
+                    // Particles[P1] -> contforce += tgforce;
+                    // Particles[P1] -> a -= tgforce / Particles[P1]->Mass;  // //Eqn 30. Zhan
+                  // omp_unset_lock(&Particles[P1]->my_lock);
+                // }
+              // }
             // if (fric_type == Fr_Bound){
                 // omp_set_lock(&Particles[P1]->my_lock);
                 // Particles[P1] -> a -= atg; 
@@ -816,7 +833,7 @@ inline void Domain::CalcContactForces2(){
 	
 	//if (max_contact_force > 0.){
     //cout << "particles surpassed max fr force"<<max_reached_part<< ", below force: " <<sta_frict_particles<<endl;
-		cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
+		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
 		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
 		//TEMP
 		// if (min_force_ts> 0)
