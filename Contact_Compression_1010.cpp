@@ -3,7 +3,7 @@
 #include <iostream>
 #include "InteractionAlt.cpp"
 
-#define VMAX	0.06
+#define VMAX	1.0
 
 using namespace SPH;
 using namespace std;
@@ -11,49 +11,49 @@ using namespace std;
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 		vcompress = VMAX;
-	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-	#ifdef __GNUC__
-	for (size_t i=0; i<domi.Particles.Size(); i++)
-	#else
-	for (int i=0; i<domi.Particles.Size(); i++)
-	#endif
-	{
-    //zcenter, x=R, y=0 particles
-		if (domi.Particles[i]->ID == 2) {
-			domi.Particles[i]->a[1] = domi.Particles[i]->a[2] = 0.;
-			domi.Particles[i]->v[1] = domi.Particles[i]->v[2] = 0.;
-			domi.Particles[i]->va[1] = domi.Particles[i]->va[2] = 0.;
-			domi.Particles[i]->vb[1] = domi.Particles[i]->vb[2] = 0.;
+	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
+	// #ifdef __GNUC__
+	// for (size_t i=0; i<domi.Particles.Size(); i++)
+	// #else
+	// for (int i=0; i<domi.Particles.Size(); i++)
+	// #endif
+	// {
+    // //zcenter, x=R, y=0 particles
+		// if (domi.Particles[i]->ID == 2) {
+			// domi.Particles[i]->a[1] = domi.Particles[i]->a[2] = 0.;
+			// domi.Particles[i]->v[1] = domi.Particles[i]->v[2] = 0.;
+			// domi.Particles[i]->va[1] = domi.Particles[i]->va[2] = 0.;
+			// domi.Particles[i]->vb[1] = domi.Particles[i]->vb[2] = 0.;
 
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}    
-    //zcenter, x=0, y=R particles
-		if (domi.Particles[i]->ID == 3) {
-			domi.Particles[i]->a[0] = domi.Particles[i]->a[2] = 0.;
-			domi.Particles[i]->v[0] = domi.Particles[i]->v[2] = 0.;
-			domi.Particles[i]->va[0] = domi.Particles[i]->va[2] = 0.;
-			domi.Particles[i]->vb[0] = domi.Particles[i]->vb[2] = 0.;
+			// //domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }    
+    // //zcenter, x=0, y=R particles
+		// if (domi.Particles[i]->ID == 3) {
+			// domi.Particles[i]->a[0] = domi.Particles[i]->a[2] = 0.;
+			// domi.Particles[i]->v[0] = domi.Particles[i]->v[2] = 0.;
+			// domi.Particles[i]->va[0] = domi.Particles[i]->va[2] = 0.;
+			// domi.Particles[i]->vb[0] = domi.Particles[i]->vb[2] = 0.;
 
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}  
-		if (domi.Particles[i]->ID == 4) {
-			domi.Particles[i]->a = 0.;
-			domi.Particles[i]->v = 0.;
-      domi.Particles[i]->va = 0.;
-      domi.Particles[i]->vb = 0.;
+			// //domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }  
+		// if (domi.Particles[i]->ID == 4) {
+			// domi.Particles[i]->a = 0.;
+			// domi.Particles[i]->v = 0.;
+      // domi.Particles[i]->va = 0.;
+      // domi.Particles[i]->vb = 0.;
 
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}        
-    //CENTER TOP AND BOTTOM, IN ORDER TO NOT TO SLIDE IF CONTACT IS UNSTABLE 
-		if (domi.Particles[i]->ID == 5) {
-			domi.Particles[i]->a[0] = domi.Particles[i]->a[1] = 0.;
-			domi.Particles[i]->v[0] = domi.Particles[i]->v[1] = 0.;
-			domi.Particles[i]->va[0] = domi.Particles[i]->va[1] = 0.;
-			domi.Particles[i]->vb[0] = domi.Particles[i]->vb[1] = 0.;
+			// //domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }        
+    // //CENTER TOP AND BOTTOM, IN ORDER TO NOT TO SLIDE IF CONTACT IS UNSTABLE 
+		// if (domi.Particles[i]->ID == 5) {
+			// domi.Particles[i]->a[0] = domi.Particles[i]->a[1] = 0.;
+			// domi.Particles[i]->v[0] = domi.Particles[i]->v[1] = 0.;
+			// domi.Particles[i]->va[0] = domi.Particles[i]->va[1] = 0.;
+			// domi.Particles[i]->vb[0] = domi.Particles[i]->vb[1] = 0.;
 
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}     
-	}
+			// //domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }     
+	// }
   
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
   domi.trimesh[1]->SetVel(Vec3_t(0.0,0., vcompress/2.));
