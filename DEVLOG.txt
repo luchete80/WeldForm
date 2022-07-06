@@ -81,3 +81,8 @@
              IMPORTANT. Velocity criteria is not working well.
              Try to do wag ceiteria as seo but with dist in future time: i.e. 
              Instead of xi for dist, use xi+v*dt
+20220706  -  First satisfactory results in contact problem with generic friction.
+             A mixed algorithm based on Wang for contact force and Zhan for
+             tangential force comparison (velocity rates), comparing with 
+             current velocity, leads to an acceptable algorithm.
+             
