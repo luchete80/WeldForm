@@ -467,6 +467,7 @@ inline void Domain::CalcContactForces(){
                 cout << "delta tg 2 "<<delta_tg<<endl;
                 }
                 
+                //DISPLACEMENT CRITERIA
                 if (norm(tgforce) < friction_sta * normal_cf ){
                   omp_set_lock(&Particles[P1]->my_lock);
                     Particles[P1] -> contforce += tgforce;
@@ -607,9 +608,11 @@ inline void Domain::CalcContactForces2(){
   
   Vec3_t tgvr, tgdir;
   double norm_tgvr;
+  Vec3_t delta_tg;
   double max_vr = 0.;
   int m;
   double normal_cf;
+  Vec3_t du;// If no contact
  
   Vec3_t atg;
   bool end;
@@ -618,7 +621,7 @@ inline void Domain::CalcContactForces2(){
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
   int stra_restr = 0; //restricted static
-	//#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_,delta, normal_cf, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	//#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, du, normal_cf, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -733,25 +736,31 @@ inline void Domain::CalcContactForces2(){
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
-
-              // if (friction_sta > 0.) { 
+            //Wang2013, but applied to current step
+            du = vr * deltat;
+            delta_tg = du - dot(du, Particles[P2]->normal)*Particles[P2]->normal;
+            tgforce = kij * delta_tg;
+            //tgforce = (kij * delta_tg - psi_cont * delta_);
+            
+            if (friction_sta > 0.) { 
                 // //delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
                 
-                // if (P1 == 12415){
-                  // //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
-                // cout << "delta tg 1 "<<delta_tg<<endl;
-                // delta_tg = (vr - dot(vr,Particles[P2]->normal)*Particles[P2]->normal)* (deltat - deltat_cont); //Viewed from P1
-                // tgforce = (kij * delta_tg - psi_cont * delta_);
-                // cout << "delta tg 2 "<<delta_tg<<endl;
-                // }
+                if (P1 == 12415){
+                  //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
+                cout << "delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
+                cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
+                cout << "tgforce " <<norm(tgforce) << ", mu N "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
+                cout << "norm atg: "<<norm(atg)<<endl;
+                }
                 
-                // if (norm(tgforce) < friction_sta * normal_cf ){
-                  // omp_set_lock(&Particles[P1]->my_lock);
-                    // Particles[P1] -> contforce += tgforce;
-                    // Particles[P1] -> a -= tgforce / Particles[P1]->Mass;  // //Eqn 30. Zhan
-                  // omp_unset_lock(&Particles[P1]->my_lock);
-                // }
-              // }
+                //if (norm(tgforce) < friction_sta * norm(Particles[P1] -> contforce) ){
+                  omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> contforce -= tgforce;
+                    Particles[P1] -> a -= atg; 
+                    //Particles[P1] -> a -= tgforce / Particles[P1]->Mass;  // //Eqn 30. Zhan
+                  omp_unset_lock(&Particles[P1]->my_lock);
+                //}
+            }
             // if (fric_type == Fr_Bound){
                 // omp_set_lock(&Particles[P1]->my_lock);
                 // Particles[P1] -> a -= atg; 
@@ -997,4 +1006,4 @@ inline void Domain::CalcContactForcesAnalytic(){
 
 }; //SPH
 
-//#include "Contact_Wang.cpp"
+#include "Contact_Wang.cpp"

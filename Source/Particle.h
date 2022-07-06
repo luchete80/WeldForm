@@ -89,6 +89,7 @@ namespace SPH {
 		double 	FPMassC;	///< Mass coefficient for fixed particles to avoid leaving particles
 		double 	Mass;		///< Mass of the particle
 		Vec3_t	Displacement;	///< Density of the particle n+1
+    Vec3_t  x_prev;           //ONLY FOR SEO CONTACT (contact in current, not predicted, step)
 
 		Mat3_t	StrainRate;	///< Global shear Strain rate tensor n
 		Mat3_t	RotationRate;	///< Global rotation tensor n

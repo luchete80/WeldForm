@@ -177,7 +177,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     GeneralAfter(*this); //Fix free accel
     
     clock_beg = clock(); 
-    if (contact) CalcContactForces2();
+    if (contact) CalcContactForcesWang();
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 		
@@ -209,6 +209,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     clock_beg = clock();   
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->x_prev = Particles[i]->x;
       du = (Particles[i]->v + Particles[i]->VXSPH)*deltat*factor;
       Particles[i]->Displacement += du;
       Particles[i]->x += du;
