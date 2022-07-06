@@ -4,6 +4,7 @@
 #define VMAX_FOR_STA_FRICTION	1.e-3
 #include "Plane.h"
 
+
 namespace SPH {
 
 //////////////////////////////// 
@@ -63,6 +64,8 @@ inline void Domain::CalcContactForcesWang(){
   double normal_cf;
   Vec3_t du;// If no contact
  
+  bool ref_accel = true;
+  
   Vec3_t atg;
   bool end;
   contact_force_sum = 0.;
@@ -71,7 +74,8 @@ inline void Domain::CalcContactForcesWang(){
   int sta_frict_particles = 0;
   int stra_restr = 0; //restricted static
   Vec3_t x_pred, vr_pred;
-	//#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, x_pred, imp_force, vr_pred, du, normal_cf, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+  Vec3_t ref_tg;
+	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, x_pred, imp_force, ref_tg, vr_pred, du, normal_cf, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -187,7 +191,8 @@ inline void Domain::CalcContactForcesWang(){
 								this -> min_force_ts = min_force_ts_;
 						}
 						omp_set_lock(&Particles[P1]->my_lock);
-						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+						//Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+            Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
             //Wang2013, but applied to current step
@@ -201,11 +206,11 @@ inline void Domain::CalcContactForcesWang(){
                 
                 if (P1 == 12415){
                   //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
-                cout << "delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
-                cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
-                cout << "tgforce " <<norm(tgforce) << ", mu N "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
-                cout << "norm atg: "<<norm(atg)<<endl;
-                cout << "tg vr " << norm_tgvr << "norm vr "<< delta_<<", vr "<< norm(vr) <<endl;
+                cout << "-------------------------\n delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
+                //cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
+                cout << "disp criteria tgforce " <<norm(tgforce) << ", mu N "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
+                cout << "norm acting tg force: "<<norm(atg)*Particles[P1] ->Mass<<endl;
+                //cout << "tg vr " << norm_tgvr << "norm vr "<< delta_<<", vr "<< norm(vr) <<endl;
                 }
                 //OR CHOOSE BETWEEN MAX FORCE TO EQUAL VELOCITIES OR DISPLACEMENTS
                 // if (norm(tgforce) < friction_sta * norm(Particles[P1] -> contforce) ){
@@ -225,24 +230,29 @@ inline void Domain::CalcContactForcesWang(){
                 imp_force = dot (vr_pred,Particles[P2]->normal) * Particles[P2]->normal/deltat*Particles[P1]->Mass;
                 tgforce = vr_pred/deltat*Particles[P1]->Mass - imp_force;
                 if (P1 == 12415){
-                  cout << "impulse tgforce "<<tgforce<< endl;
-                  cout << "impulse mu N " << norm(imp_force) * friction_sta<<endl;
+                  cout << "impulse criteria tgforce "<<tgforce<< ", mu N " << norm(imp_force) * friction_sta<<endl;
                 }
-                if (norm(tgforce) < friction_sta * norm(imp_force) ){
+                if (ref_accel)
+                  ref_tg = atg * Particles[P1]->Mass;
+                else 
+                  ref_tg = tgforce;
+                //if (norm(tgforce) < friction_sta * norm(imp_force) ){
+                if (norm(ref_tg) < friction_sta * norm(imp_force) ){
                   omp_set_lock(&Particles[P1]->my_lock);
                     Particles[P1] -> contforce -= tgforce;
                     //if (P1 == 12415) cout << "ares (a - tgforce): "<<Particles[P1] -> a - tgforce<<endl;
-                    //Particles[P1] -> a -= tgforce / Particles[P1]->Mass; 
-                    Particles[P1] -> a -= atg; 
+                    //Particles[P1] -> a -= atg; 
+                    Particles[P1] -> a -= tgforce / Particles[P1]->Mass; 
+                    //Particles[P1] -> a -= atg; 
                     //Particle tg velocity should be reinforced
-                    Particles[P1] -> v(0)=Particles[P1] -> v(1) = 0.;  //Equal tg velocities
                     //Particles[P1] -> v(0)= 0.; 
                     //Particles[P1] -> a -= tgforce / Particles[P1]->Mass;  // //Eqn 30. Zhan
                   omp_unset_lock(&Particles[P1]->my_lock);
                 } else {
-                  Particles[P1] -> a -= friction_sta * norm(imp_force) * tgdir;
+                  Particles[P1] -> a -= friction_sta * norm(imp_force) * tgforce/norm(tgforce);
+                  //if (P1 == 12415) cout << "SURPASSED, applying  " << friction_sta * norm(imp_force)* tgforce/norm(tgforce) <<endl;
                 }
-                
+                if (P1 == 12415) cout << "norm resulting force: "<<Particles[P1] ->a * Particles[P1] ->Mass <<endl;
 
             }
             // if (fric_type == Fr_Bound){

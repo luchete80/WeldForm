@@ -101,7 +101,7 @@ int main(){
 	dom.DomMin(0) = -L;
 
 									
-	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20.,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
@@ -161,7 +161,7 @@ int main(){
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction_dyn = 0.0;
-	dom.friction_sta = 0.9;
+	dom.friction_sta = 0.15;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;

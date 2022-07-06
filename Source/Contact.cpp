@@ -467,7 +467,6 @@ inline void Domain::CalcContactForces(){
                 cout << "delta tg 2 "<<delta_tg<<endl;
                 }
                 
-                //DISPLACEMENT CRITERIA
                 if (norm(tgforce) < friction_sta * normal_cf ){
                   omp_set_lock(&Particles[P1]->my_lock);
                     Particles[P1] -> contforce += tgforce;
