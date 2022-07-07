@@ -154,14 +154,14 @@ int main(){
 			// dom.Particles[a]->NoSlip=true;			
       dom.Particles[a]->not_write_surf_ID = true;		
 		}
-		if ( z > L - dx/2.  && abs(x) < 2*dx && y > R - 2*dx && a < dom.first_fem_particle_idx[0]){
+		if ( z > L - dx  && abs(x) < 2*dx && y > R - 2*dx && a < dom.first_fem_particle_idx[0]){
       cout << "CONTROL, particle "<< a << "x "<<x<< ", y " << y<<", z "<<z<<endl;
     }
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction_dyn = 0.0;
-	dom.friction_sta = 0.15;
+	dom.friction_sta = 0.05;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;

@@ -85,4 +85,6 @@
              A mixed algorithm based on Wang for contact force and Zhan for
              tangential force comparison (velocity rates), comparing with 
              current velocity, leads to an acceptable algorithm.
+20220707  -  Working on Contact. Found that displacement tg force criteria 
+             (Wang2013) reduces displacements for same friction coeff
              
