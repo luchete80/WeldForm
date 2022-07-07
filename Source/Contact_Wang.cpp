@@ -232,7 +232,7 @@ inline void Domain::CalcContactForcesWang(){
                     Particles[P1] -> a -= tgforce / Particles[P1]->Mass; 
                   omp_unset_lock(&Particles[P1]->my_lock);
                 } else {
-                  Particles[P1] -> a -= friction_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
+                  //Particles[P1] -> a -= friction_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
                   // //if (P1 == 12415) cout << "SURPASSED, applying  " << friction_sta * norm(imp_force)* tgforce/norm(tgforce) <<endl;
                 }                
                 //VELOCITY CRITERIA 
