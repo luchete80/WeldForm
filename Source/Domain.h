@@ -132,7 +132,10 @@ public:
     void LastComputeAcceleration		();									//Compute the acceleration due to the other particles
     void CalcForce2233	(Particle * P1, Particle * P2);		//Calculates the contact force between soil-soil/solid-solid particles
     void CalcAccel();		//NEW, ONLY CALCULATES ACCELERATION; IN ORDER TO ALTERNATE AND NOT CALCULATE Density at same place
-    void CalcAccelPP(); //ONLY FOR TESTING, PARALLELIZATION BY PARTICLE
+    
+    inline void CalcAccelPP(); //ONLY FOR TESTING, PARALLELIZATION BY PARTICLE
+    inline void CalcAccelPair(Particle * P1, Particle * P2);
+    
     void CalcRateTensorsDens();		//NEW, ONLY CALCULATES ACCELERATION; IN ORDER TO ALTERNATE AND NOT CALCULATE Density at same place
     void CalcDensInc();
     void CalcRateTensors();
@@ -407,6 +410,7 @@ public:
 }; // namespace SPH
 
 #include "Interaction.cpp"
+#include "InteractionTest.cpp"
 #include "Domain.cpp"
 #include "KickDriftSolver.cpp"
 #include "Neighbour.cpp"

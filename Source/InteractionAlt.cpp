@@ -363,7 +363,7 @@ inline void Domain::CalcRateTensors() {
   Particle *P1, *P2;
   //cout << "********************************************************"<<endl;
           
-	//#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -372,8 +372,8 @@ inline void Domain::CalcRateTensors() {
 	{
   for (size_t i=0; i<SMPairs[k].Size();i++) {
     #ifndef NONLOCK_SUM
-    P1	= Particles[SMPairs[k][p].first];
-    P2	= Particles[SMPairs[k][p].second];	
+    P1	= Particles[SMPairs[k][i].first];
+    P2	= Particles[SMPairs[k][i].second];	
     #else
     P1 = Particles[std::min(SMPairs[k][i].first, SMPairs[k][i].second)];
     P2 = Particles[std::max(SMPairs[k][i].first, SMPairs[k][i].second)];
@@ -497,8 +497,8 @@ inline void Domain::CalcRateTensors() {
 
     //#ifdef NONLOCK_SUM
     //if (!gradKernelCorr) 
-    pair_StrainRate[first_pair_perproc[k] + i] = StrainRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
-    pair_RotRate[first_pair_perproc[k] + i] = RotationRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
+    // pair_StrainRate[first_pair_perproc[k] + i] = StrainRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
+    // pair_RotRate[first_pair_perproc[k] + i] = RotationRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
     
         // if (SMPairs[k][i].first == ID_TEST || SMPairs[k][i].second == ID_TEST){
       // cout << "i j StrainRate mj: "<<SMPairs[k][i].first<<", "<<SMPairs[k][i].second<<", "<< RotationRate;
@@ -545,14 +545,14 @@ inline void Domain::CalcRateTensors() {
 // TODO: TEMPLATIZE, at least by type, by Reduction double, 
 inline void Domain::RateTensorsReduction(){
   //cout << "****************************************"<<endl;
-  //#pragma omp parallel for schedule (static) num_threads(Nproc)
+  #pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int i=0; i<Particles.Size();i++){
     // if (i == ID_TEST)
       // cout << "Orig Strain Rate: "<<Particles[i]->RotationRate<<endl;
     set_to_zero(Particles[i]->StrainRate);  
     set_to_zero(Particles[i]->RotationRate);  
   }
-  //#pragma omp parallel for schedule (static) num_threads(Nproc)
+  #pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int i=0; i<Particles.Size();i++){
     
     for (int n=0;n<ipair_SM[i];n++){    
