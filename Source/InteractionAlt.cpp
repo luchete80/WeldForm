@@ -5,7 +5,7 @@
 *** AND ALSO DENSITY; IN ORDER TO CALCULATE THEM SEPARATELY *//////
 //  NOTE: ONLY FOR FREE PARTICLES
 
-#define ID_TEST 0
+#define ID_TEST 1000
 namespace SPH{
 inline void Domain::CalcAccel() {
   Particle *P1, *P2;
@@ -361,8 +361,9 @@ inline void Domain::CalcRateTensorsDens() {
 //Similar but not densities
 inline void Domain::CalcRateTensors() {
   Particle *P1, *P2;
-  
-	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+  //cout << "********************************************************"<<endl;
+          
+	//#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -498,13 +499,15 @@ inline void Domain::CalcRateTensors() {
     //if (!gradKernelCorr) 
     pair_StrainRate[first_pair_perproc[k] + i] = StrainRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
     pair_RotRate[first_pair_perproc[k] + i] = RotationRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
-        if (SMPairs[k][i].first == ID_TEST || SMPairs[k][i].second == ID_TEST)
-      cout << "i j StrainRate mj: "<<SMPairs[k][i].first<<", "<<SMPairs[k][i].second<<", "<< StrainRate;
-    if (SMPairs[k][i].first == ID_TEST) cout << mj <<", ";
-    else if (SMPairs[k][i].second == ID_TEST) cout << mi<<", ";
     
-    if (SMPairs[k][i].first == ID_TEST) cout << "-"<<endl;
-    else if (SMPairs[k][i].second == ID_TEST) cout << "+" <<endl;
+        // if (SMPairs[k][i].first == ID_TEST || SMPairs[k][i].second == ID_TEST){
+      // cout << "i j StrainRate mj: "<<SMPairs[k][i].first<<", "<<SMPairs[k][i].second<<", "<< RotationRate;
+        // }
+    // if (SMPairs[k][i].first == ID_TEST) cout << mj <<", ";
+    // else if (SMPairs[k][i].second == ID_TEST) cout << mi<<", ";
+    
+    // if (SMPairs[k][i].first == ID_TEST) cout << "-"<<endl;
+    // else if (SMPairs[k][i].second == ID_TEST) cout << "+" <<endl;
     
     //#else
 		omp_set_lock(&P1->my_lock);
@@ -541,14 +544,20 @@ inline void Domain::CalcRateTensors() {
 }
 // TODO: TEMPLATIZE, at least by type, by Reduction double, 
 inline void Domain::RateTensorsReduction(){
-  #pragma omp parallel for schedule (static) num_threads(Nproc)
+  //cout << "****************************************"<<endl;
+  //#pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int i=0; i<Particles.Size();i++){
-    if (i == ID_TEST)
-      cout << "Orig Strain Rate: "<<Particles[i]->StrainRate<<endl;
+    // if (i == ID_TEST)
+      // cout << "Orig Strain Rate: "<<Particles[i]->RotationRate<<endl;
+    set_to_zero(Particles[i]->StrainRate);  
+    set_to_zero(Particles[i]->RotationRate);  
+  }
+  //#pragma omp parallel for schedule (static) num_threads(Nproc)
+  for (int i=0; i<Particles.Size();i++){
     
     for (int n=0;n<ipair_SM[i];n++){    
       // if (i == ID_TEST)
-        // cout << "i<j strrate " << Anei[i][n] << pair_StrainRate[Aref[i][n]]<<endl;
+        // cout << "i<j rot " << Anei[i][n] << pair_RotRate[Aref[i][n]]<<endl;
       double mjdj = Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density;
       Particles[i]->StrainRate    = Particles[i]->StrainRate   + mjdj * pair_StrainRate[Aref[i][n]];
       Particles[i]->RotationRate  = Particles[i]->RotationRate + mjdj * pair_RotRate[Aref[i][n]];      
@@ -556,12 +565,12 @@ inline void Domain::RateTensorsReduction(){
     for (int n=0;n<jpair_SM[i];n++){   
       double mjdj = Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass / Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Density;
       // if (i == ID_TEST)
-        // cout << "i<j strrate " << Anei[i][MAX_NB_PER_PART-1-n] << pair_StrainRate[Aref[i][MAX_NB_PER_PART-1-n]]<<endl;
+        // cout << "i<j rot " << Anei[i][MAX_NB_PER_PART-1-n] << pair_RotRate[Aref[i][MAX_NB_PER_PART-1-n]]<<endl;
       Particles[i]->StrainRate    = Particles[i]->StrainRate   - mjdj * pair_StrainRate[Aref[i][MAX_NB_PER_PART-1-n]];
       Particles[i]->RotationRate  = Particles[i]->RotationRate - mjdj * pair_RotRate[Aref[i][MAX_NB_PER_PART-1-n]];
     } 
-
-     cout << "New Strain Rate: "<<Particles[i]->StrainRate<<endl;
+    // if (i == ID_TEST)
+     // cout << "New Rot Rate: "<<Particles[i]->RotationRate<<endl;
   }
 }
 
