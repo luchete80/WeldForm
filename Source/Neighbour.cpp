@@ -5,6 +5,8 @@
 using namespace std;
 namespace SPH {
 
+#define NONLOCK_TEST
+
 inline void Domain::CellInitiate () {
 	if (!(norm(TRPR)>0.0) && !(norm(BLPF)>0.0))
 	{
@@ -562,6 +564,7 @@ inline void Domain::ResetReductionArrays(){
 
 }
 
+#ifdef NONLOCK_TEST
 void Domain::CheckParticlePairs(const int &i){
   cout << "Particle i: "<<i<<endl;
   cout << "Nb Count "<<Particles[i]->Nb<<endl;
@@ -584,13 +587,16 @@ void Domain::CheckParticlePairs(const int &i){
   cout <<"j>i pairs"<<endl;
   for (int n = 0;n< jpair_SM[i];n++)
     cout <<pair_test[Aref[i][MAX_NB_PER_PART-1-n]].first<<", "<<pair_test[Aref[i][MAX_NB_PER_PART-1-n]].second<<endl;
-   
+  
+  cout << "Done. "<<endl;
 }
-
+#endif
 // Calculate All things for new reduction
 inline void Domain::CalcPairPosList(){                             //Calculate position list for every particle
   
-  //pair_test.clear();
+  #ifdef NONLOCK_TEST
+    pair_test.clear();
+  #endif
   first_pair_perproc[0] = 0;
   pair_count = 0;
   for (int p=0;p<Nproc;p++)first_pair_perproc[p] = 0;
@@ -608,7 +614,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
    // cout << "First index per proc "<<endl;
   // for (int p=0;p<Nproc;p++) cout << first_pair_perproc[p]<<endl;
 
-  //pair_force.resize(pair_count);
+  pair_force.resize(pair_count);
   //cout << "Pair Count: " << pair_count << endl;
 
   #pragma omp parallel for schedule (static) num_threads(Nproc)
@@ -630,7 +636,9 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
 
       int i = std::min(SMPairs[k][pp].first,SMPairs[k][pp].second);
       int j = std::max(SMPairs[k][pp].first,SMPairs[k][pp].second);
-      //pair_test.push_back(std::make_pair(i,j)); //ONLY FOR TEST
+      #ifdef NONLOCK_TEST
+        pair_test.push_back(std::make_pair(i,j)); //ONLY FOR TEST
+      #endif
       // if (i==2000||j==2000){ 
         // cout << "Pair i j "<< i << ", "<<j<<", "<<first_pair_perproc[k]+pp<<endl;
         // cout << "k pp "<<k <<", "<<pp<<endl;
@@ -678,6 +686,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
 // 13: end do
 // 14: end do
 
+// OLD: DO NOT USE
 inline void Domain::CalcRefTable(){
 
   #pragma omp parallel for schedule (static) num_threads(Nproc)

@@ -1,9 +1,38 @@
 By the moment, there is an option:
-//#define NONLOCK_SUM
+#define NONLOCK_SUM in Domain.h
 
-but CalcPairPosList() is used also for XXX
 
+NEW ARRAYS:
+
+pair_force
+Anei, Aref, 
+ipairsSM[particle], jpairsSM[particle]
+
+Here https://github.com/luchete80/WeldForm_test 
+is a version which parallelizes only by particles (makes double of calculations).
+
+but CalcPairPosList() is used also for calculating Smoothing length
+CalcRefTable IS OLD. THis is calculated in PairPosList
 
 For testing there is 
 CheckParticlePairs( int &particleid);
 
+defined in Neighbour.cpp
+
+ipair_SM[i] and jpair_SM are filled in 
+  
+Anei[i][ipair_SM[i]] = j; //Only stores j>i
+Anei[j][MAX_NB_PER_PART - 1 - jpair_SM[j]] = i; //Only stores j>i
+
+
+Example Checkin particles:
+Main Loop
+Particle i: 2000
+Nb Count 55
+ipairs: 28
+jpairs: 27
+First pair pos0
+Nb list
+2002, 2001, 2035, 2017, 2016, 2037, 2036, 2020, 2019, 2018, 2551, 2275, 2274, 2258, 2553, 2552, 2535, 2278, 2277, 2276, 2260, 2259, 2243, 2293, 2570, 2312, 2295, 2294, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1447, 1706, 1722, 1723, 1966, 1982, 1998, 1999, 1466, 1742, 1743, 1760, 1741, 1431, 1448, 1449, 1691, 1707, 1708, 1724, 1725, 1726, 1967, 1968, 1983, 1984, 1985,
+Ref list
+0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 6, 4, 5, 3, 3, 1, 1, 0, 1, 2, 0, 0, 1, 1, 2, 2, 2, 3, 2, 2, 2, 1, 2, 2, 2, 2,

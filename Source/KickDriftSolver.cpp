@@ -122,9 +122,6 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			ClearNbData(); 
 			MainNeighbourSearch/*_Ext*/();
       CalcPairPosList();  
-      #ifdef NONLOCK_SUM
-      CalcRefTable();
-      #endif
       SaveNeighbourData();
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
@@ -140,10 +137,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
           // if (h_update){                
             // UpdateSmoothingLength();          
           // }
-          #ifdef NONLOCK_SUM 
-          CalcRefTable();
-          CheckParticlePairs(2000);
-          #endif
+          //#ifdef NONLOCK_TEST 
+          CheckParticlePairs(0);
+          //#endif
           SaveNeighbourData();
           //cout << "nb search"<<endl;
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -170,8 +166,12 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 		clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
+    cout << "Calc accel "<<endl;
     CalcAccel(); //Nor density or neither strain rates
+    //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
+    cout << "Done "<<endl;
     #ifdef NONLOCK_SUM
+    cout << "Calculating Acc red "<<endl;
     AccelReduction();
     #endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;

@@ -4,6 +4,8 @@
 /*  NEW FUNCTION TO CALCULATE ACCELERATION, REMOVING STRAIN AND ROTATION RATES
 *** AND ALSO DENSITY; IN ORDER TO CALCULATE THEM SEPARATELY *//////
 //  NOTE: ONLY FOR FREE PARTICLES
+
+#define ID_TEST 0
 namespace SPH{
 inline void Domain::CalcAccel() {
   Particle *P1, *P2;
@@ -123,15 +125,16 @@ inline void Domain::CalcAccel() {
 			}
 		}
     
-    #ifdef NONLOCK_SUM
+    //#ifdef NONLOCK_SUM
     //if (!gradKernelCorr) 
     pair_force[first_pair_perproc[k] + p] = temp; //SHOULD ALSO MULTIPLY ACCEL AFTER
     
-    // if (SMPairs[k][p].first == 1000 || SMPairs[k][p].second == 1000)
-      // cout << "i j temp mj: "<<SMPairs[k][p].first<<", "<<SMPairs[k][p].second<<", "<< temp;
-    // if (SMPairs[k][p].first == 1000) cout << mj<<endl;
-    // else if (SMPairs[k][p].second == 1000) cout << mi<<endl;
-    #else
+    if (SMPairs[k][p].first == ID_TEST || SMPairs[k][p].second == ID_TEST)
+      cout << "i j temp mj: "<<SMPairs[k][p].first<<", "<<SMPairs[k][p].second<<", "<< temp;
+    if (SMPairs[k][p].first == ID_TEST) cout << mj<<endl;
+    else if (SMPairs[k][p].second == ID_TEST) cout << mi<<endl;
+    
+    //#else  ////NONLOCK
     
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
@@ -153,7 +156,7 @@ inline void Domain::CalcAccel() {
 				P2->a					-= mi * temp_c[1];
 			}
 		omp_unset_lock(&P2->my_lock);
-    #endif
+    //#endif
   }//MAIN FOR IN PAIR
   }//MAIN FOR PROC
 
@@ -162,25 +165,26 @@ inline void Domain::CalcAccel() {
 inline void Domain::AccelReduction(){
 
     cout << "Particle 0 accel orig"<<endl;
-    cout << Particles[1000]->a<<endl;
+    cout << Particles[ID_TEST]->a<<endl;
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<Particles.Size();i++)
       Particles[i]->a = 0.;
   //#pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int i=0; i<Particles.Size();i++){
 
     for (int n=0;n<ipair_SM[i];n++){ 
-      if (i==1000) 
+      if (i==ID_TEST) 
       cout << "j temp mneib "<<Anei[i][n]<<", " <<pair_force[Aref[i][n]]<<", "<<Particles[Anei[i][n]]->Mass<<endl;
       
       Particles[i]->a -= Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
     for (int n=0;n<jpair_SM[i];n++){
-      if (i==1000) 
+      if (i==ID_TEST) 
       cout << "j temp mneib "<<Anei[i][MAX_NB_PER_PART-1-n]<<", " <<pair_force[Aref[i][MAX_NB_PER_PART-1-n]]<<", "<<Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass<<endl;      
       Particles[i]->a += Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}
     
   }
     cout << "Particle 0 accel new "<<endl;
-    cout << Particles[1000]->a<<endl;
+    cout << Particles[ID_TEST]->a<<endl;
 }
 
 inline void Domain::CalcRateTensorsDens() {
