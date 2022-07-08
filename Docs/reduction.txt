@@ -1,0 +1,9 @@
+By the moment, there is an option:
+//#define NONLOCK_SUM
+
+but CalcPairPosList() is used also for XXX
+
+
+For testing there is 
+CheckParticlePairs( int &particleid);
+

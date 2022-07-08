@@ -121,10 +121,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
 			MainNeighbourSearch/*_Ext*/();
-      //#ifdef NONLOCK_SUM
       CalcPairPosList();  
-      //CalcRefTable();
-      //#endif
+      #ifdef NONLOCK_SUM
+      CalcRefTable();
+      #endif
       SaveNeighbourData();
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
@@ -135,14 +135,15 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 				if (m_isNbDataCleared){
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
-          //#ifdef NONLOCK_SUM 
+          //
           CalcPairPosList(); //For min TS Vel
           // if (h_update){                
             // UpdateSmoothingLength();          
           // }
-          //CalcRefTable();
-          //CheckParticlePairs(2000);
-          //#endif
+          #ifdef NONLOCK_SUM 
+          CalcRefTable();
+          CheckParticlePairs(2000);
+          #endif
           SaveNeighbourData();
           //cout << "nb search"<<endl;
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
