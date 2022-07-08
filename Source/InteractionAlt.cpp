@@ -10,7 +10,7 @@ namespace SPH{
 inline void Domain::CalcAccel() {
   Particle *P1, *P2;
   
-	//#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -18,9 +18,14 @@ inline void Domain::CalcAccel() {
 	#endif	
 	{
   for (size_t p=0; p<SMPairs[k].Size();p++) {
+    
+    #ifndef NONLOCK_SUM
     P1	= Particles[SMPairs[k][p].first];
     P2	= Particles[SMPairs[k][p].second];	
-
+    #else
+    P1 = Particles[std::min(SMPairs[k][p].first, SMPairs[k][p].second)];
+    P2 = Particles[std::max(SMPairs[k][p].first, SMPairs[k][p].second)];
+    #endif
     double h	= (P1->h+P2->h)/2;
     Vec3_t xij	= P1->x - P2->x;
 
@@ -125,16 +130,18 @@ inline void Domain::CalcAccel() {
 			}
 		}
     
-    //#ifdef NONLOCK_SUM
+    #ifdef NONLOCK_SUM
     //if (!gradKernelCorr) 
     pair_force[first_pair_perproc[k] + p] = temp; //SHOULD ALSO MULTIPLY ACCEL AFTER
     
-    if (SMPairs[k][p].first == ID_TEST || SMPairs[k][p].second == ID_TEST)
-      cout << "i j temp mj: "<<SMPairs[k][p].first<<", "<<SMPairs[k][p].second<<", "<< temp;
-    if (SMPairs[k][p].first == ID_TEST) cout << mj<<endl;
-    else if (SMPairs[k][p].second == ID_TEST) cout << mi<<endl;
+    // if (SMPairs[k][p].first == ID_TEST || SMPairs[k][p].second == ID_TEST)
+      // cout << "i j temp mj: "<<SMPairs[k][p].first<<", "<<SMPairs[k][p].second<<", "<< temp;
+    // if (SMPairs[k][p].first == ID_TEST) cout << mj <<", ";
+    // else if (SMPairs[k][p].second == ID_TEST) cout << mi<<", ";
     
-    //#else  ////NONLOCK
+    // if (SMPairs[k][p].first == ID_TEST) cout << "-"<<endl;
+    // else if (SMPairs[k][p].second == ID_TEST) cout << "+" <<endl;
+    #else  ////NONLOCK
     
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
@@ -156,35 +163,23 @@ inline void Domain::CalcAccel() {
 				P2->a					-= mi * temp_c[1];
 			}
 		omp_unset_lock(&P2->my_lock);
-    //#endif
+    #endif
   }//MAIN FOR IN PAIR
   }//MAIN FOR PROC
 
 }
 
 inline void Domain::AccelReduction(){
-
-    cout << "Particle 0 accel orig"<<endl;
-    cout << Particles[ID_TEST]->a<<endl;
-    #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (int i=0; i<Particles.Size();i++)
-      Particles[i]->a = 0.;
-  //#pragma omp parallel for schedule (static) num_threads(Nproc)
+  #pragma omp parallel for schedule (static) num_threads(Nproc)
+  for (int i=0; i<Particles.Size();i++)
+    Particles[i]->a = 0.;
+  #pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int i=0; i<Particles.Size();i++){
-
-    for (int n=0;n<ipair_SM[i];n++){ 
-      if (i==ID_TEST) 
-      cout << "j temp mneib "<<Anei[i][n]<<", " <<pair_force[Aref[i][n]]<<", "<<Particles[Anei[i][n]]->Mass<<endl;
-      
-      Particles[i]->a -= Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
-    for (int n=0;n<jpair_SM[i];n++){
-      if (i==ID_TEST) 
-      cout << "j temp mneib "<<Anei[i][MAX_NB_PER_PART-1-n]<<", " <<pair_force[Aref[i][MAX_NB_PER_PART-1-n]]<<", "<<Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass<<endl;      
-      Particles[i]->a += Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}
-    
+    for (int n=0;n<ipair_SM[i];n++){     
+      Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
+    for (int n=0;n<jpair_SM[i];n++){   
+      Particles[i]->a -= Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}    
   }
-    cout << "Particle 0 accel new "<<endl;
-    cout << Particles[ID_TEST]->a<<endl;
 }
 
 inline void Domain::CalcRateTensorsDens() {
@@ -198,21 +193,26 @@ inline void Domain::CalcRateTensorsDens() {
 	#endif	
 	{
   for (size_t i=0; i<SMPairs[k].Size();i++) {
+    #ifndef NONLOCK_SUM
     P1	= Particles[SMPairs[k][i].first];
     P2	= Particles[SMPairs[k][i].second];	
-    
-	double h	= (P1->h+P2->h)/2;
-	Vec3_t xij	= P1->x - P2->x;
+    #else
+    P1	= Particles[SMPairs[k][i].first];
+    P2	= Particles[SMPairs[k][i].second];	
+      
+    #endif
+    double h	= (P1->h+P2->h)/2;
+    Vec3_t xij	= P1->x - P2->x;
 
-	//Periodic_X_Correction(xij, h, P1, P2);
+    //Periodic_X_Correction(xij, h, P1, P2);
 
-	double rij	= norm(xij);
+    double rij	= norm(xij);
 
-  double clock_begin;
+    double clock_begin;
 
-	// if ((rij/h)<=Cellfac)
-	// {
-  double di=0.0,dj=0.0,mi=0.0,mj=0.0;
+    // if ((rij/h)<=Cellfac)
+    // {
+    double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 
     di = P1->Density;
     mi = P1->Mass;
@@ -271,7 +271,7 @@ inline void Domain::CalcRateTensorsDens() {
     RotationRate(1,0) = -RotationRate(0,1);
     RotationRate(2,0) = -RotationRate(0,2);
     RotationRate(2,1) = -RotationRate(1,2);
-    RotationRate	  = -0.5 * GK * RotationRate;
+    RotationRate	    = -0.5 * GK * RotationRate;
     
 			// if (StrainRate(2,2)<-1.e-3)
 
@@ -370,11 +370,16 @@ inline void Domain::CalcRateTensors() {
 	#endif	
 	{
   for (size_t i=0; i<SMPairs[k].Size();i++) {
-    P1	= Particles[SMPairs[k][i].first];
-    P2	= Particles[SMPairs[k][i].second];	
+    #ifndef NONLOCK_SUM
+    P1	= Particles[SMPairs[k][p].first];
+    P2	= Particles[SMPairs[k][p].second];	
+    #else
+    P1 = Particles[std::min(SMPairs[k][i].first, SMPairs[k][i].second)];
+    P2 = Particles[std::max(SMPairs[k][i].first, SMPairs[k][i].second)];
+    #endif
     
-	double h	= (P1->h+P2->h)/2;
-	Vec3_t xij	= P1->x - P2->x;
+    double h	= (P1->h+P2->h)/2;
+    Vec3_t xij	= P1->x - P2->x;
 
 	//Periodic_X_Correction(xij, h, P1, P2);
 
@@ -488,12 +493,21 @@ inline void Domain::CalcRateTensors() {
     
     clock_begin = clock();
 		// Locking the particle 1 for updating the properties
+
+    //#ifdef NONLOCK_SUM
+    //if (!gradKernelCorr) 
+    pair_StrainRate[first_pair_perproc[k] + i] = StrainRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
+    pair_RotRate[first_pair_perproc[k] + i] = RotationRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
+        if (SMPairs[k][i].first == ID_TEST || SMPairs[k][i].second == ID_TEST)
+      cout << "i j StrainRate mj: "<<SMPairs[k][i].first<<", "<<SMPairs[k][i].second<<", "<< StrainRate;
+    if (SMPairs[k][i].first == ID_TEST) cout << mj <<", ";
+    else if (SMPairs[k][i].second == ID_TEST) cout << mi<<", ";
+    
+    if (SMPairs[k][i].first == ID_TEST) cout << "-"<<endl;
+    else if (SMPairs[k][i].second == ID_TEST) cout << "+" <<endl;
+    
+    //#else
 		omp_set_lock(&P1->my_lock);
-			// if (!gradKernelCorr){
-				// P1->dDensity	+= mj * (di/dj) * temp1;
-			// } else{
-				// P1->dDensity	+= mj * (di/dj) * temp1_c[0];
-			// }		
 
       float mj_dj= mj/dj;
 
@@ -510,11 +524,6 @@ inline void Domain::CalcRateTensors() {
 
 		// Locking the particle 2 for updating the properties
 		omp_set_lock(&P2->my_lock);
-			// if (!gradKernelCorr){
-				// P2->dDensity	+= mi * (dj/di) * temp1;							
-			// }else {
-				// P2->dDensity	+= mi * (dj/di) * temp1_c[1];
-			// }
 	
       float mi_di = mi/di;
       if (!gradKernelCorr){
@@ -526,9 +535,36 @@ inline void Domain::CalcRateTensors() {
       }
 
 		omp_unset_lock(&P2->my_lock);
+    //#endif
     }//FOR PAIRS
   }//FOR NPROC
 }
+// TODO: TEMPLATIZE, at least by type, by Reduction double, 
+inline void Domain::RateTensorsReduction(){
+  #pragma omp parallel for schedule (static) num_threads(Nproc)
+  for (int i=0; i<Particles.Size();i++){
+    if (i == ID_TEST)
+      cout << "Orig Strain Rate: "<<Particles[i]->StrainRate<<endl;
+    
+    for (int n=0;n<ipair_SM[i];n++){    
+      // if (i == ID_TEST)
+        // cout << "i<j strrate " << Anei[i][n] << pair_StrainRate[Aref[i][n]]<<endl;
+      double mjdj = Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density;
+      Particles[i]->StrainRate    = Particles[i]->StrainRate   + mjdj * pair_StrainRate[Aref[i][n]];
+      Particles[i]->RotationRate  = Particles[i]->RotationRate + mjdj * pair_RotRate[Aref[i][n]];      
+    }
+    for (int n=0;n<jpair_SM[i];n++){   
+      double mjdj = Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass / Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Density;
+      // if (i == ID_TEST)
+        // cout << "i<j strrate " << Anei[i][MAX_NB_PER_PART-1-n] << pair_StrainRate[Aref[i][MAX_NB_PER_PART-1-n]]<<endl;
+      Particles[i]->StrainRate    = Particles[i]->StrainRate   - mjdj * pair_StrainRate[Aref[i][MAX_NB_PER_PART-1-n]];
+      Particles[i]->RotationRate  = Particles[i]->RotationRate - mjdj * pair_RotRate[Aref[i][MAX_NB_PER_PART-1-n]];
+    } 
+
+     cout << "New Strain Rate: "<<Particles[i]->StrainRate<<endl;
+  }
+}
+
 
 // TODO: USED CALCULATED KERNELKS
 inline void Domain::CalcDensInc() {
@@ -542,21 +578,24 @@ inline void Domain::CalcDensInc() {
 	#endif	
 	{
   for (size_t i=0; i<SMPairs[k].Size();i++) {
+    #ifndef NONLOCK_SUM
     P1	= Particles[SMPairs[k][i].first];
     P2	= Particles[SMPairs[k][i].second];	
+    #else
+    P1	= Particles[SMPairs[k][i].first];
+    P2	= Particles[SMPairs[k][i].second];	
+    #endif
     
-	double h	= (P1->h+P2->h)/2;
-	Vec3_t xij	= P1->x - P2->x;
+    double h	= (P1->h+P2->h)/2;
+    Vec3_t xij	= P1->x - P2->x;
 
-	//Periodic_X_Correction(xij, h, P1, P2);
+    //Periodic_X_Correction(xij, h, P1, P2);
 
-	double rij	= norm(xij);
+    double rij	= norm(xij);
 
-  double clock_begin;
-
-	// if ((rij/h)<=Cellfac)
-	// {
-  double di=0.0,dj=0.0,mi=0.0,mj=0.0;
+    // if ((rij/h)<=Cellfac)
+    // {
+    double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 
     di = P1->Density;
     mi = P1->Mass;
@@ -600,7 +639,6 @@ inline void Domain::CalcDensInc() {
 			}
 		}
     
-    clock_begin = clock();
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
@@ -926,6 +964,6 @@ inline void Domain::CalcForceSOA(int &i,int &j) {
     m_forces_update_time += (double)(clock() - clock_begin) / CLOCKS_PER_SEC;
     //omp_unset_lock(&dom_lock);
   //}//Interaction
-}
+} 
 
   };//SPH

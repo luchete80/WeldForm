@@ -549,10 +549,12 @@ int Domain::AvgNeighbourCount(){
 
 void Domain::InitReductionArraysOnce(){
   //ipair_SM
-  ipl_SM.resize(Particles.Size());
+  ipl_SM.resize(Particles.Size()); //NOT USED
+  
   ipair_SM.resize(Particles.Size());
   jpair_SM.resize(Particles.Size());
-  pair_force.resize(Particles.Size());
+  
+  
   first_pair_perproc.resize(Nproc);
   std::vector<size_t> nei(MAX_NB_PER_PART);
   for (int i=0;i<Particles.Size();i++){
@@ -615,6 +617,8 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
   // for (int p=0;p<Nproc;p++) cout << first_pair_perproc[p]<<endl;
 
   pair_force.resize(pair_count);
+  pair_StrainRate.resize(pair_count);
+  pair_RotRate.resize(pair_count);
   //cout << "Pair Count: " << pair_count << endl;
 
   #pragma omp parallel for schedule (static) num_threads(Nproc)

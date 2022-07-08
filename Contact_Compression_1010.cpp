@@ -3,7 +3,7 @@
 #include <iostream>
 #include "InteractionAlt.cpp"
 
-#define VMAX	1.0
+#define VMAX	0.06
 
 using namespace SPH;
 using namespace std;
@@ -130,7 +130,7 @@ int main() try{
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 	int top, bottom, center;
   top = bottom = center = 0;   
   int center_top = 0;			

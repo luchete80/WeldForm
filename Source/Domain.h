@@ -119,7 +119,9 @@ public:
     inline void ResetReductionArrays();
     inline void CalcPairPosList();                             //Calculate position list for every particle ipl/jpl[NProc][particle]
     inline void CalcRefTable();
+    //For new reduction method
     inline void AccelReduction();
+    inline void RateTensorsReduction();
     void CheckParticlePairs(const int &i);
 		
 		void SaveNeighbourData();
@@ -130,6 +132,7 @@ public:
     void LastComputeAcceleration		();									//Compute the acceleration due to the other particles
     void CalcForce2233	(Particle * P1, Particle * P2);		//Calculates the contact force between soil-soil/solid-solid particles
     void CalcAccel();		//NEW, ONLY CALCULATES ACCELERATION; IN ORDER TO ALTERNATE AND NOT CALCULATE Density at same place
+    void CalcAccelPP(); //ONLY FOR TESTING, PARALLELIZATION BY PARTICLE
     void CalcRateTensorsDens();		//NEW, ONLY CALCULATES ACCELERATION; IN ORDER TO ALTERNATE AND NOT CALCULATE Density at same place
     void CalcDensInc();
     void CalcRateTensors();
@@ -317,6 +320,9 @@ public:
     std::vector < std::vector <size_t>  > Aref;                      // Entry[Particle ,nb], indicates link
     std::vector < std::vector <size_t>  > Anei;                      //[Particles][MAX_NB_PER_PART] neighbiour list for j > i
     std::vector <Vec3_t>                  pair_force;
+    std::vector <double>                  pair_densinc;
+    std::vector <Mat3_t>                  pair_StrainRate;
+    std::vector <Mat3_t>                  pair_RotRate;    
     
     Array< size_t > 				FixedParticles;
     Array< size_t >				FreeFSIParticles;

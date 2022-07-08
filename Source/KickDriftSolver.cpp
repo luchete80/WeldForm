@@ -138,7 +138,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
             // UpdateSmoothingLength();          
           // }
           //#ifdef NONLOCK_TEST 
-          CheckParticlePairs(0);
+          //CheckParticlePairs(0);
           //#endif
           SaveNeighbourData();
           //cout << "nb search"<<endl;
@@ -166,12 +166,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 		clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
-    cout << "Calc accel "<<endl;
     CalcAccel(); //Nor density or neither strain rates
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
-    cout << "Done "<<endl;
     #ifdef NONLOCK_SUM
-    cout << "Calculating Acc red "<<endl;
     AccelReduction();
     #endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -227,6 +224,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
+    #ifdef NONLOCK_SUM
+    RateTensorsReduction();
+    #endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  

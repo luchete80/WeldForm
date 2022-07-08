@@ -142,7 +142,7 @@ int main(){
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
 		dom.Particles[a]->Alpha		= 1.0;
-		//dom.Particles[a]->Beta		= 1.0;
+		dom.Particles[a]->Beta		= 1.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
     double x = dom.Particles[a]->x(0);
@@ -160,8 +160,8 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction_dyn = 0.0;
-	dom.friction_sta = 0.05;
+	dom.friction_dyn = 0.15;
+	dom.friction_sta = 0.15;
 	dom.PFAC = 0.8;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;
