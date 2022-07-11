@@ -87,4 +87,7 @@
              current velocity, leads to an acceptable algorithm.
 20220707  -  Working on Contact. Found that displacement tg force criteria 
              (Wang2013) reduces displacements for same friction coeff
-20220708  -  Working on reduction 
+20220708  -  Working on reduction.FINALLY SOLVED NISHIKURA REDUCTION IN ACCEL.
+             TIME IS ABOUT HALF THE TIME WITH OPENMP LOCK REDUCING IN PAIR PHASE.
+             Written reduction in tensors. Resultant tensors are the same but whole results 
+             Are still bad. 
