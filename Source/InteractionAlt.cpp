@@ -354,10 +354,6 @@ inline void Domain::CalcRateTensors() {
     #endif
     }//FOR PAIRS
   }//FOR NPROC
-  
-  for (int i=0; i<Particles.Size();i++)
-    if (i == ID_TEST)
-        cout << "Time, Orig Rot Rate " <<Time << ", "<<Particles[i]->RotationRate<<endl;
 }
 
 
