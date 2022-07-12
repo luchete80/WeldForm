@@ -92,5 +92,7 @@
              TIME IS ABOUT HALF THE TIME WITH OPENMP LOCK REDUCING IN PAIR PHASE.
              Written reduction in tensors. Resultant tensors are the same but whole results 
              Are still bad. 
-20220712  -  SIGNIFICANT IMPROVEMENT. FINALLY IMPLEMENTATION OF LEAPFROG SOLVER WORKS ON 
-             LARGE TIME STEPS. 
+20220712  -  SIGNIFICANT IMPROVEMENTS. 1. FINALLY IMPLEMENTATION OF LEAPFROG SOLVER WORKS ON 
+             LARGE TIME STEPS. 2. SOLVED PARALLEL REDUCTION BY NISHIMURA ARRAYS. Is slightly
+             faster than lock but the algorithm is applicable to parallel GPU.
+             
