@@ -230,7 +230,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
     #ifdef NONLOCK_SUM
-    //RateTensorsReduction();
+    RateTensorsReduction();
     #endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
