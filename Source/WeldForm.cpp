@@ -341,7 +341,7 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->TIInitDist	= dx;
       dom.Particles[a]->hfac = 1.2; //Only for h update, not used
     }
-		dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+		dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
 		} else {
       throw new Fatal("Particle Count is Null. Please Check Radius and Domain Dimensions.");
     }
