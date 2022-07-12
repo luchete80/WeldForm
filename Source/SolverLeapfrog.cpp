@@ -86,6 +86,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
   int ct=30;
   std::chrono::duration<double> total_time;
 	auto start_whole = std::chrono::steady_clock::now();  
+  int step = 0;
 	while (Time<=tf && idx_out<=maxidx) {
   
 		StartAcceleration(0.);
@@ -291,7 +292,8 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
 			idx_out++;
 			tout += dtOut;
 			total_time = std::chrono::steady_clock::now() - start_whole;		
-			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
+			std::cout << "\n---------------------------------------\n Total CPU time: "<<(int)total_time.count() << endl;
+      cout << "Steps: " << step<<endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
       std::cout << std::setprecision(2);
       cout << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
@@ -322,7 +324,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     if (auto_ts)      CheckMinTSVel();
     if (auto_ts_acc)  CheckMinTSAccel();
     if (auto_ts || auto_ts_acc)  AdaptiveTimeStep();
-    
+    step++;
 	
 	}
 
