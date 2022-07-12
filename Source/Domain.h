@@ -143,7 +143,8 @@ public:
     void Move						(double dt);										//Move particles
 
     void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
-    void SolveDiffUpdateKickDrift (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
+    void SolveDiffUpdateLeapfrog(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
+    void SolveDiffUpdateVerlet  (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
     void SolveDiffUpdateModEuler (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
     void SolveDiffUpdateModVerlet (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
     void Solve_orig 			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
@@ -412,7 +413,7 @@ public:
 #include "Interaction.cpp"
 #include "InteractionTest.cpp"
 #include "Domain.cpp"
-#include "KickDriftSolver.cpp"
+#include "SolverLeapfrog.cpp"
 #include "Neighbour.cpp"
 #include "Output.cpp"
 #include "InOutFlow.cpp"

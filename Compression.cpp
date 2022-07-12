@@ -165,7 +165,8 @@ int main(int argc, char **argv) try
     
     timestep = (0.7*h/(Cs+VMAX));
     dom.auto_ts = false;
-    dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
   
 		return 0;
 }

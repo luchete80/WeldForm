@@ -1,8 +1,13 @@
 namespace SPH {
   
-//////////////////////////////////////
-///////// IMPORTANT: THIS METHOD IMPLIES CALCULATE 
-inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
+///////////////////////////////////////
+//This calculates all in same time step
+//IMPORTANT: x is updated with previous accel!
+// 1. x(t+dt) = x +v(t) dt + 1/2 a(t) dt^2
+// 2. Calc a(t+dt) using x(t+dt)
+// 3. v(t+dt) = v(t) dt + 1/2 (a(t) +a(t+dt)) * dt
+///////////////////////////////////////
+inline void Domain::SolveDiffUpdateVerlet (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
 	size_t idx_out = 1;
@@ -187,9 +192,12 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     // if (ct==30) factor = 1.;
     // else        factor = 2.;
     clock_beg = clock();
+    double dt; 
+    if (isfirst)  dt = deltat/2.0;
+    else          dt = deltat;
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->v += Particles[i]->a*deltat/2.*factor;
+      Particles[i]->v += Particles[i]->a*dt;
       //Particles[i]->LimitVel();
     }
     MoveGhost();   
@@ -216,19 +224,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
       Particles[i]->Displacement += du;
       Particles[i]->x += du;
     }
-    // //Second pass has new accel
-    // CalcAccel(); //Nor density or neither strain rates
-    // //CalcAccelPP();
-    // //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
-    // #ifdef NONLOCK_SUM
-    // AccelReduction();
-    // #endif
-    
-    #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->v += Particles[i]->a*deltat/2.*factor;
-      //Particles[i]->LimitVel();
-    }
+
     MoveGhost();
     GeneralAfter(*this);
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
