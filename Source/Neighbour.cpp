@@ -619,6 +619,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
   pair_force.resize(pair_count);
   pair_StrainRate.resize(pair_count);
   pair_RotRate.resize(pair_count);
+  pair_densinc.resize(pair_count);
   //cout << "Pair Count: " << pair_count << endl;
 
   #pragma omp parallel for schedule (static) num_threads(Nproc)

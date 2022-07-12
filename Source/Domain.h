@@ -122,6 +122,7 @@ public:
     //For new reduction method
     inline void AccelReduction();
     inline void RateTensorsReduction();
+    inline void DensReduction();
     void CheckParticlePairs(const int &i);
 		
 		void SaveNeighbourData();
@@ -136,7 +137,6 @@ public:
     inline void CalcAccelPP(); //ONLY FOR TESTING, PARALLELIZATION BY PARTICLE
     inline void CalcAccelPair(Particle * P1, Particle * P2);
     
-    void CalcRateTensorsDens();		//NEW, ONLY CALCULATES ACCELERATION; IN ORDER TO ALTERNATE AND NOT CALCULATE Density at same place
     void CalcDensInc();
     void CalcRateTensors();
     void CalcForceSOA(int &i,int &j) ;
