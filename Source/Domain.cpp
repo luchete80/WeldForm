@@ -833,7 +833,7 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 	int xinc,yinc;
 	
 	int id_part=0;
-	int ghost_rows = 4;
+	int ghost_rows = 3;
 	
 	double z0;
 	if (symlength) 	z0 = r;

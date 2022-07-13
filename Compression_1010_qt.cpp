@@ -53,7 +53,7 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 
-	dx = 0.0012;  //Tenth of radius
+	dx = 0.0008;  //Tenth of radius
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -75,10 +75,10 @@ int main() try{
 	dom.DomMax(0) = L;
 	dom.DomMin(0) = -L;
 
-	bool ghost = true;								
+	bool ghostz = true;								
 	//dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, false, ghost); 
 
-  dom.AddXYSymCylinderLength(0., R, L/2.0, dx/2., rho, h, false, ghost);
+  dom.AddXYSymCylinderLength(0., R, L/2.0, dx/2., rho, h, false, ghostz);
                                           
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
@@ -102,7 +102,7 @@ int main() try{
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
     
-		if ( z > L/2. - 2.0 * dx){
+		if ( z > L/2. - dx){
       top_part++;
 			dom.Particles[a]->ID=2;
     }
