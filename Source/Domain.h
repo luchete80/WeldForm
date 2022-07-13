@@ -193,6 +193,7 @@ public:
 	inline void CalcGradCorrMixedMatrix();	//BONET GRADIENT CORRECTION
 	
 	inline void MoveGhost();
+  inline void PropGhost();
 	const double & getStepSize()const {return deltat;};
 
 	

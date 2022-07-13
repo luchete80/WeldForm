@@ -705,7 +705,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
 					//	else    
 					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					if (zp == V(2))
+					if (zp == V(2)+r)
 						part_per_row++;
 					id_part++;
 					xp += 2.*r;
@@ -1049,11 +1049,25 @@ inline void Domain::MoveGhost(){
 
 		Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
 		
-
-
+    //Several parameters
+    // Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
+    // Particles[gi]-> Strain  =     Particles[i]-> Strain;
+    // Particles[gi]-> Density  =     Particles[i]-> Density;
 
 	}
 }
+
+inline void Domain::PropGhost(){
+  	for (int gp=0; gp<GhostPairs.Size(); gp++){
+		int  i = GhostPairs[gp].first;
+		int gi = GhostPairs[gp].second;
+      Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
+      Particles[gi]-> Strain  =     Particles[i]-> Strain;
+      Particles[gi]-> Density  =     Particles[i]-> Density;      
+    }
+  
+}
+
 
 inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,

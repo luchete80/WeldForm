@@ -72,7 +72,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-  test_new_sym
+  #test_new_sym
   #Compression
 	#Compression_XSPH
   #Compression_AVisc
@@ -119,7 +119,7 @@ SET(EXES
   #Compression_qt
 	#Compression_qt_ghost
   #Compression_half  
-  #Compression_half_ghost_vel
+  Compression_half_ghost_vel
   #CompressionVel_2sides
   #Compression_half_ghost
 	#CompressionForces2

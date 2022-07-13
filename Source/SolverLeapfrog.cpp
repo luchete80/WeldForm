@@ -224,7 +224,6 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
       Particles[i]->x += du;
     }
 
-    MoveGhost();
     GeneralAfter(*this);
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
     
@@ -280,6 +279,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     }
 		if (isfirst) isfirst = false;
 
+   //PropGhost();   
 		if (Time>=tout){
 			if (TheFileKey!=NULL) {
 				String fn;
