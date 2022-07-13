@@ -64,7 +64,8 @@ inline void Domain::CalcContactForcesWang(){
   double normal_cf;
   Vec3_t du;// If no contact
  
-  bool ref_accel = true;   //true: tg force is compared to current tg accel
+ // TRUE DOES NOT WORK?
+  bool ref_accel = false;   //true: tg force is compared to current tg accel
   
   Vec3_t atg;
   bool end;
@@ -198,21 +199,21 @@ inline void Domain::CalcContactForcesWang(){
             if (friction_sta > 0.) { 
                 // //delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
                 
-                if (P1 == 11311){
-                  //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
-                cout << "-------------------------\n delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
-                //cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
-                cout << "disp criteria tgforce " <<norm(tgforce) << ", mu N "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
-                cout << "disp normal force " << kij * delta * Particles[P2]->normal<<endl;
-                cout << "norm acting tg force: "<<norm(atg)*Particles[P1] ->Mass<<endl;
-                //cout << "tg vr " << norm_tgvr << "norm vr "<< delta_<<", vr "<< norm(vr) <<endl;
-                }
-                //////OR CHOOSE BETWEEN MAX FORCE TO EQUAL VELOCITIES OR DISPLACEMENTS
+                // if (P1 == 11311){
+                  // //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
+                // cout << "-------------------------\n delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
+                // //cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
+                // cout << "disp criteria tgforce " <<norm(tgforce) << ", mu N "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
+                // cout << "disp normal force " << kij * delta * Particles[P2]->normal<<endl;
+                // cout << "norm acting tg force: "<<norm(atg)*Particles[P1] ->Mass<<endl;
+                // //cout << "tg vr " << norm_tgvr << "norm vr "<< delta_<<", vr "<< norm(vr) <<endl;
+                // }
+                // //////OR CHOOSE BETWEEN MAX FORCE TO EQUAL VELOCITIES OR DISPLACEMENTS
 
-                if (P1 == 11311){
-                  cout << "impulse criteria tgforce "<<tgforce<< ", mu N " << norm(imp_force) * friction_sta<<endl;
-                  cout << "impulse criteria normal force " << imp_force<<endl;
-                }
+                // if (P1 == 11311){
+                  // cout << "impulse criteria tgforce "<<tgforce<< ", mu N " << norm(imp_force) * friction_sta<<endl;
+                  // cout << "impulse criteria normal force " << imp_force<<endl;
+                // }
  
                 
                 ////// DISPLACEMENT CRITERIA
@@ -260,7 +261,7 @@ inline void Domain::CalcContactForcesWang(){
                 // }
                 
                 
-                if (P1 == 11311) cout << "norm resulting force: "<<Particles[P1] ->a * Particles[P1] ->Mass <<endl;
+                //if (P1 == 11311) cout << "norm resulting force: "<<Particles[P1] ->a * Particles[P1] ->Mass <<endl;
 
             }
 
