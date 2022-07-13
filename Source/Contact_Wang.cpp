@@ -64,8 +64,8 @@ inline void Domain::CalcContactForcesWang(){
   double normal_cf;
   Vec3_t du;// If no contact
  
- // TRUE DOES NOT WORK?
-  bool ref_accel = false;   //true: tg force is compared to current tg accel
+  //USE TRUE: FALSE DOES NOT WORK
+  bool ref_accel = true;   //true: tg force is compared to current tg accel
   
   Vec3_t atg;
   bool end;

@@ -2,6 +2,7 @@
 #include "Domain.h"
 #include <iostream>
 #include "InteractionAlt.cpp"
+#include "SolverKickDrift.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -179,14 +180,15 @@ int main(){
 	//		1	Outer Surface
 	//		2,3 //Boundaries
   //dom.auto_ts = false;
-  timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
+  timestep = (0.8*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
-  dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }
