@@ -116,9 +116,10 @@ int main() try{
   dom.auto_ts = false;
 //  	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   
-	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-	
+	timestep = (1.0*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  
 	dom.WriteXDMF("ContactTest");
 }
 MECHSYS_CATCH

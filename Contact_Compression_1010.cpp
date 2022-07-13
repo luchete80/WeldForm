@@ -2,8 +2,9 @@
 #include "Domain.h"
 #include <iostream>
 #include "InteractionAlt.cpp"
+#include "SolverKickDrift.cpp"
 
-#define VMAX	0.06
+#define VMAX	1.00
 
 using namespace SPH;
 using namespace std;
@@ -115,9 +116,10 @@ int main() try{
 
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + /*1.005 * */dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
-	
+	double cyl_zmin = dom.Particles[0]->x(2) - /*1.005 * */dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+
 	mesh.AxisPlaneMesh (2,false,Vec3_t(-1.5*R,-1.5*R, cyl_zmax),Vec3_t(1.5*R,1.5*R, cyl_zmax),20);
-  mesh2.AxisPlaneMesh(2,true,Vec3_t(-1.5*R,-1.5*R, -h),Vec3_t(1.5*R,1.5*R, -h),20);
+  mesh2.AxisPlaneMesh(2,true,Vec3_t(-1.5*R,-1.5*R, cyl_zmin),Vec3_t(1.5*R,1.5*R,cyl_zmin),20);
 	
   cout << "Plane z" << *mesh.node[0]<<endl;
 	
@@ -196,7 +198,7 @@ int main() try{
   dom.fric_type = Fr_Dyn;
  
 	dom.PFAC = 0.8;
-	dom.DFAC = 0.1;
+	dom.DFAC = 0.0;
 
 	//ALWAYS AFTER SPH PARTICLES
 	//TODO: DO THIS INSIDE SOLVER CHECKS
@@ -211,8 +213,11 @@ int main() try{
   //dom.auto_ts_acc = true;
 //  	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   
-	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	// timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  // dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  dom.auto_ts=true;  
+  timestep = (1.0*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
 	
 	dom.WriteXDMF("ContactTest");
 }

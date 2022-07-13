@@ -109,7 +109,9 @@ int main(int argc, char **argv) try
   double cyl_zmax = L/2. + dx*0.6 -1.e-3; //If new meshing  
   double f = 1.5;
 	cout << "Creating contact mesh.."<<endl;
-	mesh.AxisPlaneMesh(2,true,Vec3_t(-0.2,-0.2, 0.),Vec3_t(0.2,0.2,0.),15);
+  double cyl_zmin = dom.Particles[0]->x(2) -  h /*- 1.e-6*/;
+  
+	mesh.AxisPlaneMesh(2,true,Vec3_t(-0.2,-0.2, cyl_zmin),Vec3_t(0.2,0.2,cyl_zmin),15);
 	cout << "Plane z" << *mesh.node[0]<<endl;
   
   cout << "Mesh node size "<<mesh.node.Size()<<endl;
@@ -146,7 +148,7 @@ int main(int argc, char **argv) try
     
     
     //TOP PLANE
-    if (z > L/2. - dx ){
+    if (z > L/2. - 1.5*dx ){
       dom.Particles[a]->ID=3;
       dom.Particles[a]->not_write_surf_ID = true;
       top_part++;
@@ -184,9 +186,8 @@ int main(int argc, char **argv) try
   
   timestep = (0.8*h/(Cs+VMAX));
   dom.auto_ts=true;
-  //dom.auto_ts_acc=true;
-  dom.sqrt_h_a = 0.005;
-  dom.SolveDiffUpdateLeapfrog(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/1.e-5  ,"test06",1000);
+
+  dom.SolveDiffUpdateLeapfrog(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
   
   return 0;
 }
