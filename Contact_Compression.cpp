@@ -2,7 +2,7 @@
 #include "Domain.h"
 #include <iostream>
 #include "InteractionAlt.cpp"
-#include "SolverKickDrift.cpp"
+//#include "SolverKickDrift.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -105,7 +105,7 @@ int main(){
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20.,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h + r /*- 1.e-6*/;
 
 	cout << "Plane z " <<cyl_zmax<<endl;
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
@@ -180,7 +180,7 @@ int main(){
 	//		1	Outer Surface
 	//		2,3 //Boundaries
   //dom.auto_ts = false;
-  timestep = (0.8*h/(Cs)); //Standard modified Verlet do not accept such step
+  timestep = (0.3*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
@@ -188,7 +188,7 @@ int main(){
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
   dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }
