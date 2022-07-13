@@ -2,8 +2,9 @@
 #include "Domain.h"
 #include <iostream>
 #include "InteractionAlt.cpp"
+#include "SolverKickDrift.cpp"
 
-#define VMAX	0.03
+#define VMAX	0.5
 
 using namespace SPH;
 using namespace std;
@@ -11,25 +12,8 @@ using namespace std;
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 		vcompress = VMAX;
-
-  int first = 3588;
-  int last = 3863;
-  double dS = 0.0008*0.0008;
-  domi.m_scalar_prop = 0.;
-  for (int i = first;i<=last;i++){
-    domi.m_scalar_prop += domi.Particles[i]->Sigma (2,2) * dS;
-  }
-  //cout <<  "Sum "<<domi.m_scalar_prop<<endl;
-
   
-	//TODO: Modify this by relating FEM & AND partciles 
-	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
-	// domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress/2.));
-  // for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
-    // domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    // domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
-  // }
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
 }
 
 
@@ -60,7 +44,7 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 
-	dx = 0.0012;  //Tenth of radius
+	dx = 0.0006;  //Tenth of radius
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -83,35 +67,30 @@ int main() try{
 	dom.DomMin(0) = -L;
 
 	bool ghost = true;								
-	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, false, ghost); 
+	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L /2.,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + /*1.005 * */dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
-  double half_plane_length = R*1.5;
-	int count = 2.0 * half_plane_length/(2.*dx); //Half the density... od original mesh
-
-//double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
-	double cyl_zmax = L/2. + dx * 0.701; //If new meshing 
-  
-  cout << "plane length particle count: "<<count<<endl;
-	mesh.AxisPlaneMesh(2,false, Vec3_t(-half_plane_length,-half_plane_length, cyl_zmax),
-                              Vec3_t( half_plane_length, half_plane_length, cyl_zmax),count);
-	cout << "Plane z" << *mesh.node[0]<<endl;
+	mesh.AxisPlaneMesh (2,false,Vec3_t(-1.5*R,-1.5*R, cyl_zmax),Vec3_t(1.5*R,1.5*R, cyl_zmax),20);
+	
+  cout << "Plane z" << *mesh.node[0]<<endl;
 	
 	
 	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
 	cout << "Creating Spheres.."<<endl;
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
-	
+
+  
+	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = true;
-  
-  dom.Particles[3863]->print_history = true;
-  
-  cout << "Particle 3589 coords xyz "<<dom.Particles[3863]->x<<endl;
-  //dom.Particles[3863]->print_history = true;
-			
+	int top, bottom, center;
+  top = bottom = center = 0;   
+  int center_top = 0;			
+    int center_bottom = 0;
+    
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -127,11 +106,44 @@ int main() try{
 		dom.Particles[a]->Beta		= 2.5;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
+
+    double x = dom.Particles[a]->x(0);
+    double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
-    
-		// if ( z > L )
-			// dom.Particles[a]->ID=3;
+
+    //If friction is null, the cylinder not slide
+    if ( abs (z - (L/2.-dx)) < dx/2. && (abs(x - R) < 1.5*dx  || abs(x + R) < 1.5*dx ) && abs(y) < 1.1*dx){
+      dom.Particles[a]->ID=2;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      top++;      
+    } 
+    //x=R, y=0
+    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < 1.1*dx && (abs(y-R) < 1.5 *dx || abs(y+R) < 1.5*dx)){
+      dom.Particles[a]->ID=3;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      bottom++;      
+    } 
+    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=4;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center++;      
+    }     
+
+    if ( z < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=5;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center_bottom++;      
+    } 
+
+    if ( z > (L - 1.5*dx) && abs(x) < dx/2. && abs(y) < dx/2.){
+      dom.Particles[a]->ID=5;	  
+      dom.Particles[a]->not_write_surf_ID = true;
+      center_top++;      
+    }   
 	}
+  cout << top<< " Side 1 particles, "<<bottom << " side 2 particles, "<<center << " center particles" <<endl; 
+  cout << "Center Top: " <<center_top <<endl;
+  cout << "Center Bottom: " <<center_bottom <<endl;  
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction_dyn = 0.2;
@@ -139,7 +151,7 @@ int main() try{
   dom.fric_type = Fr_Dyn;
  
 	dom.PFAC = 0.8;
-	dom.DFAC = 0.1;
+	dom.DFAC = 0.0;
 
 	//ALWAYS AFTER SPH PARTICLES
 	//TODO: DO THIS INSIDE SOLVER CHECKS
@@ -149,11 +161,15 @@ int main() try{
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-  dom.auto_ts = true;
+  dom.auto_ts     = false;
+  //dom.auto_ts_acc = true;
 //  	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   
-	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	// timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  // dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  dom.auto_ts=true;  
+  timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
 	
 	dom.WriteXDMF("ContactTest");
 }
