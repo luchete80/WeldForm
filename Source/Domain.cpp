@@ -722,7 +722,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		}
 		cout << "Particles per row: "<<part_per_row<<endl;
 		
-    zp = V(2) - 2.0*r;
+    zp = V(2) - r;
 		//Insert ghost pairs relation
 		if (ghost){
       //// Z PLANE, BOTTOM COORDINATE /////
@@ -1064,6 +1064,8 @@ inline void Domain::PropGhost(){
       Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
       Particles[gi]-> Strain  =     Particles[i]-> Strain;
       Particles[gi]-> Density  =     Particles[i]-> Density;      
+      Particles[gi]-> ShearStress  =     Particles[i]-> ShearStress;  
+      Particles[gi]-> pl_strain = Particles[i]-> pl_strain; 
     }
   
 }

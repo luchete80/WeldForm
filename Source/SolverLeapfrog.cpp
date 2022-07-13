@@ -279,7 +279,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     }
 		if (isfirst) isfirst = false;
 
-   //PropGhost();   
+   PropGhost();   
 		if (Time>=tout){
 			if (TheFileKey!=NULL) {
 				String fn;

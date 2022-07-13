@@ -107,7 +107,7 @@ SET(EXES
   #Contact_Compression_1010_hlaf_ghost
   #Compression_1010
   #Contact_Compression_1010
-  #Compression_1010_half_ghost
+  Compression_1010_half_ghost
 	#NastranReader_test
 	#CompressionForces
   #Compression
@@ -119,7 +119,7 @@ SET(EXES
   #Compression_qt
 	#Compression_qt_ghost
   #Compression_half  
-  Compression_half_ghost_vel
+  #Compression_half_ghost_vel
   #CompressionVel_2sides
   #Compression_half_ghost
 	#CompressionForces2

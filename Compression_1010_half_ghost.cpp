@@ -2,8 +2,9 @@
 #include "Domain.h"
 #include <iostream>
 #include "InteractionAlt.cpp"
+#include "SolverKickDrift.cpp"
 
-#define VMAX	0.03
+#define VMAX	1.0
 
 using namespace SPH;
 using namespace std;
@@ -98,19 +99,20 @@ int main() try{
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
     
-		if ( z > L/2. -dx){
+		if ( z > L/2. - 2.0 * dx){
       top_part++;
 			dom.Particles[a]->ID=2;
     }
 	}
   cout << "top_part: "<<top_part<<endl;
 
-  dom.auto_ts = false;
+  dom.auto_ts = true;
 //  	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   
-	timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-	
+	timestep = (1.0*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+    
 	dom.WriteXDMF("ContactTest");
 }
 MECHSYS_CATCH
