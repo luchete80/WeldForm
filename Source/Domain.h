@@ -306,6 +306,8 @@ public:
     PtDom					GeneralBefore;	///< Pointer to a function: to modify particles properties before CalcForce function
     PtDom					GeneralAfter;	///< Pointer to a function: to modify particles properties after CalcForce function
     size_t					Scheme;		///< Integration scheme: 0 = Modified Verlet, 1 = Leapfrog
+    
+    double CFL;               ///FOR VELOCITY
 
     Array<Array<std::pair<size_t,size_t> > >	SMPairs;
     Array<Array<std::pair<size_t,size_t> > >	NSMPairs;

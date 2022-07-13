@@ -76,7 +76,10 @@ int main() try{
 	dom.DomMin(0) = -L;
 
 	bool ghost = true;								
-	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, false, ghost); 
+	//dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L/2.,  dx/2., rho, h, false, ghost); 
+
+  dom.AddXYSymCylinderLength(0., R, L/2.0, dx/2., rho, h, false, ghost);
+                                          
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
 	dom.gradKernelCorr = true;

@@ -146,6 +146,8 @@ inline Domain::Domain ()
   contact_mesh_auto_update = true;
   meshcount = 0;
   h_update = false;
+  
+  CFL = 0.7;
 }
 
 inline Domain::~Domain ()
@@ -251,7 +253,7 @@ inline void Domain::CheckMinTSVel() {
       // if (d>max)
         // max = d;
     }
-    test = 0.4 * min/(Particles[i]->Cs + norm(Particles[i]->v));
+    test = CFL * min/(Particles[i]->Cs + norm(Particles[i]->v));
     if (deltatmin > test ) {
       omp_set_lock(&dom_lock);
         deltatmin = test;
@@ -971,7 +973,7 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 		//Insert ghost pairs relation
 		if (symlength){
       //// Z PLANE, BOTTOM COORDINATE /////
-      cout << "inserting z ghost particles at z bottom..."<<endl;
+      cout << "Inserting z ghost particles at z bottom..."<<endl;
       //z Symm particles
       int sym_part;
       int part = 0;
@@ -985,7 +987,7 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
           Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
           Particles[id_part]->inner_mirr_part = part;
           //Particles[id_part]->ID = -50;
-          cout << "part , sym"<<part<<", "<<id_part<<endl;
+          //cout << "part , sym"<<part<<", "<<id_part<<endl;
           Particles[id_part]->ghost_plane_axis = 2;
           Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
           Particles[id_part  ]->is_ghost = true;

@@ -95,4 +95,6 @@
 20220712  -  SIGNIFICANT IMPROVEMENTS. 1. FINALLY IMPLEMENTATION OF LEAPFROG SOLVER WORKS ON 
              LARGE TIME STEPS. 2. SOLVED PARALLEL REDUCTION BY NISHIMURA ARRAYS. Is slightly
              faster than lock but the algorithm is applicable to parallel GPU.
-             
+20220713  -  FIXED GHOST PARTICLE METHOD. Equallying ghost stress, strain and density from 
+             respective particles, is working. Now remains to make Wang's hybrid 
+             contact-ghost symmetry method.
