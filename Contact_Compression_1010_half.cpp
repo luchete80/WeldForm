@@ -143,8 +143,8 @@ int main() try{
 	// timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   // dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
   dom.auto_ts=true;  
-  dom.CFL = 0.3;
-  timestep = (0.3*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  dom.CFL = 0.7;
+  timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);  
 	
 	dom.WriteXDMF("ContactTest");

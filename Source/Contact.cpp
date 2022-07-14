@@ -612,6 +612,10 @@ inline void Domain::CalcContactForces2(){
   int m;
   double normal_cf;
   Vec3_t du;// If no contact
+  
+  bool ref_accel = true;
+  
+  Vec3_t ref_tg;
  
   Vec3_t atg;
   bool end;
@@ -620,7 +624,8 @@ inline void Domain::CalcContactForces2(){
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
   int stra_restr = 0; //restricted static
-	//#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, du, normal_cf, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	Vec3_t x_pred;
+  #pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, du, normal_cf, ref_tg, m, x_pred, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -698,8 +703,7 @@ inline void Domain::CalcContactForces2(){
 						//Since FEM is assumed as rigid, stiffness is simply the SPH one 
 						kij = PFAC * Particles[P1]-> cont_stiff;
 						omega = sqrt (kij/Particles[P1]->Mass);
-						psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
-            
+						psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158 
             //normal_cf = 2.0 * Particles[P1]->Mass /(deltat*deltat )*delta;
 
 						omp_set_lock(&Particles[P1]->my_lock);
@@ -736,11 +740,19 @@ inline void Domain::CalcContactForces2(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
             //Wang2013, but applied to current step
-            du = vr * deltat;
+            //du = vr * deltat;
+
+            //Wang2013, but applied to current step
+            x_pred = Particles[P1]->x + Particles[P1]->v * deltat + Particles[P1]->a * deltat * deltat/2.0;
+            du = x_pred - Particles[P1] ->x - Particles[P2] -> v * deltat ;
+            
             delta_tg = du - dot(du, Particles[P2]->normal)*Particles[P2]->normal;
             tgforce = kij * delta_tg;
             //tgforce = (kij * delta_tg - psi_cont * delta_);
-            
+                
+           if (ref_accel) ref_tg = atg * Particles[P1]->Mass;
+           else           ref_tg = tgforce;
+               
             if (friction_sta > 0.) { 
                 // //delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
                 
@@ -749,16 +761,16 @@ inline void Domain::CalcContactForces2(){
                 cout << "delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
                 cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
                 cout << "tgforce " <<norm(tgforce) << ", mu N "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
-                cout << "norm atg: "<<norm(atg)<<endl;
+                cout << "norm atg * mass : "<<norm(atg) * Particles[P1]->Mass<<endl;
                 }
                 
-                //if (norm(tgforce) < friction_sta * norm(Particles[P1] -> contforce) ){
+                if (norm(ref_tg) < friction_sta * norm(Particles[P1] -> contforce) ){
                   omp_set_lock(&Particles[P1]->my_lock);
                     Particles[P1] -> contforce -= tgforce;
-                    Particles[P1] -> a -= atg; 
+                    Particles[P1] -> a -= tgforce / Particles[P1]->Mass; 
                     //Particles[P1] -> a -= tgforce / Particles[P1]->Mass;  // //Eqn 30. Zhan
                   omp_unset_lock(&Particles[P1]->my_lock);
-                //}
+                }
             }
             // if (fric_type == Fr_Bound){
                 // omp_set_lock(&Particles[P1]->my_lock);
