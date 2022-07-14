@@ -44,7 +44,7 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 
-	dx = 0.0006;  //Tenth of radius
+	dx = 0.0009;  //Tenth of radius
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -69,8 +69,12 @@ int main() try{
 	bool ghost = true;								
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L /2.,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
-
-	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + /*1.005 * */dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+  
+  double max = 0.;
+  for (int i=0;i<dom.Particles.Size();i++)
+    if (dom.Particles[i]->x(2) > max)
+      max  = dom.Particles[i]->x(2);
+	double cyl_zmax = max + h /*- 1.e-6*/;
 
 	mesh.AxisPlaneMesh (2,false,Vec3_t(-1.5*R,-1.5*R, cyl_zmax),Vec3_t(1.5*R,1.5*R, cyl_zmax),20);
 	
@@ -111,35 +115,6 @@ int main() try{
     double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
 
-    //If friction is null, the cylinder not slide
-    if ( abs (z - (L/2.-dx)) < dx/2. && (abs(x - R) < 1.5*dx  || abs(x + R) < 1.5*dx ) && abs(y) < 1.1*dx){
-      dom.Particles[a]->ID=2;	  
-      dom.Particles[a]->not_write_surf_ID = true;
-      top++;      
-    } 
-    //x=R, y=0
-    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < 1.1*dx && (abs(y-R) < 1.5 *dx || abs(y+R) < 1.5*dx)){
-      dom.Particles[a]->ID=3;	  
-      dom.Particles[a]->not_write_surf_ID = true;
-      bottom++;      
-    } 
-    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
-      dom.Particles[a]->ID=4;	  
-      dom.Particles[a]->not_write_surf_ID = true;
-      center++;      
-    }     
-
-    if ( z < dx/2. && abs(x) < dx/2. && abs(y) < dx/2.){
-      dom.Particles[a]->ID=5;	  
-      dom.Particles[a]->not_write_surf_ID = true;
-      center_bottom++;      
-    } 
-
-    if ( z > (L - 1.5*dx) && abs(x) < dx/2. && abs(y) < dx/2.){
-      dom.Particles[a]->ID=5;	  
-      dom.Particles[a]->not_write_surf_ID = true;
-      center_top++;      
-    }   
 	}
   cout << top<< " Side 1 particles, "<<bottom << " side 2 particles, "<<center << " center particles" <<endl; 
   cout << "Center Top: " <<center_top <<endl;
@@ -168,8 +143,9 @@ int main() try{
 	// timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   // dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
   dom.auto_ts=true;  
-  timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+  dom.CFL = 0.3;
+  timestep = (0.3*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);  
 	
 	dom.WriteXDMF("ContactTest");
 }
