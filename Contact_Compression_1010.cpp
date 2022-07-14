@@ -88,7 +88,7 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 
-	dx = 0.0012;  //Tenth of radius
+	dx = 0.0006;  //Tenth of radius
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -197,7 +197,7 @@ int main() try{
   dom.friction_sta = 0.2;
   dom.fric_type = Fr_Dyn;
  
-	dom.PFAC = 0.8;
+	dom.PFAC = 0.4;
 	dom.DFAC = 0.0;
 
 	//ALWAYS AFTER SPH PARTICLES
@@ -215,8 +215,9 @@ int main() try{
   
 	// timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   // dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-  dom.auto_ts=true;  
-  timestep = (1.0*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  dom.auto_ts=true; 
+  dom.CFL = 0.7;
+  timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
 	
 	dom.WriteXDMF("ContactTest");

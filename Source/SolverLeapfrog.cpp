@@ -180,7 +180,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     GeneralAfter(*this); //Fix free accel
     
     clock_beg = clock(); 
-    if (contact) CalcContactForcesWang();
+    if (contact) CalcContactForces2();
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 		

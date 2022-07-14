@@ -188,7 +188,9 @@ inline void Domain::CalcContactForcesWang(){
 						if (dt_fext < min_force_ts_){
 							min_force_ts_ = dt_fext;
 							if (dt_fext > 0)
+                omp_set_lock(&dom_lock);
 								this -> min_force_ts = min_force_ts_;
+                omp_unset_lock(&dom_lock);
 						}
 						omp_set_lock(&Particles[P1]->my_lock);
 						//Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
