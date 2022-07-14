@@ -161,8 +161,8 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction_dyn = 0.15;
-	dom.friction_sta = 0.15;
+	dom.friction_dyn = 0.25;
+	dom.friction_sta = 0.25;
 	dom.PFAC = 0.5;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;
@@ -180,7 +180,7 @@ int main(){
 	//		1	Outer Surface
 	//		2,3 //Boundaries
   //dom.auto_ts = false; 
-  timestep = (1.*h/(Cs)); //Standard modified Verlet do not accept such step
+  timestep = (0.3*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
   dom.auto_ts=true;

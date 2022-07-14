@@ -739,12 +739,16 @@ inline void Domain::CalcContactForces2(){
 						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
+            
+            // TANGENTIAL BEHAVIOUR
+            
             //Wang2013, but applied to current step
-            //du = vr * deltat;
+            //ORIGINAL VERSION, BASED IN CURRENT STEP
+            du = vr * deltat;
 
             //Wang2013, but applied to current step
-            x_pred = Particles[P1]->x + Particles[P1]->v * deltat + Particles[P1]->a * deltat * deltat/2.0;
-            du = x_pred - Particles[P1] ->x - Particles[P2] -> v * deltat ;
+            // x_pred = Particles[P1]->x + Particles[P1]->v * deltat + Particles[P1]->a * deltat * deltat/2.0;
+            // du = x_pred - Particles[P1] ->x - Particles[P2] -> v * deltat ;
             
             delta_tg = du - dot(du, Particles[P2]->normal)*Particles[P2]->normal;
             tgforce = kij * delta_tg;
@@ -756,7 +760,7 @@ inline void Domain::CalcContactForces2(){
             if (friction_sta > 0.) { 
                 // //delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
                 
-                if (P1 == 12415){
+                if (P1 == 11312){
                   //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
                 cout << "delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
                 cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
