@@ -22,6 +22,7 @@
 #include "Domain.h"
 #include "InteractionAlt.cpp"
 #include "SolverKickDrift.cpp"
+#include "SolverVerlet.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -166,11 +167,12 @@ int main(int argc, char **argv) try
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
-    timestep = (0.4*h/(Cs+VMAX));
+    timestep = (1.0*h/(Cs+VMAX));
     //timestep = 2.5e-6;
     dom.auto_ts = false;
-    dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
   
 		return 0;
 }

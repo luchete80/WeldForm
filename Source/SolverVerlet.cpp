@@ -91,7 +91,13 @@ inline void Domain::SolveDiffUpdateVerlet (double tf, double dt, double dtOut, c
   int ct=30;
   std::chrono::duration<double> total_time;
 	auto start_whole = std::chrono::steady_clock::now();  
-	while (Time<=tf && idx_out<=maxidx) {
+  
+  std::vector <Vec3_t> prev_acc(Particles.Size()); 
+  #pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+  for (int i=0; i<Particles.Size(); i++){
+    prev_acc[i] = Particles[i]->a;
+  }
+  while (Time<=tf && idx_out<=maxidx) {
   
 		StartAcceleration(0.);
 
@@ -172,6 +178,18 @@ inline void Domain::SolveDiffUpdateVerlet (double tf, double dt, double dtOut, c
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
 
+    clock_beg = clock();  
+    //BEFORE
+    Vec3_t du;    
+    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++){
+      Particles[i]->x_prev = Particles[i]->x;
+      du = (Particles[i]->v + Particles[i]->VXSPH)*deltat + 0.5 * prev_acc[i]*deltat*deltat;
+      Particles[i]->Displacement += du;
+      Particles[i]->x += du;
+    }
+    mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
+    
 		clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
@@ -189,20 +207,23 @@ inline void Domain::SolveDiffUpdateVerlet (double tf, double dt, double dtOut, c
     //if (contact) CalcContactForces2();
 		
     double factor = 1.;
-    // if (ct==30) factor = 1.;
-    // else        factor = 2.;
+
     clock_beg = clock();
     double dt; 
     if (isfirst)  dt = deltat/2.0;
     else          dt = deltat;
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->v += Particles[i]->a*dt;
+      Particles[i]->v += (Particles[i]->a + prev_acc[i])/2.0 * dt;
       //Particles[i]->LimitVel();
     }
     MoveGhost();   
     GeneralAfter(*this);//Reinforce BC vel   
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
+
+    // #pragma omp parallel for schedule (static) num_threads(Nproc)
+    // for (size_t i=0; i<Particles.Size(); i++)
+      // prev_acc[i] = Particles[i]->a;
     
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
@@ -213,21 +234,6 @@ inline void Domain::SolveDiffUpdateVerlet (double tf, double dt, double dtOut, c
       Particles[i]->Density += deltat*Particles[i]->dDensity*factor;
     }    
     dens_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-    //BEFORE
-    Vec3_t du;
-    
-    clock_beg = clock();   
-    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->x_prev = Particles[i]->x;
-      du = (Particles[i]->v + Particles[i]->VXSPH)*deltat*factor;
-      Particles[i]->Displacement += du;
-      Particles[i]->x += du;
-    }
-
-    MoveGhost();
-    GeneralAfter(*this);
-    mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
     
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
