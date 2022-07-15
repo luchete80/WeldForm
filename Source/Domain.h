@@ -142,17 +142,22 @@ public:
     void CalcForceSOA(int &i,int &j) ;
     void Move						(double dt);										//Move particles
 
-    void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
-    void SolveDiffUpdateLeapfrog(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
-    void SolveDiffUpdateKickDrift (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
-    void SolveDiffUpdateVerlet  (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
-    void SolveDiffUpdateModEuler (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
-    void SolveDiffUpdateModVerlet (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
-    void Solve_orig 			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
-		void Solve_orig_Ext 	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
-	void ThermalSolve			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
+  void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
+  void SolveDiffUpdateLeapfrog(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
+  void SolveDiffUpdateKickDrift (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
+  void SolveDiffUpdateVerlet  (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
+  void SolveDiffUpdateModEuler (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
+  void SolveDiffUpdateModVerlet (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
+  void Solve_orig 			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
+  void Solve_orig_Ext 	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); 
+	
+  // THERMAL //
+  void ThermalSolve			(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
 	void ThermalStructSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx); //Coupled Thermal Structural
 	void ThermalSolve_wo_init	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
+  inline void ThermalCalcs(const double &dt);
+  
+  
   void AddFixedMassScaling (const double &factor);
   inline void UpdateSmoothingLength();
   //inline void UpdateSmoothingLength_Pairs();
@@ -347,6 +352,7 @@ public:
 	bool						auto_ts;				//LUCIANO: Auto Time Stepping: VEL CRITERIA
 	bool            auto_ts_acc;    
   bool            auto_ts_cont; 
+  double          m_maxT, m_minT; //from step, tou output
   std::vector <TriMesh*> trimesh; //ORIGINALLY
 	//CONTACT 
 	double PFAC, DFAC;		// Penalty and damping factors

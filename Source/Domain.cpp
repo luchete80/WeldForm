@@ -2091,24 +2091,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		clock_beg = clock();
 
-    double maxT = 0.;
-    double minT =1000.;    
-    for (size_t i=0; i<Particles.Size(); i++){
-			//Particles[i]->T+= dt*Particles[i]->dTdt;
-			Particles[i]->TempCalcLeapfrog(dt);
-			if (Particles[i]->T > maxT)
-				maxT=Particles[i]->T;
-			if (Particles[i]->T < minT)
-				minT=Particles[i]->T;      
-    }
-    
-
-		if (thermal_solver){
-			CalcConvHeat();
-			CalcPlasticWorkHeat(deltat);
-			CalcTempInc();
-			CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term	
-		}
+    ThermalCalcs(dt);
 		
 		clock_beg = clock();
 		GeneralAfter(*this);
@@ -2153,7 +2136,7 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 			cout << "Average Nb search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step)<<endl;
 
 			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
-			std::cout << "Max, Min, Avg temps: "<< maxT << ", " << minT << ", " << (maxT+minT)/2. <<std::endl;      
+			std::cout << "Max, Min, Avg temps: "<< m_maxT << ", " << m_minT << ", " << (m_maxT+m_minT)/2. <<std::endl;      
       cout << "Particle 0 pos and vel "<<endl;
       cout << Particles[0]->x<<endl;
       cout << Particles[0]->v<<endl;
