@@ -209,21 +209,18 @@ inline void Domain::SolveDiffUpdateVerlet (double tf, double dt, double dtOut, c
     double factor = 1.;
 
     clock_beg = clock();
-    double dt; 
-    if (isfirst)  dt = deltat/2.0;
-    else          dt = deltat;
+
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      Particles[i]->v += (Particles[i]->a + prev_acc[i])/2.0 * dt;
-      //Particles[i]->LimitVel();
+      Particles[i]->v += (Particles[i]->a + prev_acc[i])/2.0 * deltat;
     }
     MoveGhost();   
     GeneralAfter(*this);//Reinforce BC vel   
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
 
-    // #pragma omp parallel for schedule (static) num_threads(Nproc)
-    // for (size_t i=0; i<Particles.Size(); i++)
-      // prev_acc[i] = Particles[i]->a;
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++)
+      prev_acc[i] = Particles[i]->a;
     
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
