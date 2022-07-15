@@ -134,8 +134,13 @@ public:
     void CalcForce2233	(Particle * P1, Particle * P2);		//Calculates the contact force between soil-soil/solid-solid particles
     void CalcAccel();		//NEW, ONLY CALCULATES ACCELERATION; IN ORDER TO ALTERNATE AND NOT CALCULATE Density at same place
     
+    ///// TEST FUNCTIONS FOR PARTICLE PARALLELIZATION
     inline void CalcAccelPP(); //ONLY FOR TESTING, PARALLELIZATION BY PARTICLE
     inline void CalcAccelPair(Particle * P1, Particle * P2);
+    inline void CalcRateTensorsPair (Particle *P1, Particle *P2);
+    inline void CalcTensorsPP();
+    inline void CalcDensPP();
+    inline void CalcDensIncPairs(Particle *P1, Particle *P2);
     
     void CalcDensInc();
     void CalcRateTensors();

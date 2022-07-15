@@ -93,4 +93,220 @@ inline void Domain::CalcAccelPP() {
   }
 }
 
+// ONLY WRITES IN P2
+
+//Similar but not densities
+inline void Domain::CalcRateTensorsPair (Particle *P1, Particle *P2) {          
+
+    double h	= (P1->h+P2->h)/2;
+    Vec3_t xij	= P1->x - P2->x;
+
+	//Periodic_X_Correction(xij, h, P1, P2);
+
+	double rij	= norm(xij);
+
+  double clock_begin;
+
+	// if ((rij/h)<=Cellfac)
+	// {
+  double di=0.0,dj=0.0,mi=0.0,mj=0.0;
+
+    di = P1->Density;
+    mi = P1->Mass;
+
+    dj = P2->Density;
+    mj = P2->Mass;
+
+		Vec3_t vij	= P1->v - P2->v;
+		
+		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
+		double K	= Kernel(Dimension, KernelType, rij/h, h);
+	
+
+		Mat3_t Sigmaj,Sigmai;
+		set_to_zero(Sigmaj);
+		set_to_zero(Sigmai);
+		Sigmai = P1->Sigma;
+		Sigmaj = P2->Sigma;
+
+		// NoSlip BC velocity correction
+		Vec3_t vab = vij;
+
+		Mat3_t StrainRate,RotationRate;
+		set_to_zero(StrainRate);
+		set_to_zero(RotationRate);
+		
+		//NEW
+		Mat3_t GKc[2];
+		double m, mc[2];
+		GKc[0] = GK * P1->gradCorrM;
+		GKc[1] = GK * P2->gradCorrM;
+		if (gradKernelCorr){
+		}
+
+    //m_clock_begin = clock();		
+		
+    Mat3_t StrainRate_c[2],RotationRate_c[2]; //Corrected gradients
+
+		// // // // Calculation strain rate tensor
+		// // // //ORIGINAL FORM			
+		//if (!gradKernelCorr){
+    StrainRate(0,0) = 2.0*vab(0)*xij(0);
+    StrainRate(0,1) = vab(0)*xij(1)+vab(1)*xij(0);
+    StrainRate(0,2) = vab(0)*xij(2)+vab(2)*xij(0);
+    StrainRate(1,0) = StrainRate(0,1);
+    StrainRate(1,1) = 2.0*vab(1)*xij(1);
+    StrainRate(1,2) = vab(1)*xij(2)+vab(2)*xij(1);
+    StrainRate(2,0) = StrainRate(0,2);
+    StrainRate(2,1) = StrainRate(1,2);
+    StrainRate(2,2) = 2.0*vab(2)*xij(2);
+    StrainRate	= -0.5 * GK * StrainRate;
+    
+    RotationRate(0,1) = vab(0)*xij(1)-vab(1)*xij(0);
+    RotationRate(0,2) = vab(0)*xij(2)-vab(2)*xij(0);
+    RotationRate(1,2) = vab(1)*xij(2)-vab(2)*xij(1);
+    RotationRate(1,0) = -RotationRate(0,1);
+    RotationRate(2,0) = -RotationRate(0,2);
+    RotationRate(2,1) = -RotationRate(1,2);
+    RotationRate	  = -0.5 * GK * RotationRate;
+    
+			// if (StrainRate(2,2)<-1.e-3)
+
+			Mat3_t gradv[2],gradvT[2];
+			
+			//cout<<"gradv"<<gradv[0]<<endl;
+			Vec3_t gradK; 
+			Mult(GK * P1->gradCorrM,xij,gradK);
+			Dyad (vab,gradK,gradv[0]); //outer product. L, velocity gradient tensor
+			Mult(GK * P2->gradCorrM,xij,gradK);
+			Dyad (vab,gradK,gradv[1]); //outer product. L, velocity gradient tensor
+			
+			for (int j=0;j<2;j++){
+				Trans(gradv[j],gradvT[j]);
+				StrainRate_c[j] 	= -0.5*(gradv[j] + gradvT[j]);
+				RotationRate_c[j] = -0.5*(gradv[j] - gradvT[j]);
+			}
+      
+		// Calculating the forces for the particle 1 & 2
+		Vec3_t temp = 0.0;
+		double temp1 = 0.0;
+		Vec3_t temp_c[2];
+		double temp1_c[2];
+		Vec3_t vc[2];
+		
+		if (gradKernelCorr){
+			for (int j=0;j<2;j++){
+				Mult (GKc[j], xij, vc[j]);
+			}
+		}
+
+
+		if (Dimension == 2) temp(2) = 0.0;
+		
+		if (!gradKernelCorr)
+			temp1 = dot( vij , GK*xij );
+    
+    clock_begin = clock();
+		// Locking the particle 1 for updating the properties
+
+    float mj_dj= mj/dj;
+
+    float mi_di = mi/di;
+    P2->StrainRate	 = P2->StrainRate + mi_di*StrainRate;
+    P2->RotationRate = P2->RotationRate + mi_di*RotationRate;
+
+
+}
+
+inline void Domain::CalcTensorsPP() {
+  Particle *P1, *P2;
+
+	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+  for (int i=0; i < Particles.Size();i++){
+    for (int n=0;n<ipair_SM[i];n++){
+      P1	= Particles[i]; 
+      P2 = Particles[Anei[i][n]];
+      CalcRateTensorsPair(P1,P2);
+    }
+    for (int n=0;n<jpair_SM[i];n++) {
+      P1	= Particles[i]; 
+      P2 = Particles[Anei[i][MAX_NB_PER_PART-1-n]];
+      CalcRateTensorsPair(P1,P2);
+    }
+  }
+}
+
+inline void Domain::CalcDensIncPairs(Particle *P1, Particle *P2) {
+
+      double h	= (P1->h+P2->h)/2;
+      Vec3_t xij	= P1->x - P2->x;
+      double rij	= norm(xij);
+
+      double di=0.0,dj=0.0,mi=0.0,mj=0.0;
+
+      di = P1->Density;
+      mi = P1->Mass;
+
+      dj = P2->Density;
+      mj = P2->Mass;
+
+      Vec3_t vij	= P1->v - P2->v;
+      
+      double GK	= GradKernel(Dimension, KernelType, rij/h, h);
+      double K	= Kernel(Dimension, KernelType, rij/h, h);
+    
+      //NEW
+      Mat3_t GKc[2];
+      double m, mc[2];
+      GKc[0] = GK * P1->gradCorrM;
+      GKc[1] = GK * P2->gradCorrM;
+      if (gradKernelCorr){
+      }
+      // Calculating the forces for the particle 1 & 2
+      Vec3_t temp = 0.0;
+      double temp1 = 0.0;
+      Vec3_t temp_c[2];
+      double temp1_c[2];
+      Vec3_t vc[2];
+      
+      if (gradKernelCorr){
+        for (int i=0;i<2;i++){
+          Mult (GKc[i], xij, vc[i]);
+        }
+      }
+
+      if (Dimension == 2) temp(2) = 0.0;
+      
+      if (!gradKernelCorr){
+        temp1 = dot( vij , GK*xij );
+      } else {
+        for (int i=0;i<2;i++){			//TODO: DO THIS ONCE!
+          temp1_c[i] = dot( vij , vc[i] );
+        }
+      }
+      if (!gradKernelCorr){
+        P2->dDensity	+= mi * (dj/di) * temp1;							
+      }else {
+        P2->dDensity	+= mi * (dj/di) * temp1_c[1];
+      }
+}
+
+inline void Domain::CalcDensPP() {
+  Particle *P1, *P2;
+
+	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+  for (int i=0; i < Particles.Size();i++){
+    for (int n=0;n<ipair_SM[i];n++){
+      P1	= Particles[i]; 
+      P2 = Particles[Anei[i][n]];
+      CalcDensIncPairs(P1,P2);
+    }
+    for (int n=0;n<jpair_SM[i];n++) {
+      P1	= Particles[i]; 
+      P2 = Particles[Anei[i][MAX_NB_PER_PART-1-n]];
+      CalcDensIncPairs(P1,P2);
+    }
+  }
+}
+
 };//SPH

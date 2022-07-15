@@ -170,8 +170,8 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
 
 		clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
-    CalcAccel(); //Nor density or neither strain rates
-    //CalcAccelPP();
+    //CalcAccel(); //Nor density or neither strain rates
+    CalcAccelPP();
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
     #ifdef NONLOCK_SUM
     AccelReduction();
@@ -202,7 +202,9 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
-    CalcDensInc(); //TODO: USE SAME KERNEL?
+    //CalcDensInc(); //TODO: USE SAME KERNEL?
+    CalcDensPP();
+    
     #ifdef NONLOCK_SUM
     DensReduction();
     #endif
@@ -228,7 +230,8 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
     
 		clock_beg = clock();
-    CalcRateTensors();  //With v and xn+1
+    //CalcRateTensors();  //With v and xn+1
+    CalcTensorsPP();
     #ifdef NONLOCK_SUM
     RateTensorsReduction();
     #endif
