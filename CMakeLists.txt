@@ -73,7 +73,7 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
   #test_new_sym
-  Compression
+  #Compression
 	#Compression_XSPH
   #Compression_AVisc
   #Compression_half_ghost_vel
@@ -92,7 +92,7 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	#Contact_Compression
+	Contact_Compression
   #Contact_Compression_1010_1side
   #Contact_Compression_fast_short
   #Contact_Compression_2surf

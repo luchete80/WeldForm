@@ -170,8 +170,8 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
 
 		clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
-    //CalcAccel(); //Nor density or neither strain rates
-    CalcAccelPP();
+    CalcAccel(); //Nor density or neither strain rates
+    //CalcAccelPP();
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
     #ifdef NONLOCK_SUM
     AccelReduction();
@@ -184,6 +184,12 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 		
+    // if (contact ){
+    // #pragma omp parallel for schedule (static) num_threads(Nproc)
+    // for (size_t i=0; i<Particles.Size(); i++)
+      // Particles[i]->a += Particles[i] -> contforce / Particles[i] -> Mass; 
+    // }
+    
     double factor = 1.;
     // if (ct==30) factor = 1.;
     // else        factor = 2.;
@@ -202,8 +208,8 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
-    //CalcDensInc(); //TODO: USE SAME KERNEL?
-    CalcDensPP();
+    CalcDensInc(); //TODO: USE SAME KERNEL?
+    //CalcDensPP();
     
     #ifdef NONLOCK_SUM
     DensReduction();
@@ -230,8 +236,8 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
     
 		clock_beg = clock();
-    //CalcRateTensors();  //With v and xn+1
-    CalcTensorsPP();
+    CalcRateTensors();  //With v and xn+1
+    //CalcTensorsPP();
     #ifdef NONLOCK_SUM
     RateTensorsReduction();
     #endif

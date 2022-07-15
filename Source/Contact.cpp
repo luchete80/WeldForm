@@ -441,9 +441,10 @@ inline void Domain::CalcContactForces(){
 							if (dt_fext > 0)
 								this -> min_force_ts = min_force_ts_;
 						}
-						omp_set_lock(&Particles[P1]->my_lock);
-						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
-						omp_unset_lock(&Particles[P1]->my_lock);
+            //Acceleration is summed up on integration
+						// omp_set_lock(&Particles[P1]->my_lock);
+						// Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+						// omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
 
             
@@ -735,9 +736,9 @@ inline void Domain::CalcContactForces2(){
 							if (dt_fext > 0)
 								this -> min_force_ts = min_force_ts_;
 						}
-						omp_set_lock(&Particles[P1]->my_lock);
-						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
-						omp_unset_lock(&Particles[P1]->my_lock);
+						// omp_set_lock(&Particles[P1]->my_lock);
+						// Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+						// omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
             
             // TANGENTIAL BEHAVIOUR
@@ -770,8 +771,7 @@ inline void Domain::CalcContactForces2(){
                 
                 if (norm(ref_tg) < friction_sta * norm(Particles[P1] -> contforce) ){
                   omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1] -> contforce -= tgforce;
-                    Particles[P1] -> a -= tgforce / Particles[P1]->Mass; 
+                    Particles[P1] -> contforce -= tgforce / Particles[P1]->Mass; 
                     //Particles[P1] -> a -= tgforce / Particles[P1]->Mass;  // //Eqn 30. Zhan
                   omp_unset_lock(&Particles[P1]->my_lock);
                 }

@@ -203,13 +203,13 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
-    if (contact) CalcContactForcesFraser();
+    if (contact) CalcContactForces();
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
     
     ////// 9. Update Density and Stress: already done
    
-    //////////// 11 to 14.
+    //////////// 11 to 13.
     clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
@@ -219,6 +219,13 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     AccelReduction();
     #endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+    
+    //14. Add contact
+    if (contact ){
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (size_t i=0; i<Particles.Size(); i++)
+      Particles[i]->a += Particles[i] -> contforce / Particles[i] -> Mass; 
+    }
     
     //// UPDATE VEL AND POS
     clock_beg = clock();  
