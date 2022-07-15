@@ -98,3 +98,9 @@
 20220713  -  FIXED GHOST PARTICLE METHOD. Equallying ghost stress, strain and density from 
              respective particles, is working. Now remains to make Wang's hybrid 
              contact-ghost symmetry method.
+20220714  -  Working with CONTACT. New Leapfrog Algorithm gives Smooth Contact Forces
+             with SEO Algorithm (CalcForces2), but static friction does not work.
+             On the other side, original KickDFrift Solver (without second acc update cycle)
+             gives smooth forces with Wang algorithm.
+             MUST FIX Original KickDrift and check also with Verlet and Fraser. 
+             

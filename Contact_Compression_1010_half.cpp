@@ -74,6 +74,8 @@ int main() try{
   for (int i=0;i<dom.Particles.Size();i++)
     if (dom.Particles[i]->x(2) > max)
       max  = dom.Particles[i]->x(2);
+  int max_x = 0;
+
 	double cyl_zmax = max + h /*- 1.e-6*/;
 
 	mesh.AxisPlaneMesh (2,false,Vec3_t(-1.5*R,-1.5*R, cyl_zmax),Vec3_t(1.5*R,1.5*R, cyl_zmax),20);
@@ -114,6 +116,11 @@ int main() try{
     double x = dom.Particles[a]->x(0);
     double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
+    
+    if (x > L/2.-dx && x > R -dx ){
+      cout << "PARTICLE FOUND "<<i<<endl;
+      
+    }
 
 	}
   cout << top<< " Side 1 particles, "<<bottom << " side 2 particles, "<<center << " center particles" <<endl; 
