@@ -104,6 +104,6 @@
              gives smooth forces with Wang algorithm.
              MUST FIX Original KickDrift and check also with Verlet and Fraser. 
 20220715  -  FIRST FRASER ALGORITHM WORKING. REINFORCED BCs before position update works.
-
+            ALSO WORKS WITH CFL 0.7
  
              

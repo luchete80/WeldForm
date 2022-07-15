@@ -181,7 +181,7 @@ int main(){
 	//		1	Outer Surface
 	//		2,3 //Boundaries
   //dom.auto_ts = false; 
-  timestep = (0.3*h/(Cs)); //Standard modified Verlet do not accept such step
+  timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
