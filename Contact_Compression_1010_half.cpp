@@ -4,7 +4,7 @@
 #include "InteractionAlt.cpp"
 #include "SolverKickDrift.cpp"
 
-#define VMAX	0.5
+#define VMAX	1.0
 
 using namespace SPH;
 using namespace std;
@@ -44,7 +44,7 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 
-	dx = 0.0009;  //Tenth of radius
+	dx = 0.0012;  //Tenth of radius
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -118,7 +118,7 @@ int main() try{
 		double z = dom.Particles[a]->x(2);
     
     if (x > L/2.-dx && x > R -dx ){
-      cout << "PARTICLE FOUND "<<i<<endl;
+      cout << "PARTICLE FOUND "<<a<<endl;
       
     }
 
@@ -150,8 +150,8 @@ int main() try{
 	// timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   // dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
   dom.auto_ts=true;  
-  dom.CFL = 0.7;
-  timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
+  dom.CFL = 0.4;
+  timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);  
 	
 	dom.WriteXDMF("ContactTest");
