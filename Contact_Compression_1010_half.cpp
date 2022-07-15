@@ -3,7 +3,9 @@
 #include <iostream>
 #include "InteractionAlt.cpp"
 #include "SolverKickDrift.cpp"
+#include "SolverFraser.cpp"
 
+#define TAU		0.002
 #define VMAX	1.0
 
 using namespace SPH;
@@ -44,7 +46,7 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 
-	dx = 0.0012;  //Tenth of radius
+	dx = 0.0009;  //Tenth of radius
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -152,7 +154,8 @@ int main() try{
   dom.auto_ts=true;  
   dom.CFL = 0.4;
   timestep = (0.4*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);  
+  //dom.SolveDiffUpdateLeapfrog(/*tf*/0.0201,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+  dom.SolveDiffUpdateFraser(/*tf*/0.0201,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);  
 	
 	dom.WriteXDMF("ContactTest");
 }
