@@ -106,9 +106,9 @@ SET(EXES
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
   #Compression_1010
-  #Contact_Compression_1010
+  Contact_Compression_1010
   #Compression_1010_qt
-  Contact_Compression_1010_half
+  #Contact_Compression_1010_half
   #Compression_1010_half_ghost
 	#NastranReader_test
 	#CompressionForces

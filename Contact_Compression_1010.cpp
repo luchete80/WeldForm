@@ -3,15 +3,29 @@
 #include <iostream>
 #include "InteractionAlt.cpp"
 #include "SolverKickDrift.cpp"
+#include "SolverFraser.cpp"
 
+#define TAU		0.002
 #define VMAX	1.00
+#define DX 0.0009
 
 using namespace SPH;
 using namespace std;
 
+int part_per_row;
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 		vcompress = VMAX;
+	if (domi.getTime() < TAU ) 
+		vcompress = VMAX/TAU * domi.getTime();
+	else
+		vcompress = VMAX;
+
+  double dS = DX * DX;
+  domi.m_scalar_prop = 0.;
+  for (int i = 0;i<=part_per_row;i++){
+    domi.m_scalar_prop += domi.Particles[i]->Sigma (2,2) * dS;
+  }
 	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 	// #ifdef __GNUC__
 	// for (size_t i=0; i<domi.Particles.Size(); i++)
@@ -56,8 +70,8 @@ void UserAcc(SPH::Domain & domi) {
 		// }     
 	// }
   
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
-  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., vcompress/2.));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., 0.));
 }
 
 
@@ -88,7 +102,7 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 
-	dx = 0.0012;  //Tenth of radius
+	dx = DX;  //Tenth of radius
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -137,7 +151,9 @@ int main() try{
   top = bottom = center = 0;   
   int center_top = 0;			
     int center_bottom = 0;
-    
+  
+  double zstart = dom.Particles[0]->x(2);
+  bool search = true;
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -157,6 +173,12 @@ int main() try{
     double x = dom.Particles[a]->x(0);
     double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
+    
+    if (z  > zstart && search ){
+      part_per_row = a;
+      search = false;
+      cout << "Particle per row "<<part_per_row<<endl;
+    }
 
     //If friction is null, the cylinder not slide
     if ( abs (z - (L/2.-dx)) < dx/2. && (abs(x - R) < 1.5*dx  || abs(x + R) < 1.5*dx ) && abs(y) < 1.1*dx){
@@ -218,8 +240,10 @@ int main() try{
   dom.auto_ts=true; 
   dom.CFL = 0.7;
   timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+  
+  //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
 	
-	dom.WriteXDMF("ContactTest");
+  dom.WriteXDMF("ContactTest");
 }
 MECHSYS_CATCH
