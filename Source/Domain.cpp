@@ -365,15 +365,15 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 			size_t k=0;
 			zp = V(2);
 
-			while (zp <= (V(2)+Lz-r)) {
+			while (zp <= (V(2)+Lz)) {
 				j = 0;
 				yp = V(1);
-				while (yp <= (V(1)+Ly-r))
+				while (yp <= (V(1)+Ly))
 				{
 					//cout << "Y: "<<yp<<endl;
 					i = 0;
 					xp = V(0);
-					while (xp <= (V(0)+Lx-r))
+					while (xp <= (V(0)+Lx))
 					{
 						x = V(0) + (2.0*i+1)*r;
 						y = V(1) + (2.0*j+1)*r;
