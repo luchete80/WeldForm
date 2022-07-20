@@ -70,6 +70,7 @@ inline void Domain::CalcContactForcesWang(){
   Vec3_t atg;
   bool end;
   contact_force_sum = 0.;
+  contact_reaction_sum = 0.;
   double dist;
   int max_reached_part = 0; //TEST
   int sta_frict_particles = 0;
@@ -169,6 +170,7 @@ inline void Domain::CalcContactForcesWang(){
 
             omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);
+              contact_reaction_sum += dot (Particles[P1] -> a,Particles[P2]->normal)* Particles[P1]->Mass;
             omp_unset_lock(&dom_lock);	
             //inside_pairs++;
 						

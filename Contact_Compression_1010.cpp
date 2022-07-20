@@ -5,9 +5,9 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-#define TAU		0.002
+#define TAU		0.0005
 #define VMAX	1.00
-#define DX 0.0009
+#define DX 0.0012
 
 using namespace SPH;
 using namespace std;
@@ -215,8 +215,8 @@ int main() try{
   cout << "Center Bottom: " <<center_bottom <<endl;  
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction_dyn = 0.2;
-  dom.friction_sta = 0.2;
+	dom.friction_dyn = 0.0;
+  dom.friction_sta = 1.0;
   dom.fric_type = Fr_Dyn;
  
 	dom.PFAC = 0.4;
@@ -242,7 +242,7 @@ int main() try{
   timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
-	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);  
 	
   dom.WriteXDMF("ContactTest");
 }

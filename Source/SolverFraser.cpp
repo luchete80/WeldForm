@@ -116,11 +116,12 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     Vec3_t max_disp = Vec3_t(0.,0.,0.);
 		for (int i=0; i<Particles.Size(); i++){
       for (int j=0;j<3;j++)
-        if (Particles[i]->Displacement[j]>max_disp[j]){
-          max_disp[j] = Particles[i]->Displacement [j];
+        if (Particles[i]->Displacement[j] * Particles[i]->Displacement[j]>max_disp[j]){
+          max_disp[j] = Particles[i]->Displacement [j] * Particles[i]->Displacement [j];
           imax=i;
 			}
 		}
+    for (int j=0;j<3;j++) max_disp[j] = sqrt(max_disp[j]);
     
     // // // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
     // // // EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
@@ -331,7 +332,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
 			cout << "Max Displacements: "<<max_disp<<endl;
-      if (contact) cout<<"Contact Force Sum "<<contact_force_sum<<endl;
+      if (contact) 
+        cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
+
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
       
       ofprop <<getTime() << ", "<<m_scalar_prop<<endl;

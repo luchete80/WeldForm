@@ -365,6 +365,7 @@ public:
 	double max_contact_force;
   
   double contact_force_sum;
+  double contact_reaction_sum;  //Acceleration of contact particles previous to apply contact_force
   
   double m_scalar_prop;  //User Defined Domain Property
 		
