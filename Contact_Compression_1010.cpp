@@ -29,7 +29,7 @@ void UserAcc(SPH::Domain & domi) {
     domi.m_scalar_prop += domi.Particles[i]->Sigma (2,2) * dS;
       normal_acc_sum      += domi.Particles[i]->a(2) * domi.Particles[i]->Mass;
   }
-  dtout = 1.0e-5;
+  dtout = 1.0e-4;
   if (domi.getTime()>tout){
     cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     cout << "Normal acc sum " << normal_acc_sum<<endl;
@@ -258,7 +258,7 @@ int main() try{
   timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
-	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);  
+	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
 	
   dom.WriteXDMF("ContactTest");
 }
