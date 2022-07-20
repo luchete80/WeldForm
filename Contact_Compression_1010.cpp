@@ -231,8 +231,8 @@ int main() try{
   cout << "Center Bottom: " <<center_bottom <<endl;  
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction_dyn = 0.0;
-  dom.friction_sta = 1.0;
+	dom.friction_dyn = 0.2;
+  dom.friction_sta = 0.2;
   dom.fric_type = Fr_Dyn;
  
 	dom.PFAC = 0.4;
