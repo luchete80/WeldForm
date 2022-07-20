@@ -36,12 +36,12 @@ void UserAcc(SPH::Domain & domi) {
     tout += dtout;
   }
   
-	for (int k=0; k<Nproc;k++) 
-		for (size_t a = 0; a < ContPairs[k].Size();a++){
-      if (dot(Particles[i] -> contforce, Particles[i] -> contforce)>0){
+	// for (int k=0; k<Nproc;k++) 
+		// for (size_t a = 0; a < ContPairs[k].Size();a++){
+      // if (dot(Particles[a] -> contforce, Particles[a] -> contforce)>0){
         
-      }
-    }
+      // }
+    // }
 	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 	// #ifdef __GNUC__
 	// for (size_t i=0; i<domi.Particles.Size(); i++)
