@@ -24,12 +24,15 @@ void UserAcc(SPH::Domain & domi) {
 
   double dS = DX * DX;
   domi.m_scalar_prop = 0.;
+  double normal_acc_sum=0.;
   for (int i = 0;i<=part_per_row;i++){
     domi.m_scalar_prop += domi.Particles[i]->Sigma (2,2) * dS;
+      normal_acc_sum      += domi.Particles[i]->a(2) * domi.Particles[i]->Mass;
   }
   dtout = 1.0e-5;
   if (domi.getTime()>tout){
     cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
+    cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout;
   }
   
@@ -178,8 +181,8 @@ int main() try{
         
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
-		dom.Particles[a]->Alpha		= 2.5;
-		dom.Particles[a]->Beta		= 2.5;
+		dom.Particles[a]->Alpha		= 1.0;
+		dom.Particles[a]->Beta		= 0.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 

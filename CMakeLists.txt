@@ -106,7 +106,7 @@ SET(EXES
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
   #Compression_1010
-  #Contact_Compression_1010
+  Contact_Compression_1010
   #Compression_1010_qt
   #Contact_Compression_1010_half
   #Compression_1010_half_ghost
@@ -139,7 +139,7 @@ SET(EXES
 	#Kernel_Test_2D_vel
 	#Traction
 	#traction_app
-	Traction_Hollomon
+	#Traction_Hollomon
 	#Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2

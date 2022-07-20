@@ -53,7 +53,7 @@ void UserAcc(SPH::Domain & domi)
     cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout; 
     
-    ofprop << domi.max_disp[2]<<", " << normal_acc_sum << endl;
+    ofprop << domi.max_disp[2]<<", "<<", "<<domi.max_ps << normal_acc_sum << endl;
   }
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
