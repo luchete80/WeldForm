@@ -96,9 +96,10 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				= 20.0;			
-    		if ( x < -H/2.0 ) {
+    		if ( x <  dx ) {
     			dom.Particles[a]->ID 			= 2;
-    			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+          dom.Particles[a]->T 			= 500.;
+    			//dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
 				// cout << "Particle " << a << "is convection BC" <<endl;
 			}
     	}
@@ -113,7 +114,7 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalSolve(/*tf*/0.1,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+		dom.ThermalSolve(/*tf*/10.1,/*dt*/0.001,/*dtOut*/0.1,"test06",999);
     cout << "dom.BLPF "<<dom.BLPF<<endl;
     cout << "dom.TRPR "<<dom.TRPR<<endl;
     for (int k=0;k<4;k++)

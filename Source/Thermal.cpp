@@ -367,9 +367,10 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 
 	
 	cout << "Calc conv "<<endl;
-	CalcConvHeatSOA();
+	//CalcConvHeatSOA();
 	cout << "Done. "<<endl;
-	CalcTempIncSOA();
+	//CalcTempIncSOA();
+  CalcTempInc();
 	cout << "End."<<endl;	
 	while (Time<tf && idx_out<=maxidx) {
 
@@ -384,20 +385,21 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		// CalcConvHeat();
 		// CalcTempInc();
 		//TODO Add 
-		double max=0,min=1000.;
-		for (size_t i=0; i<Particles.Size(); i++){
-			//Particles[i]->T+= dt*Particles[i]->dTdt;
-			Particles[i]->TempCalcLeapfrog(dt);
-			//*m_T[i]+= (*m_dTdt[i])*dt;
-			// if (Particles[i]->T > max)
-				// max=Particles[i]->T;
-			// if (Particles[i]->T < min)
-				// min=Particles[i]->T;
+		double max=0,min=1000.; 
 
-			if (*m_T[i] > max)
-				max = *m_T[i];
-			if (*m_T[i] < min)
-				min = *m_T[i];
+		for (size_t i=0; i<Particles.Size(); i++){
+			Particles[i]->T+= dt*Particles[i]->dTdt;
+			//Particles[i]->TempCalcLeapfrog(dt);
+			//*m_T[i]+= (*m_dTdt[i])*dt;
+			if (Particles[i]->T > max)
+				max=Particles[i]->T;
+			if (Particles[i]->T < min)
+				min=Particles[i]->T;
+
+			// if (*m_T[i] > max)
+				// max = *m_T[i];
+			// if (*m_T[i] < min)
+				// min = *m_T[i];
 
 		}
 		// std::cout << "Max temp: "<< max << std::endl;
@@ -422,7 +424,9 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 			acc_time_spent <<
 			std::endl;
 			std::cout << "Max, Min, Avg temps: "<< max << ", " << min << ", " << (max+min)/2. <<std::endl;
-			
+
+    cout << "Particle 800 dTdt "<<Particles[800]->dTdt<<endl;
+    
 			double max_flux = 0.;
 			for (size_t i=0; i<Particles.Size(); i++){
 				if (Particles[i]->dTdt > max_flux)
@@ -434,8 +438,9 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 
 		//AdaptiveTimeStep();
 		
-		CalcConvHeatSOA();
-		CalcTempIncSOA();
+		//CalcConvHeatSOA();
+		CalcTempInc();
+    //CalcTempIncSOA();
 
 		Time += deltat;
 		

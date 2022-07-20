@@ -106,7 +106,7 @@ SET(EXES
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
   #Compression_1010
-  Contact_Compression_1010
+  #Contact_Compression_1010
   #Compression_1010_qt
   #Contact_Compression_1010_half
   #Compression_1010_half_ghost
@@ -139,7 +139,7 @@ SET(EXES
 	#Kernel_Test_2D_vel
 	#Traction
 	#traction_app
-	#Traction_Hollomon
+	Traction_Hollomon
 	#Traction_JC
 	#ThermalCompression
 	#Thermal_Expansion_2
@@ -152,7 +152,7 @@ SET(EXES
 	#Plate-Yield_CNS_v2
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
-  #SolidBlock_Heat
+  #SolidBlock_Heat_T
 	#SolidBlock_HeatSOA
 	#SolidBlock_Heat_CNS
 	#SolidBlock_Heat_conv3faces

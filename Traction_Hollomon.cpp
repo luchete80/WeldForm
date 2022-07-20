@@ -20,11 +20,13 @@
 
 #include "Domain.h"
 #include "InteractionAlt.cpp"
+#include "SolverFraser.cpp"
 
-#define TAU		0.005
+#define TAU		0.0005
 #define VMAX	1.0
 
 #define DX 0.010
+double tout, dtout;
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -34,9 +36,23 @@ void UserAcc(SPH::Domain & domi)
 		vtraction = VMAX/TAU * domi.getTime();
 	else
 		vtraction = VMAX;
+
+  double dS = DX * DX;
+  double normal_acc_sum=0.;
+  for (size_t i=0; i<domi.Particles.Size(); i++){
+    if (domi.Particles[i]->ID == 3) {
+      domi.m_scalar_prop  += domi.Particles[i]->Sigma (2,2) * dS;
+      normal_acc_sum      += domi.Particles[i]->a(2) * domi.Particles[i]->Mass;
+    }
+  }
+  dtout = 1.0e-4;
+  if (domi.getTime()>tout){
+    cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
+    cout << "Normal acc sum " << normal_acc_sum<<endl;
+    tout += dtout; 
+  }
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-
 	#ifdef __GNUC__
 	for (size_t i=0; i<domi.Particles.Size(); i++)
 	#else
@@ -70,7 +86,7 @@ using std::endl;
 int main(int argc, char **argv) try
 {
       SPH::Domain	dom;
-
+      tout = 0.;
       dom.Dimension	= 3;
       dom.Nproc	= 4;
     	dom.Kernel_Set(Qubic_Spline);
@@ -108,7 +124,7 @@ int main(int argc, char **argv) try
   Hollomon mat(el,Fy,7.1568e8,0.22);
 			
 
-		dx = 0.010;
+		dx = DX;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -185,10 +201,12 @@ int main(int argc, char **argv) try
   // // // dom.auto_ts=true;
   // // // dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
 
-  timestep = (0.4*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
+  timestep = (0.7*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
   dom.auto_ts=true;
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+   
+	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
   return 0;
 }
 MECHSYS_CATCH
