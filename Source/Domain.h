@@ -368,7 +368,7 @@ public:
   double contact_reaction_sum;  //Acceleration of contact particles previous to apply contact_force
   
   double m_scalar_prop;  //User Defined Domain Property
-		
+	Vec3_t max_disp;
     
   //ATTENTION: REDUNDANT, ghost pairs and reference
 	Array<std::pair<size_t,size_t> > GhostPairs;	//If used

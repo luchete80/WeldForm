@@ -113,7 +113,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			}
 		}
 
-    Vec3_t max_disp = Vec3_t(0.,0.,0.);
+    max_disp = Vec3_t(0.,0.,0.);
 		for (int i=0; i<Particles.Size(); i++){
       for (int j=0;j<3;j++)
         if (Particles[i]->Displacement[j] * Particles[i]->Displacement[j]>max_disp[j]){

@@ -28,6 +28,8 @@
 #define DX 0.010
 double tout, dtout;
 
+ofstream ofprop("traction.csv", std::ios::out);
+
 void UserAcc(SPH::Domain & domi)
 {
 	double vtraction;
@@ -50,6 +52,8 @@ void UserAcc(SPH::Domain & domi)
     cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout; 
+    
+    ofprop << domi.max_disp[2]<<", " << normal_acc_sum << endl;
   }
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
@@ -148,7 +152,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 		//dom.auto_ts = false;
-		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/5.), R, Lz_side + Lz_side/5.,
+		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,/*-Lz_side/5.*/0.), R, Lz_side /*+ Lz_side/5.*/,
 											Lz_neckmin,Lz_necktot,Rxy_center,
 											dx/2., rho, h, false);
 
@@ -169,7 +173,8 @@ int main(int argc, char **argv) try
 		dom.Particles[4081]->print_history = true;	//Particle 2421, 3 [     -0.006    -0.006     0.242 ]	
     cout << "Particle History position: "<<endl;
     cout << dom.Particles[4081]->x(0)<<", "<<dom.Particles[4081]->x(1)<<", "<<dom.Particles[4081]->x(2)<<endl;
-		
+		int part_2, part_3;
+    part_2 = part_3 = 0;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				
@@ -187,15 +192,19 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI			= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 ){
+    		if ( z < dx ){
     			dom.Particles[a]->ID=2;
+          part_2++;
     			// dom.Particles[a]->IsFree=false;
     			// dom.Particles[a]->NoSlip=true;    		
 				}
-				if ( z > L )
+				if ( z > L -dx){
     			dom.Particles[a]->ID=3;
+          part_3++;
+        }
     	}
 		dom.WriteXDMF("maz");
+    cout << "particles boundary"<<part_2<< ", "<<part_3<<endl;
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
   // // // dom.auto_ts=true;
