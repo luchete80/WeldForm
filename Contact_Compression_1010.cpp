@@ -11,7 +11,8 @@
 
 using namespace SPH;
 using namespace std;
-
+double tout, dtout;
+  
 int part_per_row;
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -26,6 +27,18 @@ void UserAcc(SPH::Domain & domi) {
   for (int i = 0;i<=part_per_row;i++){
     domi.m_scalar_prop += domi.Particles[i]->Sigma (2,2) * dS;
   }
+  dtout = 1.0e-5;
+  if (domi.getTime()>tout){
+    cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
+    tout += dtout;
+  }
+  
+	for (int k=0; k<Nproc;k++) 
+		for (size_t a = 0; a < ContPairs[k].Size();a++){
+      if (dot(Particles[i] -> contforce, Particles[i] -> contforce)>0){
+        
+      }
+    }
 	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 	// #ifdef __GNUC__
 	// for (size_t i=0; i<domi.Particles.Size(); i++)
@@ -80,7 +93,7 @@ int main() try{
 	TriMesh mesh, mesh2;
 
 	cout << "Creating Mesh" << endl;
-
+  tout = 0.;
 
 	 SPH::Domain	dom;
 
