@@ -12,6 +12,8 @@
 using namespace SPH;
 using namespace std;
 double tout, dtout;
+
+ofstream ofprop("cont_comp_1010.csv", std::ios::out);
   
 int part_per_row;
 void UserAcc(SPH::Domain & domi) {
@@ -35,6 +37,7 @@ void UserAcc(SPH::Domain & domi) {
     cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout;
   }
+  ofprop << domi.max_disp[2]<<", " << normal_acc_sum << endl;
   
 	// for (int k=0; k<Nproc;k++) 
 		// for (size_t a = 0; a < ContPairs[k].Size();a++){
@@ -258,7 +261,7 @@ int main() try{
   timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
-	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+	dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
 	
   dom.WriteXDMF("ContactTest");
 }

@@ -41,11 +41,15 @@ void UserAcc(SPH::Domain & domi)
 
   double dS = DX * DX;
   double normal_acc_sum=0.;
+  double max_seq = 0;
   for (size_t i=0; i<domi.Particles.Size(); i++){
     if (domi.Particles[i]->ID == 3) {
       domi.m_scalar_prop  += domi.Particles[i]->Sigma (2,2) * dS;
       normal_acc_sum      += domi.Particles[i]->a(2) * domi.Particles[i]->Mass;
     }
+    
+    if (domi.Particles[i]->Sigma_eq > max_seq)
+      max_seq = domi.Particles[i]->Sigma_eq;
   }
   dtout = 1.0e-4;
   if (domi.getTime()>tout){
@@ -53,7 +57,7 @@ void UserAcc(SPH::Domain & domi)
     cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout; 
     
-    ofprop << domi.max_disp[2]<<", "<<", "<<domi.max_ps << normal_acc_sum << endl;
+    ofprop << domi.max_disp[0]<<", "<<domi.max_disp[1]<<", " <<domi.max_disp[2]<<", " << normal_acc_sum << endl;
   }
 	
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
@@ -214,7 +218,8 @@ int main(int argc, char **argv) try
   //dom.auto_ts=false;
   dom.auto_ts=true;
   //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-   
+  
+  ofprop << "maxux, maxux, maxux, force, maxseq "<<endl;
 	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
   return 0;
 }
