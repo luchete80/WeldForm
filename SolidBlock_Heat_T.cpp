@@ -114,7 +114,7 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalSolve(/*tf*/10.1,/*dt*/0.001,/*dtOut*/0.1,"test06",999);
+		dom.ThermalSolve(/*tf*/1.1,/*dt*/0.001,/*dtOut*/0.1,"test06",999);
     cout << "dom.BLPF "<<dom.BLPF<<endl;
     cout << "dom.TRPR "<<dom.TRPR<<endl;
     for (int k=0;k<4;k++)
