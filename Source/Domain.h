@@ -196,6 +196,8 @@ public:
 	//Thermal Solver
 	void CalcTempInc 		(); 		//LUCIANO: Temperature increment
 	void CalcTempIncSOA (); 		//LUCIANO: Temperature increment
+  inline double CalcTempIncPair (Particle *P1, *P2);  //PER PARTICLE; ONLY FOR TEST
+  inline void CalcTempIncPair();
 	inline void CalcConvHeat ();
 	inline void CalcConvHeatSOA();
 	inline void CalcPlasticWorkHeat();

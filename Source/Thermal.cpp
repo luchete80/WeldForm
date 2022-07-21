@@ -426,7 +426,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 			std::endl;
 			std::cout << "Max, Min, Avg temps: "<< max << ", " << min << ", " << (max+min)/2. <<std::endl;
 
-    cout << "Particle 800 dTdt "<<Particles[800]->dTdt<<endl;
+    cout << "Particle 0 dTdt "<<Particles[0]->dTdt<<endl;
     
 			double max_flux = 0.;
 			for (size_t i=0; i<Particles.Size(); i++){
