@@ -617,6 +617,7 @@ inline void Domain::CalcPairPosList(){                             //Calculate p
   // for (int p=0;p<Nproc;p++) cout << first_pair_perproc[p]<<endl;
 
   pair_force.resize(pair_count);
+  temp_force.resize(pair_count);
   pair_StrainRate.resize(pair_count);
   pair_RotRate.resize(pair_count);
   pair_densinc.resize(pair_count);

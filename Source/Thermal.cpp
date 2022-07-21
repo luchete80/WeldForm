@@ -1,5 +1,7 @@
 #include "Domain.h"
 #include <vector>
+#include "ThermalTest.cpp"
+
 using namespace std;
 
 namespace SPH {
@@ -365,12 +367,19 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	for ( size_t k = 0; k < Nproc ; k++) 
 		cout << "Pares: " <<SMPairs[k].Size()<<endl;
 
-	
+	// ONLY FOR TEST
+  cout << "Init red arrays"<<endl;
+  InitReductionArraysOnce();
+  CalcPairPosList();  
+  cout << "Done."<<endl;
+  
 	cout << "Calc conv "<<endl;
 	//CalcConvHeatSOA();
 	cout << "Done. "<<endl;
 	//CalcTempIncSOA();
-  CalcTempInc();
+  //CalcTempInc();
+  CalcTempIncPP();
+  //CalcConvHeat();
 	cout << "End."<<endl;	
 	while (Time<tf && idx_out<=maxidx) {
 
@@ -425,7 +434,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 			std::endl;
 			std::cout << "Max, Min, Avg temps: "<< max << ", " << min << ", " << (max+min)/2. <<std::endl;
 
-    cout << "Particle 800 dTdt "<<Particles[800]->dTdt<<endl;
+    cout << "Particle 0 dTdt "<<Particles[0]->dTdt<<endl;
     
 			double max_flux = 0.;
 			for (size_t i=0; i<Particles.Size(); i++){
@@ -439,7 +448,8 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		//AdaptiveTimeStep();
 		
 		//CalcConvHeatSOA();
-		CalcTempInc();
+		CalcTempIncPP();
+    //CalcConvHeat();
     //CalcTempIncSOA();
 
 		Time += deltat;

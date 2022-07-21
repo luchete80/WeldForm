@@ -63,7 +63,7 @@ int main(int argc, char **argv) try
     	H	= 1.;
     	n	= 10.0;
 
-    	rho	= 1000.0;
+    	rho	= 1.0;
     	dx	= H / n;
     	h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
@@ -86,17 +86,17 @@ int main(int argc, char **argv) try
 							// H , H ,  H , 
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
-     	double x;
+     	double z;
 			dom.gradKernelCorr = false;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		x = dom.Particles[a]->x(0);
+    		z = dom.Particles[a]->x(2);
 			dom.Particles[a]->k_T			=	3000.;
 			dom.Particles[a]->cp_T			=	1.;
 			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				= 20.0;			
-    		if ( x <  dx ) {
+    		if ( z <  dx ) {
     			dom.Particles[a]->ID 			= 2;
           dom.Particles[a]->T 			= 500.;
     			//dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
@@ -114,7 +114,8 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalSolve(/*tf*/10.1,/*dt*/0.001,/*dtOut*/0.1,"test06",999);
+		//dom.ThermalSolve(/*tf*/timestep + 1.0e-5,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
+    dom.ThermalSolve(/*tf*/10.001,/*dt*/timestep,/*dtOut*/1.,"test06",999);
     cout << "dom.BLPF "<<dom.BLPF<<endl;
     cout << "dom.TRPR "<<dom.TRPR<<endl;
     for (int k=0;k<4;k++)
