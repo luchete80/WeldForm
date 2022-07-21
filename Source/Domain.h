@@ -196,8 +196,8 @@ public:
 	//Thermal Solver
 	void CalcTempInc 		(); 		//LUCIANO: Temperature increment
 	void CalcTempIncSOA (); 		//LUCIANO: Temperature increment
-  inline double CalcTempIncPair (Particle *P1, *P2);  //PER PARTICLE; ONLY FOR TEST
-  inline void CalcTempIncPair();
+  inline double CalcTempIncPair (Particle *P1, Particle *P2);  //PER PARTICLE; ONLY FOR TEST
+  inline void CalcTempIncPP();
 	inline void CalcConvHeat ();
 	inline void CalcConvHeatSOA();
 	inline void CalcPlasticWorkHeat();
@@ -340,6 +340,7 @@ public:
     std::vector < std::vector <size_t>  > Aref;                      // Entry[Particle ,nb], indicates link
     std::vector < std::vector <size_t>  > Anei;                      //[Particles][MAX_NB_PER_PART] neighbiour list for j > i
     std::vector <Vec3_t>                  pair_force;
+    std::vector <double>                  temp_force;
     std::vector <double>                  pair_densinc;
     std::vector <Mat3_t>                  pair_StrainRate;
     std::vector <Mat3_t>                  pair_RotRate;    
