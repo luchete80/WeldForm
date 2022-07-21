@@ -7,7 +7,7 @@
 
 #define TAU		0.0005
 #define VMAX	1.00
-#define DX 0.0012
+#define DX 0.0009
 
 using namespace SPH;
 using namespace std;
@@ -36,7 +36,7 @@ void UserAcc(SPH::Domain & domi) {
     cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout;
-    ofprop << domi.max_disp[2]<<", " << normal_acc_sum << endl;
+    ofprop << domi.max_disp[2]<<", " << domi.contact_force_sum << endl;
   }
 
   

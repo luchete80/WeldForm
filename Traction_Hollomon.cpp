@@ -22,13 +22,14 @@
 #include "InteractionAlt.cpp"
 #include "SolverFraser.cpp"
 
-#define TAU		0.0005
+#define TAU		0.005
 #define VMAX	1.0
 
-#define DX 0.010
+#define DX 0.008
 double tout, dtout;
 
 ofstream ofprop("traction.csv", std::ios::out);
+double L, dx;
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -42,21 +43,25 @@ void UserAcc(SPH::Domain & domi)
   double dS = DX * DX;
   double normal_acc_sum=0.;
   double max_seq = 0;
+  int part = 0;
   for (size_t i=0; i<domi.Particles.Size(); i++){
-    if (domi.Particles[i]->ID == 3) {
+    if (domi.Particles[i]->x(2) > (L -dx) && domi.Particles[i]->x(2) < L+dx/2.) {
       domi.m_scalar_prop  += domi.Particles[i]->Sigma (2,2) * dS;
       normal_acc_sum      += domi.Particles[i]->a(2) * domi.Particles[i]->Mass;
+      part++;
+      
     }
     
     if (domi.Particles[i]->Sigma_eq > max_seq)
       max_seq = domi.Particles[i]->Sigma_eq;
   }
+  
   dtout = 1.0e-4;
   if (domi.getTime()>tout){
     cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout; 
-    
+    cout << "particles acc "<<part<<endl;
     ofprop << domi.max_disp[0]<<", "<<domi.max_disp[1]<<", " <<domi.max_disp[2]<<", " << normal_acc_sum << ", " << max_seq<< endl;
   }
 	
@@ -102,8 +107,8 @@ int main(int argc, char **argv) try
 			//dom.XSPH	= 0.1; //Very important
 			
 
-        double dx,h,rho,K,G,Cs,Fy;
-    	double R,L,n;
+        double h,rho,K,G,Cs,Fy;
+    	double R,n;
 		double Lz_side,Lz_neckmin,Lz_necktot,Rxy_center;
 		
 	R	= 0.075;
@@ -156,7 +161,7 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 		//dom.auto_ts = false;
-		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,/*-Lz_side/5.*/0.), R, Lz_side /*+ Lz_side/5.*/,
+		dom.AddTractionProbeLength(1, Vec3_t(0.,0.,-Lz_side/5.), R, Lz_side + Lz_side/5.,
 											Lz_neckmin,Lz_necktot,Rxy_center,
 											dx/2., rho, h, false);
 
@@ -214,13 +219,13 @@ int main(int argc, char **argv) try
   // // // dom.auto_ts=true;
   // // // dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
 
-  timestep = (0.7*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
+  timestep = (1.0*h/(Cs+VMAX)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
   dom.auto_ts=true;
   //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   
   ofprop << "maxux, maxux, maxux, force, maxseq "<<endl;
-	dom.SolveDiffUpdateFraser(/*tf*/0.02005,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+	dom.SolveDiffUpdateFraser(/*tf*/0.01005,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
   return 0;
 }
 MECHSYS_CATCH
