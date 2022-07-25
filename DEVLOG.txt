@@ -106,4 +106,5 @@
 20220715  -  FIRST FRASER ALGORITHM WORKING. REINFORCED BCs before position update works.
              ALSO WORKS WITH CFL 0.7
 20220721  -  Added Thermal Per Particle test (for comparing with conventional and non block)
+20220725  -  Working on Slice Mesh
              
