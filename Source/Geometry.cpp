@@ -178,7 +178,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
         if (ri == 0.) {tgcount =1; dalpha = 0.;}
         else {
 
-          tgcount = (double)(alpha* ri )/(2. * r) + 1;  
+          tgcount = (ceil)((alpha* ri )/(2. * r)) + 1;  
           dalpha = alpha / (tgcount-1);         
           //cout << "tg count "<<tgcount<<", dalpha"<<dalpha<<", alpha ri"<<alpha * ri<<"ri "<<ri <<endl;
         }
