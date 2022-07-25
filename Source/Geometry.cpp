@@ -142,7 +142,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 	//else						
                     z0 = -Lz/2. + r; //CHECK: -Lz/2. - r or -Lz/2.?
 	
-  int radcount = (Rxy - sqrt(2.)*r) / (2. * r ); //center particle is at (r,r,r)
+  int radcount = Rxy / (2. * r ); //center particle is at (r,r,r)
   cout << "Radial Particle count " <<radcount<<endl;
   
 	int part_per_row=0;
@@ -171,19 +171,16 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
     cout << "Length particle count "<<last_nonghostrow+1<<endl;
 
   //tangential particles
-  int plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]; //First plane id
-  int plane_ghost_part_2[last_nonghostrow][radcount][ghost_rows]; //First plane id
+  int plane_ghost_part_1[2][last_nonghostrow][radcount][ghost_rows]; //First plane id
+  //plane_ghost_part_count[3][radcount][]; // Not always is possible to count for ghost count
   
-  //plane_ghost_part_1_count[last_nonghostrow][radcount]; // Not always is possible to count for ghost count
-  
-  //ref particles
-  //int plane_ghost_part_3[][]
+  //Reflected particles (in relation to center), same angle on -x,-y coordinates
+  int plane_ghost_part_3[last_nonghostrow][ghost_rows + 1 ] [ghost_rows + 1 ];
   
     //First increment is in radius
 		while (zp <= ( z0 + Lz - r)) {
       int rcount = 0; //Used only for ghost count
       for (double ri = 0. ; ri < Rxy; ri += 2.*r){
-        double rtot = ri + sqrt(2.) * r;
         //cout << "ri "<<ri<<endl;
         
         double dalpha;
@@ -195,35 +192,20 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
           //cout << "tg count "<<tgcount<<", dalpha"<<dalpha<<", alpha ri"<<alpha * ri<<"ri "<<ri <<endl;
         }
         for (int alphai = 0; alphai < tgcount; alphai++ ){
-            xp = sqrt(2.) * r + ri * cos (alphai*dalpha);
-            yp = sqrt(2.) * r + ri * sin (alphai*dalpha);
+            xp = ri * cos (alphai*dalpha);
+            yp = ri * sin (alphai*dalpha);
             Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+            //A particle can be on all zones 
             if (alphai < ghost_rows){
-              plane_ghost_part_1[k][rcount][alphai] = part_count++; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
-              plane_ghost_part_2[k][rcount][alphai] = part_count++; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
+              plane_ghost_part_1[0][k][rcount][alphai] = part_count; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
+            }
+            if ((tgcount - alphai - 1) < ghost_rows){ // Opposite plane
+              plane_ghost_part_1[1][k][rcount][tgcount - alphai - 1] = part_count; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
+            } //Reflected particles
+            if (rcount > 0 && rcount < ghost_rows +1){ //Particle at origin x,y are not reflected
+              plane_ghost_part_3[k][rcount-1][alphai] = part_count;
             }
             part_count++;
-            
-            // if ( i < ghost_rows ){ //X PLANE SYMMETRY
-              // symm_x.push_back(id_part);
-              // if (k==0) x_ghost_per_row++;
-              // //if (k==0) 
-              // //  Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
-            // }
-            // if ( j < ghost_rows) { //Y PLANE SYMMETRY
-              // symm_y.push_back(id_part);
-              // //if (k==0) 
-              // //  Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
-            // }
-            // if (zp == z0)
-              // part_per_row++;
-            
-            // id_part++;
-            // xp += 2.*r;
-          // }
-          // yp += 2.*r;
-          // yinc +=1;
-
          }
         rcount++;
       } //alpha
@@ -232,10 +214,6 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		}
     
     cout << "Particles per row: "<<part_per_row<<endl;
-    cout << " symmetric particles x, y :"<< symm_x.size()<<", "<<symm_y.size()<<endl;
-		//TODO: CONVERT THIS IN A QUARTER CYL SECTOR FUNCTION 
-		//Is it convenient to allocate these particles at the end? 		
-		//Allocate Symmetry particles, begining from x, y and z
 		cout << "Creating ghost particles"<<endl;
     
     
@@ -246,6 +224,20 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		//cout << "zmax"<<( z0 + Lz - r)<<endl;
     int sym_y_count = 0;
     int sym_x_count;
+    for (int k=0;k<ghost_rows;k++){
+      for (int ri=0;ri<radcount;ri++){
+        for (int alphai = 0; alphai < tgcount; alphai++ ){
+          int id_part = plane_ghost_part_1[k][ri][alphai];
+          // Particles[id_part  ]->ghost_plane_axis = 1;
+          // Particles[id_part  ]->is_ghost = true;         
+          // Particles[id_part  ]->not_write_surf_ID = true;
+          for (int i=0;i<2;i++)
+            Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+          
+        }
+      }//r
+    }//z
+    
 		// while (zp <= ( z0 + Lz - r)) {
 
 			// numypart = numpartxy;	//And then diminish by 2 on each y increment
