@@ -135,7 +135,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 	int xinc,yinc;
 	
 	int id_part=0;
-	int ghost_rows = 3;
+	int ghost_rows = 2;
 	
 	double z0;
 	//if (symlength) 	z0 = r;
@@ -154,6 +154,8 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 
   cout << "Tg Particle count " <<tgcount<<endl;
   
+  int part_count = 0;
+  
   if (Dimension==3) {
     	//Cubic packing
 		double zp;
@@ -167,9 +169,19 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		int last_nonghostrow = k;
 		k = 0;zp = z0;
     cout << "Length particle count "<<last_nonghostrow+1<<endl;
-    
+
+  //tangential particles
+  int plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]; //First plane id
+  int plane_ghost_part_2[last_nonghostrow][radcount][ghost_rows]; //First plane id
+  
+  //plane_ghost_part_1_count[last_nonghostrow][radcount]; // Not always is possible to count for ghost count
+  
+  //ref particles
+  //int plane_ghost_part_3[][]
+  
     //First increment is in radius
 		while (zp <= ( z0 + Lz - r)) {
+      int rcount = 0; //Used only for ghost count
       for (double ri = 0. ; ri < Rxy; ri += 2.*r){
         double rtot = ri + sqrt(2.) * r;
         //cout << "ri "<<ri<<endl;
@@ -185,8 +197,12 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
         for (int alphai = 0; alphai < tgcount; alphai++ ){
             xp = sqrt(2.) * r + ri * cos (alphai*dalpha);
             yp = sqrt(2.) * r + ri * sin (alphai*dalpha);
-              
             Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+            if (alphai < ghost_rows){
+              plane_ghost_part_1[k][rcount][alphai] = part_count++; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
+              plane_ghost_part_2[k][rcount][alphai] = part_count++; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
+            }
+            part_count++;
             
             // if ( i < ghost_rows ){ //X PLANE SYMMETRY
               // symm_x.push_back(id_part);
@@ -209,7 +225,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
           // yinc +=1;
 
          }
-         
+        rcount++;
       } //alpha
 			k++;
 			zp += 2.0 * r;
