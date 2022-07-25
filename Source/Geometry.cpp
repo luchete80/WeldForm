@@ -5,6 +5,116 @@ namespace SPH {
 // close to each other
 // TODO: ANOTHER DOMAIN WITH LESS PARTICLES AT INNER RADIUS POSITIONs}
 // ALPHA IN RADIANS
+// THIS IS EVEN IN TG 
+void Domain::AddCylSliceLengthEven(int tag, double alpha, double Rxy, double Lz, 
+																				double r, double Density, double h) {
+	//Util::Stopwatch stopwatch;
+	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
+
+	size_t PrePS = Particles.Size();
+	double xp,yp;
+	size_t i,j;
+	double qin = 0.03;
+	srand(100);
+	
+	double Lx, Ly;
+	
+  std::pair <int,Vec3_t> opp_sym; //Position & ID of particles
+
+	//yp=pos;
+	int numypart,numxpart;
+	int xinc,yinc;
+	
+	int id_part=0;
+	int ghost_rows = 3;
+	
+	double z0;
+	//if (symlength) 	z0 = r;
+	//else						
+                    z0 = -Lz/2. + r; //CHECK: -Lz/2. - r or -Lz/2.?
+	
+  int radcount = (Rxy - sqrt(2.)*r) / (2. * r ); //center particle is at (r,r,r)
+  cout << "Radial Particle count " <<radcount<<endl;
+  
+	int part_per_row=0;
+  std::vector <int> symm_x;
+  std::vector <int> symm_y;
+  int x_ghost_per_row = 0;
+  //Cal
+  int tgcount = alpha* Rxy /(2. * r);
+  double dalpha = alpha / tgcount;
+  cout << "Tg Particle count " <<tgcount<<endl;
+  
+  if (Dimension==3) {
+    	//Cubic packing
+		double zp;
+		size_t k=0;
+		zp = z0;
+		//Calculate row count for non ghost particles
+		while (zp <= (z0 + Lz -r)){
+			k++; zp += 2.0 * r;			
+		}
+		//cout << "Particle Row count: "<< k << endl;
+		int last_nonghostrow = k;
+		k = 0;zp = z0;
+    cout << "Length particle count "<<last_nonghostrow+1<<endl;
+    
+		while (zp <= ( z0 + Lz - r)) {
+      for (int alphai = 0; alphai < tgcount + 1; alphai++ ){
+        for (int ri = 0; ri < radcount + 1;ri++){
+            xp = sqrt(2.)*r + ri * r * cos (alphai*dalpha);
+            yp = sqrt(2.)*r + ri * r * sin (alphai*dalpha);
+            int tgcount = alpha * (ri+1)*r / (2.*r); 
+              
+            Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+            
+
+         }
+         
+      } //alpha
+			k++;
+			zp += 2.0 * r;
+		}
+    
+    cout << "Particles per row: "<<part_per_row<<endl;
+    cout << " symmetric particles x, y :"<< symm_x.size()<<", "<<symm_y.size()<<endl;
+		//TODO: CONVERT THIS IN A QUARTER CYL SECTOR FUNCTION 
+		//Is it convenient to allocate these particles at the end? 		
+		//Allocate Symmetry particles, begining from x, y and z
+		cout << "Creating ghost particles"<<endl;
+    
+    
+    ///// X AND Y PLANE //////////
+    ///// HERE INSERT EACH 2 DIFFERENT SET OF X AND Y GHOST PARTICLES
+    // AT THE SAME TIME (GHOST Y PLANE (X DIR INCREMENT) STRAIGHT AND GHOST X PLANE (Y INCREMENT) IS TRANSPOSED)
+		zp = z0; k= 0;
+		//cout << "zmax"<<( z0 + Lz - r)<<endl;
+    int sym_y_count = 0;
+    int sym_x_count;
+
+		double Vol = M_PI * Rxy * Rxy * Lz;		
+		//double Mass = Vol * Density / (Particles.Size()-PrePS);
+		double Mass = Vol * Density /Particles.Size();
+		
+		cout << "Total Particle count: " << Particles.Size() <<endl;
+		cout << "Particle mass: " << Mass <<endl;
+
+		#pragma omp parallel for num_threads(Nproc)
+		#ifdef __GNUC__
+		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+		#else
+		for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+		#endif
+		{
+			Particles[i]->Mass = Mass;
+		}
+
+	}//Dim 3
+
+	R = r;									
+}
+
+
 void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz, 
 																				double r, double Density, double h) {
 	//Util::Stopwatch stopwatch;
@@ -32,7 +142,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 	//else						
                     z0 = -Lz/2. + r; //CHECK: -Lz/2. - r or -Lz/2.?
 	
-  int radcount = (R - sqrt(2.)*r) / (2. * r ); //center particle is at (r,r,r)
+  int radcount = (Rxy - sqrt(2.)*r) / (2. * r ); //center particle is at (r,r,r)
   cout << "Radial Particle count " <<radcount<<endl;
   
 	int part_per_row=0;
@@ -40,8 +150,8 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
   std::vector <int> symm_y;
   int x_ghost_per_row = 0;
   //Cal
-  int tgcount = alpha* R /(2. * r);
-  double dalpha = alpha / tgcount;
+  int tgcount;
+
   cout << "Tg Particle count " <<tgcount<<endl;
   
   if (Dimension==3) {
@@ -58,12 +168,23 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		k = 0;zp = z0;
     cout << "Length particle count "<<last_nonghostrow+1<<endl;
     
+    //First increment is in radius
 		while (zp <= ( z0 + Lz - r)) {
-      for (int alphai = 0; alphai < tgcount + 1; alphai++ ){
-        for (int ri = 0; ri < radcount + 1;ri++){
-            xp = sqrt(2.)*r + ri * r * cos (alphai*dalpha);
-            yp = sqrt(2.)*r + ri * r * sin (alphai*dalpha);
-            int tgcount = alpha * (ri+1)*r / (2.*r); 
+      for (double ri = 0. ; ri < Rxy; ri += 2.*r){
+        double rtot = ri + sqrt(2.) * r;
+        //cout << "ri "<<ri<<endl;
+        
+        double dalpha;
+        if (ri == 0.) {tgcount =1; dalpha = 0.;}
+        else {
+
+          tgcount = (double)(alpha* ri )/(2. * r) + 1;  
+          dalpha = alpha / (tgcount-1);         
+          //cout << "tg count "<<tgcount<<", dalpha"<<dalpha<<", alpha ri"<<alpha * ri<<"ri "<<ri <<endl;
+        }
+        for (int alphai = 0; alphai < tgcount; alphai++ ){
+            xp = sqrt(2.) * r + ri * cos (alphai*dalpha);
+            yp = sqrt(2.) * r + ri * sin (alphai*dalpha);
               
             Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
             
