@@ -127,6 +127,7 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed) {
 										
 		//dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.0), R, L + 2.*L/10.0,  dx/2., rho, h, false); 
+    //(int tag, double alpha, double Rxy, double Lz, double r, double Density, double h)
 		dom.AddCylSliceLength (0, M_PI/8., R, L, dx/2,rho, h);
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		

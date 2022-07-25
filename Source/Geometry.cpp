@@ -1,6 +1,10 @@
 namespace SPH {
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
+// AND HERE distance betwen particles is not even (inner particles are)
+// close to each other
+// TODO: ANOTHER DOMAIN WITH LESS PARTICLES AT INNER RADIUS POSITIONs}
+// ALPHA IN RADIANS
 void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz, 
 																				double r, double Density, double h) {
 	//Util::Stopwatch stopwatch;
@@ -28,12 +32,18 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 	//else						
                     z0 = -Lz/2. + r; //CHECK: -Lz/2. - r or -Lz/2.?
 	
-  int radcount = (R - sqrt(2.)*r) / (2. * r );
+  int radcount = (R - sqrt(2.)*r) / (2. * r ); //center particle is at (r,r,r)
+  cout << "Radial Particle count " <<radcount<<endl;
   
 	int part_per_row=0;
   std::vector <int> symm_x;
   std::vector <int> symm_y;
   int x_ghost_per_row = 0;
+  //Cal
+  int tgcount = alpha* R /(2. * r);
+  double dalpha = alpha / tgcount;
+  cout << "Tg Particle count " <<tgcount<<endl;
+  
   if (Dimension==3) {
     	//Cubic packing
 		double zp;
@@ -46,36 +56,40 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		//cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
 		k = 0;zp = z0;
-
+    cout << "Length particle count "<<last_nonghostrow+1<<endl;
+    
 		while (zp <= ( z0 + Lz - r)) {
-
-      for (int ri = 0; ri < radcount + 1;ri++){
-					xp = sqrt(2.)*r + ri * r;
-          int tgcount = alpha * (ri+1)*r / (2.*r); 
-          cout << "tg count: " << tgcount;
-          Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
-          
-          // if ( i < ghost_rows ){ //X PLANE SYMMETRY
-            // symm_x.push_back(id_part);
-            // if (k==0) x_ghost_per_row++;
-            // //if (k==0) 
-            // //  Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+      for (int alphai = 0; alphai < tgcount + 1; alphai++ ){
+        for (int ri = 0; ri < radcount + 1;ri++){
+            xp = sqrt(2.)*r + ri * r * cos (alphai*dalpha);
+            yp = sqrt(2.)*r + ri * r * sin (alphai*dalpha);
+            int tgcount = alpha * (ri+1)*r / (2.*r); 
+              
+            Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+            
+            // if ( i < ghost_rows ){ //X PLANE SYMMETRY
+              // symm_x.push_back(id_part);
+              // if (k==0) x_ghost_per_row++;
+              // //if (k==0) 
+              // //  Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+            // }
+            // if ( j < ghost_rows) { //Y PLANE SYMMETRY
+              // symm_y.push_back(id_part);
+              // //if (k==0) 
+              // //  Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
+            // }
+            // if (zp == z0)
+              // part_per_row++;
+            
+            // id_part++;
+            // xp += 2.*r;
           // }
-          // if ( j < ghost_rows) { //Y PLANE SYMMETRY
-            // symm_y.push_back(id_part);
-            // //if (k==0) 
-            // //  Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
-					// }
-          // if (zp == z0)
-						// part_per_row++;
-					
-					// id_part++;
-					// xp += 2.*r;
-				// }
-				// yp += 2.*r;
-				// yinc +=1;
+          // yp += 2.*r;
+          // yinc +=1;
 
-			 }
+         }
+         
+      } //alpha
 			k++;
 			zp += 2.0 * r;
 		}
