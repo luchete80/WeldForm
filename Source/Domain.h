@@ -94,8 +94,6 @@ public:
 	//Cylinder Slice 
 	void AddXYSymCylinderLength(int tag, double Rxy, double Lz, 
 								double r, double Density, double h, bool Fixed, bool symlength = false);
-  void AddCylSliceLengthEven(int tag, double alpha, double Rxy, double Lz, 
-																				double r, double Density, double h); //Even Tg
   void AddCylSliceLength(int tag, double alpha, double Rxy, double Lz, 
 																				double r, double Density, double h);
                                         
