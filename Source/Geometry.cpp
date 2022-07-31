@@ -120,43 +120,44 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		//cout << "zmax"<<( z0 + Lz - r)<<endl;
     //OUTER, NOT COORDINATE NORMAL
     Vec3_t normal_2 = Vec3_t(cos(alpha + M_PI/2.), sin(alpha + M_PI/2.),0.);
-    double pplane = dot (normal_2,Particles[0]->x);
+    double pplane = dot (normal_2,Particles[0]->x + normal_2 * r);
     cout << "pplane"<<pplane<<endl;
     
     int sym_y_count = 0;
     int sym_x_count;
-    int id_part[3];
     for (int k=0;k<ghost_rows;k++){
       for (int ri=0;ri<radcount;ri++){
         for (int alphai = 0; alphai < ghost_rows; alphai++ ){
           for (int i=0;i<2;i++){
-            id_part[i] = plane_ghost_part_1[i][k][ri][alphai]; 
+            int id_part = plane_ghost_part_1[i][k][ri][alphai]; 
             if (i==0){
-              xp = Particles[id_part[0]]->x(0);
-              yp =  - Particles[id_part[0]]->x(1);
+              xp = Particles[id_part]->x(0);
+              yp =  - Particles[id_part]->x(1);
               Particles[id_part  ]->ghost_plane_axis = 1;
             } else {
               //Move particle across normal
               //Distance to plane: t = (n . X) - pplane
               //Being pplane the plane coeff n . X = pplane              
-              double dist = -  dot (Particles[id_part[1]]->x,normal_2 ) - pplane ;
+              double dist = -  dot (Particles[id_part]->x,normal_2 ) - pplane ;
               cout << "dist "<<dist<<endl;
-              Vec3_t xg = Particles[id_part[1]]->x + normal_2 * abs(dist); //Outer normal
+              Vec3_t xg = Particles[id_part]->x + 2 * normal_2 * abs(dist); //Outer normal
               xp = xg(0); yp = xg(1); 
             }
-            zp = Particles[id_part[i]]->x(2);
-            Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
-            GhostPairs.Push(std::make_pair(id_part[i],part_count));
-            Particles[part_count  ]->is_ghost = true;
-            //Only for debug
-            if (k==0){
-              Particles[part_count  ]->ID = id_part[i];
-              // Particles[id_part  ]->ghost_plane_axis = 1;
-                   
-            }      
-            Particles[part_count  ]->not_write_surf_ID = true;               
-            part_count++;
-            ghost_count++;
+            zp = Particles[id_part]->x(2);
+            if (i==1 && alphai == 1) { //TEST
+              Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+              GhostPairs.Push(std::make_pair(id_part,part_count));
+              Particles[part_count  ]->is_ghost = true;
+              //Only for debug
+              if (k==0){
+                Particles[part_count  ]->ID = id_part;
+            // Particles[id_part  ]->ghost_plane_axis = 1;
+                     
+              }      
+              Particles[part_count  ]->not_write_surf_ID = true;               
+              part_count++;
+              ghost_count++;
+            }//TEST
           }//i          
         }//alpha i
       }//r
