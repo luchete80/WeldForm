@@ -125,7 +125,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
     
     int sym_y_count = 0;
     int sym_x_count;
-    for (int k=0;k<ghost_rows;k++){
+    for (int k=0;k<last_nonghostrow;k++){
       for (int ri=0;ri<radcount;ri++){
         for (int alphai = 0; alphai < ghost_rows; alphai++ ){
           for (int i=0;i<2;i++){
@@ -138,13 +138,13 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
               //Move particle across normal
               //Distance to plane: t = (n . X) - pplane
               //Being pplane the plane coeff n . X = pplane              
-              double dist = -  dot (Particles[id_part]->x,normal_2 ) - pplane ;
+              double dist = dot (Particles[id_part]->x,normal_2 ) - pplane ;
               cout << "dist "<<dist<<endl;
               Vec3_t xg = Particles[id_part]->x + 2 * normal_2 * abs(dist); //Outer normal
               xp = xg(0); yp = xg(1); 
             }
             zp = Particles[id_part]->x(2);
-            if (i==1 && alphai == 1) { //TEST
+            //if (i==1 && alphai == 0) { //TEST
               Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
               GhostPairs.Push(std::make_pair(id_part,part_count));
               Particles[part_count  ]->is_ghost = true;
@@ -157,7 +157,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
               Particles[part_count  ]->not_write_surf_ID = true;               
               part_count++;
               ghost_count++;
-            }//TEST
+            //}//TEST
           }//i          
         }//alpha i
       }//r
