@@ -123,7 +123,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		//cout << "zmax"<<( z0 + Lz - r)<<endl;
     //OUTER, NOT COORDINATE NORMAL
     Vec3_t normal_2 = Vec3_t(cos(alpha + M_PI/2.), sin(alpha + M_PI/2.),0.);
-    double pplane = dot (normal_2,Particles[0]->x /*+ normal_2 * r*/);
+    double pplane = dot (normal_2,Particles[0]->x + normal_2 * r);
     cout << "pplane"<<pplane<<endl;
     
     int sym_y_count = 0;
