@@ -395,7 +395,8 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		// CalcTempInc();
 		//TODO Add 
 		double max=0,min=1000.; 
-
+    
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
 		for (size_t i=0; i<Particles.Size(); i++){
 			Particles[i]->T+= dt*Particles[i]->dTdt;
 			//Particles[i]->TempCalcLeapfrog(dt);

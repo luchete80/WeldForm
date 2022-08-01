@@ -122,8 +122,15 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		zp = z0; k= 0;
 		//cout << "zmax"<<( z0 + Lz - r)<<endl;
     //OUTER, NOT COORDINATE NORMAL
-    Vec3_t normal_2 = Vec3_t(cos(alpha + M_PI/2.), sin(alpha + M_PI/2.),0.);
-    double pplane = dot (normal_2,Particles[0]->x + normal_2 * r);
+    Vec3_t normal_2[2]; 
+    double pplane[2];
+
+    normal_2 [0] = Vec3_t(0., -1.0 ,0.);
+    pplane [0]   = dot (normal_2[0],Particles[0]->x + normal_2[0] * r);
+    
+    normal_2 [1] = Vec3_t(cos(alpha + M_PI/2.), sin(alpha + M_PI/2.),0.);
+    pplane [1]   = dot (normal_2[1],Particles[0]->x + normal_2[1] * r);
+    
     cout << "pplane"<<pplane<<endl;
     
     int sym_y_count = 0;
@@ -133,19 +140,17 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
         for (int alphai = 0; alphai < ghost_rows; alphai++ ){
           for (int i=0;i<2;i++){
             int id_part = plane_ghost_part_1[i][k][ri][alphai]; 
-            if (i==0){
-              xp = Particles[id_part]->x(0);
-              yp =  - Particles[id_part]->x(1);
-              Particles[id_part  ]->ghost_plane_axis = 1;
-            } else {
-              //Move particle across normal
-              //Distance to plane: t = (n . X) - pplane
-              //Being pplane the plane coeff n . X = pplane              
-              double dist = dot (Particles[id_part]->x,normal_2 ) - pplane ;
-              cout << "dist "<<dist<<endl;
-              Vec3_t xg = Particles[id_part]->x + 2 * normal_2 * abs(dist); //Outer normal
-              xp = xg(0); yp = xg(1); 
-            }
+
+            Particles[id_part  ]->ghost_plane_axis = 1;
+
+            //Move particle across normal
+            //Distance to plane: t = (n . X) - pplane
+            //Being pplane the plane coeff n . X = pplane              
+            double dist = dot (Particles[id_part]->x,normal_2[i] ) - pplane[i] ;
+            cout << "dist "<<dist<<endl;
+            Vec3_t xg = Particles[id_part]->x + 2 * normal_2[i] * abs(dist); //Outer normal
+            xp = xg(0); yp = xg(1); 
+            
             zp = Particles[id_part]->x(2);
             //if (i==1 && alphai == 0) { //TEST
               Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));

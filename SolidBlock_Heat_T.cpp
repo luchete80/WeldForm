@@ -63,7 +63,7 @@ int main(int argc, char **argv) try
     	H	= 1.;
     	n	= 10.0;
 
-    	rho	= 1.0;
+    	rho	= 1000.0;
     	dx	= H / n;
     	h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
@@ -115,7 +115,7 @@ int main(int argc, char **argv) try
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
 		//dom.ThermalSolve(/*tf*/timestep + 1.0e-5,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
-    dom.ThermalSolve(/*tf*/10.001,/*dt*/timestep,/*dtOut*/1.,"test06",999);
+    dom.ThermalSolve(/*tf*/2.001,/*dt*/timestep,/*dtOut*/2.,"test06",999);
     cout << "dom.BLPF "<<dom.BLPF<<endl;
     cout << "dom.TRPR "<<dom.TRPR<<endl;
     for (int k=0;k<4;k++)
