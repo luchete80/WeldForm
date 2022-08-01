@@ -1076,8 +1076,11 @@ inline void Domain::MoveGhost(){
     
     // //vn = dot (p->normal,Particles[i]-> v)
     // for (int i=0;i<2;i++) vtg[i] = dot (p->tg[i],Particles[i]-> v);
-    
-    // int axis = Particles[gi]-> ghost_plane_axis;
+    //if (symmetry)
+    //Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
+    //if ()
+    //Particles[gi]-> v -= vn * p->normal;
+  // int axis = Particles[gi]-> ghost_plane_axis;
     // //ORIG
 		// Particles[gi]-> v[axis]  = - Particles[i]-> v[axis];
     // //NEW
