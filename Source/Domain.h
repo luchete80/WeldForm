@@ -41,6 +41,7 @@
 #include <cmath>
 
 #include "Mesh.h"
+#include "Plane.h"
 
 //#define NONLOCK_SUM
 #define MAX_NB_PER_PART 100
@@ -363,6 +364,8 @@ public:
 	bool            auto_ts_acc;    
   bool            auto_ts_cont; 
   double          m_maxT, m_minT; //from step, tou output
+  
+  std::vector <SPH::Plane*> planes;
   std::vector <TriMesh*> trimesh; //ORIGINALLY
 	//CONTACT 
 	double PFAC, DFAC;		// Penalty and damping factors

@@ -1,3 +1,6 @@
+#include "Plane.h"
+#include <vector>
+
 namespace SPH {
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
@@ -122,14 +125,23 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		zp = z0; k= 0;
 		//cout << "zmax"<<( z0 + Lz - r)<<endl;
     //OUTER, NOT COORDINATE NORMAL
-    Vec3_t normal_2[2]; 
+    Vec3_t normal_2[2], tg[2][2]; 
     double pplane[2];
 
     normal_2 [0] = Vec3_t(0., -1.0 ,0.);
     pplane [0]   = dot (normal_2[0],Particles[0]->x + normal_2[0] * r);
+    tg[0][0] = Vec3_t(1., 0. ,0.);
+    tg[0][1] = tg[1][1] = Vec3_t(0., 0.0 ,1.);    
+    tg[1][0] = Vec3_t(cos(alpha), sin(alpha),0.);
     
     normal_2 [1] = Vec3_t(cos(alpha + M_PI/2.), sin(alpha + M_PI/2.),0.);
     pplane [1]   = dot (normal_2[1],Particles[0]->x + normal_2[1] * r);
+    
+    for (int i=0;i<2;i++){
+      //Plane *p = new Plane(normal_2[i],tg[i][0],tg[i][1],pplane[i]);
+      //Plane *p = new Plane();
+      planes.push_back(new Plane(normal_2[i],tg[i][0],tg[i][1],pplane[i]));
+    }
     
     cout << "pplane"<<pplane<<endl;
     
@@ -180,6 +192,8 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
           int id_part = plane_ghost_part_3[k][ri][alphai]; 
           xr = - Particles[id_part]->x;
           Particles.Push(new Particle(tag,xr,Vec3_t(0,0,0),0.0,Density,h,false));
+          part_count++;
+          ghost_count++;
         }
       }
     }
