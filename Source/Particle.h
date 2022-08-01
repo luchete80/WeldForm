@@ -38,6 +38,8 @@
 
 //#define 	FLAT_TENSORS
 
+#include "Plane.h" //ONLY FOR GHOST
+
 class Plane;    //For analytical contact 
 namespace SPH {
 
@@ -200,6 +202,8 @@ namespace SPH {
     bool    is_ghost;      
     int     ghost_plane_axis;      //Assuming is cartesian
 		bool    impose_vel;
+    
+    SPH::Plane *plane_ghost;
 			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);

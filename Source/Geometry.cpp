@@ -154,7 +154,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
             int id_part = plane_ghost_part_1[i][k][ri][alphai]; 
 
             Particles[id_part  ]->ghost_plane_axis = 1;
-
+            
             //Move particle across normal
             //Distance to plane: t = (n . X) - pplane
             //Being pplane the plane coeff n . X = pplane              
@@ -168,9 +168,11 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
               Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
               GhostPairs.Push(std::make_pair(id_part,part_count));
               Particles[part_count  ]->is_ghost = true;
+              Particles[part_count  ]->plane_ghost = planes[i];
               //Only for debug
               if (k==0){
                 Particles[part_count  ]->ID = id_part;
+                
             // Particles[id_part  ]->ghost_plane_axis = 1;
                      
               }      

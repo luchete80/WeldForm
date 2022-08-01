@@ -1059,6 +1059,44 @@ inline void Domain::MoveGhost(){
 	}
 }
 
+// inline void Domain::MoveGhost(){
+
+	// for (int gp=0; gp<GhostPairs.Size(); gp++){
+		// int  i = GhostPairs[gp].first;
+		// int gi = GhostPairs[gp].second;
+		
+    // //ASSUMING SYMMETRY
+		// //See normal direction, if it is vertical
+    // // tg axis is the same speed
+		// Particles[gi]-> v  = Particles[i]-> v;
+    
+    // double vtg[2], vn;
+    
+    // //Plane *p = Particles[gi]->plane_ghost;
+    
+    // //vn = dot (p->normal,Particles[i]-> v)
+    // for (int i=0;i<2;i++) vtg[i] = dot (p->tg[i],Particles[i]-> v);
+    
+    // int axis = Particles[gi]-> ghost_plane_axis;
+    // //ORIG
+		// Particles[gi]-> v[axis]  = - Particles[i]-> v[axis];
+    // //NEW
+		// // Particles[gi]-> v[axis]  = Particles[i]-> v[axis] = 0.;
+		// // Particles[gi]-> a[axis]  = Particles[i]-> a[axis] = 0.;
+    
+		// Particles[gi]-> va[axis] = - Particles[i]-> va[axis];
+		// Particles[gi]-> vb[axis] = - Particles[i]-> vb[axis];
+
+		// Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
+		
+    // //Several parameters
+    // // Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
+    // // Particles[gi]-> Strain  =     Particles[i]-> Strain;
+    // // Particles[gi]-> Density  =     Particles[i]-> Density;
+
+	// }
+// }
+
 inline void Domain::PropGhost(){
   	for (int gp=0; gp<GhostPairs.Size(); gp++){
 		int  i = GhostPairs[gp].first;
