@@ -1,8 +1,11 @@
 namespace SPH {
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
+// AND HERE distance betwen particles is not even (inner particles are)
+// close to each other
+
 void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz, 
-																				double r, double Density, double h, bool Fixed, bool symlength = false) {
+																				double r, double Density, double h) {
 	//Util::Stopwatch stopwatch;
 	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
 
@@ -14,26 +17,34 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 	
 	double Lx, Ly;
 	
-  
-	
+  std::pair <int,Vec3_t> opp_sym; //Position & ID of particles
 
 	//yp=pos;
 	int numypart,numxpart;
 	int xinc,yinc;
 	
 	int id_part=0;
-	int ghost_rows = 3;
+	int ghost_rows = 2;
 	
 	double z0;
-	if (symlength) 	z0 = r;
-	else						z0 = -Lz/2. + r; //CHECK: -Lz/2. - r or -Lz/2.?
+	//if (symlength) 	z0 = r;
+	//else						
+                    z0 = -Lz/2. + r; //CHECK: -Lz/2. - r or -Lz/2.?
 	
-  int radcount = (R - sqrt(2.)*r) / (2. * r );
+  int radcount = Rxy / (2. * r ); //center particle is at (r,r,r)
+  cout << "Radial Particle count " <<radcount<<endl;
   
 	int part_per_row=0;
   std::vector <int> symm_x;
   std::vector <int> symm_y;
   int x_ghost_per_row = 0;
+  //Cal
+  int tgcount;
+
+  cout << "Tg Particle count " <<tgcount<<endl;
+  
+  int part_count = 0;
+  
   if (Dimension==3) {
     	//Cubic packing
 		double zp;
@@ -46,143 +57,134 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		//cout << "Particle Row count: "<< k << endl;
 		int last_nonghostrow = k;
 		k = 0;zp = z0;
+    cout << "Length particle count "<<last_nonghostrow+1<<endl;
 
+  //tangential particles
+  int plane_ghost_part_1[2][last_nonghostrow][radcount][ghost_rows]; //First plane id
+  //plane_ghost_part_count[3][radcount][]; // Not always is possible to count for ghost count
+  
+  //Reflected particles (in relation to center), same angle on -x,-y coordinates
+  int plane_ghost_part_3[last_nonghostrow][ghost_rows + 1 ] [ghost_rows + 1 ];
+  
+  int tgcount_ref_ghost[ghost_rows];
+  
+    //First increment is in radius
 		while (zp <= ( z0 + Lz - r)) {
+      int rcount = 0; //Used only for ghost count
+      for (double ri = 0. ; ri < Rxy; ri += 2.*r){
+        //cout << "ri "<<ri<<endl;
+        
+        double dalpha;
+        if (ri == 0.) {tgcount =1; dalpha = 0.;}
+        else {
 
-      for (int ri = 0; ri < radcount + 1;ri++){
-					xp = sqrt(2.)*r + ri * r;
-          int tgcount = alpha * (ri+1)*r / (2.*r); 
-          cout << "tg count: " << tgcount;
-          Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-          
-          // if ( i < ghost_rows ){ //X PLANE SYMMETRY
-            // symm_x.push_back(id_part);
-            // if (k==0) x_ghost_per_row++;
-            // //if (k==0) 
-            // //  Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
-          // }
-          // if ( j < ghost_rows) { //Y PLANE SYMMETRY
-            // symm_y.push_back(id_part);
-            // //if (k==0) 
-            // //  Particles[id_part]->ID = id_part; //ONLY FOR TESTING IN PARAVIEW!
-					// }
-          // if (zp == z0)
-						// part_per_row++;
-					
-					// id_part++;
-					// xp += 2.*r;
-				// }
-				// yp += 2.*r;
-				// yinc +=1;
-
-			 }
+          tgcount = (ceil)((alpha* ri )/(2. * r)) + 1;  
+          dalpha = alpha / (tgcount-1);         
+          //cout << "tg count "<<tgcount<<", dalpha"<<dalpha<<", alpha ri"<<alpha * ri<<"ri "<<ri <<endl;
+          if (rcount > 0 && rcount < ghost_rows +1) tgcount_ref_ghost[rcount - 1] = tgcount;
+        }
+        for (int alphai = 0; alphai < tgcount; alphai++ ){
+            xp =  /*r +*/ ri * cos (alphai*dalpha);
+            yp =  /*r +*/ ri * sin (alphai*dalpha);
+            Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+            //A particle can be on all zones 
+            if (alphai < ghost_rows){
+              plane_ghost_part_1[0][k][rcount][alphai] = part_count; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
+            }
+            if ((tgcount - alphai - 1) < ghost_rows){ // Opposite plane
+              plane_ghost_part_1[1][k][rcount][tgcount - alphai - 1] = part_count; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
+            } //Reflected particles
+            if (rcount > 0 && rcount < ghost_rows +1){ //Particle at origin x,y are not reflected
+              plane_ghost_part_3[k][rcount-1][alphai] = part_count;
+            }
+            //Obly for debug  
+            if (k==0){
+              Particles[part_count  ] ->ID = part_count; 
+              Particles[part_count  ]->not_write_surf_ID = true;   
+            }//ONLY FOR DEBUG
+            
+            part_count++;
+         }
+        rcount++;
+      } //alpha
 			k++;
 			zp += 2.0 * r;
 		}
     
     cout << "Particles per row: "<<part_per_row<<endl;
-    cout << " symmetric particles x, y :"<< symm_x.size()<<", "<<symm_y.size()<<endl;
-		//TODO: CONVERT THIS IN A QUARTER CYL SECTOR FUNCTION 
-		//Is it convenient to allocate these particles at the end? 		
-		//Allocate Symmetry particles, begining from x, y and z
 		cout << "Creating ghost particles"<<endl;
     
+    int ghost_count = 0;
     
     ///// X AND Y PLANE //////////
     ///// HERE INSERT EACH 2 DIFFERENT SET OF X AND Y GHOST PARTICLES
     // AT THE SAME TIME (GHOST Y PLANE (X DIR INCREMENT) STRAIGHT AND GHOST X PLANE (Y INCREMENT) IS TRANSPOSED)
 		zp = z0; k= 0;
 		//cout << "zmax"<<( z0 + Lz - r)<<endl;
+    //OUTER, NOT COORDINATE NORMAL
+    Vec3_t normal_2[2]; 
+    double pplane[2];
+
+    normal_2 [0] = Vec3_t(0., -1.0 ,0.);
+    pplane [0]   = dot (normal_2[0],Particles[0]->x + normal_2[0] * r);
+    
+    normal_2 [1] = Vec3_t(cos(alpha + M_PI/2.), sin(alpha + M_PI/2.),0.);
+    pplane [1]   = dot (normal_2[1],Particles[0]->x + normal_2[1] * r);
+    
+    cout << "pplane"<<pplane<<endl;
+    
     int sym_y_count = 0;
     int sym_x_count;
-		while (zp <= ( z0 + Lz - r)) {
+    for (int k=0;k<ghost_rows;k++){
+      for (int ri=0;ri<radcount;ri++){
+        for (int alphai = 0; alphai < ghost_rows; alphai++ ){
+          for (int i=0;i<2;i++){
+            int id_part = plane_ghost_part_1[i][k][ri][alphai]; 
 
-			numypart = numpartxy;	//And then diminish by 2 on each y increment
-			yinc = 1;	//particle row from the axis
-			//cout << "y particles: "<<numypart<<endl;
-			for (j=0; j < ghost_rows ; j++){//DY INCREMENT 
-				xp = r;
-				yp = - r - 2*r*(yinc -1); //First increment is radius, following ones are 2r			
-				numxpart = calcHalfPartCount(r, Rxy, yinc);
-				//cout << "x particles: "<<numypart<<endl;
-        sym_x_count = x_ghost_per_row *k + j;
-        //THE INCREMENTS ARE IN X, i.e. PARALLEL TO Y PLANE
-				for (i=0; i < numxpart;i++) { //DX INCREMENT
-					//if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),(z+ qin*r*double(rand())/RAND_MAX)),Vec3_t(0,0,0),0.0,Density,h,Fixed));
-					//	else    
-					Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //First insert on y plane 
-					Particles.Push(new Particle(tag,Vec3_t(yp,xp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed)); //Transpose for x plane
+            Particles[id_part  ]->ghost_plane_axis = 1;
 
-          //if (k==0) 
-          //  Particles[id_part  ]->ID = symm_y[sym_y_count]; //ONLY FOR TESTING IN PARAVIEW!  
-          //SYMMETRY ON Y PLANE IS ALTERNATED ON INDICES
-          //if (k==0) 
-          //  Particles[id_part+1]->ID = symm_x[sym_x_count]; //ONLY FOR TESTING IN PARAVIEW!           
-          
-					Particles[id_part  ]->inner_mirr_part = symm_y[sym_y_count];
-					Particles[id_part+1]->inner_mirr_part = symm_x[sym_x_count];
-          
-          GhostPairs.Push(std::make_pair(symm_y[sym_y_count],id_part  ));
-          GhostPairs.Push(std::make_pair(symm_x[sym_x_count],id_part+1));
-          
-          Particles[id_part  ]->ghost_plane_axis = 1;
-          Particles[id_part+1]->ghost_plane_axis = 0;
-          Particles[id_part  ]->is_ghost = true;
-          Particles[id_part+1]->is_ghost = true;
-          
-          Particles[id_part  ]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
-          Particles[id_part+1]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
-          //ONLY FOR TESTING SYMMETRY PLANES!
-          //Particles[id_part  ]->ID = 1; //ONLY FOR TESTING IN PARAVIEW!  
-          //Particles[id_part+1]->ID = 0; //ONLY FOR TESTING IN PARAVIEW!   
-					
-          id_part+=2;
-					xp += 2.*r;
-          sym_y_count++;
-          sym_x_count+=ghost_rows;
-				}//x rows
-				yinc++;
-			}//y rows
-			k++;
-			zp += 2.0 * r;	
-			//cout << "zp " <<zp<<endl;
-		}
-		
-    //// Z PLANE, BOTTOM COORDINATE /////
-    cout << "inserting z particles"<<endl;
-    zp = z0 - 2.0*r;
-		//Insert ghost pairs relation
-		if (symlength){
-      //// Z PLANE, BOTTOM COORDINATE /////
-      cout << "Inserting z ghost particles at z bottom..."<<endl;
-      //z Symm particles
-      int sym_part;
-      int part = 0;
-      id_part = Particles.Size(); //REDUNDANT
+            //Move particle across normal
+            //Distance to plane: t = (n . X) - pplane
+            //Being pplane the plane coeff n . X = pplane              
+            double dist = dot (Particles[id_part]->x,normal_2[i] ) - pplane[i] ;
+            cout << "dist "<<dist<<endl;
+            Vec3_t xg = Particles[id_part]->x + 2 * normal_2[i] * abs(dist); //Outer normal
+            xp = xg(0); yp = xg(1); 
+            
+            zp = Particles[id_part]->x(2);
+            //if (i==1 && alphai == 0) { //TEST
+              Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+              GhostPairs.Push(std::make_pair(id_part,part_count));
+              Particles[part_count  ]->is_ghost = true;
+              //Only for debug
+              if (k==0){
+                Particles[part_count  ]->ID = id_part;
+            // Particles[id_part  ]->ghost_plane_axis = 1;
+                     
+              }      
+              Particles[part_count  ]->not_write_surf_ID = true;               
+              part_count++;
+              ghost_count++;
+            //}//TEST
+          }//i          
+        }//alpha i
+      }//r
+    }//z
 
-      for (int zinc = 0; zinc < ghost_rows ;zinc++){
-        for (int xy = 0; xy < part_per_row;xy++){
-          xp = Particles[part]->x(0);
-          yp = Particles[part]->x(1);
-          //zp = Particles[part]->x(2);
-          Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,Fixed));				
-          Particles[id_part]->inner_mirr_part = part;
-          //Particles[id_part]->ID = -50;
-          //cout << "part , sym"<<part<<", "<<id_part<<endl;
-          Particles[id_part]->ghost_plane_axis = 2;
-          Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
-          Particles[id_part  ]->is_ghost = true;
-          //ONLY FOR TESTING SYMMETRY PLANES!
-          //Particles[id_part]->ID = Particles[id_part]->ghost_plane_axis; //ONLY FOR TESTING IN PARAVIEW!   
-          GhostPairs.Push(std::make_pair(part,id_part));
-          
-          id_part++;
-          part++;
+    //reflected particles
+    //Particles.Push(new Particle(tag,-Particles[0]->x,Vec3_t(0,0,0),0.0,Density,h,false));
+    Vec3_t xr;
+    for (int k=0;k<last_nonghostrow; k++){
+      for (int ri=0;ri < ghost_rows; ri++){
+        for (int alphai = 0; alphai < tgcount_ref_ghost[ri]; alphai++ ){
+          int id_part = plane_ghost_part_3[k][ri][alphai]; 
+          xr = - Particles[id_part]->x;
+          Particles.Push(new Particle(tag,xr,Vec3_t(0,0,0),0.0,Density,h,false));
         }
-        zp -= 2.0*r;
       }
-		////// PARALLELIZE!
-		}
+    }
+          
+    cout << "Ghost count "<<ghost_count<<endl;
     
 		
 		double Vol = M_PI * Rxy * Rxy * Lz;		

@@ -20,8 +20,8 @@ inline double Domain::CalcTempIncPair (Particle *P1, Particle *P2) {
   
   di = P1->Density; mi = P1->Mass;
   dj = P2->Density; mj = P2->Mass;
-  
-  //ret = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
+ 
+  ret = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij ) / (dot(xij,xij));
 
 	return ret;
 }
@@ -29,11 +29,12 @@ inline double Domain::CalcTempIncPair (Particle *P1, Particle *P2) {
 //THIS IS REDUNDAND, LIKE FRASER ALGORITHM ,CALCULATING EACH PAIR 2 TIMES
 inline void Domain::CalcTempIncPP() {
   Particle *P1, *P2;
-  double k;
-	#pragma omp parallel for schedule (static) private (P1,P2,k) num_threads(Nproc)
+  double k, temp;
+   for (int i=0; i < Particles.Size();i++)
+     Particles[i]->dTdt= 0.;
+	#pragma omp parallel for schedule (static) private (P1,P2,k, temp) num_threads(Nproc)
   for (int i=0; i < Particles.Size();i++){
     P1	= Particles[i]; 
-    P1->dTdt = 0.;
     k = 1./(P1->Density * P1->cp_T);
     for (int n=0;n<ipair_SM[i];n++){      
       P2 = Particles[Anei[i][n]];
