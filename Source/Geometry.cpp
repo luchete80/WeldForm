@@ -66,6 +66,8 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
   //Reflected particles (in relation to center), same angle on -x,-y coordinates
   int plane_ghost_part_3[last_nonghostrow][ghost_rows + 1 ] [ghost_rows + 1 ];
   
+  int tgcount_ref_ghost[ghost_rows];
+  
     //First increment is in radius
 		while (zp <= ( z0 + Lz - r)) {
       int rcount = 0; //Used only for ghost count
@@ -79,10 +81,11 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
           tgcount = (ceil)((alpha* ri )/(2. * r)) + 1;  
           dalpha = alpha / (tgcount-1);         
           //cout << "tg count "<<tgcount<<", dalpha"<<dalpha<<", alpha ri"<<alpha * ri<<"ri "<<ri <<endl;
+          if (rcount > 0 && rcount < ghost_rows +1) tgcount_ref_ghost[rcount - 1] = tgcount;
         }
         for (int alphai = 0; alphai < tgcount; alphai++ ){
-            xp =  r + ri * cos (alphai*dalpha);
-            yp =  r + ri * sin (alphai*dalpha);
+            xp =  /*r +*/ ri * cos (alphai*dalpha);
+            yp =  /*r +*/ ri * sin (alphai*dalpha);
             Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
             //A particle can be on all zones 
             if (alphai < ghost_rows){
@@ -120,12 +123,12 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		//cout << "zmax"<<( z0 + Lz - r)<<endl;
     //OUTER, NOT COORDINATE NORMAL
     Vec3_t normal_2 = Vec3_t(cos(alpha + M_PI/2.), sin(alpha + M_PI/2.),0.);
-    double pplane = dot (normal_2,Particles[0]->x + normal_2 * r);
+    double pplane = dot (normal_2,Particles[0]->x /*+ normal_2 * r*/);
     cout << "pplane"<<pplane<<endl;
     
     int sym_y_count = 0;
     int sym_x_count;
-    for (int k=0;k<last_nonghostrow;k++){
+    for (int k=0;k<ghost_rows;k++){
       for (int ri=0;ri<radcount;ri++){
         for (int alphai = 0; alphai < ghost_rows; alphai++ ){
           for (int i=0;i<2;i++){
@@ -162,6 +165,20 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
         }//alpha i
       }//r
     }//z
+
+    //reflected particles
+    //Particles.Push(new Particle(tag,-Particles[0]->x,Vec3_t(0,0,0),0.0,Density,h,false));
+    Vec3_t xr;
+    for (int k=0;k<last_nonghostrow; k++){
+      for (int ri=0;ri < ghost_rows; ri++){
+        for (int alphai = 0; alphai < tgcount_ref_ghost[ri]; alphai++ ){
+          int id_part = plane_ghost_part_3[k][ri][alphai]; 
+          xr = - Particles[id_part]->x;
+          Particles.Push(new Particle(tag,xr,Vec3_t(0,0,0),0.0,Density,h,false));
+        }
+      }
+    }
+          
     cout << "Ghost count "<<ghost_count<<endl;
     
 		
