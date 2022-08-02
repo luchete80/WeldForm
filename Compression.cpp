@@ -59,9 +59,10 @@ void UserAcc(SPH::Domain & domi)
 			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
 			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
 			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->v(2)			= -vcompress;
-			domi.Particles[i]->va(2)		= -vcompress;
-			domi.Particles[i]->vb(2)		= -vcompress;
+			domi.Particles[i]->v			= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+      domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -102,7 +103,7 @@ int main(int argc, char **argv) try
   Fy	= 300.e6;
   //dx	= L / (n-1);
   //dx = L/(n-1);
-  dx = 0.01;
+  dx = 0.015;
   h	= dx*1.2; //Very important
     Cs	= sqrt(K/rho);
 
@@ -168,7 +169,7 @@ int main(int argc, char **argv) try
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
-    timestep = (1.0*h/(Cs+VMAX));
+    timestep = (1.0*h/(Cs+VMAX)); 
     //timestep = 2.5e-6;
     dom.auto_ts = false;
     //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	

@@ -112,7 +112,7 @@ SET(EXES
   #Compression_1010_half_ghost
 	#NastranReader_test
 	#CompressionForces
-  Compression
+  Compression 
 	#CompressionVel
   #CompressionVel_Implicit
 	#CompressionForces_Ghost
@@ -153,7 +153,7 @@ SET(EXES
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
   #SolidBlock_Heat_T
-	slice_test
+	#slice_test
   #SolidBlock_HeatSOA
 	#SolidBlock_Heat_CNS
 	#SolidBlock_Heat_conv3faces
