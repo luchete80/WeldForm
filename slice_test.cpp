@@ -150,17 +150,17 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < -3.0*dx ){
-    			dom.Particles[a]->ID=2;
-	    			// dom.Particles[a]->IsFree=false;
-    			// dom.Particles[a]->NoSlip=true;			
-          bottom_count++;
-				}
-    		if ( z > L + 2.*dx ) {//Changed to only last row
-    			dom.Particles[a]->ID=3;
-					//dom.Particles[a]->XSPH		= 0.1;
-					forcepart_count++;
-				}
+    		// if ( z < dx ){
+    			// dom.Particles[a]->ID=2;
+	    			// // dom.Particles[a]->IsFree=false;
+    			// // dom.Particles[a]->NoSlip=true;			
+          // bottom_count++;
+				// }
+    		// if ( z > L - dx ) {//Changed to only last row
+    			// dom.Particles[a]->ID=3;
+					// //dom.Particles[a]->XSPH		= 0.1;
+					// forcepart_count++;
+				// }
     	}
 			cout << "Contact Force Particles: "<<forcepart_count<<endl;
       cout << "bottom count "<<bottom_count<<endl;
@@ -171,14 +171,14 @@ int main(int argc, char **argv) try
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
-    timestep = (1.0*h/(Cs+VMAX));
+    timestep = (0.7*h/(Cs+VMAX));
     //timestep = 2.5e-6;
-    dom.auto_ts = false;
+    dom.auto_ts = true;
     //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
-    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
-  
+    //dom.SolveDiffUpdateFraser(/*tf*/3.*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",10000);	
+    //dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
   
 		return 0;
 }

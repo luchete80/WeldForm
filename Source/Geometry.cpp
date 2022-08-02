@@ -32,7 +32,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 	double z0;
 	//if (symlength) 	z0 = r;
 	//else						
-                    z0 = -Lz/2. + r; //CHECK: -Lz/2. - r or -Lz/2.?
+    z0 = /*-Lz/2. + */ r; //CHECK: -Lz/2. - r or -Lz/2.?
 	
   int radcount = Rxy / (2. * r ); //center particle is at (r,r,r)
   cout << "Radial Particle count " <<radcount<<endl;
@@ -110,11 +110,12 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
             if (rcount > 0 && rcount < ghost_rows +1){ //Particle at origin x,y are not reflected
               plane_ghost_part_3[k][rcount-1][alphai] = part_count;
             }
-            // //Only for debug  
-            // if (k==0){
-              // Particles[part_count  ] ->ID = part_count; 
-              // Particles[part_count  ]->not_write_surf_ID = true;   
-            // }//ONLY FOR DEBUG
+            Particles[part_count  ]->not_write_surf_ID = true;   
+            //Only for debug  
+            if (k==0){
+              Particles[part_count  ] ->ID = part_count; 
+              Particles[part_count  ]->not_write_surf_ID = true;   
+            }//ONLY FOR DEBUG
             
             part_count++;
          }
@@ -135,13 +136,13 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
 		zp = z0; k= 0;
 		//cout << "zmax"<<( z0 + Lz - r)<<endl;
     //OUTER, NOT COORDINATE NORMAL
-    Vec3_t normal_2[2], tg[2][2]; 
+    Vec3_t normal_2[2], tg[2][2]; //tg is [plane][comp]
     double pplane[2];
 
     normal_2 [0] = Vec3_t(0., -1.0 ,0.);
     pplane [0]   = dot (normal_2[0],Particles[0]->x + normal_2[0] * r);
     tg[0][0] = Vec3_t(1., 0. ,0.);
-    tg[0][1] = tg[1][1] = Vec3_t(0., 0.0 ,1.);    
+    tg[0][1] = tg[1][1] = Vec3_t(0.,0.,1.);    
     tg[1][0] = Vec3_t(cos(alpha), sin(alpha),0.);
     
     normal_2 [1] = Vec3_t(cos(alpha + M_PI/2.), sin(alpha + M_PI/2.),0.);
@@ -179,14 +180,12 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
               GhostPairs.Push(std::make_pair(id_part,part_count));
               Particles[part_count  ]->is_ghost = true;
               Particles[part_count  ]->plane_ghost = planes[i];
-              Particles[part_count  ]-> ghost_type = Symmetric;
+              Particles[part_count  ]->ghost_type = Symmetric;
+              
               //Only for debug
-              // if (k==0){
-                // Particles[part_count  ]->ID = id_part;
-                
-            // Particles[id_part  ]->ghost_plane_axis = 1;
-                     
-              //}      
+              if (k==last_nonghostrow)
+                Particles[part_count  ]->ID = id_part;         
+                    
               Particles[part_count  ]->not_write_surf_ID = true;               
               part_count++;
               ghost_count++;
@@ -205,11 +204,17 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
         for (int alphai = 0; alphai < tgcount_ref_ghost[ri]; alphai++ ){
           int id_part = plane_ghost_part_3[k][ri][alphai]; 
           xr = - Particles[id_part]->x;
+          xr(2) = Particles[id_part]->x(2);
           Particles.Push(new Particle(tag,xr,Vec3_t(0,0,0),0.0,Density,h,false));
           GhostPairs.Push(std::make_pair(id_part,part_count));
-          
-          Particles[part_count  ]-> ghost_type = Mirror;
+
+          if (k==last_nonghostrow)
+            Particles[part_count  ]->ID = id_part;    
+          //Plane Ghost is not necessary here
+          Particles[part_count  ]-> ghost_type = Mirror_XY;
           Particles[part_count  ]-> is_ghost = true;
+          Particles[part_count  ]->not_write_surf_ID = true;   
+              
           part_count++;
           ghost_count++;
         }

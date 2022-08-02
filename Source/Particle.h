@@ -40,7 +40,7 @@
 
 #include "Plane.h" //ONLY FOR GHOST
 
-enum Ghost_Type {Symmetric = 0, Periodic = 1, Mirror = 2 };
+enum Ghost_Type {Symmetric = 0, Periodic = 1, Mirror_XY = 2 };
 
 class Plane;    //For analytical contact 
 namespace SPH {

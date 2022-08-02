@@ -111,3 +111,4 @@
              Begining with MoveGhost, tangential and normal.
 20220802  -  Fixed error in slice mesh generator. 
              Testing solver in slice. Errors found.
+             fixed Some meshing error with z coordinate. 

@@ -1079,10 +1079,13 @@ inline void Domain::MoveGhost(){
     if (Particles[gi]->ghost_type == Symmetric){
       Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
       Particles[gi]-> v -= vn * p->normal;
+      //cout << "vi vgi "<<Particles[i]-> v <<", " <<Particles[gi]-> v <<endl;
     }
-    else if (Particles[gi]->ghost_type == Mirror)
-      Particles[gi]-> v  = -Particles[i]-> v;
-    
+    else if (Particles[gi]->ghost_type == Mirror_XY){
+      Particles[gi]-> v(0)  = -Particles[i]-> v(0);
+      Particles[gi]-> v(1)  = -Particles[i]-> v(1);
+      Particles[gi]-> v(2)  =  Particles[i]-> v(2); 
+    }
   // int axis = Particles[gi]-> ghost_plane_axis;
     // //ORIG
 		// Particles[gi]-> v[axis]  = - Particles[i]-> v[axis];
