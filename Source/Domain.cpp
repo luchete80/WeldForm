@@ -1075,8 +1075,14 @@ inline void Domain::MoveGhost(){
     Plane *p = Particles[gi]->plane_ghost;
     
     vn = dot (p->normal,Particles[i]-> v);
-    for (int i=0;i<2;i++) vtg[i] = dot (p->tg[i],Particles[i]-> v);
+    for (int k=0;k<2;k++) vtg[k] = dot (p->tg[k],Particles[i]-> v);
     if (Particles[gi]->ghost_type == Symmetric){
+      // if (norm (Particles[i]-> v) > 1.0e-3){
+        // cout << "normal "<<p->normal<<endl;
+        // cout << "tg 1, tg2 "<<p->tg[0]<<", " <<p->tg[1]<<", " <<endl;
+        // cout << "vtg1, vtg2 " <<vtg[0]<<", "<<vtg[1]<<endl;
+        // cout << "vi vgi "<<Particles[i]-> v <<", " <<Particles[gi]-> v <<endl;
+      // }
       Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
       Particles[gi]-> v -= vn * p->normal;
       //cout << "vi vgi "<<Particles[i]-> v <<", " <<Particles[gi]-> v <<endl;

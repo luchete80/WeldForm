@@ -112,10 +112,10 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
             }
             Particles[part_count  ]->not_write_surf_ID = true;   
             //Only for debug  
-            if (k==0){
-              Particles[part_count  ] ->ID = part_count; 
-              Particles[part_count  ]->not_write_surf_ID = true;   
-            }//ONLY FOR DEBUG
+            // if (k==last_nonghostrow-1){
+              // Particles[part_count  ] ->ID = part_count; 
+              // Particles[part_count  ]->not_write_surf_ID = true;   
+            // }//ONLY FOR DEBUG
             
             part_count++;
          }
@@ -138,7 +138,8 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
     //OUTER, NOT COORDINATE NORMAL
     Vec3_t normal_2[2], tg[2][2]; //tg is [plane][comp]
     double pplane[2];
-
+    
+    //Planes are not exactly at 0,0, they have an offset of r of normal dir
     normal_2 [0] = Vec3_t(0., -1.0 ,0.);
     pplane [0]   = dot (normal_2[0],Particles[0]->x + normal_2[0] * r);
     tg[0][0] = Vec3_t(1., 0. ,0.);
@@ -183,8 +184,8 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
               Particles[part_count  ]->ghost_type = Symmetric;
               
               //Only for debug
-              if (k==last_nonghostrow)
-                Particles[part_count  ]->ID = id_part;         
+              // if (k==last_nonghostrow-1)
+                // Particles[part_count  ]->ID = id_part;         
                     
               Particles[part_count  ]->not_write_surf_ID = true;               
               part_count++;
@@ -207,9 +208,9 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
           xr(2) = Particles[id_part]->x(2);
           Particles.Push(new Particle(tag,xr,Vec3_t(0,0,0),0.0,Density,h,false));
           GhostPairs.Push(std::make_pair(id_part,part_count));
-
-          if (k==last_nonghostrow)
-            Particles[part_count  ]->ID = id_part;    
+          //ONLY FOR DEBUG
+          // if (k==last_nonghostrow-1)
+            // Particles[part_count  ]->ID = id_part;    
           //Plane Ghost is not necessary here
           Particles[part_count  ]-> ghost_type = Mirror_XY;
           Particles[part_count  ]-> is_ghost = true;

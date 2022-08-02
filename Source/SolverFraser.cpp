@@ -253,7 +253,6 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
-      if ()
       Particles[i]->v += Particles[i]->a * deltat;
     }
     MoveGhost();   
