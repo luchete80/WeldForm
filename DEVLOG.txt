@@ -109,3 +109,5 @@
 20220725  -  Working on Slice Mesher. All ghost particles. 
 20220801  -  Slice Mesher. Corrected ghost particles at y plane. 
              Begining with MoveGhost, tangential and normal.
+20220802  -  Fixed error in slice mesh generator. 
+             Testing solver in slice. Errors found.

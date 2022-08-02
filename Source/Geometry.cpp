@@ -98,23 +98,23 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
             Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
             //A particle can be on all zones 
             if (alphai < ghost_rows){
-              if (k==5)
-              cout << "pl0 k, r, alpha, id_part " << k<<", " <<rcount <<", " <<alphai<<", " <<part_count<<endl;
+              // if (k==5)
+              // cout << "pl0 k, r, alpha, id_part " << k<<", " <<rcount <<", " <<alphai<<", " <<part_count<<endl;
               plane_ghost_part_1[0][k][rcount][alphai] = part_count; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
             }
             if ((tgcount - alphai - 1) < ghost_rows){ // Opposite plane
-              if (k==5)
-                cout << "pl1 k, r, alpha, id_part " << k<< ", " <<rcount <<", " <<tgcount - alphai - 1<<", " <<part_count<<endl;
+              // if (k==5)
+                // cout << "pl1 k, r, alpha, id_part " << k<< ", " <<rcount <<", " <<tgcount - alphai - 1<<", " <<part_count<<endl;
               plane_ghost_part_1[1][k][rcount][tgcount - alphai - 1] = part_count; //plane_ghost_part_1[last_nonghostrow][radcount][ghost_rows]
             } //Reflected particles
             if (rcount > 0 && rcount < ghost_rows +1){ //Particle at origin x,y are not reflected
               plane_ghost_part_3[k][rcount-1][alphai] = part_count;
             }
-            //Only for debug  
-            if (k==0){
-              Particles[part_count  ] ->ID = part_count; 
-              Particles[part_count  ]->not_write_surf_ID = true;   
-            }//ONLY FOR DEBUG
+            // //Only for debug  
+            // if (k==0){
+              // Particles[part_count  ] ->ID = part_count; 
+              // Particles[part_count  ]->not_write_surf_ID = true;   
+            // }//ONLY FOR DEBUG
             
             part_count++;
          }
@@ -158,20 +158,18 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
     int sym_y_count = 0;
     int sym_x_count;
     for (int k=0;k<last_nonghostrow;k++){
-      cout << "k "<<k<<endl;
       for (int ri=0;ri<radcount;ri++){
         for (int alphai = 0; alphai < ghost_rows; alphai++ ){
           for (int i=0;i<2;i++){
             int id_part = plane_ghost_part_1[i][k][ri][alphai]; 
             if (id_part != -1){
-              cout << "k, r, alpha, id part << " << k<<"," <<ri<< ", " <<alphai << ", " <<id_part<<endl;
+              //cout << "k, r, alpha, id part << " << k<<"," <<ri<< ", " <<alphai << ", " <<id_part<<endl;
               Particles[id_part  ]->ghost_plane_axis = 1;
               
               //Move particle across normal
               //Distance to plane: t = (n . X) - pplane
               //Being pplane the plane coeff n . X = pplane              
               double dist = dot (Particles[id_part]->x,normal_2[i] ) - pplane[i] ;
-              cout << "dist "<<dist<<endl;
               Vec3_t xg = Particles[id_part]->x + 2 * normal_2[i] * abs(dist); //Outer normal
               xp = xg(0); yp = xg(1); 
               
@@ -183,12 +181,12 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
               Particles[part_count  ]->plane_ghost = planes[i];
               Particles[part_count  ]-> ghost_type = Symmetric;
               //Only for debug
-              if (k==0){
-                Particles[part_count  ]->ID = id_part;
+              // if (k==0){
+                // Particles[part_count  ]->ID = id_part;
                 
             // Particles[id_part  ]->ghost_plane_axis = 1;
                      
-              }      
+              //}      
               Particles[part_count  ]->not_write_surf_ID = true;               
               part_count++;
               ghost_count++;
