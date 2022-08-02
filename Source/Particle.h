@@ -40,6 +40,8 @@
 
 #include "Plane.h" //ONLY FOR GHOST
 
+enum Ghost_Type {Symmetric = 0, Periodic = 1, Mirror = 2 };
+
 class Plane;    //For analytical contact 
 namespace SPH {
 
@@ -160,6 +162,8 @@ namespace SPH {
 		bool	FirstStep;	///< to initialize the integration scheme
 		bool	ThermalFirstStep;	///< to initialize the integration scheme
 		bool 	print_history; 		//TODO: CREATE AN ENUM TO VARIABLES
+    
+    Ghost_Type ghost_type;
 		
 		
 		//LUCIANO: THERMAL PROPERTIES

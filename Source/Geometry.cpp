@@ -169,6 +169,7 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
               GhostPairs.Push(std::make_pair(id_part,part_count));
               Particles[part_count  ]->is_ghost = true;
               Particles[part_count  ]->plane_ghost = planes[i];
+              Particles[part_count  ]-> ghost_type = Symmetric;
               //Only for debug
               if (k==0){
                 Particles[part_count  ]->ID = id_part;
@@ -194,6 +195,10 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
           int id_part = plane_ghost_part_3[k][ri][alphai]; 
           xr = - Particles[id_part]->x;
           Particles.Push(new Particle(tag,xr,Vec3_t(0,0,0),0.0,Density,h,false));
+          GhostPairs.Push(std::make_pair(id_part,part_count));
+          
+          Particles[part_count  ]-> ghost_type = Mirror;
+          Particles[part_count  ]-> is_ghost = true;
           part_count++;
           ghost_count++;
         }
