@@ -96,6 +96,9 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
             xp =  /*r +*/ ri * cos (alphai*dalpha);
             yp =  /*r +*/ ri * sin (alphai*dalpha);
             Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+            if (ri == 0.){
+              Particles[part_count]->is_fixed = true;
+            }
             //A particle can be on all zones 
             if (alphai < ghost_rows){
               // if (k==5)
@@ -156,71 +159,84 @@ void Domain::AddCylSliceLength(int tag, double alpha, double Rxy, double Lz,
     }
     
     cout << "pplane"<<pplane<<endl;
-    
-    int sym_y_count = 0;
-    int sym_x_count;
+
     for (int k=0;k<last_nonghostrow;k++){
       for (int ri=0;ri<radcount;ri++){
         for (int alphai = 0; alphai < ghost_rows; alphai++ ){
           for (int i=0;i<2;i++){
             int id_part = plane_ghost_part_1[i][k][ri][alphai]; 
-            if (id_part != -1){
-              //cout << "k, r, alpha, id part << " << k<<"," <<ri<< ", " <<alphai << ", " <<id_part<<endl;
-              Particles[id_part  ]->ghost_plane_axis = 1;
-              
-              //Move particle across normal
-              //Distance to plane: t = (n . X) - pplane
-              //Being pplane the plane coeff n . X = pplane              
-              double dist = dot (Particles[id_part]->x,normal_2[i] ) - pplane[i] ;
-              Vec3_t xg = Particles[id_part]->x + 2 * normal_2[i] * abs(dist); //Outer normal
-              xp = xg(0); yp = xg(1); 
-              
-              zp = Particles[id_part]->x(2);
-            //if (i==1 && alphai == 0) { //TEST
-              Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
-              GhostPairs.Push(std::make_pair(id_part,part_count));
-              Particles[part_count  ]->is_ghost = true;
-              Particles[part_count  ]->plane_ghost = planes[i];
-              Particles[part_count  ]->ghost_type = Symmetric;
-              
-              //Only for debug
-              // if (k==last_nonghostrow-1)
-                // Particles[part_count  ]->ID = id_part;         
-                    
-              Particles[part_count  ]->not_write_surf_ID = true;               
-              part_count++;
-              ghost_count++;
-            } //If !=-1
-            //}//TEST
-          }//i          
-        }//alpha i
-      }//r
-    }//z
-
-    //reflected particles
-    //Particles.Push(new Particle(tag,-Particles[0]->x,Vec3_t(0,0,0),0.0,Density,h,false));
-    Vec3_t xr;
-    for (int k=0;k<last_nonghostrow; k++){
-      for (int ri=0;ri < ghost_rows; ri++){
-        for (int alphai = 0; alphai < tgcount_ref_ghost[ri]; alphai++ ){
-          int id_part = plane_ghost_part_3[k][ri][alphai]; 
-          xr = - Particles[id_part]->x;
-          xr(2) = Particles[id_part]->x(2);
-          Particles.Push(new Particle(tag,xr,Vec3_t(0,0,0),0.0,Density,h,false));
-          GhostPairs.Push(std::make_pair(id_part,part_count));
-          //ONLY FOR DEBUG
-          // if (k==last_nonghostrow-1)
-            // Particles[part_count  ]->ID = id_part;    
-          //Plane Ghost is not necessary here
-          Particles[part_count  ]-> ghost_type = Mirror_XY;
-          Particles[part_count  ]-> is_ghost = true;
-          Particles[part_count  ]->not_write_surf_ID = true;   
-              
-          part_count++;
-          ghost_count++;
+            if (alphai == 0){ //Only First row 
+              Particles[id_part  ]   ->plane_ghost = planes[i];
+              Particles[id_part  ]   ->correct_vel_acc = true;
+            }
+          }
         }
       }
     }
+    
+    // int sym_y_count = 0;
+    // int sym_x_count;
+    // for (int k=0;k<last_nonghostrow;k++){
+      // for (int ri=0;ri<radcount;ri++){
+        // for (int alphai = 0; alphai < ghost_rows; alphai++ ){
+          // for (int i=0;i<2;i++){
+            // int id_part = plane_ghost_part_1[i][k][ri][alphai]; 
+            // if (id_part != -1){
+              // //cout << "k, r, alpha, id part << " << k<<"," <<ri<< ", " <<alphai << ", " <<id_part<<endl;
+              // Particles[id_part  ]->ghost_plane_axis = 1;
+              
+              // //Move particle across normal
+              // //Distance to plane: t = (n . X) - pplane
+              // //Being pplane the plane coeff n . X = pplane              
+              // double dist = dot (Particles[id_part]->x,normal_2[i] ) - pplane[i] ;
+              // Vec3_t xg = Particles[id_part]->x + 2 * normal_2[i] * abs(dist); //Outer normal
+              // xp = xg(0); yp = xg(1); 
+              
+              // zp = Particles[id_part]->x(2);
+            // //if (i==1 && alphai == 0) { //TEST
+              // Particles.Push(new Particle(tag,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));
+              // GhostPairs.Push(std::make_pair(id_part,part_count));
+              // Particles[part_count  ]->is_ghost = true;
+              // Particles[part_count  ]->plane_ghost = planes[i];
+              // Particles[part_count  ]->ghost_type = Symmetric;
+              // //Only for debug
+              // // if (k==last_nonghostrow-1)
+                // // Particles[part_count  ]->ID = id_part;         
+                    
+              // Particles[part_count  ]->not_write_surf_ID = true;               
+              // part_count++;
+              // ghost_count++;
+            // } //If !=-1
+            // //}//TEST
+          // }//i          
+        // }//alpha i
+      // }//r
+    // }//z
+    
+    //
+    //reflected particles
+    // Vec3_t xr;
+    // for (int k=0;k<last_nonghostrow; k++){
+      // for (int ri=0;ri < ghost_rows; ri++){
+        // for (int alphai = 0; alphai < tgcount_ref_ghost[ri]; alphai++ ){
+          // int id_part = plane_ghost_part_3[k][ri][alphai]; 
+          // xr = - Particles[id_part]->x;
+          // xr(2) = Particles[id_part]->x(2);
+          // Particles.Push(new Particle(tag,xr,Vec3_t(0,0,0),0.0,Density,h,false));
+          // GhostPairs.Push(std::make_pair(id_part,part_count));
+          // //ONLY FOR DEBUG
+          // // if (k==last_nonghostrow-1)
+            // // Particles[part_count  ]->ID = id_part;    
+          // //Plane Ghost is not necessary here
+          // Particles[part_count  ]-> ghost_type = Mirror_XY;
+          // Particles[part_count  ]-> is_ghost = true;
+          // Particles[part_count  ]->not_write_surf_ID = true;   
+              
+          // part_count++;
+          // ghost_count++;
+        // }
+      // }
+    // }
           
     cout << "Ghost count "<<ghost_count<<endl;
     

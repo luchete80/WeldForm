@@ -206,6 +206,8 @@ public:
 	inline void CalcPlasticWorkHeat();
 	inline void CalcGradCorrMatrix();	//BONET GRADIENT CORRECTION
 	inline void CalcGradCorrMixedMatrix();	//BONET GRADIENT CORRECTION
+  
+  inline void CorrectVelAcc();  //For axil symm particles
 	
 	inline void MoveGhost();
   inline void PropGhost();

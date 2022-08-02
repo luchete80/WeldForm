@@ -1071,11 +1071,15 @@ inline void Domain::MoveGhost(){
 		//Particles[gi]-> v  = Particles[i]-> v;
     
     double vtg[2], vn;
+    double atg[2], an;
     
     Plane *p = Particles[gi]->plane_ghost;
     
     vn = dot (p->normal,Particles[i]-> v);
     for (int k=0;k<2;k++) vtg[k] = dot (p->tg[k],Particles[i]-> v);
+    an = dot (p->normal,Particles[i]-> a);
+    for (int k=0;k<2;k++) atg[k] = dot (p->tg[k],Particles[i]-> a);
+    
     if (Particles[gi]->ghost_type == Symmetric){
       // if (norm (Particles[i]-> v) > 1.0e-3){
         // cout << "normal "<<p->normal<<endl;
@@ -1085,12 +1089,23 @@ inline void Domain::MoveGhost(){
       // }
       Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
       Particles[gi]-> v -= vn * p->normal;
+      
+      Particles[gi]-> a = atg[0]*p->tg[0] + atg[1]*p->tg[1];
+      Particles[gi]-> a -= an * p->normal;
+      
+
+      
       //cout << "vi vgi "<<Particles[i]-> v <<", " <<Particles[gi]-> v <<endl;
     }
     else if (Particles[gi]->ghost_type == Mirror_XY){
       Particles[gi]-> v(0)  = -Particles[i]-> v(0);
       Particles[gi]-> v(1)  = -Particles[i]-> v(1);
       Particles[gi]-> v(2)  =  Particles[i]-> v(2); 
+      
+      Particles[gi]-> a(0)  = -Particles[i]-> a(0);
+      Particles[gi]-> a(1)  = -Particles[i]-> a(1);
+      Particles[gi]-> a(2)  =  Particles[i]-> a(2); 
+
     }
   // int axis = Particles[gi]-> ghost_plane_axis;
     // //ORIG
@@ -1102,14 +1117,49 @@ inline void Domain::MoveGhost(){
 		// Particles[gi]-> va[axis] = - Particles[i]-> va[axis];
 		// Particles[gi]-> vb[axis] = - Particles[i]-> vb[axis];
 
-		Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
+		//Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
 		
     //Several parameters
-    // Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
-    // Particles[gi]-> Strain  =     Particles[i]-> Strain;
-    // Particles[gi]-> Density  =     Particles[i]-> Density;
+    Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
+    Particles[gi]-> Strain  =     Particles[i]-> Strain;
+    Particles[gi]-> Density  =     Particles[i]-> Density;
 
 	}
+}
+
+inline void Domain::CorrectVelAcc(){  //For axil symm particles
+ 	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif
+    {
+      if (Particles[i]->correct_vel_acc){
+        Plane *p = Particles[i]->plane_ghost;
+        double vtg[2], vn;
+        double atg[2], an;
+    
+        vn = dot (p->normal,Particles[i]-> v);
+        for (int k=0;k<2;k++) vtg[k] = dot (p->tg[k],Particles[i]-> v);
+        an = dot (p->normal,Particles[i]-> a);
+        for (int k=0;k<2;k++) atg[k] = dot (p->tg[k],Particles[i]-> a);        
+
+        Particles[i]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
+        //Particles[i]-> v -= vn * p->normal;
+        
+        Particles[i]-> a = atg[0]*p->tg[0] + atg[1]*p->tg[1];
+        //Particles[i]-> a -= an * p->normal;
+        
+      }
+      
+      if (Particles[i]->is_fixed){
+        Particles[i]-> v(0) =Particles[i]-> v(1) = 0.;
+        Particles[i]-> a(0) =Particles[i]-> a(1) = 0.;
+      }
+
+
+    }      
 }
 
 inline void Domain::PropGhost(){

@@ -84,6 +84,10 @@ namespace SPH {
 		double	Cs;		///< Speed of sound
 		double	P0;		///< background pressure for equation of state
 		double 	Pressure;	///< Pressure of the particle n+1
+    
+    //Boundary corrections
+    bool correct_vel_acc;
+    bool is_fixed;
 
 		double	Density;	///< Density of the particle n+1
 		double 	Densitya;	///< Density of the particle n+1/2 (Leapfrog)

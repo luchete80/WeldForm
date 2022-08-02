@@ -106,6 +106,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
 	Nb=0;
 	
 	Displacement = 0;
+  correct_vel_acc = false;
+  is_fixed = false;
 	
 	Material_model = BILINEAR;
 	delta_pl_strain = 0.0;

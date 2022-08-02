@@ -61,16 +61,14 @@ void UserAcc(SPH::Domain & domi)
 			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
 			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
 			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->v(2)			= -vcompress;
-			domi.Particles[i]->va(2)		= -vcompress;
-			domi.Particles[i]->vb(2)		= -vcompress;
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -150,13 +148,13 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < dx ){
+    		if ( z < 3.*dx ){
     			dom.Particles[a]->ID=2;
 	    			// dom.Particles[a]->IsFree=false;
     			// dom.Particles[a]->NoSlip=true;			
           bottom_count++;
 				}
-    		if ( z > L - dx ) {//Changed to only last row
+    		if ( z > L - 3.*dx ) {//Changed to only last row
     			dom.Particles[a]->ID=3;
 					//dom.Particles[a]->XSPH		= 0.1;
 					forcepart_count++;
@@ -171,7 +169,7 @@ int main(int argc, char **argv) try
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
-    timestep = (1.0*h/(Cs+VMAX));
+    timestep = (0.7*h/(Cs+VMAX));
     //timestep = 2.5e-6;
     dom.auto_ts = false;
     //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	

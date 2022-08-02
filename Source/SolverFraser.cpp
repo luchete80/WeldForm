@@ -235,7 +235,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //BEFORE
     Vec3_t du;    
     GeneralAfter(*this);//Reinforce BC vel   
-    MoveGhost(); 
+    //CorrectVelAcc();
+    //MoveGhost(); 
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->x_prev = Particles[i]->x;
@@ -255,7 +256,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a * deltat;
     }
-    MoveGhost();   
+    //CorrectVelAcc();
+    //MoveGhost();   
+    
     GeneralAfter(*this);//Reinforce BC vel   
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
 
