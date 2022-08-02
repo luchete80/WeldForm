@@ -1074,7 +1074,7 @@ inline void Domain::MoveGhost(){
     
     Plane *p = Particles[gi]->plane_ghost;
     
-    //vn = dot (p->normal,Particles[i]-> v)
+    vn = dot (p->normal,Particles[i]-> v);
     for (int i=0;i<2;i++) vtg[i] = dot (p->tg[i],Particles[i]-> v);
     if (Particles[gi]->ghost_type == Symmetric){
       Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
