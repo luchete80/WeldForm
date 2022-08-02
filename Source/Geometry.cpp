@@ -353,6 +353,8 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
 		
 		cout << "Total Particle count: " << Particles.Size() <<endl;
 		cout << "Particle mass: " << Mass <<endl;
+    
+    solid_part_count = Particles.Size();
 
 		#pragma omp parallel for num_threads(Nproc)
 		#ifdef __GNUC__

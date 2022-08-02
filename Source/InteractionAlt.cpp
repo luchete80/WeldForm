@@ -170,16 +170,20 @@ inline void Domain::CalcAccel() {
 }
 
 inline void Domain::AccelReduction(){
-  #pragma omp parallel for schedule (static) num_threads(Nproc)
-  for (int i=0; i<Particles.Size();i++)
-    Particles[i]->a = 0.;
-  #pragma omp parallel for schedule (static) num_threads(Nproc)
-  for (int i=0; i<Particles.Size();i++){
-    for (int n=0;n<ipair_SM[i];n++){  
-      //cout << "p i<j rot " <<  Aref[i][n]<<", "<<Anei[i][n] << ", " << pair_force[Aref[i][n]]<<endl;
-      Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
-    for (int n=0;n<jpair_SM[i];n++){   
-      Particles[i]->a -= Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}    
+  if (solid_part_count > 0){
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (int i=0; i<solid_part_count;i++)
+      Particles[i]->a = 0.;
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (int i=0; i<solid_part_count;i++){
+      for (int n=0;n<ipair_SM[i];n++){  
+        //cout << "p i<j rot " <<  Aref[i][n]<<", "<<Anei[i][n] << ", " << pair_force[Aref[i][n]]<<endl;
+        Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
+      for (int n=0;n<jpair_SM[i];n++){   
+        Particles[i]->a -= Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}    
+    }
+  } else {
+    cout << "ERROR, particle count not defined"<<endl;
   }
 }
 
@@ -361,7 +365,7 @@ inline void Domain::CalcRateTensors() {
 inline void Domain::RateTensorsReduction(){
   //Not necesay to set to zero here. Are in domain
   #pragma omp parallel for schedule (static) num_threads(Nproc)
-  for (int i=0; i<Particles.Size();i++){
+  for (int i=0; i<solid_part_count;i++){
     for (int n=0;n<ipair_SM[i];n++){    
       double mjdj = Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density;
       Particles[i]->StrainRate    = Particles[i]->StrainRate   + mjdj * pair_StrainRate[Aref[i][n]];
@@ -478,7 +482,7 @@ inline void Domain::CalcDensInc() {
 
 inline void Domain::DensReduction(){
   #pragma omp parallel for schedule (static) num_threads(Nproc)
-  for (int i=0; i<Particles.Size();i++){
+  for (int i=0; i<solid_part_count;i++){
     Particles[i]->dDensity = 0.;
     for (int n=0;n<ipair_SM[i];n++){  
       Particles[i]->dDensity += Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density * pair_densinc[Aref[i][n]];

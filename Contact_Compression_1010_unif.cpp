@@ -169,7 +169,7 @@ int main() try{
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true;
+	dom.gradKernelCorr = false;
 	int top, bottom, center;
   top = bottom = center = 0;   
   int center_top = 0;			
@@ -202,7 +202,7 @@ int main() try{
       search = false;
       cout << "Particle per row "<<part_per_row<<endl;
     }
-
+ 
     // //If friction is null, the cylinder not slide
     // if ( abs (z - (L/2.-dx)) < dx/2. && (abs(x - R) < 1.5*dx  || abs(x + R) < 1.5*dx ) && abs(y) < 1.1*dx){
       // dom.Particles[a]->ID=2;	  
@@ -271,7 +271,8 @@ int main() try{
   timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
-	dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+	dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/timestep,"test06",1000);  
 	
   dom.WriteXDMF("ContactTest");
 }

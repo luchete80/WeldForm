@@ -2,6 +2,7 @@
 #include "Domain.h"
 #include <iostream>
 #include "InteractionAlt.cpp"
+#include "SolverFraser.cpp"
 
 #define VMAX	0.1
 
@@ -19,10 +20,15 @@ void UserAcc(SPH::Domain & domi) {
 	#endif
 	
 	{
-		if (domi.Particles[i]->ID == 2) 
+    //In fraser algorithm acceleration should be fixed
+		if (domi.Particles[i]->ID == 2) {
 			domi.Particles[i]->v			= Vec3_t(0.0,0.0,0.0);
-    else if (domi.Particles[i]->ID == 3) 
+			domi.Particles[i]->a			= Vec3_t(0.0,0.0,0.0);
+    }
+    else if (domi.Particles[i]->ID == 3) {
 			domi.Particles[i]->v			= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->a			= Vec3_t(0.0,0.0,0.0);
+    }
   }
 }
 
@@ -80,7 +86,7 @@ int main() try{
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	dom.gradKernelCorr = true;
+	dom.gradKernelCorr = false;
 
 	int top_part = 0;
   int bottom_part = 0;
@@ -115,11 +121,14 @@ int main() try{
   
   dom.auto_ts = false;
 //  	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
+  dom.auto_ts=true; 
+  dom.CFL = 0.7;
+  timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   
-	timestep = (1.0*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-	dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-  
-	dom.WriteXDMF("ContactTest");
+	//dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	
+  dom.WriteXDMF("ContactTest");
 }
 MECHSYS_CATCH

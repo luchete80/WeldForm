@@ -147,6 +147,8 @@ inline Domain::Domain ()
   meshcount = 0;
   h_update = false;
   
+  solid_part_count = -1;  //For nonlock reduction sum
+  
   CFL = 0.7;
 }
 
@@ -768,6 +770,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 		// temp = Max-V;
 		// double Mass = temp(0)*temp(1)*temp(2)*Density/(Particles.Size()-PrePS);
 		
+    solid_part_count = Particles.Size();
+    
 		double Vol = M_PI * Rxy * Rxy * Lz;		
 		//double Mass = Vol * Density / (Particles.Size()-PrePS);
 		double Mass = Vol * Density /Particles.Size();

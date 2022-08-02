@@ -43,7 +43,7 @@
 #include "Mesh.h"
 #include "Plane.h"
 
-//#define NONLOCK_SUM
+//#define NONLOCK_SUM 
 #define MAX_NB_PER_PART 100
 
 //C++ Enum used for easiness of coding in the input files
@@ -252,6 +252,7 @@ public:
 	
   int ts_nb_inc;
   
+  int solid_part_count;
   //TEST
   //Forces calculation time spent
   double forces_tensile_inst_calctime, forces_stressstrain_calctime,forces_acc_calctime,
