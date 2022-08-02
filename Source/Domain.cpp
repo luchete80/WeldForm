@@ -1120,9 +1120,9 @@ inline void Domain::MoveGhost(){
 		//Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
 		
     //Several parameters
-    Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
-    Particles[gi]-> Strain  =     Particles[i]-> Strain;
-    Particles[gi]-> Density  =     Particles[i]-> Density;
+    // Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
+    // Particles[gi]-> Strain  =     Particles[i]-> Strain;
+    // Particles[gi]-> Density  =     Particles[i]-> Density;
 
 	}
 }
