@@ -105,7 +105,7 @@ SET(EXES
   #Contact_Compression_TRIP_half_ghost
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
-  Contact_Compression_1010_unif
+  #Contact_Compression_1010_unif
   #Compression_1010
   #Contact_Compression_1010
   #Compression_1010_qt
@@ -153,7 +153,7 @@ SET(EXES
 	#Plate-Yield_CNS_v2
 	#Plate-Yield_3d_al
 	#Plate-Yield_3d_al_CNS
-  #SolidBlock_Heat_T
+  SolidBlock_Heat_T
 	#slice_test
   #SolidBlock_HeatSOA
 	#SolidBlock_Heat_CNS

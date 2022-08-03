@@ -103,7 +103,7 @@ int main(int argc, char **argv) try
   Fy	= 300.e6;
   //dx	= L / (n-1);
   //dx = L/(n-1);
-  dx = 0.015;
+  dx = 0.010;
   h	= dx*1.2; //Very important
     Cs	= sqrt(K/rho);
 
