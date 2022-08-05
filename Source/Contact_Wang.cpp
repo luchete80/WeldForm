@@ -242,12 +242,12 @@ inline void Domain::CalcContactForcesWang(){
                     Particles[P1] -> a -= friction_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
                   omp_unset_lock(&Particles[P1]->my_lock);
 
-                  // if (thermal_solver){
-                    // omp_set_lock(&Particles[P1]->my_lock);
-                    // Particles[P1]->q_fric_work = dot(tgforce,vr) * Particles[P1]->Mass / Particles[P1]->Density; //J/(m3.s)
-                    // //cout<< Particles[P1]->q_fric_work<<endl;
-                    // omp_unset_lock(&Particles[P1]->my_lock);
-                  // }
+                  if (thermal_solver){
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1]->q_fric_work = dot(tgforce,vr) * Particles[P1]->Mass / Particles[P1]->Density; //J/(m3.s)
+                    //cout<< Particles[P1]->q_fric_work<<endl;
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                  }
                   // //if (P1 == 12415) cout << "SURPASSED, applying  " << friction_sta * norm(imp_force)* tgforce/norm(tgforce) <<endl;
                 }         
 
