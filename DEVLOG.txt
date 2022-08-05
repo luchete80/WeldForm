@@ -115,3 +115,6 @@
              Fixed Ghost boundary conditions
              Added homogeneous cyl mesher. 
              Fixed Fraser for NONLOCK reduction.
+20220805  -  Added Frictional Work to Wang contact.
+             Added thermal calculation to fraser integrator.
+             

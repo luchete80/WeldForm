@@ -7,7 +7,7 @@
 
 #define TAU		0.0005
 #define VMAX	1.00
-#define DX 0.0009
+#define DX 0.0012
 
 using namespace SPH;
 using namespace std;

@@ -170,6 +170,7 @@ int main(int argc, char **argv) try
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
     timestep = (1.0*h/(Cs+VMAX)); 
+    dom.CFL = 1.0;
     //timestep = 2.5e-6;
     dom.auto_ts = false;
     //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	

@@ -1,7 +1,9 @@
 #include "Mesh.h"
 #include "Domain.h"
 #include "NastranReader.h"
-
+#include "InteractionAlt.cpp"
+#include "SolverKickDrift.cpp"
+#include "SolverFraser.cpp"
 
 #define VFAC			1.0
 #define VAVA			5.833e-4		//35 mm/min
@@ -32,15 +34,20 @@ void UserAcc(SPH::Domain & domi) {
       domi.Particles[i]->VXSPH(1) = 0.;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
+    
+    if (domi.Particles[i]->ID == 3) {
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);      
+    }
 
 	}
 	//Mesh is updated automatically
-  for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
-    domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
-    //THIS SHOULD BE FROM BARICENTER AND AUTOMATIC!
-    //domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
-  }
-
+  // for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
+    // domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
+    // //THIS SHOULD BE FROM BARICENTER AND AUTOMATIC!
+    // //domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
+  // }
+  //domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
 }
 
 
@@ -137,7 +144,7 @@ int main(int argc, char **argv) try
   SPH::TriMesh mesh(reader);
   
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
-  double cyl_zmax = L/2. + dx*0.6 -1.e-3; //If new meshing  
+  double cyl_zmax = L/2. + dx*0.6 /*-1.e-3*/; //If new meshing  
 
 	cout << "Creating contact mesh.."<<endl;
 	
@@ -152,7 +159,7 @@ int main(int argc, char **argv) try
 	mesh.CalcSpheres(); //DONE ONCE
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
-	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
     
   
 	dom.ts_nb_inc = 5;
@@ -173,8 +180,8 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->Material	= 2;
 			dom.Particles[a]->Fail		= 1;
 			dom.Particles[a]->Sigmay	= Fy;
-			dom.Particles[a]->Alpha		= 1.0;
-			//dom.Particles[a]->Beta		= 1.0;
+			dom.Particles[a]->Alpha		= 2.0;
+			dom.Particles[a]->Beta		= 2.0;
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
       
@@ -253,10 +260,10 @@ int main(int argc, char **argv) try
   dom.fric_type = Fr_Dyn;
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.15;
-  dom.friction_sta = 0.0;
-	dom.PFAC = 0.3;
-	dom.DFAC = 0.2;
+	dom.friction_dyn = 0.2;
+  dom.friction_sta = 0.2;
+	dom.PFAC = 0.6;
+	dom.DFAC = 0.0;
 	dom.update_contact_surface = false;
 
   dom.WriteXDMF("maz");
@@ -264,16 +271,22 @@ int main(int argc, char **argv) try
   dom.BC.InOutFlow = 0;
   
   // SET TOOL BOUNDARY CONDITIONS
-  dom.trimesh->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
-  dom.trimesh->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
+  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
+  dom.trimesh[0]->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
 
 
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
-  timestep = 1.e-8;
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
+   
+  timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
+  //dom.auto_ts=false;
+
+  dom.auto_ts=true;
   
+  //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
+  dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+    
   return 0;
 }
 MECHSYS_CATCH
