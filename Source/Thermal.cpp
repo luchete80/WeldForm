@@ -470,8 +470,8 @@ inline void Domain::ThermalCalcs(const double &dt){
     m_maxT = 0.;
     m_minT =1000.;    
     for (size_t i=0; i<Particles.Size(); i++){
-			//Particles[i]->T+= dt*Particles[i]->dTdt;
-			Particles[i]->TempCalcLeapfrog(dt);
+			Particles[i]->T+= dt*Particles[i]->dTdt;
+			//Particles[i]->TempCalcLeapfrog(dt);
 			if (Particles[i]->T > m_maxT)
 				m_maxT=Particles[i]->T;
 			if (Particles[i]->T < m_minT)
