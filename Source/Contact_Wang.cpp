@@ -24,13 +24,14 @@ inline void Domain::CalcContactForcesWang(){
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
 	
-  //#pragma omp parallel for num_threads(Nproc)
+  #pragma omp parallel for num_threads(Nproc)
   for (int i = 0;i<Particles.Size();i++){
-		omp_set_lock(&Particles[i]->my_lock);
+		//omp_set_lock(&Particles[i]->my_lock);
 		Particles[i] -> contforce = 0.; //RESET    
 		Particles[i] -> delta_cont = 0.; //RESET    
 		Particles[i] -> tgdir = 0.;				//TODO: DELETE (DEBUG) 
-		omp_unset_lock(&Particles[i]->my_lock);
+    Particles[i] -> q_fric = 0.;
+		//omp_unset_lock(&Particles[i]->my_lock);
 		inside_part[i] = 0;
 		inside_time=inside_geom=0;
   }
@@ -240,8 +241,16 @@ inline void Domain::CalcContactForcesWang(){
                     if (norm(tgforce)>1.0e-2)
                     Particles[P1] -> a -= friction_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
                   omp_unset_lock(&Particles[P1]->my_lock);
+
+                  if (thermal_solver){
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+                    //cout<< Particles[P1]->q_fric_work<<endl;
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                  }
                   // //if (P1 == 12415) cout << "SURPASSED, applying  " << friction_sta * norm(imp_force)* tgforce/norm(tgforce) <<endl;
-                }                
+                }         
+
                 //VELOCITY CRITERIA 
                 // tgforce = vr_pred/deltat*Particles[P1]->Mass - imp_force;
                // if (ref_accel) ref_tg = atg * Particles[P1]->Mass;

@@ -38,6 +38,7 @@ private:
   //TriMesh trimesh;
 	
 	public:
+  NastranReader(){}
 	NastranReader(char* fName){read(fName);}
 	
 	void WriteCSV(char const * FileKey);

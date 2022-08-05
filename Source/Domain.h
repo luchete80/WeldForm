@@ -166,6 +166,8 @@ public:
 	void ThermalSolve_wo_init	(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
   inline void ThermalCalcs(const double &dt);
   
+  //inline void CalcContactFrictionHeat();
+  
   
   void AddFixedMassScaling (const double &factor);
   inline void UpdateSmoothingLength();

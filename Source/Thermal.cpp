@@ -127,7 +127,7 @@ inline void Domain::CalcTempInc () {
 
 		if (contact)
 			Particles[i]->dTdt += Particles[i]->q_fric_work;
-		if (Particles[i]->dTdt>max){
+		if (Particles[i]->dTdt > max){
 			max= Particles[i]->dTdt;
 			imax=i;
 		}
