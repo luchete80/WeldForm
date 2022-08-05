@@ -133,7 +133,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  double ybottom = -H + dx/5; 
+  double ybottom = -H - dx; 
   
   double ytop = ybottom + H ; 
   
@@ -144,7 +144,7 @@ int main(int argc, char **argv) try
   SPH::TriMesh mesh(reader);
   
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
-  double cyl_zmax = L/2. + 4.0 * dx/*-1.e-3*/; //If new meshing  
+  double cyl_zmax = L/2. + 5.0 * dx/*-1.e-3*/; //If new meshing  
 
 	cout << "Creating contact mesh.."<<endl;
 	
