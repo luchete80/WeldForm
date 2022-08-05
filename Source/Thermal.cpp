@@ -304,20 +304,21 @@ inline void Domain::CalcPlasticWorkHeat (){ //TODO: Detect Free Surface Elements
 	for (int i=0; i<Particles.Size(); i++){//Like in Domain::Move
 	#endif
 	
-			//cout << "dS2" <<dS2<<endl;
-			//cout << Particles[i]->Density<<endl;
-			Particles[i]->q_plheat=
+			// //cout << "dS2" <<dS2<<endl;
+			// //cout << "dS2" <<dS2<<endl;
+			// //cout << Particles[i]->Density<<endl;
+			// Particles[i]->q_plheat=
 			
-					double J2	= 0.5*(ShearStress(0,0)*ShearStress(0,0) + 2.0*ShearStress(0,1)*ShearStress(1,0) +
-						2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
-						2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
+					// double J2	= 0.5*(ShearStress(0,0)*ShearStress(0,0) + 2.0*ShearStress(0,1)*ShearStress(1,0) +
+						// 2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
+						// 2.0*ShearStress(1,2)*ShearStress(2,1) + ShearStress(2,2)*ShearStress(2,2));
 						
-						;
-			if (Particles[i]->q_conv>max){
-				max= Particles[i]->q_conv;
-				imax=i;
-			}
-			//cout << "Particle  "<<Particles[i]->Mass<<endl;
+						// ;
+			// if (Particles[i]->q_conv>max){
+				// max= Particles[i]->q_conv;
+				// imax=i;
+			// }
+			// //cout << "Particle  "<<Particles[i]->Mass<<endl;
 		
 	}		
 	//cout << "Max Convection: " << max <<"in particle " << imax <<endl;
