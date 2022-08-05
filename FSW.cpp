@@ -144,7 +144,7 @@ int main(int argc, char **argv) try
   SPH::TriMesh mesh(reader);
   
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
-  double cyl_zmax = L/2. + 2.0 * dx/*-1.e-3*/; //If new meshing  
+  double cyl_zmax = L/2. + 4.0 * dx/*-1.e-3*/; //If new meshing  
 
 	cout << "Creating contact mesh.."<<endl;
 	
