@@ -133,7 +133,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  double ybottom = -H - dx; 
+  double ybottom = -H - dx/2; 
   
   double ytop = ybottom + H ; 
   
