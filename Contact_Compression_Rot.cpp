@@ -147,6 +147,12 @@ int main(){
 		dom.Particles[a]->Beta		= 1.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
+
+      dom.Particles[a]->k_T			  =	130.;
+			dom.Particles[a]->cp_T			=	960.;
+
+			dom.Particles[a]->T				  = 20.0;		
+      
     double x = dom.Particles[a]->x(0);
     double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
