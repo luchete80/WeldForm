@@ -530,7 +530,9 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
     }
 		
 		cout << "Particle Count: "<<Particles.Size()<< endl;
-
+    
+    solid_part_count = Particles.Size(); //FOR NEW REDUCTION
+        
 	R = r;
 }
 

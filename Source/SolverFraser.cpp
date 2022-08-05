@@ -269,6 +269,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     for (size_t i=0; i<Particles.Size(); i++)
       prev_acc[i] = Particles[i]->a;
    
+    //ThermalCalcs(deltat);
 
 		clock_beg = clock();        
     CalcKinEnergyEqn();    
