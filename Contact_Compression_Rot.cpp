@@ -88,6 +88,30 @@ int main(){
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
+	double E  = 68.9e9;
+	double nu = 0.3;
+  
+	Elastic_ el(E,nu);
+///// MATERIAL CONSTANTS EXAMPLE FROM
+///// Zhang_2017 (Aluminium)
+  double A,B,C,n_,m,T_m,T_t,eps_0;
+  A = 175.e6; B = 380.0e6; C = 0.0015;
+  m = 1.0;  n_ = 0.34; eps_0 = 1.0;
+  T_m = 775.; T_t = 273.;
+			
+	// 𝐴
+// 𝐽𝐶 276.0 MPa
+// 𝐵
+// 𝐽𝐶 255.0 MPa
+// 𝑛𝐽𝐶 0.3 -
+// 𝑚𝐽𝐶 1.0
+			
+	//Hollomon(const double eps0_, const double &k_, const double &m_):
+	//Hollomon mat(el,Fy/E,1220.e6,0.195);
+	JohnsonCook mat(el, A,B,C,
+                      m,n_,eps_0,
+                      T_m, T_t);	
+                      
 	double timestep;
 	timestep = (0.2*h/(Cs));
 
@@ -134,6 +158,10 @@ int main(){
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
+
+				dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
+				dom.Particles[a]->mat = &mat;
+        
 		dom.Particles[a]->G		= G;
 		dom.Particles[a]->PresEq	= 0;
 		dom.Particles[a]->Cs		= Cs;
@@ -142,7 +170,9 @@ int main(){
 		//dom.Particles[a]->Et_m = 0.01 * 68.9e9;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
-		dom.Particles[a]->Sigmay	= Fy;
+		//dom.Particles[a]->Sigmay	= Fy;
+    dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);
+
 		dom.Particles[a]->Alpha		= 1.0;
 		dom.Particles[a]->Beta		= 1.0;
 		dom.Particles[a]->TI		= 0.3;
@@ -192,7 +222,7 @@ int main(){
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
-    dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,1200*M_PI/30.));  //axis rotation m_w
+    dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,600*M_PI/30.));  //axis rotation m_w
       dom.thermal_solver = true;
   dom.cont_heat_gen = true;
   //dom.auto_ts_cont = true;

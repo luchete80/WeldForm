@@ -119,4 +119,4 @@
              Added thermal calculation to fraser integrator.
 20220809  -  Fixed frictional work.
              Added Min - Max temperatures in Fraser integration output LOG.
-             
+             Changed material of rotation compression to Johnson Cook.
