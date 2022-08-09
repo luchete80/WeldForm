@@ -222,7 +222,7 @@ int main(){
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
-    dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,600*M_PI/30.));  //axis rotation m_w
+    dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,60*M_PI/30.));  //axis rotation m_w
       dom.thermal_solver = true;
   dom.cont_heat_gen = true;
   //dom.auto_ts_cont = true;
