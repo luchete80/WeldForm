@@ -343,6 +343,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
         cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
 
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
+      if (thermal_solver)
+        std::cout << "Max, Min, Avg temps: "<< m_maxT << ", " << m_minT << ", " << (m_maxT+m_minT)/2. <<std::endl;      
       
       ofprop <<getTime() << ", "<<m_scalar_prop<<endl;
 			

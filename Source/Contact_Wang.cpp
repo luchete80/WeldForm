@@ -246,7 +246,7 @@ inline void Domain::CalcContactForcesWang(){
                     omp_set_lock(&Particles[P1]->my_lock);
                     Particles[P1]->q_fric_work = dot(tgforce,vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
                     omp_unset_lock(&Particles[P1]->my_lock);
-                    cout<< "fric work" <<Particles[P1]->q_fric_work<<endl;
+                    //cout<< "fric work" <<Particles[P1]->q_fric_work<<endl;
                   }
                   // //if (P1 == 12415) cout << "SURPASSED, applying  " << friction_sta * norm(imp_force)* tgforce/norm(tgforce) <<endl;
                 }         

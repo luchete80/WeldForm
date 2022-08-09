@@ -117,4 +117,6 @@
              Fixed Fraser for NONLOCK reduction.
 20220805  -  Added Frictional Work to Wang contact.
              Added thermal calculation to fraser integrator.
+20220809  -  Fixed frictional work.
+             Added Min - Max temperatures in Fraser integration output LOG.
              
