@@ -86,7 +86,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.0007;
+	dx = 0.0006;
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -101,12 +101,12 @@ int main(int argc, char **argv) try
   m = 1.0;  n_ = 0.3; eps_0 = 1.0;
   T_m = 775.; T_t = 273.;
 			
-	// 𝐴
-// 𝐽𝐶 276.0 MPa
-// 𝐵
-// 𝐽𝐶 255.0 MPa
-// 𝑛𝐽𝐶 0.3 -
-// 𝑚𝐽𝐶 1.0
+  // 𝐴
+  // 𝐽𝐶 276.0 MPa
+  // 𝐵
+  // 𝐽𝐶 255.0 MPa
+  // 𝑛𝐽𝐶 0.3 -
+  // 𝑚𝐽𝐶 1.0
 
 	JohnsonCook mat(el, A,B,C,
                       m,n_,eps_0,
@@ -133,9 +133,9 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  double ybottom = -H - dx/2.45; 
+  double ybottom = -H - dx/1.45;  
   
-  double ytop = ybottom + H -dx/4.; 
+  double ytop = ybottom + H ; 
   
   dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
@@ -167,6 +167,7 @@ int main(int argc, char **argv) try
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
   int bottom_particles = 0;
+  int top_particles = 0;
   int side_particles  =0;
 		for (size_t a=0; a<dom.Particles.Size(); a++)
 		{
@@ -202,10 +203,10 @@ int main(int argc, char **argv) try
         bottom_particles++;
       }
 
-      if (r > SUPPRAD && y > ( ytop - 2*dx ) ){
+      if (r > SUPPRAD && y > ( ytop - dx ) ){
         dom.Particles[a]->ID=2; //ID 1 is free surface  
         dom.Particles[a]->not_write_surf_ID = true;
-        bottom_particles++;
+        top_particles++;
       }
 			
 			
@@ -251,7 +252,8 @@ int main(int argc, char **argv) try
 				// dom.Particles[a]->ID=10;         
 		}
     
-  cout << "Top & Bottom particles: " << bottom_particles << endl;
+  cout << "Bottom particles: " << bottom_particles << endl;
+  cout << "Top particles: " << top_particles << endl;
   cout << "Side particles: " << side_particles<<endl;
 		
     // dom.Particles[0]->IsFree=false;
