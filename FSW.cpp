@@ -133,9 +133,9 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  double ybottom = -H - dx/2; 
+  double ybottom = -H - dx/1.25; 
   
-  double ytop = ybottom + H ; 
+  double ytop = ybottom + H -dx/4.; 
   
   dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
@@ -180,8 +180,8 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->Material	= 2;
 			dom.Particles[a]->Fail		= 1;
 			dom.Particles[a]->Sigmay	= Fy;
-			dom.Particles[a]->Alpha		= 2.0;
-			dom.Particles[a]->Beta		= 2.0;
+			dom.Particles[a]->Alpha		= 1.0;
+			//dom.Particles[a]->Beta		= 2.0;
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
       
@@ -285,7 +285,7 @@ int main(int argc, char **argv) try
   dom.auto_ts=true;
   
   //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
-  dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/1.e-6  ,"test06",1000);
     
   return 0;
 }

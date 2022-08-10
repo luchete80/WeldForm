@@ -120,3 +120,4 @@
 20220809  -  Fixed frictional work.
              Added Min - Max temperatures in Fraser integration output LOG.
              Changed material of rotation compression to Johnson Cook.
+20220810  -  Changed max displacement (Now only are calculated from solid particles, excluding contact ones
