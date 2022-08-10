@@ -67,7 +67,7 @@ int main(int argc, char **argv) try
     double dx,h,rho,K,G,Cs,Fy;
 		double H,L,n;
 
-		H	= 0.003;
+		H	= 0.001;
 		L	= 0.05;
     
 		n	= 30.0;		//in length, radius is same distance
@@ -86,7 +86,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.0006;
+	dx = 0.00025;
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -231,33 +231,7 @@ int main(int argc, char **argv) try
         dom.Particles[a]->IsFree=false;
         side_particles++;
 			}			
-			
-			// if ( x < dx  && x > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=1;
-			// if ( y < dx  && y > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=2; 
-				
-			//x,y, central symmetry
-			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=4;  
-			
-			// if ( y < dx  && y > -dx/2. && z < dx  && z > -dx/2. ) //yz -5
-				// dom.Particles[a]->ID=5;           
-			// if (  x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 6
-				// dom.Particles[a]->ID=6;         
-			
-			//First one captures 4 particle, second one
-			//if ( y < dx  && y > -dx && x < dx  && x > -dx && z < dx  && z > -dx/2. ) //xz - 7
-			// if ( y < dx  && y > -dx && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
-				// dom.Particles[a]->ID=7;   
-
-			//TOP
-			// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
-				// dom.Particles[a]->ID=8;           
-			// if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
-				// dom.Particles[a]->ID=9;         
-			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
-				// dom.Particles[a]->ID=10;         
+     
 		}
     
   cout << "Bottom particles: " << bottom_particles << endl;
