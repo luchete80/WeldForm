@@ -283,7 +283,7 @@ int main(int argc, char **argv) try
   dom.BC.InOutFlow = 0;
   
   // SET TOOL BOUNDARY CONDITIONS
-  //dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
+  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
   dom.trimesh[0]->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
 
 
