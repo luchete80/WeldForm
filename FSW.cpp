@@ -5,7 +5,7 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-#define VFAC			1.0
+#define VFAC			15.0
 #define VAVA			5.833e-4		//35 mm/min
 #define WROT 			1200.0 	    //rpm
 #define TOOLRAD   0.0062
@@ -67,7 +67,7 @@ int main(int argc, char **argv) try
     double dx,h,rho,K,G,Cs,Fy;
 		double H,L,n;
 
-		H	= 0.005;
+		H	= 0.003;
 		L	= 0.05;
     
 		n	= 30.0;		//in length, radius is same distance
@@ -86,7 +86,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.00085;
+	dx = 0.0007;
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -96,10 +96,10 @@ int main(int argc, char **argv) try
 	Elastic_ el(E,nu);
 ///// MATERIAL CONSTANTS EXAMPLE FROM
 ///// Zhang_2017 (Aluminium) ?
-      double A,B,C,n_,m,T_m,T_t,eps_0;
-      A = 276.e6; B = 255.0e6; C = 0.0015;
-      m = 1.0;  n_ = 0.3; eps_0 = 1.0;
-      T_m = 775.; T_t = 273.;
+  double A,B,C,n_,m,T_m,T_t,eps_0;
+  A = 276.e6; B = 255.0e6; C = 0.0015;
+  m = 1.0;  n_ = 0.3; eps_0 = 1.0;
+  T_m = 775.; T_t = 273.;
 			
 	// 𝐴
 // 𝐽𝐶 276.0 MPa
@@ -133,7 +133,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  double ybottom = -H - dx/1.25; 
+  double ybottom = -H - dx/2.45; 
   
   double ytop = ybottom + H -dx/4.; 
   
@@ -185,8 +185,8 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
       
-      dom.Particles[a]->k_T			  =	130.;
-			dom.Particles[a]->cp_T			=	960.;
+      dom.Particles[a]->k_T			  =	130.*VFAC;  //[W/(m.K)]
+			dom.Particles[a]->cp_T			=	960.;       //[J/(kg.K)]
 			// dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			// dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				  = 20.0;			
@@ -271,7 +271,7 @@ int main(int argc, char **argv) try
   dom.BC.InOutFlow = 0;
   
   // SET TOOL BOUNDARY CONDITIONS
-  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
+  //dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
   dom.trimesh[0]->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
 
 
@@ -285,7 +285,7 @@ int main(int argc, char **argv) try
   dom.auto_ts=true;
   
   //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
-  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/1.e-6  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
 }
