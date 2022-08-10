@@ -82,7 +82,7 @@ int main(int argc, char **argv) try
 	K= E / ( 3.*(1.-2*nu) );
 	G= E / (2.* (1.+nu));
 
-	Fy	= 350.e6;  
+	Fy	= 350.e6;   
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
@@ -202,13 +202,13 @@ int main(int argc, char **argv) try
         dom.Particles[a]->not_write_surf_ID = true;
         bottom_particles++;
         
-        if (r < TOOLRAD){
-          dom.Particles[a]->ID = 4; //ID 1 is free surface  
-          dom.Particles[a]->not_write_surf_ID = true;
+        //if (r < TOOLRAD){
+          // dom.Particles[a]->ID = 4; //ID 1 is free surface  
+          // dom.Particles[a]->not_write_surf_ID = true;
           dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
           dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
           dom.Particles[a]->T_inf 		= 20.;
-        }
+        //}
       }
 
       if (r > SUPPRAD && y > ( ytop - dx ) ){
