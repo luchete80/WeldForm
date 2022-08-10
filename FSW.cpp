@@ -27,12 +27,14 @@ void UserAcc(SPH::Domain & domi) {
     //Vertical Constraint
 		if (domi.Particles[i]->ID == 2) {
 			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-      domi.Particles[i]->a(1)		  = 0.;
-			domi.Particles[i]->va(1)	  = 0.;
-			domi.Particles[i]->v(1)		  = 0.;
-			domi.Particles[i]->vb(1)	  = 0.;
-      domi.Particles[i]->VXSPH(1) = 0.;
+      // domi.Particles[i]->a(1)		  = 0.;
+			// domi.Particles[i]->va(1)	  = 0.;
+			// domi.Particles[i]->v(1)		  = 0.;
+			// domi.Particles[i]->vb(1)	  = 0.;
+      // domi.Particles[i]->VXSPH(1) = 0.;
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);   
 		}
     
     if (domi.Particles[i]->ID == 3) {
