@@ -206,7 +206,6 @@ public:
   inline void CalcTempIncPP();
 	inline void CalcConvHeat ();
 	inline void CalcConvHeatSOA();
-	inline void CalcPlasticWorkHeat();
 	inline void CalcGradCorrMatrix();	//BONET GRADIENT CORRECTION
 	inline void CalcGradCorrMixedMatrix();	//BONET GRADIENT CORRECTION
   
