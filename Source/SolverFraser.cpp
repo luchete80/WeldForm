@@ -338,6 +338,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			std::cout << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
+      if (max > 0.)
+        cout<<"Plastic Work "<<plastic_work<<endl;
 			cout << "Max Displacements (No Cont Surf): "<<max_disp<<endl;
       if (contact) {
         cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;

@@ -151,7 +151,7 @@ inline Domain::Domain ()
   
   CFL = 0.7;
   friction_function = Constant;
-  contact_friction_work = 0.;
+  contact_friction_work = plastic_work = ext_f_work = 0.;
 }
 
 inline Domain::~Domain ()
