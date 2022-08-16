@@ -220,7 +220,10 @@ public:
 	/////////////////////// CONTACT /////////////////////////////
 	void AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id);
   void CalculateSurface(const int &id = 1);
-	inline void CalcContactForces();
+  
+  void GenerateSPHMesh(const int &tag, NastranReader &nr,double Density);
+	
+  inline void CalcContactForces();
   inline void CalcContactForcesAnalytic();
   inline void CalcContactForces2(); //Position criteria, SEO Contact detection
   inline void CalcContactForcesWang();

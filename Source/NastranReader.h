@@ -18,12 +18,15 @@
 
 namespace SPH {
 
+
 using namespace std;
-  
+
+class Domain;  
 class TriMesh;
 class NastranReader {
 private:
   friend class SPH::TriMesh;
+  friend class SPH::Domain;
 	std::vector <std::string> rawData;
 	int line_count;
 	int elem_count;

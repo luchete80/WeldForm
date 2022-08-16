@@ -130,7 +130,7 @@ SET(EXES
 	#Cantilever_comp_contact
 	#Contact_Cantilever
 	#FreeSurface
-  FSW
+  FSW_nastran
 	#Elastic
 	#Heat_2D
 	#Impact_Campos

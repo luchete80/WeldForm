@@ -213,5 +213,7 @@ inline void TriMesh::Update(const double &dt){
   CalcNormals();        //From node positions
   UpdatePlaneCoeff();   //pplane
 }
-
+ 
+  
+  
 };
