@@ -62,12 +62,14 @@ inline void Domain::CalcContactForcesWang(){
   Vec3_t delta_tg;
   double max_vr = 0.;
   int m;
-  double normal_cf;
+  
   Vec3_t du;// If no contact
  
   //USE TRUE: FALSE DOES NOT WORK
   bool ref_accel = true;   //true: tg force is compared to current tg accel
-  
+
+  double fr_sta, fr_dyn;
+            
   Vec3_t atg;
   bool end;
   contact_force_sum = 0.;
@@ -78,7 +80,7 @@ inline void Domain::CalcContactForcesWang(){
   int stra_restr = 0; //restricted static
   Vec3_t x_pred, vr_pred;
   Vec3_t ref_tg;
-	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, x_pred, imp_force, ref_tg, vr_pred, du, normal_cf, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, x_pred, imp_force, fr_sta, fr_dyn, ref_tg, vr_pred, du, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -201,7 +203,6 @@ inline void Domain::CalcContactForcesWang(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
             
-            double fr_sta, fr_dyn;
             fr_sta = friction_sta;
             fr_dyn = friction_dyn;
             if (friction_function == Linear)
