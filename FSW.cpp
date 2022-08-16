@@ -273,10 +273,10 @@ int main(int argc, char **argv) try
 	dom.contact = true;
 	//dom.friction = 0.15;
   
-  friction_function = Linear;
+  dom.friction_function = Linear;
 	// dom.friction_dyn = 0.2;
   // dom.friction_sta = 0.2;
-  dom.friction_b = 0.3
+  dom.friction_b = 0.3;
   dom.friction_m = (0.1-0.3)/500.;
   
 	dom.PFAC = 0.6;
