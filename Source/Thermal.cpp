@@ -130,8 +130,10 @@ inline void Domain::CalcTempInc () {
 		f = 1./(Particles[i]->Density * Particles[i]->cp_T );
     Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat);	
     
+    if (i<solid_part_count){
     plw = f * Particles[i]->q_plheat;
     pl_sum += plw;
+    }
     // Particles[i]->dTdt += plw;
     
 		if (contact){
