@@ -201,7 +201,13 @@ inline void Domain::CalcContactForcesWang(){
 						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
             
-            if (friction_sta > 0.) { 
+            double fr_sta, fr_dyn;
+            fr_sta = friction_sta;
+            fr_dyn = friction_dyn;
+            if (friction_function == Linear)
+              fr_sta = fr_dyn = friction_m * Particles[P1] ->T + friction_b;
+            
+            if (fr_sta > 0.) { 
                 // //delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
                 
                 // if (P1 == 11311){
@@ -230,7 +236,7 @@ inline void Domain::CalcContactForcesWang(){
                if (ref_accel) ref_tg = atg * Particles[P1]->Mass;
                else           ref_tg = tgforce;
                 
-               if (norm(ref_tg) < friction_sta * norm(Particles[P1] -> contforce) ){
+               if (norm(ref_tg) < fr_sta * norm(Particles[P1] -> contforce) ){
                   omp_set_lock(&Particles[P1]->my_lock);
                     //if (P1 == 12415) cout << "ares (a - tgforce): "<<Particles[P1] -> a - tgforce<<endl;
                     Particles[P1] -> a -= tgforce / Particles[P1]->Mass; 
@@ -239,7 +245,7 @@ inline void Domain::CalcContactForcesWang(){
                   omp_set_lock(&Particles[P1]->my_lock);
                     //cout << "mu N SURPASSED: tg force: " << tgforce<<endl;
                     if (norm(tgforce)>1.0e-2)
-                    Particles[P1] -> a -= friction_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
+                    Particles[P1] -> a -= fr_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
                   omp_unset_lock(&Particles[P1]->my_lock);
 
                   if (thermal_solver){

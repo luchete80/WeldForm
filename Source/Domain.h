@@ -51,6 +51,7 @@ enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spli
 enum Viscosity_Eq_Type { Morris=0, Shao=1, Incompressible_Full=2, Takeda=3 };
 enum Gradient_Type { Squared_density=0, Multiplied_density=1 };
 
+//TODO: Add from which it depends
 enum Function_Type { Constant=0, Linear=1, Multilinear=2};
 
 enum Friction_Type{Fr_Sta=0,Fr_Dyn,Fr_StaDyn,Fr_Bound};
@@ -233,6 +234,7 @@ public:
   inline void CalcContactInitialGap();
   inline void UpdateContactParticles();  //Update position, velocity and normals FROM MESH
   
+  inline void UpdateFrictionCoeff();
   
   //////////////////////////// ENERGY
   double kin_energy_sum, int_energy_sum;
@@ -245,6 +247,7 @@ public:
 	double contact_force_factor;
 	double friction;
   double friction_sta, friction_dyn;
+  double friction_m, friction_b;  //linear coeff TODO: MOVE TO FUNCTION
   
   Function_Type friction_function;
   // double friction_sta;

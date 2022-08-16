@@ -2369,5 +2369,12 @@ inline void Domain::UpdateSmoothingLength(){
   }
 }
 
+inline void Domain::UpdateFrictionCoeff(){
+   // #pragma omp parallel for schedule (static) private (min, d, max, sum) num_threads(Nproc)
+  // for (size_t i=0; i<Particles.Size(); i++){
+    // friction_m * Particles[i]->T + friction_b;
+  // }    
+}
+
 
 }; // namespace SPH
