@@ -150,6 +150,8 @@ inline Domain::Domain ()
   solid_part_count = -1;  //For nonlock reduction sum
   
   CFL = 0.7;
+  friction_function = Constant;
+  contact_friction_work = 0.;
 }
 
 inline Domain::~Domain ()

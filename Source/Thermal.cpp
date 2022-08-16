@@ -122,19 +122,27 @@ inline void Domain::CalcTempInc () {
 	int imax;
   
   double f;
+  double frw, fr_temp = 0.;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	private (f)//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
 		f = 1./(Particles[i]->Density * Particles[i]->cp_T );
     Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat);	
     
-		if (contact)
-			Particles[i]->dTdt += f * Particles[i]->q_fric_work; //[J/(kg.s)] / [J/(kg.K)]]
+		if (contact){
+      if (i<solid_part_count){
+        frw = f * Particles[i]->q_fric_work;
+        fr_temp += frw;
+        Particles[i]->dTdt += frw; //[J/(kg.s)] / [J/(kg.K)]]
+      }
+    }
 		if (Particles[i]->dTdt > max){
 			max= Particles[i]->dTdt;
 			imax=i;
 		}
 	}
+  contact_friction_work += fr_temp * deltat;
+  
 	//cout << "Max dTdt: " << max <<"in particle: " << imax<<endl;
 	
 }

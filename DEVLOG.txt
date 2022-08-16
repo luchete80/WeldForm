@@ -122,3 +122,5 @@
              Changed material of rotation compression to Johnson Cook.
 20220810  -  Changed max displacement (Now only are calculated from solid particles, excluding contact ones
              Corrected position on workpiece in FSW example. 
+20220816  -  Beginging to write Solid Mesh reader. 
+             Added Contact Friction Work calc.

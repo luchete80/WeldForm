@@ -51,7 +51,10 @@ enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spli
 enum Viscosity_Eq_Type { Morris=0, Shao=1, Incompressible_Full=2, Takeda=3 };
 enum Gradient_Type { Squared_density=0, Multiplied_density=1 };
 
+enum Function_Type { Constant=0, Linear=1, Multilinear=2};
+
 enum Friction_Type{Fr_Sta=0,Fr_Dyn,Fr_StaDyn,Fr_Bound};
+
 namespace SPH {
   
   struct amplitude {
@@ -242,6 +245,8 @@ public:
 	double contact_force_factor;
 	double friction;
   double friction_sta, friction_dyn;
+  
+  Function_Type friction_function;
   // double friction_sta;
   // double friction_kin;
   Friction_Type fric_type;
@@ -253,7 +258,8 @@ public:
   double m_forces_momentum_time;
   double m_forces_tensors_time;
   double m_forces_update_time;
-	
+	double contact_friction_work;
+  
   int ts_nb_inc;
   
   int solid_part_count;

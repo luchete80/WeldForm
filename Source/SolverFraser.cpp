@@ -339,8 +339,10 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
 			cout << "Max Displacements (No Cont Surf): "<<max_disp<<endl;
-      if (contact) 
+      if (contact) {
         cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
+        cout<<"Contact Friction Work "<<contact_friction_work<<endl;
+      }
 
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
       if (thermal_solver)
