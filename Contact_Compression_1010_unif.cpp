@@ -8,7 +8,7 @@
 #include "Geometry.cpp"
 
 #define TAU		0.0005
-#define VMAX	1.00
+#define VMAX	0.5
 #define DX 0.0012
 
 using namespace SPH;
@@ -188,8 +188,8 @@ int main() try{
         
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
-		dom.Particles[a]->Alpha		= 2.5;
-		dom.Particles[a]->Beta		= 2.5;
+		dom.Particles[a]->Alpha		= 1.0;
+		dom.Particles[a]->Beta		= 0.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 
@@ -271,7 +271,7 @@ int main() try{
   timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
-	dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+	dom.SolveDiffUpdateFraser(/*tf*/0.02105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
   //dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/timestep,"test06",1000);  
 	
   dom.WriteXDMF("ContactTest");

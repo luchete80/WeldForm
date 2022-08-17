@@ -82,7 +82,7 @@ SET(EXES
 	#Compression_smallD
 	#Compression_smallL
 	#Compression_smallL_1side
-  Contact_Compression_Rot
+  #Contact_Compression_Rot
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
@@ -106,7 +106,7 @@ SET(EXES
   #Contact_Compression_TRIP_half_ghost
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
-  #Contact_Compression_1010_unif
+  Contact_Compression_1010_unif
   #Compression_1010
   #Contact_Compression_1010
   #Compression_1010_qt
