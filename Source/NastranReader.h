@@ -24,7 +24,7 @@ using namespace std;
 class Domain;  
 class TriMesh;
 class NastranReader {
-private:
+protected:
   friend class SPH::TriMesh;
   friend class SPH::Domain;
 	std::vector <std::string> rawData;
@@ -48,7 +48,7 @@ private:
 	void WriteVTK(char const * FileKey);
 	
   ~NastranReader();
-	inline void read(char *fName);
+	virtual inline void read(char *fName);
 	
 };
 

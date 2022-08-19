@@ -106,7 +106,7 @@ SET(EXES
   #Contact_Compression_TRIP_half_ghost
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
-  Contact_Compression_1010_unif
+  #Contact_Compression_1010_unif
   #Compression_1010
   #Contact_Compression_1010
   #Compression_1010_qt
@@ -131,7 +131,7 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  #FSW_nastran
+  FSW_nastran
 	#Elastic
 	#Heat_2D
 	#Impact_Campos
@@ -176,6 +176,7 @@ add_subdirectory("examples")
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
 	#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
+  #"${CMAKE_SOURCE_DIR}/Source/NastranVolReader.cpp"
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")

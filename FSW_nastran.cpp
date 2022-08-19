@@ -1,9 +1,9 @@
 #include "Mesh.h"
 #include "Domain.h"
-#include "NastranReader.h"
-#include "InteractionAlt.cpp"
-#include "SolverKickDrift.cpp"
-#include "SolverFraser.cpp"
+#include "NastranVolReader.h"
+//#include "InteractionAlt.cpp"
+//#include "SolverKickDrift.cpp"
+//#include "SolverFraser.cpp"
 #include "Geometry.cpp"
 
 #define VFAC			15.0
@@ -142,7 +142,7 @@ int main(int argc, char **argv) try
   
 //  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-  SPH::NastranReader reader("Tool.nas");
+  SPH::NastranVolReader reader("Mesh.nas");
   dom.GenerateSPHMesh(0, reader,2700.);
   
   // SPH::TriMesh mesh(reader);
