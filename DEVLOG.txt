@@ -125,3 +125,8 @@
 20220816  -  Beginging to write Solid Mesh reader. 
              Added Contact Friction Work Sum  calc.
              Added Plastic Work Sum calc.
+20220822  -  Working on solid SPH mesher.
+             Fixed plastic work. Now it is NOT limited to thermal problems only.
+             Also, value iscorrected 
+             Recovering compression thermal problem.
+             

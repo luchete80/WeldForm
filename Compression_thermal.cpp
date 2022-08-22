@@ -20,6 +20,8 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include "InteractionAlt.cpp"
+#include "SolverFraser.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -48,14 +50,14 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
 			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
 			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
@@ -89,7 +91,7 @@ int main(int argc, char **argv) try
 		Fy	= 300.e6;
     	//dx	= L / (n-1);
 		//dx = L/(n-1);
-		dx = 0.018;
+		dx = 0.015;
     h	= dx*1.1; //Very important
         Cs	= sqrt(K/rho);
 
@@ -135,8 +137,8 @@ int main(int argc, char **argv) try
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-	    			dom.Particles[a]->IsFree=false;
-    			dom.Particles[a]->NoSlip=true;			
+	    			//dom.Particles[a]->IsFree=false;
+    			//dom.Particles[a]->NoSlip=true;			
 				
 				}
     		if ( z > L )
@@ -145,9 +147,18 @@ int main(int argc, char **argv) try
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
-
+    dom.thermal_solver = true;
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.ThermalStructSolve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+		//dom.ThermalStructSolve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+
+    timestep = (1.0*h/(Cs+VMAX)); 
+    dom.CFL = 1.0;
+    //timestep = 2.5e-6;
+    dom.auto_ts = false;
+    //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     
 		return 0;
 }
