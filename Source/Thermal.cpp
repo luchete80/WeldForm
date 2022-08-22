@@ -149,7 +149,7 @@ inline void Domain::CalcTempInc () {
 		}
 	}
   contact_friction_work += fr_temp * deltat;
-  plastic_work += pl_sum * deltat;
+  //plastic_work += pl_sum * deltat;
   
 	//cout << "Max dTdt: " << max <<"in particle: " << imax<<endl;
 	

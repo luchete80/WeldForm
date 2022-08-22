@@ -13,12 +13,21 @@ inline void Domain::CalcThermalExpStrainRate(){
 
 inline void Domain::CalcPlasticWorkHeat(const double &dt){
 	double max = 0.;
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
+  double f;
+  double plw, pl_sum = 0.;
+	#pragma omp parallel for schedule (static) num_threads(Nproc) private (f)
 	for (int p=0;p<Particles.Size();p++){
+    f = Particles[p]->Mass / Particles[p]->Density; //Vol
 		Particles[p]->CalcPlasticWorkHeat(dt);	//Add Thermal expansion Strain Rate Term
 		if ( Particles[p] -> q_plheat > max)
 			max = Particles[p] -> q_plheat;
-	}		
+    
+    if (p < solid_part_count){
+      plw = f * Particles[p]->q_plheat;
+      pl_sum += plw;      
+    }
+	}
+  plastic_work += pl_sum * dt;  
 	//cout << "Max plastic heat gen: "<<max<<endl;
 }
 

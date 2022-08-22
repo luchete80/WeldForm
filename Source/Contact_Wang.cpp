@@ -65,6 +65,7 @@ inline void Domain::CalcContactForcesWang(){
   
   Vec3_t du;// If no contact
  
+  ext_forces_work_step = 0.;
   //USE TRUE: FALSE DOES NOT WORK
   bool ref_accel = true;   //true: tg force is compared to current tg accel
 
@@ -174,6 +175,9 @@ inline void Domain::CalcContactForcesWang(){
             omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);
               contact_reaction_sum += dot (Particles[P1] -> a,Particles[P2]->normal)* Particles[P1]->Mass;
+              //ext_forces_work_step += dot (Particles[P1] -> contforce,//Particles[P2]->v);
+              //ext_forces_work_step += /*dot(*/Particles[P1] -> contforce/*,1./norm(Particles[P2]->v)*Particles[P2]->v)*/ * Particles[P2]->v; //Assuming v2 and forces are parallel
+              ext_forces_work_step += dot(Particles[P1] -> contforce,Particles[P2]->v);
             omp_unset_lock(&dom_lock);	
             //inside_pairs++;
 						
@@ -294,6 +298,7 @@ inline void Domain::CalcContactForcesWang(){
 	//cout << "Inside pairs count: "<<inside_geom<<", Inside time: "<<inside_time<<", statically restricted " << stra_restr<<endl;
 	int cont_force_count = 0;
 	
+  ext_forces_work += ext_forces_work_step * deltat;
 	//if (max_contact_force > 0.){
     //cout << "particles surpassed max fr force"<<max_reached_part<< ", below force: " <<sta_frict_particles<<endl;
 		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;

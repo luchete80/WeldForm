@@ -345,6 +345,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       if (contact) {
         cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
         cout<<"Contact Friction Work "<<contact_friction_work<<endl;
+        cout<<"External Forces Work "<< ext_forces_work<<endl;
       }
 
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;

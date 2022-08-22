@@ -262,6 +262,7 @@ public:
   double m_forces_tensors_time;
   double m_forces_update_time;
 	double contact_friction_work, plastic_work, ext_f_work;
+  double ext_forces_work,ext_forces_work_step;
   
   int ts_nb_inc;
   
