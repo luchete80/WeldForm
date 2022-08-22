@@ -462,7 +462,6 @@ inline void Domain::ThermalCalcs(const double &dt){
     }
     
 			CalcConvHeat();
-			CalcPlasticWorkHeat(deltat);
 			CalcTempInc();
 			CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term	
 		}

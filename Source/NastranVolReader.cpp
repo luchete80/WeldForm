@@ -159,6 +159,10 @@ void NastranVolReader::read( const char* fName){
 	l = curr_line;
   for (int n=0;n<elem_count;n++){
     //cout << n+1<< " ";
+    if (rawData[l].substr(0,6) == string("CTETRA")){
+      //cout << "penta "<<endl;
+      nodecount = 4;
+    }
     if (rawData[l].substr(0,6) == string("CPENTA")){
       //cout << "penta "<<endl;
       nodecount = 8;
