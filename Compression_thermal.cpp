@@ -121,6 +121,8 @@ int main(int argc, char **argv) try
     	{
     		dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;
+			dom.Particles[a]->k_T			=	150.;
+			dom.Particles[a]->cp_T			=	960.;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
     		dom.Particles[a]->Material	= 2;

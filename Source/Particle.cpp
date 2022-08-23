@@ -1012,12 +1012,21 @@ inline void Particle::CalcStressStrain(double dt) {
 	
 	if ( dep > 0.0 ) {
 		double f = dep/Sigmay;
-		Strain_pl(0,0) += f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
-		Strain_pl(1,1) += f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
-		Strain_pl(2,2) += f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
-		Strain_pl(0,1) += 1.5*f*(Sigma(0,1));
-		Strain_pl(0,2) += 1.5*f*(Sigma(0,2));
-		Strain_pl(1,2) += 1.5*f*(Sigma(1,2));
+		// Strain_pl(0,0) += f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
+		// Strain_pl(1,1) += f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
+		// Strain_pl(2,2) += f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+		// Strain_pl(0,1) += 1.5*f*(Sigma(0,1));
+		// Strain_pl(0,2) += 1.5*f*(Sigma(0,2));
+		// Strain_pl(1,2) += 1.5*f*(Sigma(1,2));
+      Strain_pl_incr (0,0) = f*(Sigma(0,0)-0.5*(Sigma(1,1) + Sigma(2,2) ));
+      Strain_pl_incr (1,1) = f*(Sigma(1,1)-0.5*(Sigma(0,0) + Sigma(2,2) ));
+      Strain_pl_incr (2,2) = f*(Sigma(2,2)-0.5*(Sigma(0,0) + Sigma(1,1) ));
+      Strain_pl_incr (0,1) = Strain_pl_incr (1,0) = 1.5*f*(Sigma(0,1));
+      Strain_pl_incr (0,2) = Strain_pl_incr (2,0) = 1.5*f*(Sigma(0,2));
+      Strain_pl_incr (1,2) = Strain_pl_incr (2,1) = 1.5*f*(Sigma(1,2));
+      
+      Strain_pl = Strain_pl + Strain_pl_incr;
+      
 	}	
   
   Strain	= dt*StrainRate + Strain;

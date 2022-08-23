@@ -20,6 +20,8 @@
 ************************************************************************************/
 
 #include "Domain.h"
+#include "InteractionAlt.cpp"
+#include "SolverFraser.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -48,14 +50,14 @@ void UserAcc(SPH::Domain & domi)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			//domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
 			//domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
 			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
@@ -106,7 +108,6 @@ int main(int argc, char **argv) try
     	dom.GeneralAfter = & UserAcc;
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
-		//dom.auto_ts = false;
 
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
@@ -120,8 +121,6 @@ int main(int argc, char **argv) try
     	{
     		dom.Particles[a]->G		= G;
     		dom.Particles[a]->PresEq	= 0;
-			dom.Particles[a]->k_T			=	150.;
-			dom.Particles[a]->cp_T			=	960.;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
     		dom.Particles[a]->Material	= 2;
@@ -131,13 +130,15 @@ int main(int argc, char **argv) try
     		//dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
-			dom.Particles[a]->T					= 20.0;	
-			
+
+				dom.Particles[a]->th_exp 		= 0.;	
+				dom.Particles[a]->T					= 20.0;
+				
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-	    			dom.Particles[a]->IsFree=false;
-    			dom.Particles[a]->NoSlip=true;			
+	    			//dom.Particles[a]->IsFree=false;
+    			//dom.Particles[a]->NoSlip=true;			
 				
 				}
     		if ( z > L )
@@ -146,10 +147,18 @@ int main(int argc, char **argv) try
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
-
+    dom.thermal_solver = true;
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		dom.ThermalStructSolve(/*tf*/0.005,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
+		//dom.ThermalStructSolve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+
+    timestep = (1.0*h/(Cs+VMAX)); 
+    dom.CFL = 1.0;
+    //timestep = 2.5e-6;
+    dom.auto_ts = false;
+    //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     
 		return 0;
 }
