@@ -152,7 +152,9 @@ int main(int argc, char **argv) try
     dom.thermal_solver = true;
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.ThermalStructSolve(/*tf*/0.00505,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-
+    
+    dom.pl_work_heat_frac = 0.9;
+    
     timestep = (1.0*h/(Cs+VMAX)); 
     dom.CFL = 1.0;
     //timestep = 2.5e-6;
@@ -160,7 +162,7 @@ int main(int argc, char **argv) try
     //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
-    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     
 		return 0;
 }

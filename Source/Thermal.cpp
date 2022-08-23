@@ -128,7 +128,7 @@ inline void Domain::CalcTempInc () {
 	for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
 		f = 1./(Particles[i]->Density * Particles[i]->cp_T );
-    Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat);	
+    Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat * pl_work_heat_frac);	
     
     if (i<solid_part_count){
     plw = f * Particles[i]->q_plheat;

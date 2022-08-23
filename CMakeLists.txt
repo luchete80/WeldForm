@@ -89,7 +89,7 @@ SET(EXES
 	#Compression_Elastic_CNS
   #Compression_TRIP_half_ghost_vel
   #Compression_TRIP_vel
-  #Compression_thermal
+  Compression_thermal
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
@@ -107,7 +107,7 @@ SET(EXES
   #Contact_Compression_TRIP_half_ghost
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
-  Contact_Compression_1010_unif
+  #Contact_Compression_1010_unif
   #Compression_1010
   #Contact_Compression_1010
   #Compression_1010_qt

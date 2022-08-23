@@ -912,13 +912,13 @@ inline void Particle::CalcPlasticWorkHeat(const double &dt){
 		// Double inner product, Fraser 3-106
 		//cout <<"depdt"<<endl;
 		//cout << depdt<<endl;
-		q_plheat 	= 1.0  *	(
+		q_plheat 	= 
 						Sigma(0,0)*depdt(0,0) + 
 						2.0*Sigma(0,1)*depdt(1,0) + 2.0*Sigma(0,2)*depdt(2,0) + 
 						Sigma(1,1)*depdt(1,1) +
 						2.0*Sigma(1,2)*depdt(2,1) + 
 						Sigma(2,2)*depdt(2,2)
-						);
+						;
 		//cout << "plastic heat "<<q_plheat<<endl;
 	}
 }

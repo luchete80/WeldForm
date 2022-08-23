@@ -153,6 +153,7 @@ inline Domain::Domain ()
   friction_function = Constant;
   contact_friction_work = plastic_work = ext_f_work = 0.;
   ext_forces_work = 0.;
+  pl_work_heat_frac = 0.9;
 }
 
 inline Domain::~Domain ()
