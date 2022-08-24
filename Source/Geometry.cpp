@@ -371,37 +371,79 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
 	R = r;									
 }
 
-void Domain::GenerateSPHMesh(const int &tag, NastranReader &nr,double Density){
+//In case elements were generated at Nastran Node Positions
+// void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density){
 
-  for (int n=0;n<nr.node_count;n++){
-    Vec3_t v(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]);
-    double h=1.;
-    Particles.Push(new Particle(tag,v,Vec3_t(0,0,0),0.0,Density,h,false));
-  }
-  cout << "Generated "<<Particles.Size()<< " particles. "<<endl;
+  // for (int n=0;n<nr.node_count;n++){
+    // Vec3_t v(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]);
+    // double h=1.;
+    // Particles.Push(new Particle(tag,v,Vec3_t(0,0,0),0.0,Density,h,false));
+  // }
+   // cout << "Generated "<<Particles.Size()<<" particles. "<<endl;
+   
+  // std::vector<double> h(Particles.Size());
+  // std::vector<double> elxnod(Particles.Size());
   
+  // // //cout << "Normals"<<endl;
+  // for (int e=0;e<nr.elem_count;e++){ //Look for element
+    // Vec3_t v = nr.elem[e]->centroid;
+
+    // double dist[8];
+    // //
+    // for (int i=0;i < nr.elem[e]->node_count; i++){
+      // //Vec3_t v[3];
+      // int k = i+1;
+      // if (i==2) k = 0; 
+      // dist[i] = norm(Particles[nr.elcon[3*e + k]]->x - Particles[nr.elcon[3*e+i]]->x );
+      // elxnod[nr.elcon[3*e + k]]++;
+      // elxnod[nr.elcon[3*e + i]]++;
+      // h[nr.elcon[3*e + k]] += dist[i];
+      // h[nr.elcon[3*e + i]] += dist[i];
+    // }
+  // }  
+  // for (int i=0;i<Particles.Size();i++)
+    // Particles[i]->h = h[i]/elxnod[i];
+
+    // Particles.Push(new Particle(tag,v,Vec3_t(0,0,0),0.0,Density,h,false));
+  
+// }
+
+//Generated at centroids
+void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density){
+
+  for (int e=0;e < nr.elem.size();e++){
+    //Vec3_t v(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]);
+    double h=1.;
+    //cout << "centroid "<<nr.elem[e]->centroid<<endl;
+    Particles.Push(new Particle(tag,nr.elem[e]->centroid,Vec3_t(0,0,0),0.0,Density,h,false));
+  }
+   cout << "Generated "<<Particles.Size()<<" particles. "<<endl;
+   
   std::vector<double> h(Particles.Size());
   std::vector<double> elxnod(Particles.Size());
   
   // //cout << "Normals"<<endl;
-  for (int e=0;e<nr.elem_count;e++){
-    // element.Push(new Element(nr.elcon[3*e],nr.elcon[3*e+1],nr.elcon[3*e+2]));		  
-		// Vec3_t v = ( *node[nr.elcon[3*e]] + *node[nr.elcon[3*e+1]] + *node[nr.elcon[3*e+2]] ) / 3. 
-    double dist[3];
-    for (int i=0;i<3;i++){
-      //Vec3_t v[3];
-      int k = i+1;
-      if (i==2) k = 0; 
-      dist[i] = norm(Particles[nr.elcon[3*e + k]]->x - Particles[nr.elcon[3*e+i]]->x );
-      elxnod[nr.elcon[3*e + k]]++;
-      elxnod[nr.elcon[3*e + i]]++;
-      h[nr.elcon[3*e + k]] += dist[i];
-      h[nr.elcon[3*e + i]] += dist[i];
-    }
-  }  
-  for (int i=0;i<Particles.Size();i++)
-    Particles[i]->h = h[i]/elxnod[i];
+  // for (int e=0;e<nr.elem_count;e++){ //Look for element
+    // Vec3_t v = nr.elem[e]->centroid;
 
+    // double dist[8];
+    // //
+    // for (int i=0;i < nr.elem[e]->node_count; i++){
+      // //Vec3_t v[3];
+      // int k = i+1;
+      // if (i==2) k = 0; 
+      // dist[i] = norm(Particles[nr.elcon[3*e + k]]->x - Particles[nr.elcon[3*e+i]]->x );
+      // elxnod[nr.elcon[3*e + k]]++;
+      // elxnod[nr.elcon[3*e + i]]++;
+      // h[nr.elcon[3*e + k]] += dist[i];
+      // h[nr.elcon[3*e + i]] += dist[i];
+    // }
+  // }  
+  // for (int i=0;i<Particles.Size();i++)
+    // Particles[i]->h = h[i]/elxnod[i];
+
+    
+  
 }
 
 };

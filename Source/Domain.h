@@ -65,6 +65,8 @@ namespace SPH {
 	//std::map;
 };
 
+class NastranVolReader;
+
 
 struct boundaryCondition {
 	int 	zoneId;
@@ -225,7 +227,7 @@ public:
 	void AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id);
   void CalculateSurface(const int &id = 1);
   
-  void GenerateSPHMesh(const int &tag, NastranReader &nr,double Density);
+  void GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density);
 	
   inline void CalcContactForces();
   inline void CalcContactForcesAnalytic();

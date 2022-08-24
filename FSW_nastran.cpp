@@ -275,7 +275,8 @@ int main(int argc, char **argv) try
   
   // //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
   // dom.SolveDiffUpdateFraser(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
-    
+  
+  cout << "Program Ended" <<endl;
   return 0;
 }
 MECHSYS_CATCH
