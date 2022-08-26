@@ -82,7 +82,7 @@ SET(EXES
 	#Compression_smallD
 	#Compression_smallL
 	#Compression_smallL_1side
-  #Contact_Compression_Rot
+  Contact_Compression_Rot
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
@@ -132,7 +132,7 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  FSW_nastran
+  #FSW_nastran
 	#Elastic
 	#Heat_2D
 	#Impact_Campos
