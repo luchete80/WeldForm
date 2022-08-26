@@ -28,10 +28,6 @@ class Tri {
   double p;
 };
 
-double triarea (Vec3_t &v1,Vec3_t &v2,Vec3_t &v3){
-  
-}
-
 void Tetra::CalcVol() {
     //1/3 AB .h 
     
@@ -50,21 +46,55 @@ void Tetra::CalcVol() {
 void Hexa::CalcVol(){
   Plane plane(*mesh->nod[node[0]],*mesh->nod[node[1]],*mesh->nod[node[2]]);  
   Tri tri(*mesh->nod[node[0]],*mesh->nod[node[1]],*mesh->nod[node[2]]);
-  
+  Tri tri2(*mesh->nod[node[1]],*mesh->nod[node[2]],*mesh->nod[node[3]]);
+  double ab = tri.area + tri2.area;
   //Get midpoint of top plane 
   
   //Projecting top verices to plane 1
+  
+  Vec3_t vmed = 1./4.*(*mesh->nod[node[4]]+*mesh->nod[node[5]]+*mesh->nod[node[6]]+*mesh->nod[node[7]]);
+  double h = plane.dist_to_point(vmed);
+  double vol1 = ab * h;
+  Plane plane_top(plane.normal, vmed);
   Vec3_t vtop[4];
   for (int i=0;i<4;i++){
-    vtop[i] = project_point(*mesh->nod[node[4+i]]);
+    vtop[i] = plane_top.project_point(*mesh->nod[node[4+i]]);
   }
-
-  Plane plane2(*mesh->nod[node[4]],*mesh->nod[node[5]],*mesh->nod[node[6]]);  
   
-  // Do the same as opposite
+  Tri tri3(vtop[0],vtop[1],vtop[2]);
+  Tri tri4(vtop[1],vtop[2],vtop[3]);
+  
+  double ab2 = tri3.area + tri4.area;
+  
+  vol = 0.5*(ab+ab2)*h;
+  //cout << "Vol "<<vol <<endl; 
+  // TODO: Do the same as opposite with top plane and average! 
+  
   
   //cout << "d, X.n "<<plane.pplane<< ", " << dot(plane.normal, *mesh->nod[node[0]])<< endl;
-  cout << "normals "<<plane.normal<< ", " <<plane2.normal<<endl;
+  //cout << "normals "<<plane.normal<< ", " <<plane2.normal<<endl;
+}
+
+//Always  seems to be nodes 3 and 6 to be collapsing
+//TODO: EVALUATE ALL CASES
+//Order are CCW and from bottom to top
+
+void Pyram::CalcVol(){
+  //So square is at nodes 0,1, 3 and 4
+  // 3 4
+  // 0 1
+  Tri tri(*mesh->nod[node[0]],*mesh->nod[node[1]],*mesh->nod[node[3]]);
+  Tri tri2(*mesh->nod[node[0]],*mesh->nod[node[1]],*mesh->nod[node[4]]);  
+
+  Plane plane(*mesh->nod[node[0]],*mesh->nod[node[1]],*mesh->nod[node[3]]);
+    
+  double h = plane.dist_to_point(*mesh->nod[node[2]]);
+  
+  
+  //cout << "test X+h.n: "<< dot(*mesh->nod[node[3]] - h*normal, normal) << ", d "<<d<<endl; 
+  vol = 1./3. * (tri.area + tri2.area) * h;
+  //cout << "vol "<<vol<<endl;
+  
 }
   
 void NastranVolReader::read( const char* fName){
@@ -114,7 +144,8 @@ void NastranVolReader::read( const char* fName){
         if (!start_elem){
           start_elem = true;
 					line_start_elem = l;
-				}
+          cout << "Tetra found"<<endl;
+        }
         //cout << "Element found!"<<endl;
         //cout << "CTETRA"<<endl;
         elem_count++;
@@ -125,6 +156,7 @@ void NastranVolReader::read( const char* fName){
         if (!start_elem){
           start_elem = true;
 					line_start_elem = l;
+          cout << "Hexa found at line "<< l << endl;
 				}
         elem_count++;
         l++;
@@ -133,6 +165,7 @@ void NastranVolReader::read( const char* fName){
         if (!start_elem){
           start_elem = true;
 					line_start_elem = l;
+          cout << "Penta found"<<endl;
 				}
         elem_count++;
         l++;
@@ -160,7 +193,7 @@ void NastranVolReader::read( const char* fName){
   //Allocating nodes 
   cout << "Allocating nodes"<<endl;
   //node  	= new double 	[3 * node_count];
-  nodeid  = new int 		[node_count];
+  
 
 	// NODAL FIELD DATA IS: GRID|ID|CP|X1|	
   int curr_line = line_start_node;
@@ -168,6 +201,8 @@ void NastranVolReader::read( const char* fName){
 	Vec3_t min( 1000., 1000., 1000.);
   Vec3_t max(-1000.,-1000.,-1000.);
 	
+  std::vector <int> nodeid(node_count);
+  
 	for (int n=0;n<node_count;n++){
     //cout << n+1; //DEBUG
 		string temp = rawData[l].substr(FIELD_LENGTH,FIELD_LENGTH); //Second field, id
@@ -264,10 +299,11 @@ void NastranVolReader::read( const char* fName){
         pos = 3*(FIELD_LENGTH)+ en*FIELD_LENGTH; //First 3 are ELEMTYE, el id  and PROP
         nid[en]=pos;
 			} else {
-        pos = 1*(FIELD_LENGTH)+ en*FIELD_LENGTH; //First 3 are ELEMTYE, el id  and PROP
+        pos = 1*(FIELD_LENGTH)+ (en-6)*FIELD_LENGTH; //First 3 are ELEMTYE, el id  and PROP
         lnum = 1; 
       }
 			temp = rawData[l+lnum].substr(pos,FIELD_LENGTH); //Second field, id
+      //cout << "Field "<<temp<<endl;
       d = atoi(temp.c_str());
       nid[en] = d;
       int nod = nodepos.find(d)->second;

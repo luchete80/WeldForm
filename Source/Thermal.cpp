@@ -125,7 +125,8 @@ inline void Domain::CalcTempInc () {
   double frw, fr_temp = 0.;
   double plw, pl_sum = 0.;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	private (f)//LUCIANO//LIKE IN DOMAIN->MOVE
-	for (int i=0; i<Particles.Size(); i++){
+  for (int i=0; i < solid_part_count; i++){
+	//for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
 		f = 1./(Particles[i]->Density * Particles[i]->cp_T );
     Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat * pl_work_heat_frac);	

@@ -64,7 +64,7 @@ class Prism: public NASElement{
     CalcVol();
   }
   void CalcVol(){
-    
+    vol = 0.;
   }
 };
 
@@ -76,8 +76,9 @@ class Pyram: public NASElement{
     if (nodes.size()!=5) cout << "CPYRAM Node Count ERROR"<<endl;
     allocate(nodes);
     CalcCentroids();
+    CalcVol();
   }
-  void CalcVol(){}
+  void CalcVol();
 };
 
 using namespace std;
@@ -89,7 +90,13 @@ public NastranReader {
   std::vector<Vec3_t* > nod;
   std::vector <NASElement*> elem;
   public:
-  NastranVolReader(char* fName){read(fName);}
+  NastranVolReader(char* fName){
+    read(fName);
+    double vol = 0.;
+    for (int i=0;i<elem.size();i++)
+      vol +=elem[i]->vol;
+    cout << "Total vol: "<< vol << endl;
+  }
 	inline void read(const char *fName);
   ~NastranVolReader(){
     for (int i=0;i<nod.size();i++)

@@ -25,6 +25,13 @@ public:
       normal = w/norm(w);
       pplane = dot (p1,normal);      
     }
+    Plane (Vec3_t &n, Vec3_t &p_){
+      //Normalize!
+      normal = n/norm(n);
+      p = p_;
+      pplane = dot(n,p);
+      
+    }
     double dist_to_point(Vec3_t q){
       return abs(dot (q-p,normal));
     }
@@ -37,7 +44,7 @@ public:
   	double 	pplane;			//In boundary elements, plane coefficient, useful for contact
     Vec3_t 	normal;
     Vec3_t 	tg[2];
-    Vec3_t p;
+    Vec3_t p;      //Necesary to distance to plane
 };
 
 };
