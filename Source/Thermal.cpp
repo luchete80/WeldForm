@@ -124,6 +124,7 @@ inline void Domain::CalcTempInc () {
   double f;
   double frw, fr_temp = 0.;
   double plw, pl_sum = 0.;
+  
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	private (f)//LUCIANO//LIKE IN DOMAIN->MOVE
   for (int i=0; i < solid_part_count; i++){
 	//for (int i=0; i<Particles.Size(); i++){
@@ -149,6 +150,10 @@ inline void Domain::CalcTempInc () {
 			imax=i;
 		}
 	}
+  
+  for (int i=solid_part_count; i<Particles.Size(); i++){
+    Particles[i]->dTdt = 0.;
+  }
   contact_friction_work += fr_temp * deltat;
   //plastic_work += pl_sum * deltat;
   
@@ -453,7 +458,7 @@ inline void Domain::ThermalCalcs(const double &dt){
   if (thermal_solver){
     m_maxT = 0.;
     m_minT =1000.;    
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (size_t i=0; i < solid_part_count; i++){
 			Particles[i]->T+= dt*Particles[i]->dTdt;
 			//Particles[i]->TempCalcLeapfrog(dt);
 			if (Particles[i]->T > m_maxT)
