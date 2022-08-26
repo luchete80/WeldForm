@@ -132,3 +132,5 @@
 20220823 -   Fixed thermal compression example with new Fraser Solver.
 20220826 -   Corrected Nastran reader (Hexa nodes).
              Added Pyram vol elements.
+             Removed (by the moment) solid (rigid) particle to increment temperature.
+             
