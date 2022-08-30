@@ -82,7 +82,7 @@ SET(EXES
 	#Compression_smallD
 	#Compression_smallL
 	#Compression_smallL_1side
-  Contact_Compression_Rot
+  #Contact_Compression_Rot
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
@@ -90,6 +90,7 @@ SET(EXES
   #Compression_TRIP_half_ghost_vel
   #Compression_TRIP_vel
   #Compression_thermal
+  Contact_Compression_thermal
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
