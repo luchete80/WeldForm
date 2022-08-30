@@ -14,6 +14,7 @@ class NASElement{
   double vol;
   NastranVolReader *mesh;
   std::vector <int> node;
+  int id;
   Vec3_t 	centroid;	
   void allocate(std::vector<int>nid){
     node.resize(nodecount);

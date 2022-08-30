@@ -291,6 +291,7 @@ void NastranVolReader::read( const char* fName){
     int linecount = 0;
     int nid[8];
     bool ispyra = false;
+    int id;
 		for (int en=0;en<nodecount;en++){
       int lnum = 0;
       string temp;
@@ -322,6 +323,9 @@ void NastranVolReader::read( const char* fName){
 			//elcon[3*n+en] = nod;
 			//cout << d<<" ";
 		}//for node count;
+
+    id = atoi(rawData[l].substr(FIELD_LENGTH,FIELD_LENGTH).c_str());
+    //cout << "el id "<<id<<endl;
     if (!ispyra &&nodecount ==6 )cprismcount++;
     //cout << endl;
     if (nv.size() == 4)
@@ -333,6 +337,7 @@ void NastranVolReader::read( const char* fName){
     else if (nv.size() == 8)
       elem.push_back(new Hexa(this,nv));
 		//cout << endl;
+    elem[n]->id = id; //ONLY FOR CONTROL
 		l += line_incr;
 	}// For elem count    
   cout << "Done."<<endl;

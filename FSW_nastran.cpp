@@ -143,7 +143,7 @@ int main(int argc, char **argv) try
 //  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranVolReader reader("Mesh.nas");
-  dom.GenerateSPHMesh(0, reader,2700.);
+  dom.GenerateSPHMesh(0, reader,2700., 1.2);
   
   // SPH::TriMesh mesh(reader);
   

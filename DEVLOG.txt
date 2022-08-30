@@ -133,4 +133,6 @@
 20220826 -   Corrected Nastran reader (Hexa nodes).
              Added Pyram vol elements.
              Removed (by the moment) solid (rigid) particle to increment temperature.
-             
+20220830 -   NASTRAN reader: 
+              - Added element masses. 
+              - Added element h

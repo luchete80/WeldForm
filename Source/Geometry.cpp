@@ -409,7 +409,7 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
 // }
 
 //Generated at centroids
-void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density){
+void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density, double hfac){
 
   for (int e=0;e < nr.elem.size();e++){
     //Vec3_t v(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]);
@@ -420,29 +420,59 @@ void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density
    cout << "Generated "<<Particles.Size()<<" particles. "<<endl;
    
   std::vector<double> h(Particles.Size());
-  std::vector<double> elxnod(Particles.Size());
+  std::vector<int> el_nod_count(nr.node_count);
+  int el_nod[nr.node_count][10]; //element list per node
+  int el_nb[nr.elem_count][10];
+  std::vector<int> el_nb_count(Particles.Size());
+  //el_nod.resize();
   
   // //cout << "Normals"<<endl;
-  // for (int e=0;e<nr.elem_count;e++){ //Look for element
-    // Vec3_t v = nr.elem[e]->centroid;
+  //First check each element node and add current element as shared 
+  for (int e=0;e<nr.elem_count;e++){ //Look for element
+    //Vec3_t v = nr.elem[e]->centroid;
 
-    // double dist[8];
-    // //
-    // for (int i=0;i < nr.elem[e]->node_count; i++){
-      // //Vec3_t v[3];
-      // int k = i+1;
-      // if (i==2) k = 0; 
-      // dist[i] = norm(Particles[nr.elcon[3*e + k]]->x - Particles[nr.elcon[3*e+i]]->x );
-      // elxnod[nr.elcon[3*e + k]]++;
-      // elxnod[nr.elcon[3*e + i]]++;
-      // h[nr.elcon[3*e + k]] += dist[i];
-      // h[nr.elcon[3*e + i]] += dist[i];
-    // }
-  // }  
-  // for (int i=0;i<Particles.Size();i++)
-    // Particles[i]->h = h[i]/elxnod[i];
+    double dist[8];
+    //
+    for (int i=0;i < nr.elem[e]->nodecount; i++){
+      int nid = nr.elem[e]->node[i];
+      el_nod[nid][el_nod_count[nid]]= e;
+      el_nod_count[nid] ++;
+    }
+  }  
+  
+  // for (int n = 0 ; n<100;n++){
+    // cout << el_nod_count[n] << ": "<<endl;
+    // for (int nn=0;nn<el_nod_count[n];nn++)
+      // cout << nr.elem[el_nod[n][nn]]->id << " ";
+    // cout << endl;
+  // }
+  
+  // for (int n=0;n<10;n++)
+    // cout << "
+  //Now check from the list which elements are shared by node
+  for (int e=0;e<nr.elem_count;e++){ //Look for element
+    for (int i=0;i < nr.elem[e]->nodecount; i++){
+      int nid = nr.elem[e]->node[i];
+      for (int en = 0; en < el_nod_count[nid]; en++){
+        if(el_nod[nid][en] != e){
+          el_nb[e][el_nb_count[e]] = el_nod[nid][en];
+          el_nb_count[e]++;
+          h[e] += norm (Particles[el_nod[nid][en]]->x - Particles[e]->x); 
+        }
+      }//Loop through shared element nodes 
+    }
+  }
+  //Loop throug nodes 
+  
 
-    
+  for (int i=0;i<Particles.Size();i++){
+    Particles[i]->h = h[i]/el_nb_count[i];
+    Particles[i]->Nb = el_nb_count[i];
+  }
+  
+  for (int i=0;i<Particles.Size();i++){
+    Particles[i]->Mass = Density * nr.elem[i]->vol;
+  }
   
 }
 

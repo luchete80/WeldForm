@@ -227,7 +227,7 @@ public:
 	void AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id);
   void CalculateSurface(const int &id = 1);
   
-  void GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density);
+  void GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density, double hfac);
 	
   inline void CalcContactForces();
   inline void CalcContactForcesAnalytic();
