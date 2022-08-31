@@ -325,6 +325,10 @@ void NastranVolReader::read( const char* fName){
 		}//for node count;
 
     id = atoi(rawData[l].substr(FIELD_LENGTH,FIELD_LENGTH).c_str());
+    // if (id == 9763 || id == 7679) {
+      // cout << "id "<<id<<endl;
+      // for (int k=0;k<4;k++) cout << nv[k] << ", " ;
+    // }
     //cout << "el id "<<id<<endl;
     if (!ispyra &&nodecount ==6 )cprismcount++;
     //cout << endl;
@@ -336,6 +340,9 @@ void NastranVolReader::read( const char* fName){
       elem.push_back(new Prism(this,nv));
     else if (nv.size() == 8)
       elem.push_back(new Hexa(this,nv));
+    else {
+      cout << "ERROR. Element unknown"<<endl;
+    }
 		//cout << endl;
     elem[n]->id = id; //ONLY FOR CONTROL
 		l += line_incr;

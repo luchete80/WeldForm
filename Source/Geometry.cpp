@@ -409,9 +409,10 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
 // }
 
 //Generated at centroids
+//ORIGINAL, MORE RAM
 void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density, double hfac){
 
-  for (int e=0;e < nr.elem.size();e++){
+   for (int e=0;e < nr.elem.size();e++){
     //Vec3_t v(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]);
     double h=1.;
     //cout << "centroid "<<nr.elem[e]->centroid<<endl;
@@ -421,24 +422,32 @@ void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density
    
   std::vector<double> h(Particles.Size());
   std::vector<int> el_nod_count(nr.node_count);
-  int el_nod[nr.node_count][10]; //element list per node
-  int el_nb[nr.elem_count][10];
+  short el_nod[nr.node_count][50]; //element list per node, TODO: CHANGE BY ELEMENT POINTER
   std::vector<int> el_nb_count(Particles.Size());
   //el_nod.resize();
   
   // //cout << "Normals"<<endl;
   //First check each element node and add current element as shared 
+  int maxn = 0;
   for (int e=0;e<nr.elem_count;e++){ //Look for element
-    //Vec3_t v = nr.elem[e]->centroid;
-
-    double dist[8];
-    //
     for (int i=0;i < nr.elem[e]->nodecount; i++){
       int nid = nr.elem[e]->node[i];
       el_nod[nid][el_nod_count[nid]]= e;
+      
+      // if (nid == 30) cout << nr.elem[e]->id << "ncount " <<i<< " internal el id " <<e<<endl;
+      // if (nid == 30) cout << "el_nod[nid][el_nod_count[nid]]" <<el_nod[nid][el_nod_count[nid]]<<endl;
       el_nod_count[nid] ++;
+      if (e==142 || nr.elem[e]->id == 7679)cout << nid << " ";
+      if (el_nod_count[nid] > maxn)
+        maxn = el_nod_count[nid];
     }
-  }  
+  }
+  cout << "Max elements shared by nodes: "<<maxn<<endl;
+  cout << "Nopde 30 "<<endl;
+  
+  // for (int i=0;i<el_nod_count[30];i++)
+    // cout << nr.elem[el_nod[30][i]]->id<< " " ;
+  // cout <<endl;
   
   // for (int n = 0 ; n<100;n++){
     // cout << el_nod_count[n] << ": "<<endl;
@@ -450,30 +459,116 @@ void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density
   // for (int n=0;n<10;n++)
     // cout << "
   //Now check from the list which elements are shared by node
+  maxn = 0;
+  int emax;
   for (int e=0;e<nr.elem_count;e++){ //Look for element
-    for (int i=0;i < nr.elem[e]->nodecount; i++){
+    for (int i=0;i < nr.elem[e]->nodecount; i++){//Element node
       int nid = nr.elem[e]->node[i];
-      for (int en = 0; en < el_nod_count[nid]; en++){
+      for (int en = 0; en < el_nod_count[nid]; en++){//Each element shared this node
         if(el_nod[nid][en] != e){
-          el_nb[e][el_nb_count[e]] = el_nod[nid][en];
+          //el_nb[e][el_nb_count[e]] = el_nod[nid][en];
           el_nb_count[e]++;
-          h[e] += norm (Particles[el_nod[nid][en]]->x - Particles[e]->x); 
+          if (el_nb_count[e]++ > maxn){
+            maxn = el_nb_count[e];
+            emax = e;
+          }
+          h[e] += norm (nr.elem[el_nod[nid][en]]->centroid - nr.elem[e]->centroid); 
+          if (e==142){
+            cout << "node " <<i << ", id "<<nid <<", el " <<nr.elem[el_nod[nid][en]]->id<<endl;
+            
+          }
         }
       }//Loop through shared element nodes 
     }
   }
   //Loop throug nodes 
-  
+  cout << "Max elem neighbours " <<maxn << " for elem id" << nr.elem[emax]->id <<endl;
 
+  
+  double hmax = 0.;
+  int imax;
   for (int i=0;i<Particles.Size();i++){
-    Particles[i]->h = h[i]/el_nb_count[i];
+    Particles[i]->h = h[i]/el_nb_count[i] * hfac;
     Particles[i]->Nb = el_nb_count[i];
+    if (Particles[i]->h > hmax){
+      hmax = Particles[i]->h;
+      imax = i;
+    }
   }
+  cout << "h max is " << hmax << ", in particle " << imax << ", elem id " << nr.elem[imax]->id<<endl;
+  cout << "nb count " <<  el_nb_count[imax]<<endl;
+  // for (int nb=0;nb<el_nb_count[imax];nb++){
+    // cout << nr.elem[el_nb[imax][nb]]->id<<", ";
+  // }
+  cout <<endl;
   
   for (int i=0;i<Particles.Size();i++){
     Particles[i]->Mass = Density * nr.elem[i]->vol;
   }
   
 }
+
+// //Slow,but does not crash, it uses less RAM
+// void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density, double hfac){
+
+  // for (int e=0;e < nr.elem.size();e++){
+    // //Vec3_t v(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]);
+    // double h=1.;
+    // //cout << "centroid "<<nr.elem[e]->centroid<<endl;
+    // Particles.Push(new Particle(tag,nr.elem[e]->centroid,Vec3_t(0,0,0),0.0,Density,h,false));
+  // }
+   // cout << "Generated "<<Particles.Size()<<" particles. "<<endl;
+   
+  // std::vector<double> h(Particles.Size());
+  // std::vector<int> el_nod_count(nr.node_count);
+  // short el_nod[nr.node_count][50]; //element list per node, TODO: CHANGE BY ELEMENT POINTER
+  // std::vector<int> el_nb_count(Particles.Size());
+  // //el_nod.resize();
+  
+  // // //cout << "Normals"<<endl;
+  // //First check each element node and add current element as shared 
+  // int maxn = 0;
+  // int emax;
+  // for (int e=0;e<nr.elem_count;e++){ //Look for element
+    // for (int i=0;i < nr.elem[e]->nodecount; i++){
+      // int nid = nr.elem[e]->node[i];
+      // for (int en = 0 ; en < nr.elem_count;en++) { //Loop though all elements looking for this node
+        // for (int in=0;in < nr.elem[en]->nodecount; in++){
+          // if (nr.elem[e]->node[i] == nr.elem[en]->node[in] ) {
+            // el_nb_count[e]++;
+          // }
+          // if (el_nb_count[e]++ > maxn){
+            // maxn = el_nb_count[e];
+            // emax = e;
+          // }
+        // }
+      // }
+    // }
+  // }
+   // cout << "Max elem neighbours " <<maxn << " for elem id" << nr.elem[emax]->id <<endl;
+  
+  // double hmax = 0.;
+  // int imax;
+  // for (int i=0;i<Particles.Size();i++){
+    // Particles[i]->h = h[i]/el_nb_count[i];
+    // Particles[i]->Nb = el_nb_count[i];
+    // if (Particles[i]->h > hmax){
+      // hmax = Particles[i]->h;
+      // imax = i;
+    // }
+  // }
+  // cout << "h max is " << hmax << ", in particle " << imax << ", elem id " << nr.elem[imax]->id<<endl;
+  // cout << "nb count " <<  el_nb_count[imax]<<endl;
+  // // for (int nb=0;nb<el_nb_count[imax];nb++){
+    // // cout << nr.elem[el_nb[imax][nb]]->id<<", ";
+  // // }
+  // cout <<endl;
+  
+  // for (int i=0;i<Particles.Size();i++){
+    // Particles[i]->Mass = Density * nr.elem[i]->vol;
+  // }
+  
+// }
+
 
 };

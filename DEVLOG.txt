@@ -136,3 +136,4 @@
 20220830 -   NASTRAN reader: 
               - Added element masses. 
               - Added element h
+20220831 -   Fixed h calculation in nastran import. 
