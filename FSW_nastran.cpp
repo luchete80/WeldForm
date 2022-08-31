@@ -145,6 +145,7 @@ int main(int argc, char **argv) try
   SPH::NastranVolReader reader("Mesh.nas");
   dom.GenerateSPHMesh(0, reader,2700., 1.2);
   
+  cout << "Mesh generated. "<<endl;
   SPH::TriMesh mesh(reader);
   
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL

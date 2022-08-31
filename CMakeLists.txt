@@ -89,7 +89,7 @@ SET(EXES
 	#Compression_Elastic_CNS
   #Compression_TRIP_half_ghost_vel
   #Compression_TRIP_vel
-  #Compression_thermal
+  Compression_thermal
   #Contact_Compression_thermal
 	#Cantilever
 	#Cantilever2
@@ -133,7 +133,7 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  FSW_nastran
+  #FSW_nastran
 	#Elastic
 	#Heat_2D
 	#Impact_Campos
