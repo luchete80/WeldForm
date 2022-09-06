@@ -142,13 +142,17 @@ int main(int argc, char **argv) try
   
 //  dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-  SPH::NastranVolReader reader("Mesh.nas");
-  dom.GenerateSPHMesh(0, reader,2700., 1.2);
+  SPH::NastranVolReader reader_vol("Mesh.nas");
+  dom.GenerateSPHMesh(0, reader_vol,2700., 1.2);
   
   cout << "Mesh generated. "<<endl;
+  
+  cout << "Creating tool "<<endl;
+  
+  SPH::NastranReader reader("Tool.nas");
   SPH::TriMesh mesh(reader);
   
-  //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
+
   double cyl_zmax = L/2. + 5.0 * dx/*-1.e-3*/; //If new meshing  
 
 	cout << "Creating contact mesh.."<<endl;
@@ -274,10 +278,9 @@ int main(int argc, char **argv) try
 
   dom.auto_ts=true;
   
-  //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
-  dom.SolveDiffUpdateFraser(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
   
-  cout << "Program Ended" <<endl;
+  // cout << "Program Ended" <<endl;
   return 0;
 }
 MECHSYS_CATCH

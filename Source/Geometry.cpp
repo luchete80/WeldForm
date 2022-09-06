@@ -502,9 +502,11 @@ void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density
   // }
   cout <<endl;
   
-  for (int i=0;i<Particles.Size();i++){
+  for (int i=0; i < Particles.Size(); i++){
     Particles[i]->Mass = Density * nr.elem[i]->vol;
   }
+  
+  solid_part_count = Particles.Size();
   
 }
 

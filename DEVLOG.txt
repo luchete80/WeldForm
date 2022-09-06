@@ -137,3 +137,5 @@
               - Added element masses. 
               - Added element h
 20220831 -   Fixed h calculation in nastran import. 
+20220906 -   Added solid_part_count to GenerateSPHMesh
+             Fixed FSW_nastran example (surface tool was meshed with volumetric reader).
