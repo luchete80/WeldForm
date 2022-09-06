@@ -170,6 +170,10 @@ int main(int argc, char **argv) try
 											//Not for any force calc in contact formulation
 	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
     
+  //mesh.Move(Vec3_t(0.,10.*h,0.));
+  for (size_t a=0; a<dom.solid_part_count; a++){
+    dom.Particles[a]->x += Vec3_t(0.,-h,0.);
+  }
   
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
@@ -267,7 +271,7 @@ int main(int argc, char **argv) try
   // SET TOOL BOUNDARY CONDITIONS
   dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
   dom.trimesh[0]->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
-
+  
 
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
   dom.thermal_solver = true;
@@ -278,7 +282,7 @@ int main(int argc, char **argv) try
 
   dom.auto_ts=true;
   
-  dom.SolveDiffUpdateFraser(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-5 ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
   
   // cout << "Program Ended" <<endl;
   return 0;
