@@ -214,6 +214,19 @@ inline void TriMesh::Update(const double &dt){
   UpdatePlaneCoeff();   //pplane
 }
  
+//To use in contact intersection
+inline void TriMesh::Move(const Vec3_t &v){
+	//Seems to be More accurate to do this by node vel
+	//This is used by normals
+
+	for (int n=0;n<node.Size();n++){
+		*node[n] += v;
+	} 
+  CalcCentroids();
+  CalcNormals();        //From node positions
+  UpdatePlaneCoeff();   //pplane
+}
+ 
   
   
 };

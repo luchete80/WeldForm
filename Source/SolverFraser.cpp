@@ -161,6 +161,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
           if (contact) {
             clock_beg = clock();
             ContactNbUpdate(this);
+            // if (isfirst)
+              // CalcContactInitialGap(); //BEFORE! contactnb
             contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
           }
 				}// ts_i == 0				
