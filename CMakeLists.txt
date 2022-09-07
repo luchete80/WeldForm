@@ -73,7 +73,7 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
   #test_new_sym
-  #Compression
+  Compression
 	#Compression_XSPH
   #Compression_AVisc
   #Compression_half_ghost_vel
@@ -90,7 +90,7 @@ SET(EXES
   #Compression_TRIP_half_ghost_vel
   #Compression_TRIP_vel
   #Compression_thermal
-  Compression_nastran
+  #Compression_nastran
   #Contact_Compression_thermal
 	#Cantilever
 	#Cantilever2
@@ -175,6 +175,8 @@ SET(EXES
 )
 
 add_subdirectory("examples")
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -fstrict-aliasing -ftree-vectorize -funroll-loops -mmmx -msse -msse2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -fopenmp -march=native -pthread")
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
