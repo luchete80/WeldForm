@@ -67,6 +67,7 @@ friend class NastranReader;
 	void CalcCentroids();
 	inline void SetVel(const Vec3_t &v) {m_v = v;};
 	inline void SetRotAxisVel(const Vec3_t &omega){m_w = omega;};
+  inline void Move(const Vec3_t &v);
 };
 
 };
