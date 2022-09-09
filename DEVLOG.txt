@@ -107,6 +107,7 @@
              ALSO WORKS WITH CFL 0.7
 20220721  -  Added Thermal Per Particle test (for comparing with conventional and non block)
 20220725  -  Working on Slice Mesher. All ghost particles. 
+---------------------------------------------------------------------------------------------
 20220801  -  Slice Mesher. Corrected ghost particles at y plane. 
              Begining with MoveGhost, tangential and normal.
 20220802  -  Fixed error in slice mesh generator. 
@@ -137,7 +138,12 @@
               - Added element masses. 
               - Added element h
 20220831 -   Fixed h calculation in nastran import. 
+--------------------------------------------------------------------------------------------
 20220906 -   Added solid_part_count to GenerateSPHMesh
              Fixed FSW_nastran example (surface tool was meshed with volumetric reader).
              Added move mesh feature.
              Working on calculate initial gap.
+20220907 -   Added Compression Example with nastran imported mesh.
+             Found 2 things with fraser integrator:
+             KGC is not working (Compression example)
+20220908 -   

@@ -103,7 +103,7 @@ int main(int argc, char **argv) try
   Fy	= 300.e6;
   //dx	= L / (n-1);
   //dx = L/(n-1);
-  dx = 0.010;
+  dx = 0.015;
   h	= dx*1.2; //Very important
     Cs	= sqrt(K/rho);
 
@@ -148,13 +148,15 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < -3.0*dx ){
+    		//if ( z < -3.0*dx ){
+        if ( z < 0.0 ){
     			dom.Particles[a]->ID=2;
 	    			// dom.Particles[a]->IsFree=false;
     			// dom.Particles[a]->NoSlip=true;			
           bottom_count++;
 				}
-    		if ( z > L + 2.*dx ) {//Changed to only last row
+    		//if ( z > L + 2.*dx ) {//Changed to only last row
+        if ( z > L ) {//Changed to only last row
     			dom.Particles[a]->ID=3;
 					//dom.Particles[a]->XSPH		= 0.1;
 					forcepart_count++;

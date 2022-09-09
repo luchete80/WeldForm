@@ -171,104 +171,104 @@ int main(int argc, char **argv) try
 	// //mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
 	// cout << "Creating Spheres.."<<endl;
 	// //mesh.v = Vec3_t(0.,0.,);
-	// mesh.CalcSpheres(); //DONE ONCE
-	// double hfac = 1.1;	//Used only for Neighbour search radius cutoff
-											// //Not for any force calc in contact formulation
-	// dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+	mesh.CalcSpheres(); //DONE ONCE
+	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
+											//Not for any force calc in contact formulation
+	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
     
   //mesh.Move(Vec3_t(0.,10.*h,0.));
   for (size_t a=0; a<dom.solid_part_count; a++){
     dom.Particles[a]->x += Vec3_t(0.,-h,0.);
   }
   
-	// dom.ts_nb_inc = 5;
-	// dom.gradKernelCorr = false;
+	dom.ts_nb_inc = 5;
+	dom.gradKernelCorr = false;
 			
-	// cout << "Particle count: "<<dom.Particles.Size()<<endl;
-  // int bottom_particles = 0;
-  // int top_particles = 0;
-  // int side_particles  =0;
-		// for (size_t a=0; a<dom.Particles.Size(); a++)
-		// {
-      // dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
-      // dom.Particles[a]->mat = &mat;
+	cout << "Particle count: "<<dom.Particles.Size()<<endl;
+  int bottom_particles = 0;
+  int top_particles = 0;
+  int side_particles  =0;
+		for (size_t a=0; a<dom.Particles.Size(); a++)
+		{
+      dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
+      dom.Particles[a]->mat = &mat;
         
-			// dom.Particles[a]->G		= G;
-			// dom.Particles[a]->PresEq	= 0;
-			// dom.Particles[a]->Cs		= Cs;
-			// dom.Particles[a]->Shepard	= false;
-			// dom.Particles[a]->Material	= 2;
-			// dom.Particles[a]->Fail		= 1;
-			// dom.Particles[a]->Sigmay	= Fy;
-			// dom.Particles[a]->Alpha		= 1.0;
-			// //dom.Particles[a]->Beta		= 2.0;
-			// dom.Particles[a]->TI		= 0.3;
-			// dom.Particles[a]->TIInitDist	= dx;
+			dom.Particles[a]->G		= G;
+			dom.Particles[a]->PresEq	= 0;
+			dom.Particles[a]->Cs		= Cs;
+			dom.Particles[a]->Shepard	= false;
+			dom.Particles[a]->Material	= 2;
+			dom.Particles[a]->Fail		= 1;
+			dom.Particles[a]->Sigmay	= Fy;
+			dom.Particles[a]->Alpha		= 1.0;
+			//dom.Particles[a]->Beta		= 2.0;
+			dom.Particles[a]->TI		= 0.3;
+			dom.Particles[a]->TIInitDist	= dx;
       
-      // dom.Particles[a]->k_T			  =	130.*VFAC;  //[W/(m.K)]
-			// dom.Particles[a]->cp_T			=	960.;       //[J/(kg.K)]
-			// // dom.Particles[a]->h_conv		= 100.0; //W/m2-K
-			// // dom.Particles[a]->T_inf 		= 500.;
-			// dom.Particles[a]->T				  = 20.0;			
+      dom.Particles[a]->k_T			  =	130.*VFAC;  //[W/(m.K)]
+			dom.Particles[a]->cp_T			=	960.;       //[J/(kg.K)]
+			// dom.Particles[a]->h_conv		= 100.0; //W/m2-K
+			// dom.Particles[a]->T_inf 		= 500.;
+			dom.Particles[a]->T				  = 20.0;			
 			
-			// double x = dom.Particles[a]->x(0);
-			// double y = dom.Particles[a]->x(1);
-			// double z = dom.Particles[a]->x(2);
+			double x = dom.Particles[a]->x(0);
+			double y = dom.Particles[a]->x(1);
+			double z = dom.Particles[a]->x(2);
 			
-      // double r = sqrt (x*x+z*z);      
-      // if (/*r < TOOLRAD && */y < (ybottom +dx ) ){
-        // dom.Particles[a]->ID=2; //ID 1 is free surface  
-        // dom.Particles[a]->not_write_surf_ID = true;
-        // bottom_particles++;
+      double r = sqrt (x*x+z*z);      
+      if (/*r < TOOLRAD && */y < (ybottom +dx ) ){
+        dom.Particles[a]->ID=2; //ID 1 is free surface  
+        dom.Particles[a]->not_write_surf_ID = true;
+        bottom_particles++;
         
-        // //if (r < TOOLRAD){
-          // // dom.Particles[a]->ID = 4; //ID 1 is free surface  
-          // // dom.Particles[a]->not_write_surf_ID = true;
-          // dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-          // dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
-          // dom.Particles[a]->T_inf 		= 20.;
-        // //}
-      // }
+        //if (r < TOOLRAD){
+          // dom.Particles[a]->ID = 4; //ID 1 is free surface  
+          // dom.Particles[a]->not_write_surf_ID = true;
+          dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+          dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+          dom.Particles[a]->T_inf 		= 20.;
+        //}
+      }
 
-      // if (r > SUPPRAD && y > ( ytop - dx ) ){
-        // dom.Particles[a]->ID=2; //ID 1 is free surface  
-        // dom.Particles[a]->not_write_surf_ID = true;
-        // top_particles++;
-      // }
+      if (r > SUPPRAD && y > ( ytop - dx ) ){
+        dom.Particles[a]->ID=2; //ID 1 is free surface  
+        dom.Particles[a]->not_write_surf_ID = true;
+        top_particles++;
+      }
 			
 			
-			// //SIDES
-			// if ( z < -L/2. + dx || z > L/2. - dx){
-				// dom.Particles[a]->ID=3;
-				// dom.Particles[a]->not_write_surf_ID = true;
-   			// dom.Particles[a]->IsFree=false;
-        // side_particles++;
-			// }
-			// else if ( x < -L/2. + 2.*dx || x > L/2. - 2.*dx){
-				// dom.Particles[a]->ID=3;
-				// dom.Particles[a]->not_write_surf_ID = true;
-        // dom.Particles[a]->IsFree=false;
-        // side_particles++;
-			// }			
+			//SIDES
+			if ( z < -L/2. + dx || z > L/2. - dx){
+				dom.Particles[a]->ID=3;
+				dom.Particles[a]->not_write_surf_ID = true;
+   			dom.Particles[a]->IsFree=false;
+        side_particles++;
+			}
+			else if ( x < -L/2. + 2.*dx || x > L/2. - 2.*dx){
+				dom.Particles[a]->ID=3;
+				dom.Particles[a]->not_write_surf_ID = true;
+        dom.Particles[a]->IsFree=false;
+        side_particles++;
+			}			
 			
 
-		// }
+		}
     
-    // cout << "Bottom particles: " << bottom_particles << endl;
-    // cout << "Top particles: " << top_particles << endl;
-    // cout << "Side particles: " << side_particles<<endl;
+    cout << "Bottom particles: " << bottom_particles << endl;
+    cout << "Top particles: " << top_particles << endl;
+    cout << "Side particles: " << side_particles<<endl;
       
-      // // dom.Particles[0]->IsFree=false;
-      // // dom.Particles[0]->NoSlip=true;			
-    // //Contact Penalty and Damping Factors
-    // dom.fric_type = Fr_Dyn;
-    // dom.contact = true;
-    // //dom.friction = 0.15;
-    // dom.friction_dyn = 0.2;
-    // dom.friction_sta = 0.2;
-    // dom.PFAC = 0.6;
-    // dom.DFAC = 0.0;
-    // dom.update_contact_surface = false;
+      // dom.Particles[0]->IsFree=false;
+      // dom.Particles[0]->NoSlip=true;			
+    //Contact Penalty and Damping Factors
+    dom.fric_type = Fr_Dyn;
+    dom.contact = true;
+    //dom.friction = 0.15;
+    dom.friction_dyn = 0.2;
+    dom.friction_sta = 0.2;
+    dom.PFAC = 0.6;
+    dom.DFAC = 0.0;
+    dom.update_contact_surface = false;
 
   dom.WriteXDMF("maz");
   dom.m_kernel = SPH::iKernel(dom.Dimension,h);	

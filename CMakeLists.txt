@@ -73,7 +73,7 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
   #test_new_sym
-  Compression
+  #Compression
 	#Compression_XSPH
   #Compression_AVisc
   #Compression_half_ghost_vel
@@ -82,7 +82,7 @@ SET(EXES
 	#Compression_smallD
 	#Compression_smallL
 	#Compression_smallL_1side
-  #Contact_Compression_Rot
+  Contact_Compression_Rot
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
