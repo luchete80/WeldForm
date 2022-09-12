@@ -146,4 +146,5 @@
 20220907 -   Added Compression Example with nastran imported mesh.
              Found 2 things with fraser integrator:
              KGC is not working (Compression example)
-20220908 -   
+20220912 -   Found an CRUCIAL ERROR in Contact. 
+             Now velocity results in rotation-compression are correct.

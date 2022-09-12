@@ -67,7 +67,7 @@ inline void Domain::CalcContactForcesWang(){
  
   ext_forces_work_step = 0.;
   //USE TRUE: FALSE DOES NOT WORK
-  bool ref_accel = true;   //true: tg force is compared to current tg accel
+  bool ref_accel = false;   //true: tg force is compared to current tg accel
 
   double fr_sta, fr_dyn;
             
@@ -240,17 +240,20 @@ inline void Domain::CalcContactForcesWang(){
 
                if (ref_accel) ref_tg = atg * Particles[P1]->Mass;
                else           ref_tg = tgforce;
+               
+               double dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119
                 
                if (norm(ref_tg) < fr_sta * norm(Particles[P1] -> contforce) ){
                   omp_set_lock(&Particles[P1]->my_lock);
                     //if (P1 == 12415) cout << "ares (a - tgforce): "<<Particles[P1] -> a - tgforce<<endl;
-                    Particles[P1] -> a -= tgforce / Particles[P1]->Mass; 
+                    Particles[P1] -> a -= tgforce / Particles[P1]->Mass;         
                   omp_unset_lock(&Particles[P1]->my_lock);
                 } else {
                   omp_set_lock(&Particles[P1]->my_lock);
                     //cout << "mu N SURPASSED: tg force: " << tgforce<<endl;
-                    if (norm(tgforce)>1.0e-2)
-                    Particles[P1] -> a -= fr_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
+                    //if (norm(tgforce)>1.0e-2)
+                    Particles[P1] -> a -= fr_dyn * norm(Particles[P1] -> contforce) / Particles[P1]->Mass * tgforce/norm(tgforce);
+                    //Particles[P1] -> a -= Particles[P1] -> Sigma_eq /sqrt(3.)* dS * dS * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
                   omp_unset_lock(&Particles[P1]->my_lock);
 
                   if (thermal_solver){
