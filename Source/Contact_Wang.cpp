@@ -67,7 +67,7 @@ inline void Domain::CalcContactForcesWang(){
  
   ext_forces_work_step = 0.;
   //USE TRUE: FALSE DOES NOT WORK
-  bool ref_accel = false;   //true: tg force is compared to current tg accel
+  //bool ref_accel = false;   //true: tg force is compared to current tg accel
 
   double fr_sta, fr_dyn;
             
@@ -238,8 +238,9 @@ inline void Domain::CalcContactForcesWang(){
                 delta_tg = du - dot(du, Particles[P2]->normal)*Particles[P2]->normal;
                 tgforce = kij * delta_tg;
 
-               if (ref_accel) ref_tg = atg * Particles[P1]->Mass;
-               else           ref_tg = tgforce;
+               //if (ref_accel) ref_tg = atg * Particles[P1]->Mass;
+               //else           
+                 ref_tg = tgforce;
                
                double dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119
                 
