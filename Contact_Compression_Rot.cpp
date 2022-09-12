@@ -168,7 +168,7 @@ int main(){
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
+	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
