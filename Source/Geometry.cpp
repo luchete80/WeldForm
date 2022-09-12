@@ -1,6 +1,8 @@
 #include "Plane.h"
 #include <vector>
 
+#include "NastranVolReader.h"
+
 namespace SPH {
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
