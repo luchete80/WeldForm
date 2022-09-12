@@ -12,7 +12,7 @@ using namespace SPH;
 using namespace std;
 
 std::ofstream of;
-
+double tout;
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 
@@ -52,7 +52,14 @@ void UserAcc(SPH::Domain & domi) {
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
-  of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
+  //of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
+  double dtout = 1.e-4;
+  if (domi.getTime()>=tout){
+    // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
+    // cout << "Normal acc sum " << normal_acc_sum<<endl;
+    tout += dtout;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << endl;
+  }
 }
 
 
@@ -106,12 +113,19 @@ int main(){
 // 𝑛𝐽𝐶 0.3 -
 // 𝑚𝐽𝐶 1.0
 			
-	//Hollomon(const double eps0_, const double &k_, const double &m_):
+
 	//Hollomon mat(el,Fy/E,1220.e6,0.195);
-	JohnsonCook mat(el, A,B,C,
-                      m,n_,eps_0,
-                      T_m, T_t);	
-                      
+  
+	// JohnsonCook mat(el, A,B,C,
+                      // m,n_,eps_0,
+                      // T_m, T_t);	
+  
+  //IF BILINEAR
+    double Et = 0.1 * E;
+		
+		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
+				
+  
 	double timestep;
 	timestep = (0.2*h/(Cs));
 
@@ -158,10 +172,15 @@ int main(){
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
-
-				dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
-				dom.Particles[a]->mat = &mat;
-        
+    //IF JOHNSON COOK
+    // dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
+    // dom.Particles[a]->mat = &mat;
+    //dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);    
+    //--ELSE IF BILINEAR
+    dom.Particles[a]->Ep 			= Ep;//HARDENING
+ 		dom.Particles[a]->Sigmay	= Fy;
+    /////-----------------------------------
+    
 		dom.Particles[a]->G		= G;
 		dom.Particles[a]->PresEq	= 0;
 		dom.Particles[a]->Cs		= Cs;
@@ -170,8 +189,8 @@ int main(){
 		//dom.Particles[a]->Et_m = 0.01 * 68.9e9;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
-		//dom.Particles[a]->Sigmay	= Fy;
-    dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);
+
+
 
 		dom.Particles[a]->Alpha		= 1.0;
 		dom.Particles[a]->Beta		= 0.0;
@@ -211,7 +230,7 @@ int main(){
 
 	of = std::ofstream ("cf.csv", std::ios::out);
   of << "Time, cf, vypart"<<endl;
-  
+  tout = 0.;
 
 	//ID 	0 Internal
 	//		1	Outer Surface
