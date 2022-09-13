@@ -11,6 +11,10 @@
 #define TOOLRAD   0.0062
 #define SUPPRAD   0.01
 
+double tout, dtout;
+
+ofstream ofprop("fsw_force.csv", std::ios::out);
+
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 
@@ -50,6 +54,11 @@ void UserAcc(SPH::Domain & domi) {
     // //domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
   // }
   //domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  dtout = 1.0e-4;
+  if (domi.getTime()>=tout){
+    tout += dtout;
+    ofprop << domi.max_disp[2]<<", " << domi.contact_force_sum << endl;
+  }
 }
 
 
@@ -208,7 +217,7 @@ int main(int argc, char **argv) try
           // dom.Particles[a]->ID = 4; //ID 1 is free surface  
           // dom.Particles[a]->not_write_surf_ID = true;
           dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-          dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+          dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
           dom.Particles[a]->T_inf 		= 20.;
         //}
       }
@@ -221,16 +230,20 @@ int main(int argc, char **argv) try
 			
 			
 			//SIDES
-			if ( z < -L/2. + dx || z > L/2. - dx){
+			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/30.0/*- dx*/){ 
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
    			dom.Particles[a]->IsFree=false;
+          dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+          dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}
-			else if ( x < -L/2. + 2.*dx || x > L/2. - 2.*dx){
+			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/30.0/*- 2.*dx*/){
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
         dom.Particles[a]->IsFree=false;
+        dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+        dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}			
 			

@@ -148,3 +148,4 @@
              KGC is not working (Compression example)
 20220912 -   Found an CRUCIAL ERROR in Contact. 
              Now velocity results in rotation-compression are correct.
+20220913 -   Adjusting FSW_reduced_test convection coeffs. 
