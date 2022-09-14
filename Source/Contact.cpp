@@ -31,6 +31,9 @@ void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id
 	}
 	cout << Particles.Size() - first_fem_particle_idx[meshcount] << "particles added with ID " << contact_surf_id[meshcount] <<endl;
 	cout << first_fem_particle_idx[meshcount] << " is the first solid particle index."<<endl;
+  
+  tot_cont_heat_cond.push_back(0.);
+  
   meshcount++;
 }
 

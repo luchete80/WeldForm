@@ -175,6 +175,10 @@ namespace SPH {
 		double Ta,Tb;						//Temperature (t-1) for leapfrog
 		double q_source;
 		double q_conv,T_inf,h_conv;				//Different heat source terms
+    double q_cont_conv;
+    
+    double mcp_t;                   //mass * cp, ONLY FOR CONTACT SOLID PARTICLES 
+    
 		double q_plheat;				//Plastic Work Heat generation
 		double th_exp;		//Constant
 		

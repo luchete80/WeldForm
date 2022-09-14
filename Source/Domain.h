@@ -291,7 +291,12 @@ public:
     double					CsMax;		///< Max speed of sound for calculating the timestep
 	double 					Vol;		///LUCIANO
 	
-		bool cont_heat_gen;
+		bool cont_heat_gen;     //Contact heat generation
+    bool cont_heat_cond;    //Contact Heat conduction
+    
+    double contact_hc;      //Conductance coeff
+    
+    std::vector <double>    tot_cont_heat_cond; //Total contact heat conductance
 	
 		std::vector <int> 			first_fem_particle_idx;			//The rest are ridig bodies
     int                     meshcount;
@@ -314,6 +319,7 @@ public:
     bool					FSI;						///< Selecting variable to choose Fluid-Structure Interaction
 		int						contact_type;		//0: no contact 1: node to surface 2: node 2 node
 		bool					thermal_solver;
+
     
    std::vector <boundaryCondition> bConds;  //NEW, For BCond
 	

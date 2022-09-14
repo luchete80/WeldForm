@@ -140,6 +140,9 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
   for (int i=0;i<3;i++) rotrate[i] = 0 ;
   
   impose_vel = false; //For bonded contact
+  
+  q_cont_conv = 0.;
+  mcp_t = 1.;
 }
 
 inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin, size_t Scheme, Mat3_t I)

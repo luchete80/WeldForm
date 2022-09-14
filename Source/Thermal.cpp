@@ -130,7 +130,7 @@ inline void Domain::CalcTempInc () {
 	//for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
 		f = 1./(Particles[i]->Density * Particles[i]->cp_T );
-    Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat * pl_work_heat_frac);	
+    Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat * pl_work_heat_frac + Particles[i]->q_cont_conv);	
     
     if (i<solid_part_count){
     plw = f * Particles[i]->q_plheat;
@@ -457,9 +457,11 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 inline void Domain::ThermalCalcs(const double &dt){
   if (thermal_solver){
     m_maxT = 0.;
-    m_minT =1000.;    
+    m_minT =1000.; 
+
+    #pragma omp parallel for schedule (static) num_threads(Nproc)    
     for (size_t i=0; i < solid_part_count; i++){
-			Particles[i]->T+= dt*Particles[i]->dTdt;
+			Particles[i]->T += dt*Particles[i]->dTdt;
 			//Particles[i]->TempCalcLeapfrog(dt);
 			if (Particles[i]->T > m_maxT)
 				m_maxT=Particles[i]->T;
@@ -470,7 +472,16 @@ inline void Domain::ThermalCalcs(const double &dt){
 			CalcConvHeat();
 			CalcTempInc();
 			CalcThermalExpStrainRate();	//Add Thermal expansion Strain Rate Term	
-		}
+  
+    if (contact && cont_heat_cond){
+      #pragma omp parallel for schedule (static) num_threads(Nproc)    
+      for (size_t i = solid_part_count; i < Particles.Size(); i++){
+        Particles[i]->T += tot_cont_heat_cond[Particles[i]->mesh] / Particles[i]->mcp_t;
+      }
+
+    }
+  
+  }
 }
 
 inline void Domain::ThermalSolve_wo_init (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
