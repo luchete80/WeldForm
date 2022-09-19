@@ -11,6 +11,9 @@
 using namespace SPH;
 using namespace std;
 
+bool thermal_contact = true;
+#define W_RPM 600
+
 std::ofstream of;
 double tout;
 void UserAcc(SPH::Domain & domi) {
@@ -241,9 +244,16 @@ int main(){
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
-    dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,60*M_PI/30.));  //axis rotation m_w
+    dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,W_RPM*M_PI/30.));  //axis rotation m_w
       dom.thermal_solver = true;
   dom.cont_heat_gen = true;
+  
+  //IF THERMAL CONTACT
+  if (thermal_contact){
+    dom.cont_heat_cond = true;
+    dom.contact_hc = 1000.;
+    
+  }
   //dom.auto_ts_cont = true;
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
