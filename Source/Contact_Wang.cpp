@@ -253,7 +253,7 @@ inline void Domain::CalcContactForcesWang(){
                       dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.666666666);
                       //Fraser Eq 3.121
                       omp_set_lock(&Particles[P1]->my_lock);
-                      Particles[P1]->q_cont_conv = Particles[i]->Density * contact_hc * dS2 * (Particles[P2]->T - Particles[P1]->T)/Particles[P1]->Mass;
+                      Particles[P1]->q_cont_conv = Particles[i]->Density * contact_hc * dS2 * (Particles[P2]->T - Particles[P1]->T) / Particles[P1]->Mass;
                       omp_unset_lock(&Particles[P1]->my_lock);
                       
                       omp_set_lock(&dom_lock);                             

@@ -218,6 +218,11 @@ int main(){
       cout << "CONTROL, particle "<< a << "x "<<x<< ", y " << y<<", z "<<z<<endl;
     }
 	}
+  
+  //TODO: SET TO CONTACT PROPERTIES CLASS
+  for (size_t i = dom.solid_part_count; i < dom.Particles.Size(); i++)
+    dom.Particles[i]->mcp_t=1.;
+  
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction_dyn = 0.2;
@@ -244,15 +249,14 @@ int main(){
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
-    dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,W_RPM*M_PI/30.));  //axis rotation m_w
-      dom.thermal_solver = true;
+  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,W_RPM*M_PI/30.));  //axis rotation m_w
+  dom.thermal_solver = true;
   dom.cont_heat_gen = true;
   
   //IF THERMAL CONTACT
   if (thermal_contact){
-    dom.cont_heat_cond = true;
-    dom.contact_hc = 1000.;
-    
+    dom.cont_heat_cond  = true;
+    dom.contact_hc      = 1000.; 
   }
   //dom.auto_ts_cont = true;
     
