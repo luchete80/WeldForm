@@ -61,7 +61,7 @@ void UserAcc(SPH::Domain & domi) {
     // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     // cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout;
-    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << endl;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << domi.accum_cont_heat_cond << endl;
   }
 }
 
@@ -171,7 +171,7 @@ int main(){
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
+	dom.gradKernelCorr = true; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{

@@ -296,8 +296,8 @@ public:
     
     double contact_hc;      //Conductance coeff
     
-    std::vector <double>    tot_cont_heat_cond; //Total contact heat conductance
-	
+    std::vector <double>    tot_cont_heat_cond;   //Total contact heat conductance
+    double                  accum_cont_heat_cond; 
 		std::vector <int> 			first_fem_particle_idx;			//The rest are ridig bodies
     int                     meshcount;
 		

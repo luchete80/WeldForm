@@ -289,6 +289,8 @@ inline void Domain::CalcContactForcesWang(){
 	//}
 	//Correct time step!
 //	std::min(deltat,dt_fext)
+  for (int m=0;m<meshcount;m++) 
+    accum_cont_heat_cond +=tot_cont_heat_cond[m] * deltat;
 }
 
 

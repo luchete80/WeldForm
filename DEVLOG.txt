@@ -150,3 +150,6 @@
              Now velocity results in rotation-compression are correct.
 20220913 -   Adjusting FSW_reduced_test convection coeffs. 
 20220914 -   Added contact heat conductance.
+20220921 -   Added accumulated contact heat flux.
+             Error found in heating of rigid surfaces. There was a deltat missing. 
+             

@@ -157,6 +157,7 @@ inline Domain::Domain ()
   
   cont_heat_gen   = false;
   cont_heat_cond  = false;
+  accum_cont_heat_cond = 0.;
   
 }
 

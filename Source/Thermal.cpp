@@ -476,7 +476,7 @@ inline void Domain::ThermalCalcs(const double &dt){
     if (contact && cont_heat_cond){
       #pragma omp parallel for schedule (static) num_threads(Nproc)    
       for (size_t i = solid_part_count; i < Particles.Size(); i++){
-        //Particles[i]->T += tot_cont_heat_cond[Particles[i]->mesh] / Particles[i]->mcp_t;
+        Particles[i]->T += tot_cont_heat_cond[Particles[i]->mesh] / Particles[i]->mcp_t * deltat;
       }
     }
   
