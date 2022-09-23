@@ -81,8 +81,7 @@ SET(EXES
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL
-	#Compression_smallL_1side
-  Contact_Compression_Rot
+	#Compression_smallL_1side  
 	#Compression_smallD_CNS
 	#Compression_10ts
 	#Compression_Elastic_CNS_10ts
@@ -92,6 +91,7 @@ SET(EXES
   #Compression_thermal
   #Compression_nastran
   #Contact_Compression_thermal
+  Contact_Compression_Rot
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl

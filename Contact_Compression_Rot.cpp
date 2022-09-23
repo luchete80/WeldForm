@@ -61,7 +61,7 @@ void UserAcc(SPH::Domain & domi) {
     // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     // cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout;
-    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << domi.accum_cont_heat_cond << endl;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
   }
 }
 
@@ -171,14 +171,14 @@ int main(){
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
+	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
     //IF JOHNSON COOK
     // dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
     // dom.Particles[a]->mat = &mat;
-    //dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);    
+    // dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);    
     //--ELSE IF BILINEAR
     dom.Particles[a]->Ep 			= Ep;//HARDENING
  		dom.Particles[a]->Sigmay	= Fy;
@@ -237,7 +237,7 @@ int main(){
 
 
 	of = std::ofstream ("cf.csv", std::ios::out);
-  of << "Time, cf, vypart"<<endl;
+  of << "Time, cf, maxdisp, cfsum, heat cond sum, friction sum"<<endl;
   tout = 0.;
 
 	//ID 	0 Internal

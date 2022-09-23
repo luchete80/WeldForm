@@ -152,4 +152,5 @@
 20220914 -   Added contact heat conductance.
 20220921 -   Added accumulated contact heat flux.
              Error found in heating of rigid surfaces. There was a deltat missing. 
-             
+20220923 -   Critical ERROR Corrected error in HEAT GENERATION. 
+             Incorrect use of force.

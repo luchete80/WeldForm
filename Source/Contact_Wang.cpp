@@ -35,6 +35,7 @@ inline void Domain::CalcContactForcesWang(){
 		inside_part[i] = 0;
 		inside_time=inside_geom=0;
     Particles[i] -> q_cont_conv = 0.;
+    Particles[i] -> friction_hfl = 0.;
   }
  
   for (int m=0;m<meshcount;m++) tot_cont_heat_cond[m] = 0.;
@@ -51,7 +52,7 @@ inline void Domain::CalcContactForcesWang(){
   int i,j;  //For inside testing
 	
 	int P1,P2;
-  Vec3_t tgforce;
+  Vec3_t tgforce, tgforce_dyn;
   Vec3_t imp_force;
   Vec3_t Qj[Particles.Size()]; //Things not allowed
   //Vec3_t vr[Particles.Size()];
@@ -85,7 +86,7 @@ inline void Domain::CalcContactForcesWang(){
   Vec3_t x_pred, vr_pred;
   Vec3_t ref_tg;
   double dS2;
-	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, x_pred, imp_force, fr_sta, fr_dyn, ref_tg, vr_pred, du, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgvr,norm_tgvr,tgdir,atg, dS2) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, x_pred, imp_force, fr_sta, fr_dyn, ref_tg, vr_pred, du, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgforce_dyn,tgvr,norm_tgvr,tgdir,atg, dS2) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -233,24 +234,28 @@ inline void Domain::CalcContactForcesWang(){
                if (norm(ref_tg) < fr_sta * norm(Particles[P1] -> contforce) ){
                   omp_set_lock(&Particles[P1]->my_lock);
                     //if (P1 == 12415) cout << "ares (a - tgforce): "<<Particles[P1] -> a - tgforce<<endl;
-                    Particles[P1] -> a -= tgforce / Particles[P1]->Mass;         
+                    Particles[P1] -> a -= tgforce / Particles[P1]->Mass;   
+                    Particles[P1]->q_fric_work  = dot(tgforce,vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)       
+                    Particles[P1]->friction_hfl = dot(tgforce,vr) / dS2; //J/(m3.s)                    
                   omp_unset_lock(&Particles[P1]->my_lock);
                 } else {
+                  tgforce_dyn = fr_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
                   omp_set_lock(&Particles[P1]->my_lock);
-                    //cout << "mu N SURPASSED: tg force: " << tgforce<<endl;
-                    //if (norm(tgforce)>1.0e-2)
-                    Particles[P1] -> a -= fr_dyn * norm(Particles[P1] -> contforce) / Particles[P1]->Mass * tgforce/norm(tgforce);
-                    //Particles[P1] -> a -= Particles[P1] -> Sigma_eq /sqrt(3.)* dS * dS * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
+                    Particles[P1] -> a -= tgforce_dyn / Particles[P1]->Mass;
                   omp_unset_lock(&Particles[P1]->my_lock);
 
                   if (thermal_solver){
+                    dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.666666666);      
+                    //atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;                      
                     omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1]->q_fric_work = dot(tgforce,vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
+                    Particles[P1]->q_fric_work  = dot(tgforce_dyn,vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
+                    Particles[P1]->friction_hfl = dot(tgforce_dyn,vr) / dS2; //J/(m3.s)
+                    // Particles[P1]->q_fric_work  = Particles[P1]->Mass * dot(atg, vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
+                    // Particles[P1]->friction_hfl = Particles[P1]->Mass * dot(atg,vr) / dS2;
                     omp_unset_lock(&Particles[P1]->my_lock);
                     //cout<< "fric work" <<Particles[P1]->q_fric_work<<endl;
                     
                     if (cont_heat_cond){//Contact thermal Conductance
-                      dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.666666666);
                       //Fraser Eq 3.121
                       omp_set_lock(&Particles[P1]->my_lock);
                       Particles[P1]->q_cont_conv = Particles[i]->Density * contact_hc * dS2 * (Particles[P2]->T - Particles[P1]->T) / Particles[P1]->Mass;
