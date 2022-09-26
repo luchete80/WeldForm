@@ -308,14 +308,17 @@ int main(int argc, char **argv) try
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
+  
+  dom.cont_heat_cond  = true;
+  dom.contact_hc      = 1000.*VFAC; 
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
-  dom.auto_ts=true;
+  dom.auto_ts=false;
   
   //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
-  dom.SolveDiffUpdateFraser(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-3  ,"test06",1000);
     
   return 0;
 }
