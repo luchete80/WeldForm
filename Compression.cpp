@@ -81,7 +81,7 @@ void UserAcc(SPH::Domain & domi)
     // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     // cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout;
-    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << ", " <<ext_forces_work<<", " <<domi.plastic_work << ", " <<domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
   }
 }
 
@@ -179,7 +179,7 @@ int main(int argc, char **argv) try
 		dom.BC.InOutFlow = 0;
 
     of = std::ofstream ("cf.csv", std::ios::out);
-    of << "Time, cf, maxdisp, cfsum, heat cond sum, friction sum"<<endl;
+    of << "Time, disp, cf, ext_f_wk, plastic_wk, heat_cond, friction_wk"<<endl;
     tout = 0.;
     
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
