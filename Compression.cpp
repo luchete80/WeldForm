@@ -30,6 +30,8 @@
 
 int forcepart_count;
 
+std::ofstream of;
+double tout;
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -73,6 +75,14 @@ void UserAcc(SPH::Domain & domi)
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
+
+  double dtout = 1.e-4;
+  if (domi.getTime()>=tout){
+    // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
+    // cout << "Normal acc sum " << normal_acc_sum<<endl;
+    tout += dtout;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
+  }
 }
 
 
@@ -168,6 +178,10 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
+    of = std::ofstream ("cf.csv", std::ios::out);
+    of << "Time, cf, maxdisp, cfsum, heat cond sum, friction sum"<<endl;
+    tout = 0.;
+    
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
