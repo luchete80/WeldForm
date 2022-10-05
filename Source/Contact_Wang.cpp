@@ -176,14 +176,6 @@ inline void Domain::CalcContactForcesWang(){
               Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159     
               Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
-
-            omp_set_lock(&dom_lock);            
-              contact_force_sum += norm(Particles[P1] ->contforce);
-              contact_reaction_sum += dot (Particles[P1] -> a,Particles[P2]->normal)* Particles[P1]->Mass;
-              //ext_forces_work_step += dot (Particles[P1] -> contforce,//Particles[P2]->v);
-              //ext_forces_work_step += /*dot(*/Particles[P1] -> contforce/*,1./norm(Particles[P2]->v)*Particles[P2]->v)*/ * Particles[P2]->v; //Assuming v2 and forces are parallel
-              ext_forces_work_step += dot(Particles[P1] -> contforce,Particles[P2]->v);
-            omp_unset_lock(&dom_lock);	
             //inside_pairs++;
 						
 						// TANGENTIAL COMPONENNT DIRECTION
@@ -241,6 +233,7 @@ inline void Domain::CalcContactForcesWang(){
                 } else {
                   tgforce_dyn = fr_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
                   omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> contforce -= tgforce_dyn;
                     Particles[P1] -> a -= tgforce_dyn / Particles[P1]->Mass;
                   omp_unset_lock(&Particles[P1]->my_lock);
 
@@ -271,6 +264,14 @@ inline void Domain::CalcContactForcesWang(){
 
 
             }
+            
+              omp_set_lock(&dom_lock);            
+              contact_force_sum += norm(Particles[P1] ->contforce);
+              contact_reaction_sum += dot (Particles[P1] -> a,Particles[P2]->normal)* Particles[P1]->Mass;
+              //ext_forces_work_step += dot (Particles[P1] -> contforce,//Particles[P2]->v);
+              //ext_forces_work_step += /*dot(*/Particles[P1] -> contforce/*,1./norm(Particles[P2]->v)*Particles[P2]->v)*/ * Particles[P2]->v; //Assuming v2 and forces are parallel
+              ext_forces_work_step += dot(Particles[P1] -> contforce,Particles[P2]->v);
+            omp_unset_lock(&dom_lock);	
 
             
 					}// if inside
