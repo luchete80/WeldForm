@@ -263,7 +263,7 @@ inline void Domain::CalcContactForcesWang(){
                 }         
 
 
-            }
+            }//friction
             
               omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);

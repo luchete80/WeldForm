@@ -61,7 +61,7 @@ void UserAcc(SPH::Domain & domi) {
     // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     // cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout;
-    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << ", " <<domi.ext_forces_work<<", " <<domi.plastic_work << ", " <<domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
   }
 }
 

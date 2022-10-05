@@ -13,6 +13,8 @@ using namespace std;
 
 std::ofstream of;
 
+double tout;
+
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 
@@ -53,6 +55,15 @@ void UserAcc(SPH::Domain & domi) {
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
   domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
   of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
+
+  double dtout = 1.e-4;
+  if (domi.getTime()>=tout){
+    // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
+    // cout << "Normal acc sum " << normal_acc_sum<<endl;
+    tout += dtout;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << ", " <<domi.ext_forces_work<<", " <<domi.plastic_work << ", " <<domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
+  }
+
 }
 
 
@@ -130,7 +141,7 @@ int main(){
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
+	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
@@ -162,8 +173,8 @@ int main(){
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-	dom.friction_dyn = 0.5;
-	dom.friction_sta = 0.5;
+	dom.friction_dyn = 0.2;
+	dom.friction_sta = 0.2;
 	dom.PFAC = 0.5;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;
@@ -174,8 +185,8 @@ int main(){
 
 
 	of = std::ofstream ("cf.csv", std::ios::out);
-  of << "Time, cf, vypart"<<endl;
-  
+    of << "Time, disp, cf, ext_f_wk, plastic_wk, heat_cond, friction_wk"<<endl;
+    tout = 0.;  
 
 	//ID 	0 Internal
 	//		1	Outer Surface
@@ -185,7 +196,7 @@ int main(){
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
-  dom.auto_ts=true;
+  dom.auto_ts=false;
   //dom.auto_ts_cont = true;
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
