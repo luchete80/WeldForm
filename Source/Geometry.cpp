@@ -417,7 +417,7 @@ void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density
    for (int e=0;e < nr.elem.size();e++){
     //Vec3_t v(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]);
     double h=1.;
-    //cout << "centroid "<<nr.elem[e]->centroid<<endl;
+    //cout << "centroid "<<nr.elem[e]->centroid<<endl; 
     Particles.Push(new Particle(tag,nr.elem[e]->centroid,Vec3_t(0,0,0),0.0,Density,h,false));
   }
    cout << "Generated "<<Particles.Size()<<" particles. "<<endl;
@@ -488,7 +488,8 @@ void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density
 
   
   double hmax = 0.;
-  int imax;
+  int imax, imin;
+  double hmin =1000.;
   for (int i=0;i<Particles.Size();i++){
     Particles[i]->h = h[i]/el_nb_count[i] * hfac;
     Particles[i]->Nb = el_nb_count[i];
@@ -496,8 +497,13 @@ void Domain::GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density
       hmax = Particles[i]->h;
       imax = i;
     }
+    else if (Particles[i]->h < hmin){
+      hmin = Particles[i]->h;
+      imin = i;
+    }
   }
   cout << "h max is " << hmax << ", in particle " << imax << ", elem id " << nr.elem[imax]->id<<endl;
+  cout << "h min is " << hmin << ", in particle " << imin << ", elem id " << nr.elem[imin]->id<<endl;
   cout << "nb count " <<  el_nb_count[imax]<<endl;
   // for (int nb=0;nb<el_nb_count[imax];nb++){
     // cout << nr.elem[el_nb[imax][nb]]->id<<", ";
