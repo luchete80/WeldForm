@@ -223,12 +223,12 @@ inline void Domain::CalcContactForcesWang(){
                
                double dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119
                 
-               if (norm(ref_tg) < fr_sta * norm(Particles[P1] -> contforce) ){
+               if (norm(ref_tg) < fr_sta * norm(Particles[P1] -> contforce) ){ //STATIC; NO SLIP
                   omp_set_lock(&Particles[P1]->my_lock);
                     //if (P1 == 12415) cout << "ares (a - tgforce): "<<Particles[P1] -> a - tgforce<<endl;
                     Particles[P1] -> a -= tgforce / Particles[P1]->Mass;   
-                    Particles[P1]->q_fric_work  = dot(tgforce,vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)       
-                    Particles[P1]->friction_hfl = dot(tgforce,vr) / dS2; //J/(m3.s)                    
+                    // Particles[P1]->q_fric_work  = dot(tgforce,vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)       
+                    // Particles[P1]->friction_hfl = dot(tgforce,vr) / dS2; //J/(m3.s)                    
                   omp_unset_lock(&Particles[P1]->my_lock);
                 } else {
                   tgforce_dyn = fr_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
@@ -241,7 +241,7 @@ inline void Domain::CalcContactForcesWang(){
                     dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.666666666);      
                     //atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;                      
                     omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1]->q_fric_work  = dot(tgforce_dyn,vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
+                    Particles[P1]->q_fric_work  = abs(dot(tgforce_dyn,vr)) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
                     Particles[P1]->friction_hfl = dot(tgforce_dyn,vr) / dS2; //J/(m3.s)
                     // Particles[P1]->q_fric_work  = Particles[P1]->Mass * dot(atg, vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
                     // Particles[P1]->friction_hfl = Particles[P1]->Mass * dot(atg,vr) / dS2;

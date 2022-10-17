@@ -156,3 +156,4 @@
              Incorrect use of force.
 20221005 -    Changed example.
               Added tangential force to output and external forces work evaluation.
+20221017 -    Added things in Nastran reader.
