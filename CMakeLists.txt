@@ -89,14 +89,14 @@ SET(EXES
   #Compression_TRIP_half_ghost_vel
   #Compression_TRIP_vel
   #Compression_thermal
-  Compression_nastran
+  #Compression_nastran
   #Contact_Compression_thermal
   #Contact_Compression_Rot
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	#Contact_Compression
+	Contact_Compression
   #Contact_Compression_1010_1side
   #Contact_Compression_fast_short
   #Contact_Compression_2surf
