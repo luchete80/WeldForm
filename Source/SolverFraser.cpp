@@ -343,6 +343,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
       if (max > 0.)
         cout<<"Plastic Work "<<plastic_work<<endl;
+      cout.precision(6);
 			cout << "Max Displacements (No Cont Surf): "<<max_disp<<endl;
       if (contact) {
         cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
