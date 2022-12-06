@@ -157,4 +157,4 @@
 20221005 -    Changed example.
               Added tangential force to output and external forces work evaluation.
 20221017 -    Added things in Nastran reader.
-20221206 -    Fixed frictional work. Fixed friction heat flux (J/m2). 
+20221206 -    Fixed frictional work. 
