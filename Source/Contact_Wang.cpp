@@ -246,7 +246,7 @@ inline void Domain::CalcContactForcesWang(){
                     //atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;                      
                     omp_set_lock(&Particles[P1]->my_lock);
                     Particles[P1]->q_fric_work  = abs(dot(tgforce_dyn,vr)) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
-                    Particles[P1]->friction_hfl = dot(tgforce_dyn,vr) / dS2; //J/(m3.s)
+                    Particles[P1]->friction_hfl = dot(tgforce_dyn,vr) *Particles[P1]->Mass / (Particles[P1]->Density * dS2); //J/(m3.s)
                     // Particles[P1]->q_fric_work  = Particles[P1]->Mass * dot(atg, vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
                     // Particles[P1]->friction_hfl = Particles[P1]->Mass * dot(atg,vr) / dS2;
                     omp_unset_lock(&Particles[P1]->my_lock);

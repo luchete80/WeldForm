@@ -141,7 +141,7 @@ inline void Domain::CalcTempInc () {
 		if (contact){
       if (i<solid_part_count){
         frw = f * Particles[i]->q_fric_work;
-        fr_temp += frw;
+        fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density; //TODO: CHECK
         Particles[i]->dTdt += frw; //[J/(kg.s)] / [J/(kg.K)]]
       }
     }
