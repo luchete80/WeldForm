@@ -273,8 +273,8 @@ int main(int argc, char **argv) try
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
   
-  dom.cont_heat_cond  = true;
-  dom.contact_hc      = 1000.*VFAC; 
+  //dom.cont_heat_cond  = true;
+  //dom.contact_hc      = 1000.*VFAC; 
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
