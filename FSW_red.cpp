@@ -26,23 +26,11 @@ void UserAcc(SPH::Domain & domi) {
 	for (size_t i=0; i<domi.Particles.Size(); i++)
 	#else
 	for (int i=0; i<domi.Particles.Size(); i++)
-	#endif
-	
+	#endif	
 	{
-    //Vertical Constraint
-		if (domi.Particles[i]->ID == 2) {
-			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-      // domi.Particles[i]->a(1)		  = 0.;
-			// domi.Particles[i]->va(1)	  = 0.;
-			// domi.Particles[i]->v(1)		  = 0.;
-			// domi.Particles[i]->vb(1)	  = 0.;
-      // domi.Particles[i]->VXSPH(1) = 0.;
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);   
-		}
     
-    if (domi.Particles[i]->ID == 3) {
+    //BOTTOM
+    if (domi.Particles[i]->ID == 2) {
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);      
     }
@@ -80,7 +68,7 @@ int main(int argc, char **argv) try
   double H,L,n;
 
   H	= 0.003;
-  L	= 0.02;
+  L	= 0.03;
 
   n	= 30.0;		//in length, radius is same distance
 
@@ -222,12 +210,13 @@ int main(int argc, char **argv) try
           dom.Particles[a]->T_inf 		= 20.;
         //}
       }
-
-      if (r > SUPPRAD && y > ( ytop - dx ) ){
-        dom.Particles[a]->ID=2; //ID 1 is free surface  
-        dom.Particles[a]->not_write_surf_ID = true;
-        top_particles++;
-      }
+      
+      ////// TOP
+      // if (r > SUPPRAD && y > ( ytop - dx ) ){
+        // dom.Particles[a]->ID=4; //ID 1 is free surface  
+        // dom.Particles[a]->not_write_surf_ID = true;
+        // top_particles++;
+      // }
 			
 			
 			//SIDES
@@ -247,33 +236,7 @@ int main(int argc, char **argv) try
         dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}			
-			
-			// if ( x < dx  && x > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=1;
-			// if ( y < dx  && y > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=2; 
-				
-			//x,y, central symmetry
-			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=4;  
-			
-			// if ( y < dx  && y > -dx/2. && z < dx  && z > -dx/2. ) //yz -5
-				// dom.Particles[a]->ID=5;           
-			// if (  x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 6
-				// dom.Particles[a]->ID=6;         
-			
-			//First one captures 4 particle, second one
-			//if ( y < dx  && y > -dx && x < dx  && x > -dx && z < dx  && z > -dx/2. ) //xz - 7
-			// if ( y < dx  && y > -dx && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
-				// dom.Particles[a]->ID=7;   
-
-			//TOP
-			// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
-				// dom.Particles[a]->ID=8;           
-			// if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
-				// dom.Particles[a]->ID=9;         
-			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
-				// dom.Particles[a]->ID=10;         
+			         
 		}
     
   cout << "Bottom particles: " << bottom_particles << endl;

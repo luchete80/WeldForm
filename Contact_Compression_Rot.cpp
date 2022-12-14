@@ -171,7 +171,7 @@ int main(){
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
+	dom.gradKernelCorr = true; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
@@ -263,7 +263,7 @@ int main(){
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.0305,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
