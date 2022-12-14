@@ -282,7 +282,8 @@ int main(int argc, char **argv) try
   dom.auto_ts=false;
   
   //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
-  dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,/*dtOut*/1.e-3  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,/*dtOut*/1.e-3  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
     
   return 0;
 }
