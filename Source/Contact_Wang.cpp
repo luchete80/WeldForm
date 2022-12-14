@@ -176,6 +176,10 @@ inline void Domain::CalcContactForcesWang(){
               Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159     
               Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
+            
+            // if ( abs(Particles[P1] -> contforce[0])>1.0e-5 || abs(Particles[P1] -> contforce[1])>1.0e-5){
+              // cout << "TG CONTACT FORCE != 0 !!! "<<endl;
+            // }
             //inside_pairs++;
 						
 						// TANGENTIAL COMPONENNT DIRECTION
