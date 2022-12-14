@@ -99,7 +99,7 @@ int main(int argc, char **argv) try
   double A,B,C,n_,m,T_m,T_t,eps_0;
   A = 276.e6; B = 255.0e6; C = 0.0015;
   m = 1.0;  n_ = 0.3; eps_0 = 1.0;
-  T_m = 775.; T_t = 273.;
+  T_m = 582.; T_t = 0.;
 			
   // 𝐴
   // 𝐽𝐶 276.0 MPa
