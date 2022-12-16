@@ -154,7 +154,8 @@
              Error found in heating of rigid surfaces. There was a deltat missing. 
 20220923 -   Critical ERROR Corrected error in HEAT GENERATION. 
              Incorrect use of force.
-20221005 -    Changed example.
-              Added tangential force to output and external forces work evaluation.
-20221017 -    Added things in Nastran reader.
-20221206 -    Fixed frictional work. 
+20221005 -   Changed example.
+             Added tangential force to output and external forces work evaluation.
+20221017 -   Added things in Nastran reader.
+20221206 -   Fixed frictional work. 
+20221207 -   Fixed friction_hfl

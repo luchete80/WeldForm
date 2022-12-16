@@ -66,6 +66,7 @@ inline void Domain::CalcContactForcesWang(){
   Vec3_t delta_tg;
   double max_vr = 0.;
   int m;
+  double abs_fv;
   
   Vec3_t du;// If no contact
  
@@ -86,7 +87,7 @@ inline void Domain::CalcContactForcesWang(){
   Vec3_t x_pred, vr_pred;
   Vec3_t ref_tg;
   double dS2;
-	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, x_pred, imp_force, fr_sta, fr_dyn, ref_tg, vr_pred, du, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgforce_dyn,tgvr,norm_tgvr,tgdir,atg, dS2) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, abs_fv, x_pred, imp_force, fr_sta, fr_dyn, ref_tg, vr_pred, du, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgforce_dyn,tgvr,norm_tgvr,tgdir,atg, dS2) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -245,8 +246,9 @@ inline void Domain::CalcContactForcesWang(){
                     dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.666666666);      
                     //atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;                      
                     omp_set_lock(&Particles[P1]->my_lock);
-                    Particles[P1]->q_fric_work  = abs(dot(tgforce_dyn,vr)) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
-                    Particles[P1]->friction_hfl = dot(tgforce_dyn,vr) / dS2; //J/(m3.s)
+                    abs_fv = abs(dot(tgforce_dyn,vr));
+                    Particles[P1]->q_fric_work  =  abs_fv * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
+                    Particles[P1]->friction_hfl = abs_fv / dS2; //J/(m3.s)
                     // Particles[P1]->q_fric_work  = Particles[P1]->Mass * dot(atg, vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
                     // Particles[P1]->friction_hfl = Particles[P1]->Mass * dot(atg,vr) / dS2;
                     omp_unset_lock(&Particles[P1]->my_lock);
