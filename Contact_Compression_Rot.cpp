@@ -8,6 +8,8 @@
 #define TAU		0.005
 #define VMAX	10.0
 
+#define VFAC	20.0  
+
 using namespace SPH;
 using namespace std;
 
@@ -54,7 +56,7 @@ void UserAcc(SPH::Domain & domi) {
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress*VFAC));
   //of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
   double dtout = 1.e-4;
   if (domi.getTime()>=tout){
@@ -200,7 +202,7 @@ int main(){
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 
-      dom.Particles[a]->k_T			  =	130.;
+      dom.Particles[a]->k_T			  =	130.*VFAC;
 			dom.Particles[a]->cp_T			=	960.;
 
 			dom.Particles[a]->T				  = 20.0;		
@@ -249,7 +251,7 @@ int main(){
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
-  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,W_RPM*M_PI/30.));  //axis rotation m_w
+  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,W_RPM*M_PI/30.*VFAC));  //axis rotation m_w
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
   
