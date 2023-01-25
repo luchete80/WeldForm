@@ -159,3 +159,5 @@
 20221017 -   Added things in Nastran reader.
 20221206 -   Fixed frictional work. 
 20221207 -   Fixed friction_hfl
+------------------------------
+20230125 -   Added shear stress in Wang contact Algorithm

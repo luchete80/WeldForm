@@ -8,9 +8,9 @@
 namespace SPH {
 
 //////////////////////////////// 
-//// From Zhan: A SPH framework for dynamic interaction between soil and
-////            rigid body system with hybrid contact method
-//// HERE PREDICTED VELOCITY IS PREV VELOCITY
+//// From Wang: Simulating frictional contact in smoothed particle hydrodynamics
+//// https://link.springer.com/article/10.1007/s11431-013-5262-x
+//// Wang, Wu, GU, HUA, Science China 2013
 ////////////////////////////////
 inline void Domain::CalcContactForcesWang(){
 
@@ -31,6 +31,7 @@ inline void Domain::CalcContactForcesWang(){
 		Particles[i] -> delta_cont = 0.; //RESET    
 		Particles[i] -> tgdir = 0.;				//TODO: DELETE (DEBUG) 
     Particles[i] -> q_fric_work = 0.;
+    Particles[i] -> cshearabs = 0.; //cshear module
 		//omp_unset_lock(&Particles[i]->my_lock);
 		inside_part[i] = 0;
 		inside_time=inside_geom=0;
@@ -248,6 +249,7 @@ inline void Domain::CalcContactForcesWang(){
                     omp_set_lock(&Particles[P1]->my_lock);
                     abs_fv = abs(dot(tgforce_dyn,vr));
                     Particles[P1]->q_fric_work  =  abs_fv * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
+                    Particles[P1]->cshearabs = norm(tgforce_dyn) / dS2;
                     Particles[P1]->friction_hfl = abs_fv / dS2; //J/(m3.s)
                     // Particles[P1]->q_fric_work  = Particles[P1]->Mass * dot(atg, vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
                     // Particles[P1]->friction_hfl = Particles[P1]->Mass * dot(atg,vr) / dS2;

@@ -8,7 +8,7 @@
 #define TAU		0.005
 #define VMAX	10.0
 
-#define VFAC	20.0  
+#define VFAC	1.0  
 
 using namespace SPH;
 using namespace std;

@@ -129,7 +129,7 @@ inline void Domain::CalcTempInc () {
   for (int i=0; i < solid_part_count; i++){
 	//for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
-		f = 1./(Particles[i]->Density * Particles[i]->cp_T );
+		f = 1./(Particles[i]->Density * Particles[i]->cp_T ); //[ºC m^3/J]
     Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat * pl_work_heat_frac + Particles[i]->q_cont_conv);	
     
     if (i<solid_part_count){
@@ -140,8 +140,8 @@ inline void Domain::CalcTempInc () {
     
 		if (contact){
       if (i<solid_part_count){
-        frw = f * Particles[i]->q_fric_work;
-        fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density; //TODO: CHECK
+        frw = f * Particles[i]->q_fric_work; //[ºC m^3/J] x J/[s m3] = ºC/s
+        fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density; //TODO: CHECK  -- J/[s m3] x m3
         Particles[i]->dTdt += frw; //[J/(kg.s)] / [J/(kg.K)]]
       }
     }

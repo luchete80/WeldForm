@@ -224,6 +224,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
     if (contact) CalcContactForcesWang();
+    
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 
