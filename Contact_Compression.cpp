@@ -15,6 +15,8 @@ std::ofstream of;
 
 double tout;
 
+bool contact = true; //NOT WORKING WITH CONTACT = FALSE
+
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 
@@ -33,14 +35,15 @@ void UserAcc(SPH::Domain & domi) {
 	
 	{
 		//TODO: Modify this by relating FEM & AND partciles 
-		// if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
-		// {
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-// //			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		// }
+    if (!contact)
+		if (domi.Particles[i]->ID == 3) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+//			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
@@ -53,7 +56,9 @@ void UserAcc(SPH::Domain & domi) {
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  if (contact)
+    domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  
   of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
 
   double dtout = 1.e-4;
@@ -170,9 +175,16 @@ int main(){
 		if ( z > L - dx  && abs(x) < 2*dx && y > R - 2*dx && a < dom.first_fem_particle_idx[0]){
       cout << "CONTROL, particle "<< a << "x "<<x<< ", y " << y<<", z "<<z<<endl;
     }
+    if (!contact) {
+      if ( z > L ){
+        dom.Particles[a]->ID=3;
+        dom.Particles[a]->not_write_surf_ID = true;  
+      }    
+    }
 	}
 	//Contact Penalty and Damping Factors
-	dom.contact = true;
+  if (contact)
+    dom.contact = true;
 	dom.friction_dyn = 0.0;
 	dom.friction_sta = 0.0;
 	dom.PFAC = 0.5;

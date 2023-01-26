@@ -161,3 +161,4 @@
 20221207 -   Fixed friction_hfl
 ------------------------------
 20230125 -   Added shear stress in Wang contact Algorithm
+20230126 -  Begining to add option in Contact Compression example to not use contact (only for testing)
