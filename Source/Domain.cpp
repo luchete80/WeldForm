@@ -1676,16 +1676,17 @@ void Domain::CalcKinEnergyEqn(){
 		}
 	}
   double inc = 0.;
-	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	//SERIAL IS FASTER THAN ATOMIC
+  //#pragma omp parallel for schedule(static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
 	#else
 	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
 	#endif
 	{
-    omp_set_lock(&dom_lock);
+    //omp_set_lock(&dom_lock);
     inc += Particles[i]->dkin_energy_dt;
-    omp_unset_lock(&dom_lock);		
+    //omp_unset_lock(&dom_lock);		
 	}	
   kin_energy_sum += inc * deltat;
 }
