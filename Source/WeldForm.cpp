@@ -118,8 +118,8 @@ int main(int argc, char **argv) try {
     double c[6];
     string mattype;
     cout << "Reading Material.."<<endl;
-    readValue(material[0]["type"], 		mattype);
-    readValue(material[0]["density0"], 		rho);
+    cout << "Type.."<< endl; readValue(material[0]["type"], 		mattype);
+    cout << "Density.."<< endl; readValue(material[0]["density0"], 		rho);
     readValue(material[0]["youngsModulus"], 	E);
     readValue(material[0]["poissonsRatio"], 	nu);
     readValue(material[0]["yieldStress0"], 	Fy);

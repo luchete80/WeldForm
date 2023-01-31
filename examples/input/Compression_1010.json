@@ -5,9 +5,11 @@
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.4,
-  "autoTS": true,
+  "autoTS": [false,false,false],
   "simTime": 0.01,
-  "outTime": 1.0e-5
+  "outTime": 1.0e-5,
+  "artifViscAlpha": 2.5,
+  "artifViscBeta": 2.5
 }
 ,
 "Materials":[ 

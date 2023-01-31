@@ -167,15 +167,19 @@ inline void Domain::CalcContactForcesWang(){
 						// DAMPING
 						//Calculate SPH and FEM elements stiffness (series)
 						//Since FEM is assumed as rigid, stiffness is simply the SPH one 
-            kij = 2.0 * Particles[P1]->Mass / (deltat * deltat);
-						//kij = PFAC * Particles[P1]-> cont_stiff;
+            //if (!gradKernelCorr)
+              kij = 2.0 * Particles[P1]->Mass / (deltat * deltat);
+            //else //TESTING PHASE
+            //  kij = Particles[P1]->Mass / (deltat * deltat);
+						
+            //kij = PFAC * Particles[P1]-> cont_stiff;
 						omega = sqrt (kij/Particles[P1]->Mass);
 						psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
             
             //normal_cf = 2.0 * Particles[P1]->Mass /(deltat*deltat )*delta;
 
 						omp_set_lock(&Particles[P1]->my_lock);
-              Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159     
+                Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159    
               Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
             
