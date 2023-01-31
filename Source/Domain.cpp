@@ -1703,10 +1703,10 @@ void Domain::CalcIntEnergyEqn(){
 	#endif
 	{
     Particles[i]->CalcIntEnergyEqn();
-    //omp_set_lock(&dom_lock);
-    inc += Particles[i]->dint_energy_dt;
-    //omp_unset_lock(&dom_lock);		
 	}
+  
+  for (size_t i=0; i<max; i++)
+    inc += Particles[i]->dint_energy_dt;
   
 	int_energy_sum += inc * deltat;
 }
