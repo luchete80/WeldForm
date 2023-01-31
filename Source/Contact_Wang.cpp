@@ -179,13 +179,13 @@ inline void Domain::CalcContactForcesWang(){
               Particles[P1] -> delta_cont = delta;
 						omp_unset_lock(&Particles[P1]->my_lock);
             
-            if (P1 ==11062) {
-            cout << "Particle "<<P1 << ", contforce "<<Particles[P1] ->contforce<<endl;
-            cout << "x_pred "<<x_pred<<endl;
-            cout << "x: "<<Particles[P1]->x <<endl;
-            cout << "dist: "<<dist <<endl;
-            cout << "pplane "<<trimesh[m]-> element[Particles[P2]->element] -> pplane<<endl;
-            }
+            // if (P1 ==11062) {
+            // cout << "Particle "<<P1 << ", contforce "<<Particles[P1] ->contforce<<endl;
+            // cout << "x_pred "<<x_pred<<endl;
+            // cout << "x: "<<Particles[P1]->x <<endl;
+            // cout << "dist: "<<dist <<endl;
+            // cout << "pplane "<<trimesh[m]-> element[Particles[P2]->element] -> pplane<<endl;
+            // }
             // if ( abs(Particles[P1] -> contforce[0])>1.0e-5 || abs(Particles[P1] -> contforce[1])>1.0e-5){
               // cout << "TG CONTACT FORCE != 0 !!! "<<endl;
             // }

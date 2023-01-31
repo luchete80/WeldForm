@@ -132,24 +132,30 @@ inline void Domain::CalcTempInc () {
 		f = 1./(Particles[i]->Density * Particles[i]->cp_T ); //[ºC m^3/J]
     Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat * pl_work_heat_frac + Particles[i]->q_cont_conv);	
     
-    if (i<solid_part_count){
     plw = f * Particles[i]->q_plheat;
     pl_sum += plw;
-    }
     // Particles[i]->dTdt += plw;
     
 		if (contact){
-      if (i<solid_part_count){
         frw = f * Particles[i]->q_fric_work; //[ºC m^3/J] x J/[s m3] = ºC/s
-        fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density; //TODO: CHECK  -- J/[s m3] x m3
+        //omp_set_lock(&dom_lock); 
+        // #pragma omp atomic
+        // fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density; //TODO: CHECK  -- J/[s m3] x m3
+        //omp_unset_lock(&dom_lock);	
+        
+        omp_set_lock(&Particles[i]->my_lock);
         Particles[i]->dTdt += frw; //[J/(kg.s)] / [J/(kg.K)]]
-      }
+        omp_unset_lock(&Particles[i]->my_lock);
+      
     }
 		if (Particles[i]->dTdt > max){
 			max= Particles[i]->dTdt;
 			imax=i;
 		}
 	}
+  if (contact)
+    for (int i=0; i < solid_part_count; i++)
+      fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density;
   
   for (int i=solid_part_count; i<Particles.Size(); i++){
     Particles[i]->dTdt = 0.;

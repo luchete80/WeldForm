@@ -88,6 +88,8 @@ namespace SPH {
     //Boundary corrections
     bool correct_vel_acc;
     bool is_fixed;
+    
+    double ps_energy; //PER UNIT VOLUME
 
 		double	Density;	///< Density of the particle n+1
 		double 	Densitya;	///< Density of the particle n+1/2 (Leapfrog)

@@ -162,3 +162,7 @@
 ------------------------------
 20230125 -   Added shear stress in Wang contact Algorithm
 20230126 -  Begining to add option in Contact Compression example to not use contact (only for testing)
+20230131 -  Added plastic strain dissipation per unit volume output
+         -  FIXED ERRORS DUE TO PARALLEL (NOT ATOMIZED)
+         --  FIXED PLASTIC DISSIPATION SUM
+         -   FIXED CONTACT FRICTION SUM 

@@ -143,6 +143,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
   
   q_cont_conv = 0.;
   mcp_t = 1.;
+  
+  ps_energy = 0.;
 }
 
 inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin, size_t Scheme, Mat3_t I)
@@ -924,6 +926,7 @@ inline void Particle::CalcPlasticWorkHeat(const double &dt){
 						;
 		//cout << "plastic heat "<<q_plheat<<endl;
 	}
+  ps_energy += q_plheat * dt;
 }
 
 inline void Particle::CalcIntEnergyEqn(){

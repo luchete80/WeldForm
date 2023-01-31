@@ -1683,9 +1683,9 @@ void Domain::CalcKinEnergyEqn(){
 	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
 	#endif
 	{
-    //omp_set_lock(&dom_lock);
+    omp_set_lock(&dom_lock);
     inc += Particles[i]->dkin_energy_dt;
-    //omp_unset_lock(&dom_lock);		
+    omp_unset_lock(&dom_lock);		
 	}	
   kin_energy_sum += inc * deltat;
 }
