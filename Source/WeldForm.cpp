@@ -197,14 +197,19 @@ int main(int argc, char **argv) try {
 		cout << "Dimensions: "<<endl;
 		PRINTVEC(L)
 		if (domtype == "Box"){
-      cout << "Adding Box Length..."<<endl;      
+      cout << "Adding Box ..."<<endl;      
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 		}
 		else if (domtype == "Cylinder"){
-			if (sym[0] && sym[1])
+      cout << "Adding Cylinder";      
+			if (sym[0] && sym[1]){
+        cout << " with symmetry..."<<endl;
         dom.AddXYSymCylinderLength(0, L[0]/2., L[2], r, rho, h, false, sym[2]); 
-      else
+      }
+      else {
+        cout << "..."<<endl;
         dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym[2]); 
+      }
     }
 
         cout <<"t  			= "<<timestep<<endl;
@@ -252,6 +257,8 @@ int main(int argc, char **argv) try {
     std::vector<TriMesh *> mesh;
     
     if (contact){
+      cout << "Reading contact mesh "<<endl;
+      // TODO: CHECK IF MESH IS NOT DEFINED
       mesh.push_back(new TriMesh);
       //TODO: CHANGE TO EVERY DIRECTION
       int dens = 10;
