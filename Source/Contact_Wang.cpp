@@ -227,7 +227,7 @@ inline void Domain::CalcContactForcesWang(){
               fr_sta = fr_dyn = friction_m * Particles[P1] ->T + friction_b;
             
             if (fr_sta > 0.) { 
-
+ 
                 ////// DISPLACEMENT CRITERIA
                 //Wang2013, but applied to current step
                 du = x_pred - Particles[P1] ->x - Particles[P2] -> v * deltat ;

@@ -256,7 +256,10 @@ int main(int argc, char **argv) try {
     
     std::vector<TriMesh *> mesh;
     
+    cout << "Set contact to ";
     if (contact){
+      cout << "true."<<endl;
+      dom.contact = true;
       cout << "Reading contact mesh "<<endl;
       // TODO: CHECK IF MESH IS NOT DEFINED
       mesh.push_back(new TriMesh);
@@ -278,7 +281,9 @@ int main(int argc, char **argv) try {
       dom.PFAC = 0.8;
       dom.DFAC = 0.0;
       
-		}
+		} 
+    else 
+      cout << "false. "<<endl;
     
 		std::vector <SPH::amplitude> amps;
 		
