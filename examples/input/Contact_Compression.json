@@ -76,7 +76,7 @@
 {
 	"ZoneId": 		2,
 	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, -0.1]
+	"value": 		[ 0.0, 0.0, -1.0]
 },
 {
 	"zoneId": 	10,

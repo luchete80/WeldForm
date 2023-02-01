@@ -644,7 +644,8 @@ int Domain::AssignZone(Vec3_t &start, Vec3_t &end, int &id){
         included = false;
     }
     if (included){
-      Particles[a]->ID=id; 
+      Particles[a]->ID=id;
+      Particles[a]->not_write_surf_ID = true;		      
       partcount++;
     }
   }
