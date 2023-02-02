@@ -91,7 +91,7 @@ SET(EXES
   #Compression_thermal
   #Compression_nastran
   #Contact_Compression_thermal
-  #Contact_Compression_Rot
+  Contact_Compression_Rot
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl

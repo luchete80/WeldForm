@@ -109,7 +109,7 @@ int main(){
   double A,B,C,n_,m,T_m,T_t,eps_0;
   A = 175.e6; B = 380.0e6; C = 0.0015;
   m = 1.0;  n_ = 0.34; eps_0 = 1.0;
-  T_m = 775.; T_t = 273.;
+  T_m = 502.; T_t = 0.; //775-273 = 502
 			
 	// 𝐴
 // 𝐽𝐶 276.0 MPa
@@ -121,13 +121,12 @@ int main(){
 
 	//Hollomon mat(el,Fy/E,1220.e6,0.195);
   
-	// JohnsonCook mat(el, A,B,C,
-                      // m,n_,eps_0,
-                      // T_m, T_t);	
+	JohnsonCook mat(el, A,B,C,
+                      m,n_,eps_0,
+                      T_m, T_t);	
   
   //IF BILINEAR
     double Et = 0.1 * E;
-		
 		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
 				
   
@@ -178,12 +177,12 @@ int main(){
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
     //IF JOHNSON COOK
-    // dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
-    // dom.Particles[a]->mat = &mat;
-    // dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);    
+    dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
+    dom.Particles[a]->mat = &mat;
+    dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);    
     //--ELSE IF BILINEAR
-    dom.Particles[a]->Ep 			= Ep;//HARDENING
- 		dom.Particles[a]->Sigmay	= Fy;
+    // dom.Particles[a]->Ep 			= Ep;//HARDENING
+ 		// dom.Particles[a]->Sigmay	= Fy;
     /////-----------------------------------
     
 		dom.Particles[a]->G		= G;
@@ -229,7 +228,7 @@ int main(){
 	dom.contact = true;
 	dom.friction_dyn = 0.2;
 	dom.friction_sta = 0.2;
-	dom.PFAC = 0.5;
+	dom.PFAC = 0.6;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;
 
