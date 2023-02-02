@@ -179,7 +179,7 @@ int main(){
     //IF JOHNSON COOK
     dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
     dom.Particles[a]->mat = &mat;
-    dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);    
+    dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.0);    
     //--ELSE IF BILINEAR
     // dom.Particles[a]->Ep 			= Ep;//HARDENING
  		// dom.Particles[a]->Sigmay	= Fy;

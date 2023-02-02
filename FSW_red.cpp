@@ -180,7 +180,8 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->Shepard	= false;
 			dom.Particles[a]->Material	= 2;
 			dom.Particles[a]->Fail		= 1;
-			dom.Particles[a]->Sigmay	= Fy;
+			//dom.Particles[a]->Sigmay	= Fy;
+      dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			dom.Particles[a]->Alpha		= 1.0;
 			//dom.Particles[a]->Beta		= 2.0;
 			dom.Particles[a]->TI		= 0.3;
@@ -202,13 +203,11 @@ int main(int argc, char **argv) try
         dom.Particles[a]->not_write_surf_ID = true;
         bottom_particles++;
         
-        //if (r < TOOLRAD){
-          // dom.Particles[a]->ID = 4; //ID 1 is free surface  
-          // dom.Particles[a]->not_write_surf_ID = true;
-          dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-          dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
-          dom.Particles[a]->T_inf 		= 20.;
-        //}
+
+          // dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+          // dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+          // dom.Particles[a]->T_inf 		= 20.;
+
       }
       
       ////// TOP
@@ -224,16 +223,16 @@ int main(int argc, char **argv) try
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
    			dom.Particles[a]->IsFree=false;
-          dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
-          dom.Particles[a]->T_inf 		= 20.;
+          // dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+          // dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}
 			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/30.0/*- 2.*dx*/){
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
         dom.Particles[a]->IsFree=false;
-        dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
-        dom.Particles[a]->T_inf 		= 20.;
+        // dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+        // dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}			
 			         
