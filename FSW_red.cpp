@@ -5,7 +5,7 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-#define VFAC			30.0
+#define VFAC			1.0
 //#define VAVA			5.833e-4		//35 mm/min
 #define VAVA			1.e-3		//35 mm/min
 #define WROT 			1200.0 	    //rpm

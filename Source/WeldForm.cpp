@@ -36,6 +36,15 @@
 using namespace std;
 using namespace SPH;
 
+// template <typename T > 
+// void ReadParameter(T in, nlohmann::json in) {
+  // cout << "Reading Configuration parameters..."<<endl; 
+  // cout << "Time step size: ";
+  // readValue(in["timeStepSize"], /*scene.timeStepSize*/ts);
+  // cout << ts << endl;
+// }
+
+
 void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
@@ -96,8 +105,11 @@ int main(int argc, char **argv) try {
 		dom.Nproc	= 4;
 		string kernel;
     double ts;
-		readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
-    	dom.Kernel_Set(Qubic_Spline);
+    cout << "Reading Configuration parameters..."<<endl; 
+		cout << "Time step size: ";
+    readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
+    cout << ts << endl;
+    dom.Kernel_Set(Qubic_Spline);
     
 		
 		readValue(config["integrationMethod"], dom.Scheme); //0:Verlet, 1:LeapFrog, 2: Modified Verlet
@@ -130,7 +142,10 @@ int main(int argc, char **argv) try {
     readValue(material[0]["const1"], 		c[1]);
     Material_ *mat;
     Elastic_ el(E,nu);
-    if (mattype == "Hollomon") mat = new Hollomon(el,Fy,c[0],c[1]);
+    if (mattype == "Bilinear") mat = new Hollomon(el,Fy,c[0],c[1]);
+    //else if (mattype == "JohnsonCook") mat = new JohnsonCook(el,Fy,c[0],c[1],c[2],c[4],c[3]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	
+                      
+    //else if ()
     //else if (mattype == "JohnsonCook") mat = 
 		cout << "Mat type  "<<mattype<<endl;
     cout << "Done. "<<endl;
@@ -345,7 +360,8 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->Cs			= Cs;
       dom.Particles[a]->Shepard		= false;
       
-      if ( mattype == "Hollomon" )  dom.Particles[a]->Material_model  = HOLLOMON;
+      if      ( mattype == "Hollomon" )     dom.Particles[a]->Material_model  = HOLLOMON;
+      else if ( mattype == "JohnsonCook" )  dom.Particles[a]->Material_model  = JOHNSON_COOK;
 			dom.Particles[a]->mat             = mat;
       dom.Particles[a]->Sigmay		      = Fy;
             

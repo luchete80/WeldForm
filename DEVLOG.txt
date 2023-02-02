@@ -166,3 +166,8 @@
          -  FIXED ERRORS DUE TO PARALLEL (NOT ATOMIZED)
          --  FIXED PLASTIC DISSIPATION SUM
          -   FIXED CONTACT FRICTION SUM 
+         
+         - FIXED COMPRESSION 1010 input file
+20230201 - Working on input file, now reading contact (with errors).
+20230202 - CONTACT FIRST TIME WORKING. 
+         - Fixed Contact Compression example.
