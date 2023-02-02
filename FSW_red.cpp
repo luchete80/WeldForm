@@ -222,7 +222,7 @@ int main(int argc, char **argv) try
 			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/30.0/*- dx*/){ 
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
-   			dom.Particles[a]->IsFree=false;
+   			//dom.Particles[a]->IsFree=false;
           // dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
           // dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
@@ -230,7 +230,7 @@ int main(int argc, char **argv) try
 			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/30.0/*- 2.*dx*/){
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
-        dom.Particles[a]->IsFree=false;
+        //dom.Particles[a]->IsFree=false;
         // dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
         // dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
