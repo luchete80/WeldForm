@@ -248,7 +248,7 @@ int main() try{
   dom.friction_sta = 0.2;
   dom.fric_type = Fr_Dyn;
  
-	dom.PFAC = 0.4;
+	dom.PFAC = 0.6;
 	dom.DFAC = 0.0;
 
 	//ALWAYS AFTER SPH PARTICLES

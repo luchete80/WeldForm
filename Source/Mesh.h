@@ -35,6 +35,7 @@ class Element{
 	int 		node[3];
 	double 	pplane;			//In boundary elements, plane coefficient, useful for contact
 	int 		nfar;						//farthest away node from baricenter
+  double  area;           
 	//Sphere* centroid;
 	//Mesh*		mesh;
 };
@@ -53,6 +54,8 @@ friend class NastranReader;
 	
 	Vec3_t							m_v;						//Constant Uniform v
   Vec3_t              m_w;            //Constant axis rotation
+  
+  double              T;              //homogeneous temp
   
 	TriMesh();
   TriMesh(NastranReader &nr);

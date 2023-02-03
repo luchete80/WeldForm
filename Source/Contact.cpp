@@ -31,6 +31,9 @@ void Domain::AddTrimeshParticles(TriMesh *mesh, const float &hfac, const int &id
 	}
 	cout << Particles.Size() - first_fem_particle_idx[meshcount] << "particles added with ID " << contact_surf_id[meshcount] <<endl;
 	cout << first_fem_particle_idx[meshcount] << " is the first solid particle index."<<endl;
+  
+  tot_cont_heat_cond.push_back(0.);
+  
   meshcount++;
 }
 
@@ -463,13 +466,13 @@ inline void Domain::CalcContactForces(){
               if (friction_sta > 0.) { 
                 //delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
                 
-                if (P1 == 12415){
-                  //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
-                cout << "delta tg 1 "<<delta_tg<<endl;
-                delta_tg = (vr - dot(vr,Particles[P2]->normal)*Particles[P2]->normal)* (deltat - deltat_cont); //Viewed from P1
-                tgforce = (kij * delta_tg - psi_cont * delta_);
-                cout << "delta tg 2 "<<delta_tg<<endl;
-                }
+                // if (P1 == 12415){
+                  // //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
+                // cout << "delta tg 1 "<<delta_tg<<endl;
+                // delta_tg = (vr - dot(vr,Particles[P2]->normal)*Particles[P2]->normal)* (deltat - deltat_cont); //Viewed from P1
+                // tgforce = (kij * delta_tg - psi_cont * delta_);
+                // cout << "delta tg 2 "<<delta_tg<<endl;
+                // }
                 
                 if (norm(tgforce) < friction_sta * normal_cf ){
                   omp_set_lock(&Particles[P1]->my_lock);

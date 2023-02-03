@@ -8,8 +8,13 @@
 #define TAU		0.005
 #define VMAX	10.0
 
+#define VFAC	1.0  
+
 using namespace SPH;
 using namespace std;
+
+bool thermal_contact = true;
+#define W_RPM 600
 
 std::ofstream of;
 double tout;
@@ -51,14 +56,14 @@ void UserAcc(SPH::Domain & domi) {
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress*VFAC));
   //of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
   double dtout = 1.e-4;
   if (domi.getTime()>=tout){
     // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
     // cout << "Normal acc sum " << normal_acc_sum<<endl;
     tout += dtout;
-    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << endl;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << ", " <<domi.ext_forces_work<<", " <<domi.plastic_work << ", " <<domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
   }
 }
 
@@ -104,7 +109,7 @@ int main(){
   double A,B,C,n_,m,T_m,T_t,eps_0;
   A = 175.e6; B = 380.0e6; C = 0.0015;
   m = 1.0;  n_ = 0.34; eps_0 = 1.0;
-  T_m = 775.; T_t = 273.;
+  T_m = 502.; T_t = 0.; //775-273 = 502
 			
 	// 𝐴
 // 𝐽𝐶 276.0 MPa
@@ -116,13 +121,12 @@ int main(){
 
 	//Hollomon mat(el,Fy/E,1220.e6,0.195);
   
-	// JohnsonCook mat(el, A,B,C,
-                      // m,n_,eps_0,
-                      // T_m, T_t);	
+	JohnsonCook mat(el, A,B,C,
+                      m,n_,eps_0,
+                      T_m, T_t);	
   
   //IF BILINEAR
     double Et = 0.1 * E;
-		
 		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
 				
   
@@ -173,12 +177,12 @@ int main(){
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
     //IF JOHNSON COOK
-    // dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
-    // dom.Particles[a]->mat = &mat;
-    //dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,273.);    
+    dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
+    dom.Particles[a]->mat = &mat;
+    dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.0);    
     //--ELSE IF BILINEAR
-    dom.Particles[a]->Ep 			= Ep;//HARDENING
- 		dom.Particles[a]->Sigmay	= Fy;
+    // dom.Particles[a]->Ep 			= Ep;//HARDENING
+ 		// dom.Particles[a]->Sigmay	= Fy;
     /////-----------------------------------
     
 		dom.Particles[a]->G		= G;
@@ -197,7 +201,7 @@ int main(){
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 
-      dom.Particles[a]->k_T			  =	130.;
+      dom.Particles[a]->k_T			  =	130.*VFAC;
 			dom.Particles[a]->cp_T			=	960.;
 
 			dom.Particles[a]->T				  = 20.0;		
@@ -215,11 +219,16 @@ int main(){
       cout << "CONTROL, particle "<< a << "x "<<x<< ", y " << y<<", z "<<z<<endl;
     }
 	}
+  
+  //TODO: SET TO CONTACT PROPERTIES CLASS
+  for (size_t i = dom.solid_part_count; i < dom.Particles.Size(); i++)
+    dom.Particles[i]->mcp_t=1.;
+  
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
 	dom.friction_dyn = 0.2;
 	dom.friction_sta = 0.2;
-	dom.PFAC = 0.5;
+	dom.PFAC = 0.6;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;
 
@@ -229,7 +238,7 @@ int main(){
 
 
 	of = std::ofstream ("cf.csv", std::ios::out);
-  of << "Time, cf, vypart"<<endl;
+  of << "Time, cf, maxdisp, cfsum, heat cond sum, friction sum"<<endl;
   tout = 0.;
 
 	//ID 	0 Internal
@@ -241,15 +250,21 @@ int main(){
   //dom.auto_ts=false;
 
   dom.auto_ts=true;
-    dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,60*M_PI/30.));  //axis rotation m_w
-      dom.thermal_solver = true;
+  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.,W_RPM*M_PI/30.*VFAC));  //axis rotation m_w
+  dom.thermal_solver = true;
   dom.cont_heat_gen = true;
+  
+  //IF THERMAL CONTACT
+  if (thermal_contact){
+    dom.cont_heat_cond  = false;
+    dom.contact_hc      = 1000.; 
+  }
   //dom.auto_ts_cont = true;
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.0305,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");

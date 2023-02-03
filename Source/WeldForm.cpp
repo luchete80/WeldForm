@@ -25,6 +25,9 @@
 #include "InteractionAlt.cpp"
 #include "Mesh.h"
 
+#include "SolverFraser.cpp"
+
+
 #define TAU		0.005
 #define VMAX	10.0
 
@@ -32,6 +35,15 @@
 
 using namespace std;
 using namespace SPH;
+
+// template <typename T > 
+// void ReadParameter(T in, nlohmann::json in) {
+  // cout << "Reading Configuration parameters..."<<endl; 
+  // cout << "Time step size: ";
+  // readValue(in["timeStepSize"], /*scene.timeStepSize*/ts);
+  // cout << ts << endl;
+// }
+
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -93,8 +105,11 @@ int main(int argc, char **argv) try {
 		dom.Nproc	= 4;
 		string kernel;
     double ts;
-		readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
-    	dom.Kernel_Set(Qubic_Spline);
+    cout << "Reading Configuration parameters..."<<endl; 
+		cout << "Time step size: ";
+    readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
+    cout << ts << endl;
+    dom.Kernel_Set(Qubic_Spline);
     
 		
 		readValue(config["integrationMethod"], dom.Scheme); //0:Verlet, 1:LeapFrog, 2: Modified Verlet
@@ -118,8 +133,8 @@ int main(int argc, char **argv) try {
     double c[6];
     string mattype;
     cout << "Reading Material.."<<endl;
-    readValue(material[0]["type"], 		mattype);
-    readValue(material[0]["density0"], 		rho);
+    cout << "Type.."<< endl; readValue(material[0]["type"], 		mattype);
+    cout << "Density.."<< endl; readValue(material[0]["density0"], 		rho);
     readValue(material[0]["youngsModulus"], 	E);
     readValue(material[0]["poissonsRatio"], 	nu);
     readValue(material[0]["yieldStress0"], 	Fy);
@@ -127,7 +142,10 @@ int main(int argc, char **argv) try {
     readValue(material[0]["const1"], 		c[1]);
     Material_ *mat;
     Elastic_ el(E,nu);
-    if (mattype == "Hollomon") mat = new Hollomon(el,Fy,c[0],c[1]);
+    if (mattype == "Bilinear") mat = new Hollomon(el,Fy,c[0],c[1]);
+    //else if (mattype == "JohnsonCook") mat = new JohnsonCook(el,Fy,c[0],c[1],c[2],c[4],c[3]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	
+                      
+    //else if ()
     //else if (mattype == "JohnsonCook") mat = 
 		cout << "Mat type  "<<mattype<<endl;
     cout << "Done. "<<endl;
@@ -194,14 +212,19 @@ int main(int argc, char **argv) try {
 		cout << "Dimensions: "<<endl;
 		PRINTVEC(L)
 		if (domtype == "Box"){
-      cout << "Adding Box Length..."<<endl;      
+      cout << "Adding Box ..."<<endl;      
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 		}
 		else if (domtype == "Cylinder"){
-			if (sym[0] && sym[1])
+      cout << "Adding Cylinder";      
+			if (sym[0] && sym[1]){
+        cout << " with symmetry..."<<endl;
         dom.AddXYSymCylinderLength(0, L[0]/2., L[2], r, rho, h, false, sym[2]); 
-      else
+      }
+      else {
+        cout << "..."<<endl;
         dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym[2]); 
+      }
     }
 
         cout <<"t  			= "<<timestep<<endl;
@@ -248,7 +271,12 @@ int main(int argc, char **argv) try {
     
     std::vector<TriMesh *> mesh;
     
+    cout << "Set contact to ";
     if (contact){
+      cout << "true."<<endl;
+      dom.contact = true;
+      cout << "Reading contact mesh "<<endl;
+      // TODO: CHECK IF MESH IS NOT DEFINED
       mesh.push_back(new TriMesh);
       //TODO: CHANGE TO EVERY DIRECTION
       int dens = 10;
@@ -268,7 +296,9 @@ int main(int argc, char **argv) try {
       dom.PFAC = 0.8;
       dom.DFAC = 0.0;
       
-		}
+		} 
+    else 
+      cout << "false. "<<endl;
     
 		std::vector <SPH::amplitude> amps;
 		
@@ -330,7 +360,8 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->Cs			= Cs;
       dom.Particles[a]->Shepard		= false;
       
-      if ( mattype == "Hollomon" )  dom.Particles[a]->Material_model  = HOLLOMON;
+      if      ( mattype == "Hollomon" )     dom.Particles[a]->Material_model  = HOLLOMON;
+      else if ( mattype == "JohnsonCook" )  dom.Particles[a]->Material_model  = JOHNSON_COOK;
 			dom.Particles[a]->mat             = mat;
       dom.Particles[a]->Sigmay		      = Fy;
             
@@ -341,7 +372,8 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->TIInitDist	= dx;
       dom.Particles[a]->hfac = 1.2; //Only for h update, not used
     }
-		dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+    dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
 		} else {
       throw new Fatal("Particle Count is Null. Please Check Radius and Domain Dimensions.");
     }

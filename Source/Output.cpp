@@ -108,7 +108,10 @@ inline void Domain::WriteXDMF (char const * FileKey)
     float * deltacont	= new float[Particles.Size()];		//LUCIANO
 		float * eff_str_rate	= new float[ Particles.Size()];		//LUCIANO
 		float * gradcorrmat = new float [6 * Particles.Size()];
-		
+		float * q_friction  = new float [Particles.Size()];
+    float * c_shearabs  = new float [Particles.Size()];
+    float * ps_en  = new float [Particles.Size()];
+    
 	double P1,P2,P3;
 
     #pragma omp parallel for schedule (static) private(P1,P2,P3) num_threads(Nproc)
@@ -182,7 +185,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
         ContForce  [3*i  ] = float(Particles[i]->contforce(0));
         ContForce  [3*i+1] = float(Particles[i]->contforce(1));
         ContForce  [3*i+2] = float(Particles[i]->contforce(2));	
-
+        
+        q_friction [i] = float(Particles[i]->friction_hfl);
+        c_shearabs [i] = float(Particles[i]->cshearabs); 
+        ps_en [i] = float(Particles[i]->ps_energy);
+        
         // TgDir  [3*i  ] 	= float(Particles[i]->tgdir(0));
         // TgDir  [3*i+1] 	= float(Particles[i]->tgdir(1));
         // TgDir	[3*i+2] 	= float(Particles[i]->tgdir(2));	
@@ -258,11 +265,20 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_int(file_id,dsname.CStr(),1,dims,Nb);
     dsname.Printf("ContNeib");
     H5LTmake_dataset_int(file_id,dsname.CStr(),1,dims,ContNb);
+    dsname.Printf("q_friction");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,q_friction);
+    dsname.Printf("c_shearabs");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,c_shearabs);
+
+    dsname.Printf("ps_en");
+    H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ps_en);
+    
     dims[0] = 3*Particles.Size();
 	dsname.Printf("Displacement");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Disvec);
 	dsname.Printf("Contact Force");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ContForce);	
+
 	// dsname.Printf("Tg Dir");
     // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,TgDir);	
 	// dsname.Printf("Normal Vec");
@@ -300,6 +316,9 @@ inline void Domain::WriteXDMF (char const * FileKey)
   // delete [] deltacont;
 	//delete [] eff_str_rate;
 	delete [] gradcorrmat;
+  delete [] q_friction;
+  delete [] c_shearabs;
+  delete [] ps_en;
 	
    //Closing the file
     H5Fflush(file_id,H5F_SCOPE_GLOBAL);
@@ -433,7 +452,22 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/Contact Force \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n";
-    // oss << "     <Attribute Name=\"Tg Dir\" AttributeType=\"Vector\" Center=\"Node\">\n";
+    oss << "     <Attribute Name=\"q_friction\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/q_friction \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n"; 
+    oss << "     <Attribute Name=\"c_shearabs\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/c_shearabs \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n"; 
+    oss << "     <Attribute Name=\"ps_en\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+    oss << "        " << fn.CStr() <<":/ps_en \n";
+    oss << "       </DataItem>\n";
+    oss << "     </Attribute>\n"; 
+  // oss << "     <Attribute Name=\"Tg Dir\" AttributeType=\"Vector\" Center=\"Node\">\n";
     // oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     // oss << "        " << fn.CStr() <<":/Tg Dir \n";
     // oss << "       </DataItem>\n";

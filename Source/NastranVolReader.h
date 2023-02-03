@@ -110,7 +110,24 @@ public NastranReader {
   };
 };
 
-
+class Tri {
+  public:
+  
+  Tri(Vec3_t &v1,Vec3_t &v2,Vec3_t &v3){
+    v[0] = v1; v[1] = v2; v[2] = v3;
+    for (int i=0;i<3;i++){
+      int k = i + 1;
+      if (k == 3) k = 0; 
+      l[i] = norm(v[k]-v[i]);
+    }
+    p = 0.5*(l[0]+l[1]+l[2]);
+    area = sqrt(p*(p-l[0])*(p-l[1])*(p-l[2]));
+  }
+  Vec3_t v[3];
+  double l[3];
+  double area;
+  double p;
+};
 
 #include "NastranVolReader.cpp"
 

@@ -5,11 +5,16 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-#define VFAC			15.0
-#define VAVA			5.833e-4		//35 mm/min
+#define VFAC			1.0
+//#define VAVA			5.833e-4		//35 mm/min
+#define VAVA			1.e-3		//35 mm/min
 #define WROT 			1200.0 	    //rpm
 #define TOOLRAD   0.0062
 #define SUPPRAD   0.01
+
+double tout, dtout;
+
+ofstream ofprop("fsw_force.csv", std::ios::out);
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -21,23 +26,11 @@ void UserAcc(SPH::Domain & domi) {
 	for (size_t i=0; i<domi.Particles.Size(); i++)
 	#else
 	for (int i=0; i<domi.Particles.Size(); i++)
-	#endif
-	
+	#endif	
 	{
-    //Vertical Constraint
-		if (domi.Particles[i]->ID == 2) {
-			//domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-      // domi.Particles[i]->a(1)		  = 0.;
-			// domi.Particles[i]->va(1)	  = 0.;
-			// domi.Particles[i]->v(1)		  = 0.;
-			// domi.Particles[i]->vb(1)	  = 0.;
-      // domi.Particles[i]->VXSPH(1) = 0.;
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);   
-		}
     
-    if (domi.Particles[i]->ID == 3) {
+    //BOTTOM
+    if (domi.Particles[i]->ID == 2) {
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);      
     }
@@ -50,6 +43,11 @@ void UserAcc(SPH::Domain & domi) {
     // //domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
   // }
   //domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  dtout = 1.0e-4;
+  if (domi.getTime()>=tout){
+    tout += dtout;
+    ofprop << domi.max_disp[2]<<", " << domi.contact_force_sum << endl;
+  }
 }
 
 
@@ -70,7 +68,7 @@ int main(int argc, char **argv) try
   double H,L,n;
 
   H	= 0.003;
-  L	= 0.02;
+  L	= 0.03;
 
   n	= 30.0;		//in length, radius is same distance
 
@@ -101,7 +99,7 @@ int main(int argc, char **argv) try
   double A,B,C,n_,m,T_m,T_t,eps_0;
   A = 276.e6; B = 255.0e6; C = 0.0015;
   m = 1.0;  n_ = 0.3; eps_0 = 1.0;
-  T_m = 775.; T_t = 273.;
+  T_m = 582.; T_t = 0.;
 			
   // 𝐴
   // 𝐽𝐶 276.0 MPa
@@ -182,7 +180,8 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->Shepard	= false;
 			dom.Particles[a]->Material	= 2;
 			dom.Particles[a]->Fail		= 1;
-			dom.Particles[a]->Sigmay	= Fy;
+			//dom.Particles[a]->Sigmay	= Fy;
+      dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			dom.Particles[a]->Alpha		= 1.0;
 			//dom.Particles[a]->Beta		= 2.0;
 			dom.Particles[a]->TI		= 0.3;
@@ -204,62 +203,39 @@ int main(int argc, char **argv) try
         dom.Particles[a]->not_write_surf_ID = true;
         bottom_particles++;
         
-        //if (r < TOOLRAD){
-          // dom.Particles[a]->ID = 4; //ID 1 is free surface  
-          // dom.Particles[a]->not_write_surf_ID = true;
-          dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-          dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
-          dom.Particles[a]->T_inf 		= 20.;
-        //}
-      }
 
-      if (r > SUPPRAD && y > ( ytop - dx ) ){
-        dom.Particles[a]->ID=2; //ID 1 is free surface  
-        dom.Particles[a]->not_write_surf_ID = true;
-        top_particles++;
+          // dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+          // dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+          // dom.Particles[a]->T_inf 		= 20.;
+
       }
+      
+      ////// TOP
+      // if (r > SUPPRAD && y > ( ytop - dx ) ){
+        // dom.Particles[a]->ID=4; //ID 1 is free surface  
+        // dom.Particles[a]->not_write_surf_ID = true;
+        // top_particles++;
+      // }
 			
 			
 			//SIDES
-			if ( z < -L/2. + dx || z > L/2. - dx){
+			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/30.0/*- dx*/){ 
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
-   			dom.Particles[a]->IsFree=false;
+   			//dom.Particles[a]->IsFree=false;
+          // dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+          // dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}
-			else if ( x < -L/2. + 2.*dx || x > L/2. - 2.*dx){
+			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/30.0/*- 2.*dx*/){
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
-        dom.Particles[a]->IsFree=false;
+        //dom.Particles[a]->IsFree=false;
+        // dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+        // dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}			
-			
-			// if ( x < dx  && x > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=1;
-			// if ( y < dx  && y > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=2; 
-				
-			//x,y, central symmetry
-			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z < L/2. - dx)
-				// dom.Particles[a]->ID=4;  
-			
-			// if ( y < dx  && y > -dx/2. && z < dx  && z > -dx/2. ) //yz -5
-				// dom.Particles[a]->ID=5;           
-			// if (  x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 6
-				// dom.Particles[a]->ID=6;         
-			
-			//First one captures 4 particle, second one
-			//if ( y < dx  && y > -dx && x < dx  && x > -dx && z < dx  && z > -dx/2. ) //xz - 7
-			// if ( y < dx  && y > -dx && x < dx  && x > -dx/2. && z < dx  && z > -dx/2. ) //xz - 7
-				// dom.Particles[a]->ID=7;   
-
-			//TOP
-			// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
-				// dom.Particles[a]->ID=8;           
-			// if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
-				// dom.Particles[a]->ID=9;         
-			// if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
-				// dom.Particles[a]->ID=10;         
+			         
 		}
     
   cout << "Bottom particles: " << bottom_particles << endl;
@@ -295,14 +271,18 @@ int main(int argc, char **argv) try
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
+  
+  //dom.cont_heat_cond  = true;
+  //dom.contact_hc      = 1000.*VFAC; 
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
-  dom.auto_ts=true;
+  dom.auto_ts=false;
   
   //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/400* timestep,"test06",999);
-  dom.SolveDiffUpdateFraser(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-5  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,/*dtOut*/1.e-3  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
     
   return 0;
 }

@@ -227,6 +227,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
     if (contact) CalcContactForcesWang();
+    
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 
@@ -346,11 +347,14 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
       if (max > 0.)
         cout<<"Plastic Work "<<plastic_work<<endl;
+      cout.precision(6);
 			cout << "Max Displacements (No Cont Surf): "<<max_disp<<endl;
       if (contact) {
         cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
         cout<<"Contact Friction Work "<<contact_friction_work<<endl;
         cout<<"External Forces Work "<< ext_forces_work<<endl;
+        if (cont_heat_cond)
+          cout << "Total contact heat flux" << accum_cont_heat_cond <<endl;
       }
 
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;

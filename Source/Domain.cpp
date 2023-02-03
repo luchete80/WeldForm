@@ -156,6 +156,10 @@ inline Domain::Domain ()
   pl_work_heat_frac = 0.9;
   
   nonlock_sum = true;
+  cont_heat_gen   = false;
+  cont_heat_cond  = false;
+  accum_cont_heat_cond = 0.;
+  
 }
 
 inline Domain::~Domain ()
@@ -641,7 +645,8 @@ int Domain::AssignZone(Vec3_t &start, Vec3_t &end, int &id){
         included = false;
     }
     if (included){
-      Particles[a]->ID=id; 
+      Particles[a]->ID=id;
+      Particles[a]->not_write_surf_ID = true;		      
       partcount++;
     }
   }
@@ -1673,7 +1678,8 @@ void Domain::CalcKinEnergyEqn(){
 		}
 	}
   double inc = 0.;
-	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	//SERIAL IS FASTER THAN ATOMIC
+  //#pragma omp parallel for schedule(static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
 	#else
@@ -1700,10 +1706,10 @@ void Domain::CalcIntEnergyEqn(){
 	#endif
 	{
     Particles[i]->CalcIntEnergyEqn();
-    //omp_set_lock(&dom_lock);
-    inc += Particles[i]->dint_energy_dt;
-    //omp_unset_lock(&dom_lock);		
 	}
+  
+  for (size_t i=0; i<max; i++)
+    inc += Particles[i]->dint_energy_dt;
   
 	int_energy_sum += inc * deltat;
 }

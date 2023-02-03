@@ -88,6 +88,8 @@ namespace SPH {
     //Boundary corrections
     bool correct_vel_acc;
     bool is_fixed;
+    
+    double ps_energy; //PER UNIT VOLUME
 
 		double	Density;	///< Density of the particle n+1
 		double 	Densitya;	///< Density of the particle n+1/2 (Leapfrog)
@@ -97,8 +99,10 @@ namespace SPH {
 		double 	FPMassC;	///< Mass coefficient for fixed particles to avoid leaving particles
 		double 	Mass;		///< Mass of the particle
 		Vec3_t	Displacement;	///< Density of the particle n+1
-    Vec3_t  x_prev;           //ONLY FOR SEO CONTACT (contact in current, not predicted, step)
-
+    Vec3_t  x_prev;           //ONLY FOR SEO CONTACT (contact in current, not predicted, step)z
+    double  friction_hfl; //Surface 
+    double  cshearabs;   // Contact shear stress module, for comparison
+    
 		Mat3_t	StrainRate;	///< Global shear Strain rate tensor n
 		Mat3_t	RotationRate;	///< Global rotation tensor n
 		double	ShearRate;	///< Global shear rate for fluids
@@ -175,6 +179,10 @@ namespace SPH {
 		double Ta,Tb;						//Temperature (t-1) for leapfrog
 		double q_source;
 		double q_conv,T_inf,h_conv;				//Different heat source terms
+    double q_cont_conv;
+    
+    double mcp_t;                   //mass * cp, ONLY FOR CONTACT SOLID PARTICLES 
+    
 		double q_plheat;				//Plastic Work Heat generation
 		double th_exp;		//Constant
 		
