@@ -102,10 +102,22 @@ int main(int argc, char **argv) try {
 		
 		dom.Dimension	= 3;
 		
-		dom.Nproc	= 4;
 		string kernel;
     double ts;
+    
     cout << "Reading Configuration parameters..."<<endl; 
+    
+    int np = 4;
+    readValue(config["Nproc"], np);   
+    dom.Nproc	= np;
+        
+    string sumType = "Nishimura";
+    readValue(config["sumType"], /*scene.timeStepSize*/sumType);
+    if (sumType == "Locking") dom.nonlock_sum = false;
+    else if (sumType == "Nishimura") dom.nonlock_sum = true;
+    else cout << "sumType value not valid. Options are \"Locking\" and \"Nishimura\". "<<endl; 
+    
+    
 		cout << "Time step size: ";
     readValue(config["timeStepSize"], /*scene.timeStepSize*/ts);
     cout << ts << endl;

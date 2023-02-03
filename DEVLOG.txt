@@ -171,3 +171,7 @@
 20230201 - Working on input file, now reading contact (with errors).
 20230202 - CONTACT FIRST TIME WORKING. 
          - Fixed Contact Compression example.
+20230203 - Nishimura reductions is changed to if instead of preprocessor.
+         - Addded reduction type to input file readinig
+         - Added a correction to locking sum in case of gradient correction (not yet ready)
+         

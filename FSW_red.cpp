@@ -59,7 +59,7 @@ int main(int argc, char **argv) try
   SPH::Domain	dom;
 
   dom.Dimension	= 3;
-  dom.Nproc	= 4;
+  dom.Nproc	= 32;
   dom.Kernel_Set(Qubic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
   //dom.XSPH	= 0.1; //Very important
@@ -164,6 +164,7 @@ int main(int argc, char **argv) try
   
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
+  //dom.nonlock_sum = false;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
   int bottom_particles = 0;

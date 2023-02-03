@@ -87,7 +87,11 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
   cout << "Main Loop"<<endl;
   
-
+  if (nonlock_sum && gradKernelCorr){
+    cout << "WARNING: Nishimura summation is not working with Gradient Kernel Correction. Summation changed to Locking." <<endl;
+    nonlock_sum = false;
+  }
+    
   int ct=30;
   std::chrono::duration<double> total_time;
 	auto start_whole = std::chrono::steady_clock::now();  
