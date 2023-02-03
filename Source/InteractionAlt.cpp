@@ -19,13 +19,16 @@ inline void Domain::CalcAccel() {
 	{
   for (size_t p=0; p<SMPairs[k].Size();p++) {
     
-    #ifndef NONLOCK_SUM
+    if (!nonlock_sum){
+    //#ifndef NONLOCK_SUM
     P1	= Particles[SMPairs[k][p].first];
     P2	= Particles[SMPairs[k][p].second];	
-    #else
+    //#else
+    }  else {
     P1 = Particles[std::min(SMPairs[k][p].first, SMPairs[k][p].second)];
     P2 = Particles[std::max(SMPairs[k][p].first, SMPairs[k][p].second)];
-    #endif
+    //#endif
+    }
     double h	= (P1->h+P2->h)/2;
     Vec3_t xij	= P1->x - P2->x;
 
@@ -130,8 +133,9 @@ inline void Domain::CalcAccel() {
 			}
 		}
     
-    #ifdef NONLOCK_SUM
+    //#ifdef NONLOCK_SUM
     //if (!gradKernelCorr) 
+    if (nonlock_sum)
     pair_force[first_pair_perproc[k] + p] = temp; //SHOULD ALSO MULTIPLY ACCEL AFTER
     
     // if (SMPairs[k][p].first == ID_TEST || SMPairs[k][p].second == ID_TEST)
@@ -141,8 +145,8 @@ inline void Domain::CalcAccel() {
     
     // if (SMPairs[k][p].first == ID_TEST) cout << "-"<<endl;
     // else if (SMPairs[k][p].second == ID_TEST) cout << "+" <<endl;
-    #else  ////NONLOCK
-    
+    //#else  ////NONLOCK
+    selse {
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
@@ -163,7 +167,8 @@ inline void Domain::CalcAccel() {
 				P2->a					-= mi * temp_c[1];
 			}
 		omp_unset_lock(&P2->my_lock);
-    #endif
+    //#endif
+    }
   }//MAIN FOR IN PAIR
   }//MAIN FOR PROC
 
@@ -198,14 +203,16 @@ inline void Domain::CalcRateTensors() {
 	#endif	
 	{
   for (size_t p=0; p<SMPairs[k].Size();p++) {
-    #ifndef NONLOCK_SUM
+    if (!nonlock_sum){
+    //#ifndef NONLOCK_SUM
     P1	= Particles[SMPairs[k][p].first];
     P2	= Particles[SMPairs[k][p].second];	
-    #else
+    //#else
+    } else {
     P1 = Particles[std::min(SMPairs[k][p].first, SMPairs[k][p].second)];
     P2 = Particles[std::max(SMPairs[k][p].first, SMPairs[k][p].second)];
-    #endif
-    
+    //#endif
+    }
     double h	= (P1->h+P2->h)/2;
     Vec3_t xij	= P1->x - P2->x;
 
@@ -322,12 +329,14 @@ inline void Domain::CalcRateTensors() {
     clock_begin = clock();
 		// Locking the particle 1 for updating the properties
 
-    #ifdef NONLOCK_SUM
+    //#ifdef NONLOCK_SUM
+    if (nonlock_sum){
     //if (!gradKernelCorr) 
     pair_StrainRate[first_pair_perproc[k] + p] = StrainRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
     pair_RotRate[first_pair_perproc[k] + p] = RotationRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
-    #else
-		omp_set_lock(&P1->my_lock);
+    //#else
+		} else {
+      omp_set_lock(&P1->my_lock);
 
       float mj_dj= mj/dj;
 
@@ -355,7 +364,8 @@ inline void Domain::CalcRateTensors() {
       }
 
 		omp_unset_lock(&P2->my_lock);
-    #endif
+    //#endif
+    }//nonlock_sum
     }//FOR PAIRS
   }//FOR NPROC
 }
@@ -391,13 +401,16 @@ inline void Domain::CalcDensInc() {
 	#endif	
 	{
     for (size_t p=0; p<SMPairs[k].Size();p++) {
-      #ifndef NONLOCK_SUM
+      //#ifndef NONLOCK_SUM
+      if (!nonlock_sum) {
       P1	= Particles[SMPairs[k][p].first];
       P2	= Particles[SMPairs[k][p].second];	
-      #else
+      //#else
+      } else {
       P1 = Particles[std::min(SMPairs[k][p].first, SMPairs[k][p].second)];
       P2 = Particles[std::max(SMPairs[k][p].first, SMPairs[k][p].second)];
-      #endif
+      //#endif
+      }
       
       double h	= (P1->h+P2->h)/2;
       Vec3_t xij	= P1->x - P2->x;
@@ -451,10 +464,11 @@ inline void Domain::CalcDensInc() {
           temp1_c[i] = dot( vij , vc[i] );
         }
       }
-      #ifdef NONLOCK_SUM
+      //#ifdef NONLOCK_SUM
+      if (nonlock_sum)
       pair_densinc[first_pair_perproc[k] + p] = temp1;
-      #else
-      
+      //#else
+      else {
       // Locking the particle 1 for updating the properties
       omp_set_lock(&P1->my_lock);
         if (!gradKernelCorr){
@@ -474,7 +488,8 @@ inline void Domain::CalcDensInc() {
           P2->dDensity	+= mi * (dj/di) * temp1_c[1];
         }
       omp_unset_lock(&P2->my_lock);
-      #endif
+      //#endif
+      }
     }//FOR PAIRS
   }//FOR NPROC
 

@@ -344,6 +344,7 @@ public:
     size_t					Scheme;		///< Integration scheme: 0 = Modified Verlet, 1 = Leapfrog
     
     double CFL;               ///FOR VELOCITY
+    bool  nonlock_sum;        //Reduction by table instead of thread locking (Nishimura)
 
     Array<Array<std::pair<size_t,size_t> > >	SMPairs;
     Array<Array<std::pair<size_t,size_t> > >	NSMPairs;

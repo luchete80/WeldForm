@@ -184,9 +184,10 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
     CalcDensInc(); //TODO: USE SAME KERNEL?
-    #ifdef NONLOCK_SUM
-    DensReduction();
-    #endif
+    //#ifdef NONLOCK_SUM
+    if (nonlock_sum) 
+      DensReduction();
+    //#endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
@@ -197,9 +198,10 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
-    #ifdef NONLOCK_SUM
+    //#ifdef NONLOCK_SUM
+    if (nonlock_sum)
     RateTensorsReduction();
-    #endif
+    //#endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
@@ -216,9 +218,10 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     CalcAccel(); //Nor density or neither strain rates
     //CalcAccelPP();
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
-    #ifdef NONLOCK_SUM
+    //#ifdef NONLOCK_SUM
+    if (nonlock_sum)
     AccelReduction();
-    #endif
+    //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
     ///// 8. CONTACT FORCES
