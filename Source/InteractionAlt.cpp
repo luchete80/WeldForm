@@ -19,12 +19,12 @@ inline void Domain::CalcAccel() {
 	{
   for (size_t p=0; p<SMPairs[k].Size();p++) {
     
-    if (!nonlock_sum){
     //#ifndef NONLOCK_SUM
+    if (!nonlock_sum){
     P1	= Particles[SMPairs[k][p].first];
     P2	= Particles[SMPairs[k][p].second];	
     //#else
-    }  else {
+    } else {
     P1 = Particles[std::min(SMPairs[k][p].first, SMPairs[k][p].second)];
     P2 = Particles[std::max(SMPairs[k][p].first, SMPairs[k][p].second)];
     //#endif
@@ -134,8 +134,8 @@ inline void Domain::CalcAccel() {
 		}
     
     //#ifdef NONLOCK_SUM
-    //if (!gradKernelCorr) 
     if (nonlock_sum)
+    //if (!gradKernelCorr) 
     pair_force[first_pair_perproc[k] + p] = temp; //SHOULD ALSO MULTIPLY ACCEL AFTER
     
     // if (SMPairs[k][p].first == ID_TEST || SMPairs[k][p].second == ID_TEST)
@@ -146,7 +146,7 @@ inline void Domain::CalcAccel() {
     // if (SMPairs[k][p].first == ID_TEST) cout << "-"<<endl;
     // else if (SMPairs[k][p].second == ID_TEST) cout << "+" <<endl;
     //#else  ////NONLOCK
-    selse {
+    else { 
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
@@ -168,7 +168,7 @@ inline void Domain::CalcAccel() {
 			}
 		omp_unset_lock(&P2->my_lock);
     //#endif
-    }
+    }//nonlock_sum
   }//MAIN FOR IN PAIR
   }//MAIN FOR PROC
 
@@ -203,12 +203,12 @@ inline void Domain::CalcRateTensors() {
 	#endif	
 	{
   for (size_t p=0; p<SMPairs[k].Size();p++) {
-    if (!nonlock_sum){
     //#ifndef NONLOCK_SUM
+    if (!nonlock_sum){
     P1	= Particles[SMPairs[k][p].first];
     P2	= Particles[SMPairs[k][p].second];	
-    //#else
     } else {
+    //#else
     P1 = Particles[std::min(SMPairs[k][p].first, SMPairs[k][p].second)];
     P2 = Particles[std::max(SMPairs[k][p].first, SMPairs[k][p].second)];
     //#endif
@@ -335,8 +335,8 @@ inline void Domain::CalcRateTensors() {
     pair_StrainRate[first_pair_perproc[k] + p] = StrainRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
     pair_RotRate[first_pair_perproc[k] + p] = RotationRate; //SHOULD ALSO MULTIPLY ACCEL AFTER
     //#else
-		} else {
-      omp_set_lock(&P1->my_lock);
+    } else {
+		omp_set_lock(&P1->my_lock);
 
       float mj_dj= mj/dj;
 
@@ -401,8 +401,8 @@ inline void Domain::CalcDensInc() {
 	#endif	
 	{
     for (size_t p=0; p<SMPairs[k].Size();p++) {
+      if (!nonlock_sum){
       //#ifndef NONLOCK_SUM
-      if (!nonlock_sum) {
       P1	= Particles[SMPairs[k][p].first];
       P2	= Particles[SMPairs[k][p].second];	
       //#else
@@ -489,7 +489,7 @@ inline void Domain::CalcDensInc() {
         }
       omp_unset_lock(&P2->my_lock);
       //#endif
-      }
+      }//nonlock_sum
     }//FOR PAIRS
   }//FOR NPROC
 
