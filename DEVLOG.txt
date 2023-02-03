@@ -174,4 +174,4 @@
 20230203 - Nishimura reductions is changed to if instead of preprocessor.
          - Addded reduction type to input file readinig
          - Added a correction to locking sum in case of gradient correction (not yet ready)
-         
+         - Changed input to read johnson cook, bilinear and hollomon

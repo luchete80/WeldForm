@@ -105,6 +105,11 @@ int main(int argc, char **argv) try {
 		string kernel;
     double ts;
     
+    cout << "--------------------------------------------"<<endl;
+    cout << "----------------- WELDFORM -----------------"<<endl;
+    cout << "----------------- v. 0.4.0 -----------------"<<endl;
+    cout << "--------------------------------------------"<<endl<<endl<<endl;
+    
     cout << "Reading Configuration parameters..."<<endl; 
     
     int np = 4;
@@ -123,6 +128,12 @@ int main(int argc, char **argv) try {
     cout << ts << endl;
     dom.Kernel_Set(Qubic_Spline);
     
+    
+    string solver = "Mech";
+    readValue(config["solver"],solver);
+    
+    if (solver=="Mech-Thermal")
+      dom.thermal_solver = true;
 		
 		readValue(config["integrationMethod"], dom.Scheme); //0:Verlet, 1:LeapFrog, 2: Modified Verlet
 
@@ -142,24 +153,33 @@ int main(int argc, char **argv) try {
 		// MATERIAL //
 		//////////////
 		double rho,E,nu,K,G,Cs,Fy;
-    double c[6];
-    string mattype;
+    double Et, Ep;  //Hardening (only for bilinear and multilear)
+    std::vector<double> c;
+    c.resize(10);
+    string mattype = "Bilinear";
     cout << "Reading Material.."<<endl;
     cout << "Type.."<< endl; readValue(material[0]["type"], 		mattype);
     cout << "Density.."<< endl; readValue(material[0]["density0"], 		rho);
     readValue(material[0]["youngsModulus"], 	E);
     readValue(material[0]["poissonsRatio"], 	nu);
     readValue(material[0]["yieldStress0"], 	Fy);
-    readValue(material[0]["const1"], 		c[0]);
-    readValue(material[0]["const1"], 		c[1]);
+    readArray(material[0]["const"], 		c);
     Material_ *mat;
     Elastic_ el(E,nu);
-    if (mattype == "Bilinear") mat = new Hollomon(el,Fy,c[0],c[1]);
-    //else if (mattype == "JohnsonCook") mat = new JohnsonCook(el,Fy,c[0],c[1],c[2],c[4],c[3]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	
-                      
-    //else if ()
-    //else if (mattype == "JohnsonCook") mat = 
-		cout << "Mat type  "<<mattype<<endl;
+    cout << "Mat type  "<<mattype<<endl;
+    if      (mattype == "Bilinear")    {
+      Ep = E*c[0]/(E-c[0]);		                              //only constant is tangent modulus
+      cout << "Material Constants, Et: "<<c[0]<<endl;
+    } else if (mattype == "Hollomon")    {
+      mat = new Hollomon(el,Fy,c[0],c[1]);
+      cout << "Material Constants, K: "<<c[0]<<", n: "<<c[1]<<endl;
+    } else if (mattype == "JohnsonCook") {
+      //Order is 
+                                 //A(sy0) ,B,  ,C,   m   ,n   ,eps_0,T_m, T_transition
+      mat = new JohnsonCook(el,Fy, c[0],c[1],c[3],c[2],c[6], c[4],c[5]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	 //FIRST IS n_ than m
+      cout << "Material Constants, B: "<<c[0]<<", C: "<<c[1]<<", n: "<<c[2]<<", m: "<<c[3]<<", T_m: "<<c[4]<<", T_t: "<<c[5]<<", eps_0: "<<c[6]<<endl;
+    } else                              throw new Fatal("Invalid material type.");
+    
     cout << "Done. "<<endl;
        
 		K= E / ( 3.*(1.-2*nu) );
@@ -372,9 +392,12 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->Cs			= Cs;
       dom.Particles[a]->Shepard		= false;
       
-      if      ( mattype == "Hollomon" )     dom.Particles[a]->Material_model  = HOLLOMON;
+      if      ( mattype == "Bilinear" )     dom.Particles[a]->Ep 			= Ep;//HARDENING 
+      else if ( mattype == "Hollomon" )     dom.Particles[a]->Material_model  = HOLLOMON;
       else if ( mattype == "JohnsonCook" )  dom.Particles[a]->Material_model  = JOHNSON_COOK;
-			dom.Particles[a]->mat             = mat;
+			if (mattype == "Hollomon" || mattype == "JohnsonCook"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
+        dom.Particles[a]->mat             = mat;
+      }
       dom.Particles[a]->Sigmay		      = Fy;
             
       dom.Particles[a]->Fail			= 1;
@@ -385,7 +408,12 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->hfac = 1.2; //Only for h update, not used
     }
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
-    dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+    if (solver=="Mech" || solver=="Mech-Thermal")
+      dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+    else if (solver=="Thermal")
+      dom.ThermalSolve(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+    else 
+      throw new Fatal("Invalid solver.");
 		} else {
       throw new Fatal("Particle Count is Null. Please Check Radius and Domain Dimensions.");
     }

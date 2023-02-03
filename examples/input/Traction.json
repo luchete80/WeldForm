@@ -16,7 +16,8 @@
 {
 	"id": "Solid",
 	"type": "Hollomon",
-  "const": [7.18e8, 0.22],
+  "const1": 7.18e8,
+  "const2": 0.22,
 	"density0": 7850.0, 
 	"youngsModulus": 200.0E9, 
 	"poissonsRatio": 0.3,
