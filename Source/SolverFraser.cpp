@@ -230,7 +230,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
+    cout << "Solving Forces"<<endl;
     if (contact) CalcContactForcesWang();
+    cout << "Done "<<endl;
     
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();

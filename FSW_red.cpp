@@ -59,7 +59,7 @@ int main(int argc, char **argv) try
   SPH::Domain	dom;
 
   dom.Dimension	= 3;
-  dom.Nproc	= 32;
+  dom.Nproc	= 4;
   dom.Kernel_Set(Qubic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
   //dom.XSPH	= 0.1; //Very important
@@ -164,7 +164,7 @@ int main(int argc, char **argv) try
   
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
-  //dom.nonlock_sum = false;
+  dom.nonlock_sum = false;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
   int bottom_particles = 0;
@@ -181,8 +181,8 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->Shepard	= false;
 			dom.Particles[a]->Material	= 2;
 			dom.Particles[a]->Fail		= 1;
-			//dom.Particles[a]->Sigmay	= Fy;
-      dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
+      dom.Particles[a]->Sigmay	= Fy;
+      //dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			dom.Particles[a]->Alpha		= 1.0;
 			//dom.Particles[a]->Beta		= 2.0;
 			dom.Particles[a]->TI		= 0.3;
@@ -205,9 +205,9 @@ int main(int argc, char **argv) try
         bottom_particles++;
         
 
-          // dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-          // dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
-          // dom.Particles[a]->T_inf 		= 20.;
+          dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+          dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+          dom.Particles[a]->T_inf 		= 20.;
 
       }
       
@@ -223,17 +223,17 @@ int main(int argc, char **argv) try
 			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/30.0/*- dx*/){ 
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
-   			//dom.Particles[a]->IsFree=false;
-          // dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
-          // dom.Particles[a]->T_inf 		= 20.;
+   			dom.Particles[a]->IsFree=false;
+          dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+          dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}
 			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/30.0/*- 2.*dx*/){
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
-        //dom.Particles[a]->IsFree=false;
-        // dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
-        // dom.Particles[a]->T_inf 		= 20.;
+        dom.Particles[a]->IsFree=false;
+        dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+        dom.Particles[a]->T_inf 		= 20.;
         side_particles++;
 			}			
 			         
