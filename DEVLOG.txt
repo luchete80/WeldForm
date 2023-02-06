@@ -175,3 +175,5 @@
          - Addded reduction type to input file readinig
          - Added a correction to locking sum in case of gradient correction (not yet ready)
          - Changed input to read johnson cook, bilinear and hollomon
+20230206 - Ready to read nastran input files for rigid bodies (contact surfaces).
+  

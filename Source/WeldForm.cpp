@@ -298,22 +298,37 @@ int main(int argc, char **argv) try {
     
 		readVector(rigbodies[0]["start"], 	start);       
 		readVector(rigbodies[0]["dim"], 	dim); 
-    if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
-      std::cout << "ERROR: Contact Plane Surface should have one null dimension"<<std::endl;
-    
+    if (rigbody_type == "File"){
+      string filename = "";
+      readValue(rigbodies[0]["fileName"], 	filename); 
+      cout << "Reading Mesh input file..." << endl;
+      SPH::NastranReader reader("Tool.nas");
+    }
+    else {
+      if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
+        throw new Fatal("ERROR: Contact Plane Surface should have one null dimension");
+    }
     std::vector<TriMesh *> mesh;
     
     cout << "Set contact to ";
     if (contact){
       cout << "true."<<endl;
       dom.contact = true;
-      cout << "Reading contact mesh "<<endl;
-      // TODO: CHECK IF MESH IS NOT DEFINED
-      mesh.push_back(new TriMesh);
+      cout << "Reading contact mesh..."<<endl;
       //TODO: CHANGE TO EVERY DIRECTION
       int dens = 10;
       readValue(rigbodies[0]["partSide"],dens);
-      mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);
+      if (rigbody_type == "Plane"){
+        // TODO: CHECK IF MESH IS NOT DEFINED
+        mesh.push_back(new TriMesh);
+        mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);
+      } else if (rigbody_type == "File"){
+        string filename = "";
+        readValue(rigbodies[0]["fileName"], 	filename); 
+        cout << "Reading Mesh input file " << filename <<endl;
+        SPH::NastranReader reader(filename.c_str());
+          mesh.push_back (new SPH::TriMesh(reader));
+      }
       cout << "Creating Spheres.."<<endl;
       //mesh.v = Vec3_t(0.,0.,);
       mesh[0]->CalcSpheres(); //DONE ONCE

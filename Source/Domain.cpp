@@ -402,7 +402,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 				}
 				k++;
 				zp = V(2) + (2.0*k+1)*r;//COMMENTED BY LUCIANO
-				cout << "Z: "<<z<<endl;
+				//cout << "Z: "<<z<<endl;
 			}
     	}
 
@@ -584,7 +584,7 @@ inline void Domain::Add3DCubicBoxParticles(int tag, Vec3_t const & V, double Lx,
 				yp = V(1) + (2.0*j+1)*r;//COMMENTED BY LUCIANO
 			}
 			k++;
-			cout << "Z: "<<z<<endl;
+			//cout << "Z: "<<z<<endl;
 			zp = V(2) + (2.0*k+1)*r;//COMMENTED BY LUCIANO
 		}
     	//Vol+=(Lx*Ly*Lz);
