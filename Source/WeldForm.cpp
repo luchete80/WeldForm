@@ -97,7 +97,7 @@ int main(int argc, char **argv) try {
 		nlohmann::json amplitudes 	= j["Amplitudes"];
 		nlohmann::json rigbodies 		= j["RigidBodies"];
 		nlohmann::json bcs 			= j["BoundaryConditions"];
-		nlohmann::json bcs 			= j["InitialConditions"];
+		nlohmann::json ics 			= j["InitialConditions"];
 		
 		SPH::Domain	dom;
 		
@@ -185,7 +185,7 @@ int main(int argc, char **argv) try {
     // THERMAL PROPERTIES
     double k_T, cp_T;
     readValue(material[0]["thermalCond"], 	  k_T);
-    readValue(material[0]["thermalHeatCap"], 	k_cp);    
+    readValue(material[0]["thermalHeatCap"], 	cp_T);    
     
     cout << "Done. "<<endl;
        
@@ -431,7 +431,7 @@ int main(int argc, char **argv) try {
       
       // THERMAL PROPS
       dom.Particles[a]->k_T = k_T;
-      
+      dom.Particles[a]->cp_T = cp_T;
     }
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech" || solver=="Mech-Thermal")
