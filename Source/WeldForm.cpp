@@ -97,6 +97,7 @@ int main(int argc, char **argv) try {
 		nlohmann::json amplitudes 	= j["Amplitudes"];
 		nlohmann::json rigbodies 		= j["RigidBodies"];
 		nlohmann::json bcs 			= j["BoundaryConditions"];
+		nlohmann::json bcs 			= j["InitialConditions"];
 		
 		SPH::Domain	dom;
 		
@@ -179,6 +180,12 @@ int main(int argc, char **argv) try {
       mat = new JohnsonCook(el,Fy, c[0],c[1],c[3],c[2],c[6], c[4],c[5]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	 //FIRST IS n_ than m
       cout << "Material Constants, B: "<<c[0]<<", C: "<<c[1]<<", n: "<<c[2]<<", m: "<<c[3]<<", T_m: "<<c[4]<<", T_t: "<<c[5]<<", eps_0: "<<c[6]<<endl;
     } else                              throw new Fatal("Invalid material type.");
+    
+    
+    // THERMAL PROPERTIES
+    double k_T, cp_T;
+    readValue(material[0]["thermalCond"], 	  k_T);
+    readValue(material[0]["thermalHeatCap"], 	k_cp);    
     
     cout << "Done. "<<endl;
        
@@ -421,6 +428,10 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->TI			= 0.3;
       dom.Particles[a]->TIInitDist	= dx;
       dom.Particles[a]->hfac = 1.2; //Only for h update, not used
+      
+      // THERMAL PROPS
+      dom.Particles[a]->k_T = k_T;
+      
     }
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech" || solver=="Mech-Thermal")
