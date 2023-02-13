@@ -1,0 +1,78 @@
+{
+"Configuration":
+{
+	"particleRadius": 0.0075, 
+	"hFactor": 1.2,
+  "cflMethod": 1,
+  "cflFactor": 0.4,
+  "autoTS": [false,false,false],
+  "simTime": 0.01,
+  "outTime": 1.0e-5
+}
+,
+"Materials":[ 
+{
+	"id": "Solid",
+	"type": "Bilinear",
+  "const1": 7.18e8,
+  "const2": 0.22,
+	"density0": 2700.0, 
+	"youngsModulus": 68.9E9, 
+	"poissonsRatio": 0.3,
+	"yieldStress0": 300.0E6
+}],
+
+"DomainBlocks": 
+[{
+	"type": "Cylinder",
+	"zoneId": 0,
+	"denseMode": 0,
+	"start": [ 0.0, 0.0, -0.028],
+	"dim": [0.3, 0.0, 0.616],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1]
+}],
+
+"RigidBodies": 
+[{
+	"type": "Plane",
+	"zoneId": 10,
+	"start": [-0.25, -0.25, 0.5975],
+  "partSide": 20,
+	"dim":   [0.5, 0.5, 0.0],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1]
+}],
+
+"DomainZones": [
+{
+	"id": 2,
+	"start":[-1.0,-1.0, -0.03],
+	"end": 	[ 1.0, 1.0, 0.0000]
+}
+],
+
+"Amplitudes": [
+{
+	"id": 		1,
+	"valueType": 1,
+	"time": 	[ 0.0, 0.0, 0.0],
+	"value": 	[ 0.0, 0.0, 0.0]
+}
+],
+"BoundaryConditions": [
+{
+	"zoneId": 	2,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, 0.0],
+	"free": 		true
+},
+{
+	"zoneId": 	10,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, -1.0],
+	"free": 		true
+}
+]
+
+}

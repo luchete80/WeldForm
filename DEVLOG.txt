@@ -176,4 +176,7 @@
          - Added a correction to locking sum in case of gradient correction (not yet ready)
          - Changed input to read johnson cook, bilinear and hollomon
 20230206 - Ready to read nastran input files for rigid bodies (contact surfaces).
-  
+20230207 - Changed FSW_red model density (from input command)
+         - Begining to add Contact_Compression_Rot example
+         - Begining to add thermal properties (constant) and initial conditions to input file
+20230213 - test

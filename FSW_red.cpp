@@ -5,7 +5,7 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-#define VFAC			1.0
+#define VFAC			15.0
 //#define VAVA			5.833e-4		//35 mm/min
 #define VAVA			1.e-3		//35 mm/min
 #define WROT 			1200.0 	    //rpm
@@ -34,8 +34,9 @@ void UserAcc(SPH::Domain & domi) {
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);      
     }
-
 	}
+  
+ 
 	//Mesh is updated automatically
   // for (int i = domi.first_fem_particle_idx;i<domi.Particles.Size();i++){
     // domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
@@ -59,7 +60,7 @@ int main(int argc, char **argv) try
   SPH::Domain	dom;
 
   dom.Dimension	= 3;
-  dom.Nproc	= 4;
+  dom.Nproc	= 12;
   dom.Kernel_Set(Qubic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
   //dom.XSPH	= 0.1; //Very important
@@ -86,7 +87,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.0006;
+	dx = 0.0004; //If dx = 0.0006 then 
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -133,7 +134,7 @@ int main(int argc, char **argv) try
 	// void AddDoubleSymCylinderLength(int tag, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
-  double ybottom = -H - dx/1.45;  
+  double ybottom = -H - 1.2 * dx;  
   
   double ytop = ybottom + H ; 
   
@@ -164,7 +165,7 @@ int main(int argc, char **argv) try
   
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
-  dom.nonlock_sum = false;
+  dom.nonlock_sum = true;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
   int bottom_particles = 0;
@@ -181,9 +182,10 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->Shepard	= false;
 			dom.Particles[a]->Material	= 2;
 			dom.Particles[a]->Fail		= 1;
-      dom.Particles[a]->Sigmay	= Fy;
-      //dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
-			dom.Particles[a]->Alpha		= 1.0;
+      //dom.Particles[a]->Sigmay	= Fy;
+      dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
+			
+      dom.Particles[a]->Alpha		= 1.0;
 			//dom.Particles[a]->Beta		= 2.0;
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
@@ -205,9 +207,9 @@ int main(int argc, char **argv) try
         bottom_particles++;
         
 
-          dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-          dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
-          dom.Particles[a]->T_inf 		= 20.;
+        dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+        dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+        dom.Particles[a]->T_inf 		= 20.;
 
       }
       
@@ -220,20 +222,26 @@ int main(int argc, char **argv) try
 			
 			
 			//SIDES
-			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/30.0/*- dx*/){ 
+			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/25.0/*- dx*/){ 
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
    			dom.Particles[a]->IsFree=false;
-          dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
-          dom.Particles[a]->T_inf 		= 20.;
+        
+        dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+        dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+        dom.Particles[a]->T_inf 		= 20.;
+        
         side_particles++;
 			}
-			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/30.0/*- 2.*dx*/){
+			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/25.0/*- 2.*dx*/){
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
         dom.Particles[a]->IsFree=false;
+
+        dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
         dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
         dom.Particles[a]->T_inf 		= 20.;
+
         side_particles++;
 			}			
 			         
@@ -281,9 +289,9 @@ int main(int argc, char **argv) try
 
   dom.auto_ts=false;
   
-  dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,timestep,"test06",1000);
   //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,/*dtOut*/1.e-3  ,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.03,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
     
   return 0;
 }
