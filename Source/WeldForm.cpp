@@ -436,11 +436,7 @@ int main(int argc, char **argv) try {
       
       // THERMAL PROPS
       dom.Particles[a]->k_T = k_T;
-<<<<<<< HEAD
-      
-=======
       dom.Particles[a]->cp_T = cp_T;
->>>>>>> 5c13dc2f055db159e57d96dd1582c5fb2f0aff99
     }
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech" || solver=="Mech-Thermal")
