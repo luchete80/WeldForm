@@ -1,6 +1,7 @@
 {
 "Configuration":
 {
+  "solver": "Mech-Thermal",
 	"particleRadius": 0.0075, 
 	"hFactor": 1.2,
   "cflMethod": 1,
