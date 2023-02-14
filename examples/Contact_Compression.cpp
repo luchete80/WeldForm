@@ -2,6 +2,8 @@
 #include "Domain.h"
 #include <iostream>
 #include "InteractionAlt.cpp"
+#include "SolverKickDrift.cpp"
+#include "SolverFraser.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -10,6 +12,10 @@ using namespace SPH;
 using namespace std;
 
 std::ofstream of;
+
+double tout;
+
+bool contact = true; //NOT WORKING WITH CONTACT = FALSE
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -29,14 +35,15 @@ void UserAcc(SPH::Domain & domi) {
 	
 	{
 		//TODO: Modify this by relating FEM & AND partciles 
-		// if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
-		// {
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-// //			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		// }
+    if (!contact)
+		if (domi.Particles[i]->ID == 3) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+//			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
@@ -49,8 +56,19 @@ void UserAcc(SPH::Domain & domi) {
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  if (contact)
+    domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  
   of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
+
+  double dtout = 1.e-4;
+  if (domi.getTime()>=tout){
+    // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
+    // cout << "Normal acc sum " << normal_acc_sum<<endl;
+    tout += dtout;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << ", " <<domi.ext_forces_work<<", " <<domi.plastic_work << ", " <<domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
+  }
+
 }
 
 
@@ -101,12 +119,12 @@ int main(){
 	dom.DomMin(0) = -L;
 
 									
-	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20.,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
 	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
-	
+	cout << "Plane z " <<cyl_zmax<<endl;
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.5,-0.5, cyl_zmax),Vec3_t(0.5,0.5, cyl_zmax),40);
 	cout << "Plane z" << *mesh.node[0]<<endl;
 	
@@ -115,9 +133,20 @@ int main(){
 	cout << "Creating Spheres.."<<endl;
 	//mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE
+
+	//////////////////////
+
+	//ALWAYS AFTER SPH PARTICLES
+	//TODO: DO THIS INSIDE SOLVER CHECKS
+	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
+											//Not for any force calc in contact formulation
+  cout << "Adding mesh particles ...";
+	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  cout << "done."<<endl;
+  
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true;
+	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
@@ -131,9 +160,11 @@ int main(){
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
 		dom.Particles[a]->Alpha		= 1.0;
-		//dom.Particles[a]->Beta		= 1.0;
+		dom.Particles[a]->Beta		= 1.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
+    double x = dom.Particles[a]->x(0);
+    double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
 		if ( z < 0 ){
 			dom.Particles[a]->ID=2;
@@ -141,16 +172,24 @@ int main(){
 			// dom.Particles[a]->NoSlip=true;			
       dom.Particles[a]->not_write_surf_ID = true;		
 		}
-		// if ( z > L )
-			// dom.Particles[a]->ID=3;
+		if ( z > L - dx  && abs(x) < 2*dx && y > R - 2*dx && a < dom.first_fem_particle_idx[0]){
+      cout << "CONTROL, particle "<< a << "x "<<x<< ", y " << y<<", z "<<z<<endl;
+    }
+    if (!contact) {
+      if ( z > L ){
+        dom.Particles[a]->ID=3;
+        dom.Particles[a]->not_write_surf_ID = true;  
+      }    
+    }
 	}
 	//Contact Penalty and Damping Factors
-	dom.contact = true;
-	dom.friction_dyn = 0.15;
-	dom.friction_sta = 0.15;
-	dom.PFAC = 0.8;
+  if (contact)
+    dom.contact = true;
+	dom.friction_dyn = 0.0;
+	dom.friction_sta = 0.0;
+	dom.PFAC = 0.5;
 	dom.DFAC = 0.0;
-  dom.fric_type = Fr_Bound;
+  dom.fric_type = Fr_Dyn;
 
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
@@ -158,29 +197,26 @@ int main(){
 
 
 	of = std::ofstream ("cf.csv", std::ios::out);
-  of << "Time, cf, vypart"<<endl;
-  
-	//////////////////////
+    of << "Time, disp, cf, ext_f_wk, plastic_wk, heat_cond, friction_wk"<<endl;
+    tout = 0.;  
 
-	//ALWAYS AFTER SPH PARTICLES
-	//TODO: DO THIS INSIDE SOLVER CHECKS
-	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
-											//Not for any force calc in contact formulation
-  cout << "Adding mesh particles ...";
-	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-  cout << "done."<<endl;
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-  //dom.auto_ts = false;
-  timestep = (1.0*h/(Cs)); //Standard modified Verlet do not accept such step
+  //dom.auto_ts = false; 
+  dom.CFL = 0.7;
+  timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
-  dom.auto_ts=true;
+  dom.auto_ts=false;
+  //dom.auto_ts_cont = true;
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
-  dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  //dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,timestep,"test06",1000);
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

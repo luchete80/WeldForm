@@ -20,6 +20,7 @@
 
 #include "Domain.h"
 
+
 void UserAcc(SPH::Domain & domi)
 {
 	// #pragma omp parallel for schedule (static) num_threads(domi.Nproc)
@@ -52,15 +53,15 @@ int main(int argc, char **argv) try
 
         dom.Dimension	= 3;
         dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic_Spline);
-    	dom.Scheme	= 0;
+    	dom.Kernel_Set(Qubic_Spline);
+    	dom.Scheme	= 1;
 //     	dom.XSPH	= 0.5; //Very important
 
         double dx,h,rho,K,G,Cs,Fy;
     	double H,L,n;
 
     	H	= 1.;
-    	n	= 15.0;
+    	n	= 10.0;
 
     	rho	= 1000.0;
     	dx	= H / n;
@@ -75,35 +76,36 @@ int main(int argc, char **argv) try
         cout<<"G  = "<<G<<endl;
         cout<<"Fy = "<<Fy<<endl;
     	dom.GeneralAfter = & UserAcc;
-        dom.DomMax(0) = H;
-        dom.DomMin(0) = -H;
+        //dom.DomMax(0) = H;
+        //dom.DomMin(0) = -H;
 
-     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20., -H/2.0 -H/20. ), H + H/20., H +H/20.,  H + H/20. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t (0.,0.,0.), H ,H,H , dx/2.0 ,rho, h, 1 , 0 , false, false );
 		//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20.,0. ), H + H/20., H +H/20.,  0. , dx/2.0 ,rho, h, 1 , 0 , false, false );
      	
 // dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
 							// H , H ,  H , 
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );
 		std::cout << "Particle Number: "<< dom.Particles.size() << endl;
-     	double x;
-
+     	double z;
+			dom.gradKernelCorr = false;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
-    		x = dom.Particles[a]->x(0);
+    		z = dom.Particles[a]->x(2);
 			dom.Particles[a]->k_T			=	3000.;
 			dom.Particles[a]->cp_T			=	1.;
 			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				= 20.0;			
-    		if ( x < -H/2.0 ) {
-    			//dom.Particles[a]->ID 			= 2;
+    		if ( z <  dx ) {
+    			dom.Particles[a]->ID 			= 2;
+          dom.Particles[a]->T 			= 500.;
     			//dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
 				// cout << "Particle " << a << "is convection BC" <<endl;
-				dom.Particles[a]->T = 500.;
 			}
     	}
 
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
+				timestep = 0.001;	
 		cout << "Time Step: "<<timestep<<endl;
 		//timestep=1.e-6;
 		//0.3 rho cp h^2/k
@@ -112,8 +114,17 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalSolve(timestep + 1.e-8,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+		//dom.ThermalSolve(/*tf*/timestep + 1.0e-5,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
+    dom.ThermalSolve(/*tf*/2.001,/*dt*/timestep,/*dtOut*/2.,"test06",999);
+    cout << "dom.BLPF "<<dom.BLPF<<endl;
+    cout << "dom.TRPR "<<dom.TRPR<<endl;
+    for (int k=0;k<4;k++)
+      for (int j=0;j<4;j++){
+    for (int i=0;i<4;i++)
 
+          cout <<dom.HOC[i][j][k]<<", ";
+        cout << endl;
+      }
 //		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 
         return 0;

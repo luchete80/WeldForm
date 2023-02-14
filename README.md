@@ -22,6 +22,7 @@ Has been exclusively adapted to solid mechaincs, and it includes:
 - Coupled ThermoMechanical Solver (in progress)
 - Contact formulation (in progress)
 - Adaptive search only in case of plastic strain threshold (in progress)
+- Parallel Reduction Sums by standard thread locking or with Nishimura table. 
 
 ## Building Instructions
 
@@ -54,3 +55,8 @@ CompactNSearch and CuNSearch must be separated (either they are in conflict)
 3) GSL: Obtained from here: 
 4) The files for visual studio are located in :
 
+
+## References
+ * [PersianSPH] (https://github.com/mghkorzani/persiansph)
+ * Kirk Fraser, ROBUST AND EFFICIENT MESHFREE SOLID THERMO-MECHANICS SIMULATION OF FRICTION STIR WELDING
+ * Daisuke Nishiura , Hide Sakaguchi. Parallel-vector algorithms for particle simulations on shared-memory multiprocessors. Journal of Computational Physics 230 (2011) 1923–1938

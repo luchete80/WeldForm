@@ -21,12 +21,17 @@
 
 #include "Domain.h"
 #include "InteractionAlt.cpp"
+#include "SolverKickDrift.cpp"
+#include "SolverVerlet.cpp"
+#include "SolverFraser.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
 
 int forcepart_count;
 
+std::ofstream of;
+double tout;
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -56,9 +61,10 @@ void UserAcc(SPH::Domain & domi)
 			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
 			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
 			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->v(2)			= -vcompress;
-			domi.Particles[i]->va(2)		= -vcompress;
-			domi.Particles[i]->vb(2)		= -vcompress;
+			domi.Particles[i]->v			= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+      domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -69,6 +75,14 @@ void UserAcc(SPH::Domain & domi)
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
+
+  double dtout = 1.e-4;
+  if (domi.getTime()>=tout){
+    // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
+    // cout << "Normal acc sum " << normal_acc_sum<<endl;
+    tout += dtout;
+    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << ", " <<domi.ext_forces_work<<", " <<domi.plastic_work << ", " <<domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
+  }
 }
 
 
@@ -121,11 +135,12 @@ int main(int argc, char **argv) try
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									// double r, double Density, double h, bool Fixed) {
 										
-		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
+		dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.0), R, L + 2.*L/10.0,  dx/2., rho, h, false); 
 		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
 		forcepart_count = 0;
+    int bottom_count = 0;
 		//dom.gradKernelCorr = true;
 		dom.ts_nb_inc = 5;		
 		
@@ -143,29 +158,43 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 ){
+    		//if ( z < -3.0*dx ){
+        if ( z < 0.0 ){
     			dom.Particles[a]->ID=2;
 	    			// dom.Particles[a]->IsFree=false;
     			// dom.Particles[a]->NoSlip=true;			
-				
+          bottom_count++;
 				}
-    		if ( z > (L - dx) ) {//Changed to only last row
+    		//if ( z > L + 2.*dx ) {//Changed to only last row
+        if ( z > L ) {//Changed to only last row
     			dom.Particles[a]->ID=3;
 					//dom.Particles[a]->XSPH		= 0.1;
 					forcepart_count++;
 				}
     	}
 			cout << "Contact Force Particles: "<<forcepart_count<<endl;
+      cout << "bottom count "<<bottom_count<<endl;
 		dom.WriteXDMF("maz");
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
 
+    of = std::ofstream ("cf.csv", std::ios::out);
+    of << "Time, disp, cf, ext_f_wk, plastic_wk, heat_cond, friction_wk"<<endl;
+    tout = 0.;
+    
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
-    timestep = (0.4*h/(Cs+VMAX));
+    timestep = (1.0*h/(Cs+VMAX)); 
+    dom.CFL = 1.0;
+    //timestep = 2.5e-6;
     dom.auto_ts = false;
-    dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateFraser(5*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",10000);	
+  
   
 		return 0;
 }

@@ -63,7 +63,7 @@ void UserAcc(SPH::Domain & domi)
     // domi.Particles[i]->a = Vec3_t(0.0,0.0,0.0);
     // domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,0.0,-vcompress/2.);
   // }
-  domi.trimesh->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
 
 }
 
@@ -156,6 +156,7 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
     		dom.Particles[a]->Alpha		= 1.0;
+        dom.Particles[a]->hfac		= 1.2;
     		//dom.Particles[a]->Beta		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
@@ -194,8 +195,8 @@ int main(int argc, char **argv) try
         //TOP
     		// if ( y < dx  && y > -dx/2. && z > L/2. - dx ) //yz -5
     			// dom.Particles[a]->ID=8;           
-     		// if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
-    			// dom.Particles[a]->ID=9;         
+     		if (  x < dx  && x > -dx/2. && z > L/2. - dx ) //xz - 6
+    			dom.Particles[a]->ID=9;         
         // if ( y < dx  && y > -dx/2. && x < dx  && x > -dx/2. && z > L/2. - dx ) //xyz - 7
     			// dom.Particles[a]->ID=10;         
     	}
@@ -206,10 +207,11 @@ int main(int argc, char **argv) try
   dom.fric_type = Fr_Dyn;
 	dom.contact = true;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.15;
+	dom.friction = 0.0;
+	dom.friction_dyn = 0.2;
   dom.friction_sta = 0.0;
-	dom.PFAC = 0.4;
-	dom.DFAC = 0.2;
+	dom.PFAC = 0.6;
+	dom.DFAC = 0.;
 	dom.update_contact_surface = false;
 
   dom.WriteXDMF("maz");
@@ -220,15 +222,17 @@ int main(int argc, char **argv) try
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
-	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
     
 
   //dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
   
   
-  timestep = (0.4 *h/(Cs));
-  dom.auto_ts=false;
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+  timestep = (0.4 *h/(Cs+VMAX));
+  dom.auto_ts=true;
+  //dom.auto_ts_acc=true;
+  dom.sqrt_h_a = 0.005;
+  dom.SolveDiffUpdateKickDrift(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   
   return 0;
 }

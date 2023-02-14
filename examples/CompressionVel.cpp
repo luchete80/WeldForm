@@ -63,9 +63,9 @@ void UserAcc(SPH::Domain & domi)
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
@@ -84,7 +84,7 @@ int main(int argc, char **argv) try
   dom.Kernel_Set(Qubic_Spline);
   //dom.Kernel_Set(Hyperbolic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
-  dom.XSPH	= 0.1; //Very important
+  //dom.XSPH	= 0.1; //Very important
 
   double dx,h,rho,K,G,Cs,Fy;
   double R,L,n;
@@ -145,8 +145,8 @@ int main(int argc, char **argv) try
     		double z = dom.Particles[a]->x(2);
     		if ( z < 0 ){
     			dom.Particles[a]->ID=2;
-	    			dom.Particles[a]->IsFree=false;
-    			dom.Particles[a]->NoSlip=true;			
+	    			// dom.Particles[a]->IsFree=false;
+    			// dom.Particles[a]->NoSlip=true;			
 				
 				}
     		if ( z > (L -1.5*h)&& z<(L -1.5*h + h) ) {//Changed to only last row

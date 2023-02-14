@@ -16,7 +16,6 @@ void UserAcc(SPH::Domain & domi) {
 		vcompress = VMAX/TAU * domi.getTime();
 	else
 		vcompress = VMAX;
-  int side = 0;
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -27,31 +26,29 @@ void UserAcc(SPH::Domain & domi) {
 	#endif
 	
 	{
-    //zcenter, x=R, y=0 particles
-		if (domi.Particles[i]->ID == 2) {
-			domi.Particles[i]->a[1] = domi.Particles[i]->a[2] = 0.;
-			domi.Particles[i]->v[1] = domi.Particles[i]->v[2] = 0.;
-			domi.Particles[i]->va[1] = domi.Particles[i]->va[2] = 0.;
-			domi.Particles[i]->vb[1] = domi.Particles[i]->vb[2] = 0.;
-      side++;
+		//TODO: Modify this by relating FEM & AND partciles 
+		// if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+// //			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }
+		if (domi.Particles[i]->ID == 2)
+		{
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
 			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}    
-    //zcenter, x=0, y=R particles
-		if (domi.Particles[i]->ID == 3) {
-			domi.Particles[i]->a[0] = domi.Particles[i]->a[2] = 0.;
-			domi.Particles[i]->v[0] = domi.Particles[i]->v[2] = 0.;
-			domi.Particles[i]->va[0] = domi.Particles[i]->va[2] = 0.;
-			domi.Particles[i]->vb[0] = domi.Particles[i]->vb[2] = 0.;
-      side++;
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}    
+		}
 	}
 	
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress/2.));
-  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., vcompress/2.));
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
+  domi.trimesh[1]->SetVel(Vec3_t(0.0,0., 0.));
 }
 
 
@@ -124,8 +121,7 @@ int main(){
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
-	int top, bottom;
-  top = bottom =0;   
+			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -141,37 +137,28 @@ int main(){
 		//dom.Particles[a]->Beta		= 1.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
-    double x = dom.Particles[a]->x(0);
-    double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
-
-    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x - R) < 1.5*dx && abs(y) < 1.1*dx){
-      dom.Particles[a]->ID=2;	  
-      dom.Particles[a]->not_write_surf_ID = true;
-      top++;      
-    } 
-    //x=R, y=0
-    if ( abs (z - (L/2.-dx)) < dx/2. && abs(x) < 1.1*dx && abs(y-R) < 1.5*dx){
-      dom.Particles[a]->ID=3;	  
-      dom.Particles[a]->not_write_surf_ID = true;
-      bottom++;      
-    } 
-    
+		// if ( z < 0 ){
+			// dom.Particles[a]->ID=2;
+			// dom.Particles[a]->IsFree=false;
+			// dom.Particles[a]->NoSlip=true;			
+		
+		// }
+		// if ( z > L )
+			// dom.Particles[a]->ID=3;
 	}
 	//Contact Penalty and Damping Factors
 	dom.contact = true;
-  //dom.fric_type = Fr_Bound;
-
+  dom.fric_type = Fr_Dyn;
 	//dom.friction = 0.15;
-	dom.friction_dyn = 0.0;
-	dom.friction_sta = 1.0;
-	dom.PFAC = 0.5;
-	dom.DFAC = 0.5;
+	dom.friction_dyn = 0.1;
+	dom.friction_sta = 0.1;
+	dom.PFAC = 0.6;
+	dom.DFAC = 0.0;
 	
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
 
-  cout << top<< " Top particles, "<<bottom << " bottom particles"<<endl; 
 	
 	//////////////////////
 
@@ -191,7 +178,8 @@ int main(){
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
   
     timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
-    dom.auto_ts=false;  
+    dom.auto_ts=true;
+    dom.auto_ts_acc=false;    
     dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");

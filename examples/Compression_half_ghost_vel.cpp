@@ -2,6 +2,8 @@
 
 #include "Domain.h"
 #include "InteractionAlt.cpp"
+#include "SolverKickDrift.cpp"
+
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -166,7 +168,7 @@ int main(int argc, char **argv) try
     			// dom.Particles[a]->ID=7;   
 
 
-    		if ( z > L/2. - dx ){
+    		if ( z > L/2. - 2.0*dx ){
     			dom.Particles[a]->ID=11;	         
         }
         //TOP
@@ -182,14 +184,16 @@ int main(int argc, char **argv) try
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 		dom.BC.InOutFlow = 0;
  
-    timestep = (0.2*h/(Cs)); //Standard modified Verlet do not accept such step
-    dom.auto_ts=false;
+    timestep = (1.0*h/(Cs)); //Standard modified Verlet do not accept such step
+    dom.auto_ts=true;
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
     // timestep = (0.4 *h/(Cs));
     // dom.auto_ts=false;
-    dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+    //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
     
+    dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+      
 		return 0;
 }
 MECHSYS_CATCH
