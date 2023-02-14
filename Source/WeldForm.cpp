@@ -109,7 +109,7 @@ int main(int argc, char **argv) try {
     
     cout << "--------------------------------------------"<<endl;
     cout << "----------------- WELDFORM -----------------"<<endl;
-    cout << "----------------- v. 0.4.0 -----------------"<<endl;
+    cout << "----------------- v. 0.4.1 -----------------"<<endl;
     cout << "--------------------------------------------"<<endl<<endl<<endl;
     
     cout << "Reading Configuration parameters..."<<endl; 
