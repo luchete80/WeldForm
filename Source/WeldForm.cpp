@@ -404,8 +404,10 @@ int main(int argc, char **argv) try {
 		double IniTemp = 0.;
 		for (auto& ic : ics){
 			double temp;
-			readValue(ic["Temp"], IniTemp);
-			
+			if (solver == "Mech-Thermal"){
+				readValue(ic["Temp"], IniTemp);
+				cout << "Initial Temp: "<<IniTemp<<endl;
+			}
 		}
     
     //Add fixed particles, these have priority
