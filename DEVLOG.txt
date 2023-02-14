@@ -181,5 +181,8 @@
          - Begining to add thermal properties (constant) and initial conditions to input file
 
 20230213 - test
+20230214 - Working on Input. 
+		 - FIXED COMPRESSION EXAMPLE.
+		 
 
  

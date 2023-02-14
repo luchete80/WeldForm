@@ -8,7 +8,7 @@
   "cflFactor": 0.4,
   "autoTS": [false,false,false],
   "simTime": 0.01,
-  "outTime": 1.0e-5
+  "outTime": 1.0e-4
 }
 ,
 "Materials":[ 
@@ -39,6 +39,11 @@
 	"id": 2,
 	"start":[-1.0,-1.0, -0.03],
 	"end": 	[ 1.0, 1.0, 0.0000]
+},
+{
+	"id": 3,
+	"start":[-1.0,-1.0, 0.56],
+	"end": 	[ 1.0, 1.0, 1.0000]
 }
 ],
 
@@ -58,7 +63,7 @@
 	"free": 		true
 },
 {
-	"zoneId": 	10,
+	"zoneId": 	3,
 	"valuetype": 	"Constant",
 	"value": 		[ 0.0, 0.0, -1.0],
 	"free": 		true

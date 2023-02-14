@@ -97,11 +97,8 @@ int main(int argc, char **argv) try {
 		nlohmann::json amplitudes 	= j["Amplitudes"];
 		nlohmann::json rigbodies 		= j["RigidBodies"];
 		nlohmann::json bcs 			= j["BoundaryConditions"];
-<<<<<<< HEAD
-		nlohmann::json bcs 			= j["InitialConditions"];
-=======
 		nlohmann::json ics 			= j["InitialConditions"];
->>>>>>> 5c13dc2f055db159e57d96dd1582c5fb2f0aff99
+
 		
 		SPH::Domain	dom;
 		
@@ -402,8 +399,14 @@ int main(int argc, char **argv) try {
 			dom.bConds.push_back(bcon);
 			
       std::cout<< "BCs "<<  ", Zone ID: "<<bcon.zoneId<<", Value :" <<bcon.value<<std::endl;
+		}//Boundary Conditions
+		
+		double IniTemp = 0.;
+		for (auto& ic : ics){
+			double temp;
+			readValue(ic["Temp"], IniTemp);
+			
 		}
-    
     
     //Add fixed particles, these have priority
     
@@ -437,6 +440,8 @@ int main(int argc, char **argv) try {
       // THERMAL PROPS
       dom.Particles[a]->k_T = k_T;
       dom.Particles[a]->cp_T = cp_T;
+	  
+	  dom.Particles[a]->T = IniTemp;
     }
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech" || solver=="Mech-Thermal")
