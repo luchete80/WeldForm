@@ -375,8 +375,8 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	//CalcConvHeatSOA();
 	cout << "Done. "<<endl;
 	//CalcTempIncSOA();
-  //CalcTempInc();
-  CalcTempIncPP();
+  CalcTempInc();
+  //CalcTempIncPP();
   //CalcConvHeat();
 	cout << "End."<<endl;	
 	while (Time<tf && idx_out<=maxidx) {
@@ -447,7 +447,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		//AdaptiveTimeStep();
 		
 		//CalcConvHeatSOA();
-		CalcTempIncPP();
+		CalcTempInc();
     //CalcConvHeat();
     //CalcTempIncSOA();
 
