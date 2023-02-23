@@ -196,6 +196,8 @@ public:
 	
     void WriteXDMF			(char const * FileKey);					//Save a XDMF file for the visualization
     void WriteCSV				(char const * FileKey);					//Save a XDMF file for the visualization
+    
+    void ReadXDMF			(char const * FileKey);	        //NEW, FOR RESTART
 
     void InFlowBCLeave	();
     void InFlowBCFresh	();
@@ -467,6 +469,7 @@ public:
 #include "Domain.cpp"
 #include "SolverLeapfrog.cpp"
 #include "Neighbour.cpp"
+#include "Input.cpp"
 #include "Output.cpp"
 #include "InOutFlow.cpp"
 

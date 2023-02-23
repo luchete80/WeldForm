@@ -134,7 +134,7 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  FSW_red
+  #FSW_red
   #FSW_nastran
 	#Elastic
 	#Heat_2D
@@ -171,7 +171,8 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
+	#"Source/WeldForm"
+  "restart_test"
 )
 
 add_subdirectory("examples")
@@ -182,10 +183,13 @@ FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
 	#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
   #"${CMAKE_SOURCE_DIR}/Source/NastranVolReader.cpp"
+  
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 ENDFOREACH(var)
+
+
 
 # ADD_EXECUTABLE        (WeldForm "${PROJECT_SOURCE_DIR}/Source/WeldForm.cpp" )
 # TARGET_LINK_LIBRARIES (WeldForm ${LIBS} blitz)
