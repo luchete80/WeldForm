@@ -73,6 +73,7 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
   #test_new_sym
+  Cantilever
   #Compression
 	#Compression_XSPH
   #Compression_AVisc
@@ -171,8 +172,8 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	#"Source/WeldForm"
-  "restart_test"
+	"Source/WeldForm"
+  #"restart_test"
 )
 
 add_subdirectory("examples")

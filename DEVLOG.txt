@@ -187,4 +187,5 @@
 20230223 - ADDING RESTART read file for the first time. 
 20230227 - Fixed cantilever algorithm 
          - Added output reading log
+         - Changed box domain to write particles until (Length - r)
  
