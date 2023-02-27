@@ -234,9 +234,9 @@ int main(int argc, char **argv) try {
     bool sym[] = {false,false,false};
 		readValue(domblock[0]["id"], 	id);
 		readVector(domblock[0]["start"], 	start);
-		readVector(domblock[0]["dim"], 	L);
-		readValue(domblock[0]["type"], 	domtype); //0: Box
-    readValue(domblock[0]["matID"], 	matID); //0: Box
+		cout << "Reading Domain dim" << endl;  readVector(domblock[0]["dim"], 	L);
+		cout << "Reading Domain type" << endl; readValue(domblock[0]["type"], 	domtype); //0: Box
+    cout << "Reading Domain mat id" << endl;  readValue(domblock[0]["matID"], 	matID); //0: Box
     readBoolVector(domblock[0]["sym"], 	sym); //0: Box
         for (int i=0;i<3;i++) {//TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
