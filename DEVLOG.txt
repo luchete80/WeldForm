@@ -185,4 +185,6 @@
 		 - FIXED COMPRESSION EXAMPLE.
 		 - FIRST TIME READING THERMAL-STRUCT coupled problem (Compression_thermal.json)
 20230223 - ADDING RESTART read file for the first time. 
+20230227 - Fixed cantilever algorithm 
+         - Added output reading log
  

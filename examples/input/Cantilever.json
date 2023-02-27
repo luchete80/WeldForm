@@ -15,9 +15,9 @@
 	{
     "id": "Solid",
     "density0": 2700.0, 
-    "youngsModulus ": 70.0e9, 
-    "poissonsRatio ": 0.33,
-    "yieldStress0 ": 3.0E6
+    "youngsModulus": 70.0e9, 
+    "poissonsRatio": 0.33,
+    "yieldStress0": 3.0E6
 	}
 ]
 ,
@@ -26,7 +26,7 @@
 [
   {
     "id": 0,
-    "type": 0,
+    "type": "Box",
     "matID": 1,
     "denseMode": 0,
     "start": [0.05, -0.012, -0.006],
