@@ -2,12 +2,14 @@
 "Configuration":
 { 
 	"particleRadius": 0.001, 
-	"hFactor": 1.1,
+	"hFactor": 1.2,
 	"cflMethod": 1, 
 	"cflFactor": 0.4,
+  "sumType": "Nisadsdhimura",
 	"autoTS": [false,false,false],
-	"simTime": 0.01,
-	"outTime": 1.0e-5
+	"simTime": 5.0e-7,
+  "artifViscAlpha": 0.0,
+	"outTime": 1.94e-7
 }
 ,
 "Materials": 
@@ -17,7 +19,7 @@
     "density0": 2700.0, 
     "youngsModulus": 70.0e9, 
     "poissonsRatio": 0.33,
-    "yieldStress0": 3.0E6
+    "yieldStress0": 30000.0E6
 	}
 ]
 ,
@@ -68,7 +70,7 @@
 {
 	"zoneId": 	3,
 	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, -0.48],
+	"value": 		[ 0.0, -0.48, 0.0],
 	"free": 		true
 }
 ]

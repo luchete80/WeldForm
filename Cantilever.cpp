@@ -1,7 +1,11 @@
 #include "Domain.h"
 
+#include "InteractionAlt.cpp"
+#include "SolverFraser.cpp"
+
 #define TAU		0.005
 #define UMAX	0.0024
+
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -74,7 +78,7 @@ int main(int argc, char **argv) try
 	Cs	= sqrt(K/rho);
 
 	double timestep;
-	timestep = (0.2*h/(Cs));
+	timestep = (0.4*h/(Cs));
 		
 		//timestep = 2.5e-6;
 		//timestep = 5.e-7;
@@ -97,7 +101,8 @@ int main(int argc, char **argv) try
 							Lx + Lx/20.0 , Ly /*+dx*/,  Lz /*+dx*/, 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-		dom.gradKernelCorr = true;
+		dom.gradKernelCorr = false;
+    dom.ts_nb_inc = 5;		
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -106,10 +111,10 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->PresEq	= 0;
     		dom.Particles[a]->Cs		= Cs;
     		dom.Particles[a]->Shepard	= false;
-    		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 0.0;
+        dom.Particles[a]->Material	= 2;
+    		dom.Particles[a]->Alpha		= 1.0;
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double x = dom.Particles[a]->x(0);
@@ -124,11 +129,12 @@ int main(int argc, char **argv) try
     		if ( y >= (Ly/2. - dx ) && x >= (Lx/2. -Lx/40.) )
     			dom.Particles[a]->ID=3;
     	}
-		dom.WriteXDMF("maz");
+      		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
+      dom.auto_ts=false; 
+//		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
-
-    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.00001,"test06",999);
+      dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.00001,"test06",1000);
         return 0;
 }
 MECHSYS_CATCH

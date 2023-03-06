@@ -1988,352 +1988,354 @@ inline void Domain::TimestepCheck ()
 }
 
 inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
-	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
-
-	size_t idx_out = 1;
-	double tout = Time;
-
-	//Initializing adaptive time step variables
-	deltat = deltatint = deltatmin	= dt;
-	
-	auto start_whole = std::chrono::steady_clock::now();
-		
-	cout << "Initial checks"<<endl;
-	InitialChecks();
-	cout << "Creating list and cells"<<endl;
-	CellInitiate();
-	ListGenerate();
-	PrintInput(TheFileKey);
-	cout << "Time Step check"<<endl;
-	TimestepCheck();
-	WholeVelocity();
-	
-	//TODO: MOVE
-	if (contact){
-		for (int i=0; i<Particles.Size(); i++)
-			Particles [i] -> ID_orig = Particles [i] -> ID;
-	}
-	
-	cout << "Cell Size: "<<CellSize<<endl;
-	
-	if (contact) { //Calculate particle Stiffness
-		//Cs	= sqrt(K/rho);
-		for (int i=0; i<Particles.Size(); i++){
-			double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
-			//TODO: If convection heat is updated every step, maybe dS could be calculated once 
-			// in order to account for this too
-			double dS = pow(Particles[i]->Mass/Particles[i]->Density,0.33333); //Fraser 3-119
-			//Fraser Thesis, Eqn. 3-153
-			Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
-		}		
-		cout << "dS, Cs, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " 
-    << Particles[0]->Cs << ", " << Particles [0] -> cont_stiff <<endl;
-		min_force_ts = deltat;
-	}
-	cout << "Fixed Particles Size: "<<FixedParticles.Size()<<endl;
-	cout << "Initial Cell Number: "<<CellNo[0]<<", " <<CellNo[1]<<", "<< CellNo[2]<<", " <<endl;
-	
-	std::chrono::duration<double> total_time,neighbour_time;
-	
-	clock_t clock_beg;
-	double clock_time_spent,start_acc_time_spent, pr_acc_time_spent,acc_time_spent, 
-				contact_time_spent, trimesh_time_spent, bc_time_spent,
-				mov_time_spent;
-
-	double neigbour_time_spent_per_interval=0.;
-	
-	clock_time_spent = 
-	pr_acc_time_spent=acc_time_spent= start_acc_time_spent = 
-	contact_time_spent = trimesh_time_spent = bc_time_spent = 
-	mov_time_spent = 0.;
+  throw new Fatal("STANDARD ORIGINAL SOLVER DEPRECATED. Use Fraser or SolveDiffUpdateKickDrift ");
   
-  double contact_nb_time_spent = 0.;
-  double contact_surf_time_spent = 0.;
+	// std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
-	//Initial model output
-	if (TheFileKey!=NULL) {
-		String fn;
-		fn.Printf    ("%s_Initial", TheFileKey);
-		WriteXDMF    (fn.CStr());
-		std::cout << "\nInitial Condition has been generated\n" << std::endl;
-	}
+	// size_t idx_out = 1;
+	// double tout = Time;
+
+	// //Initializing adaptive time step variables
+	// deltat = deltatint = deltatmin	= dt;
 	
-
-	unsigned long steps=0;
-	unsigned int first_step;
+	// auto start_whole = std::chrono::steady_clock::now();
+		
+	// cout << "Initial checks"<<endl;
+	// InitialChecks();
+	// cout << "Creating list and cells"<<endl;
+	// CellInitiate();
+	// ListGenerate();
+	// PrintInput(TheFileKey);
+	// cout << "Time Step check"<<endl;
+	// TimestepCheck();
+	// WholeVelocity();
 	
-	int ts_i=0;
-
-	bool isfirst = true;
-	bool isyielding = false;
-
-	//In case of contact this must be SURFACE particles
-	//TODO, REMOVE so many nb search
-  cout << "Calculating Nbs.."<<endl;
-	if (contact){
-		MainNeighbourSearch();
-		SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-		CalculateSurface(1);				//After Nb search	
-	}
-  cout << "done."<<endl;
-	//IF GRADCORR IS CALCULATED HERE; INVERSE IS NOT FOUND (ERROR)
-	// TO BE CHECK
-	// if (gradKernelCorr)
-		// CalcGradCorrMatrix();	
-	ClearNbData();
+	// //TODO: MOVE
+	// if (contact){
+		// for (int i=0; i<Particles.Size(); i++)
+			// Particles [i] -> ID_orig = Particles [i] -> ID;
+	// }
 	
-	//Print history
-	std::ofstream of("History.csv", std::ios::out);
-  of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
-  
-  bool check_nb_every_time = false;
-  
-
-	while (Time<=tf && idx_out<=maxidx) {
-		clock_beg = clock();
-		StartAcceleration(Gravity);
-		start_acc_time_spent = (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		//if (BC.InOutFlow>0) InFlowBCFresh();
-		auto start_task = std::chrono::system_clock::now();
-		
-
-		double max = 0;
-		int imax;
-		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
-		for (int i=0; i<Particles.Size(); i++){
-			if (Particles[i]->pl_strain > max){
-        omp_set_lock(&dom_lock);
-				max= Particles[i]->pl_strain;
-        omp_unset_lock(&dom_lock);
-				imax=i;
-			}
-		}
-
-    Vec3_t max_disp = Vec3_t(0.,0.,0.);
-		for (int i=0; i<Particles.Size(); i++){
-      for (int j=0;j<3;j++)
-        if (Particles[i]->Displacement[j]>max_disp[j]){
-          max_disp[j] = Particles[i]->Displacement [j];
-          imax=i;
-			}
-		}
-    
-    // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
-    //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
-    if (norm(max_disp) > 0.1 * hmax){
-      if (!check_nb_every_time)
-        cout << "Checking Nb Every step now."<<endl;
-      check_nb_every_time = true;
-    }
-    else 
-      check_nb_every_time = false;
-		
-		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
-			ClearNbData();
-      
-      // THIS IS IF MAINNBSEARCH INCLUDE SEARCHING CONTACT (NEW)
-      // if (contact){
-				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-				// CalculateSurface(1);				//After Nb search			        
-      // }
-      
-			MainNeighbourSearch/*_Ext*/();
-      
-     // if (contact) SaveContNeighbourData();
-			
-			if (contact) {
-				//TODO: CHANGE CONTACT STIFFNESS!
-				SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-				CalculateSurface(1);				//After Nb search			
-				ContactNbSearch();
-				SaveContNeighbourData();	//Again Save Nb data
-			}//contact
-			isyielding  = true ;
-		}
-		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
-			if ( ts_i == 0 ){
-				clock_beg = clock();
-				if (m_isNbDataCleared){
-
-          // if (contact){
-            // SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-            // CalculateSurface(1);				//After Nb search			        
-          // }
-					MainNeighbourSearch/*_Ext*/();
-          //if (contact) SaveContNeighbourData();
-					
-          neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;					
-          
-          // TODO: SEPARATE CONTACT SEARCH STEP INTERVAL
-					// OLD
-          if (contact) {
-
-						//cout << "performing contact search"<<endl
-            clock_beg = clock();
-          //if (update_contact_surface){
-            
-            SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
-            CalculateSurface(1);				//After Nb search			
-            contact_surf_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-            if (isfirst)
-              CalcContactInitialGap(); //BEFORE! contactnb
-            ContactNbSearch();
-            SaveContNeighbourData();
-            contact_nb_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-						//}
-					}//contact				
-				}// ts_i == 0				
-				
-			}
-		
-    } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
-
-		//NEW, gradient correction
-			if (isfirst) {
-				if (gradKernelCorr){
-          cout << "Calculating gradient correction matrix"<<endl;
-          CalcGradCorrMatrix();	}
-				cout << "Done."<<endl;
-				isfirst = false;
-			}		
-
-			
-		auto end_task = std::chrono::system_clock::now();
-		 neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
-		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
-		clock_beg = clock();
-		GeneralBefore(*this);
-		bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		clock_beg = clock();
-		PrimaryComputeAcceleration();
-		pr_acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		clock_beg = clock();
-		LastComputeAcceleration();
-		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		clock_beg = clock();
-
-    ThermalCalcs(dt);
-		
-		clock_beg = clock();
-		GeneralAfter(*this);
-		bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		steps++;
-		//cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
-		// output
-		if (Time>=tout){
-			if (TheFileKey!=NULL) {
-				String fn;
-				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
-				WriteXDMF    (fn.CStr());
-				//fn.Printf    ("%s_%.5f", TheFileKey, Time);
-				WriteCSV    (fn.CStr());
-
-			}
-			idx_out++;
-			tout += dtOut;
-			total_time = std::chrono::steady_clock::now() - start_whole;
-			std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
-			std::cout << "Current Time Step = " <<deltat<<std::endl;
-			
-			clock_time_spent += neigbour_time_spent_per_interval;
-			std::cout << "Total CPU time: "<<total_time.count() << endl <<
-			", Nb: " << clock_time_spent << ", StAcc:  " 
-			<< start_acc_time_spent << ", PrAcc: " << pr_acc_time_spent << endl<<
-      "Total Forces : " << acc_time_spent<< endl<<", Contact Forces: "<< m_contact_forces_time<<
-      "Artif Visc: "<<m_forces_artifvisc_time << ", Momentum forces: "<<m_forces_momentum_time << 
-      "Forces Tensor: "<<m_forces_tensors_time<< endl<<
-      " Forces Update: " << m_forces_update_time <<endl<<", Contact Nb : "<< contact_nb_time_spent << 
-      "Contact Surf : "<< contact_surf_time_spent  << "Msh: " << trimesh_time_spent <<
-			", BC: "<< bc_time_spent << 
-			", mv: "<<mov_time_spent <<
-      ", Contact Force Sum "<<contact_force_sum<<
-      ", UserDefProp: "<<m_scalar_prop<<
-			std::endl;
-						
-			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
-			
-			std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
-			cout << "Total Nb search time in this interval: " << neigbour_time_spent_per_interval;
-			cout << "Average Nb search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step)<<endl;
-
-			cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
-			std::cout << "Max, Min, Avg temps: "<< m_maxT << ", " << m_minT << ", " << (m_maxT+m_minT)/2. <<std::endl;      
-      cout << "Particle 0 pos and vel "<<endl;
-      cout << Particles[0]->x<<endl;
-      cout << Particles[0]->v<<endl;
-      
-      // cout << "ghost pair 0" << GhostPairs[0].first<<", "<<GhostPairs[0].second<<endl;
-      // cout << Particles[GhostPairs[0].second]->x<<endl;
-      // cout << Particles[GhostPairs[0].second]->v<<endl;
-      
-			first_step=steps;
-			neigbour_time_spent_per_interval=0.;
-			cout << "Max Displacements: "<<max_disp<<endl;
-      
-			if (contact)
-				cout << "Max Contact Force: "<<max_contact_force<<endl;
-			
-			for (int p=0;p<Particles.Size();p++){
-				if (Particles[p]->print_history)
-          of << Particles[p]->Displacement << ", "<<Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< 
-          Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
-          contact_force_sum << endl;
-			}
-		}
-		
-		// if (isyielding)
-			// cout << "Current Time Step: "<<deltat<<endl;
-		
+	// cout << "Cell Size: "<<CellSize<<endl;
+	
+	// if (contact) { //Calculate particle Stiffness
+		// //Cs	= sqrt(K/rho);
 		// for (int i=0; i<Particles.Size(); i++){
-			// if (Particles[i]->contforce>0.)
-		if (auto_ts)
-			AdaptiveTimeStep();
-    //cout << "delta t"<<deltat<<endl;
-    
-		clock_beg = clock();
-
-		Move(deltat); // INCLUDES GHOST PARTICLES
-    MoveGhost();  //If Symmetry, 
-    
-    
-		mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		clock_beg = clock();
-		// Update velocity, plane coeff pplane and other things
-    if (contact){
- 		//cout << "checking contact"<<endl;
-      if (contact_mesh_auto_update){
-        for (int m=0; m<trimesh.size();m++)
-          trimesh[m]->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals        
-      }
-      //cout << "Updating contact particles"<<endl;
-      UpdateContactParticles(); //Updates normal and velocities
-		}
-    //cout << "Done"<<endl;
-
-		trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		
-		Time += deltat;
-		//if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
-		
-		
-		if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
-			if ( ts_i == (ts_nb_inc - 1) ){
-				ClearNbData();
-			}
-
-			ts_i ++;
-			if ( ts_i > (ts_nb_inc - 1) ) 
-				ts_i = 0;
-		
-		}
-		
+			// double bulk = Particles[i]->Cs * Particles[i]->Cs *Particles[i]-> Density;  //RESTORE ORIGINAL BULK
+			// //TODO: If convection heat is updated every step, maybe dS could be calculated once 
+			// // in order to account for this too
+			// double dS = pow(Particles[i]->Mass/Particles[i]->Density,0.33333); //Fraser 3-119
+			// //Fraser Thesis, Eqn. 3-153
+			// Particles [i] -> cont_stiff = 9. * bulk * Particles [i]->G / (3. * bulk + Particles [i]->G) * dS; 
+		// }		
+		// cout << "dS, Cs, Contact Stiffness" << pow(Particles[0]->Mass/Particles[0]->Density,0.33333)<< ", " 
+    // << Particles[0]->Cs << ", " << Particles [0] -> cont_stiff <<endl;
+		// min_force_ts = deltat;
+	// }
+	// cout << "Fixed Particles Size: "<<FixedParticles.Size()<<endl;
+	// cout << "Initial Cell Number: "<<CellNo[0]<<", " <<CellNo[1]<<", "<< CellNo[2]<<", " <<endl;
 	
-	}
+	// std::chrono::duration<double> total_time,neighbour_time;
+	
+	// clock_t clock_beg;
+	// double clock_time_spent,start_acc_time_spent, pr_acc_time_spent,acc_time_spent, 
+				// contact_time_spent, trimesh_time_spent, bc_time_spent,
+				// mov_time_spent;
+
+	// double neigbour_time_spent_per_interval=0.;
+	
+	// clock_time_spent = 
+	// pr_acc_time_spent=acc_time_spent= start_acc_time_spent = 
+	// contact_time_spent = trimesh_time_spent = bc_time_spent = 
+	// mov_time_spent = 0.;
+  
+  // double contact_nb_time_spent = 0.;
+  // double contact_surf_time_spent = 0.;
+
+	// //Initial model output
+	// if (TheFileKey!=NULL) {
+		// String fn;
+		// fn.Printf    ("%s_Initial", TheFileKey);
+		// WriteXDMF    (fn.CStr());
+		// std::cout << "\nInitial Condition has been generated\n" << std::endl;
+	// }
 	
 
-	of.close();
+	// unsigned long steps=0;
+	// unsigned int first_step;
 	
-	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
+	// int ts_i=0;
+
+	// bool isfirst = true;
+	// bool isyielding = false;
+
+	// //In case of contact this must be SURFACE particles
+	// //TODO, REMOVE so many nb search
+  // cout << "Calculating Nbs.."<<endl;
+	// if (contact){
+		// MainNeighbourSearch();
+		// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+		// CalculateSurface(1);				//After Nb search	
+	// }
+  // cout << "done."<<endl;
+	// //IF GRADCORR IS CALCULATED HERE; INVERSE IS NOT FOUND (ERROR)
+	// // TO BE CHECK
+	// // if (gradKernelCorr)
+		// // CalcGradCorrMatrix();	
+	// ClearNbData();
+	
+	// //Print history
+	// std::ofstream of("History.csv", std::ios::out);
+  // of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
+  
+  // bool check_nb_every_time = false;
+  
+
+	// while (Time<=tf && idx_out<=maxidx) {
+		// clock_beg = clock();
+		// StartAcceleration(Gravity);
+		// start_acc_time_spent = (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		// //if (BC.InOutFlow>0) InFlowBCFresh();
+		// auto start_task = std::chrono::system_clock::now();
+		
+
+		// double max = 0;
+		// int imax;
+		// #pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		// for (int i=0; i<Particles.Size(); i++){
+			// if (Particles[i]->pl_strain > max){
+        // omp_set_lock(&dom_lock);
+				// max= Particles[i]->pl_strain;
+        // omp_unset_lock(&dom_lock);
+				// imax=i;
+			// }
+		// }
+
+    // Vec3_t max_disp = Vec3_t(0.,0.,0.);
+		// for (int i=0; i<Particles.Size(); i++){
+      // for (int j=0;j<3;j++)
+        // if (Particles[i]->Displacement[j]>max_disp[j]){
+          // max_disp[j] = Particles[i]->Displacement [j];
+          // imax=i;
+			// }
+		// }
+    
+    // // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
+    // //EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
+    // if (norm(max_disp) > 0.1 * hmax){
+      // if (!check_nb_every_time)
+        // cout << "Checking Nb Every step now."<<endl;
+      // check_nb_every_time = true;
+    // }
+    // else 
+      // check_nb_every_time = false;
+		
+		// if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
+			// ClearNbData();
+      
+      // // THIS IS IF MAINNBSEARCH INCLUDE SEARCHING CONTACT (NEW)
+      // // if (contact){
+				// // SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+				// // CalculateSurface(1);				//After Nb search			        
+      // // }
+      
+			// MainNeighbourSearch/*_Ext*/();
+      
+     // // if (contact) SaveContNeighbourData();
+			
+			// if (contact) {
+				// //TODO: CHANGE CONTACT STIFFNESS!
+				// SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+				// CalculateSurface(1);				//After Nb search			
+				// ContactNbSearch();
+				// SaveContNeighbourData();	//Again Save Nb data
+			// }//contact
+			// isyielding  = true ;
+		// }
+		// if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
+			// if ( ts_i == 0 ){
+				// clock_beg = clock();
+				// if (m_isNbDataCleared){
+
+          // // if (contact){
+            // // SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+            // // CalculateSurface(1);				//After Nb search			        
+          // // }
+					// MainNeighbourSearch/*_Ext*/();
+          // //if (contact) SaveContNeighbourData();
+					
+          // neigbour_time_spent_per_interval += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;					
+          
+          // // TODO: SEPARATE CONTACT SEARCH STEP INTERVAL
+					// // OLD
+          // if (contact) {
+
+						// //cout << "performing contact search"<<endl
+            // clock_beg = clock();
+          // //if (update_contact_surface){
+            
+            // SaveNeighbourData();				//Necesary to calulate surface! Using Particle->Nb (count), could be included in search
+            // CalculateSurface(1);				//After Nb search			
+            // contact_surf_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+            // if (isfirst)
+              // CalcContactInitialGap(); //BEFORE! contactnb
+            // ContactNbSearch();
+            // SaveContNeighbourData();
+            // contact_nb_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+						// //}
+					// }//contact				
+				// }// ts_i == 0				
+				
+			// }
+		
+    // } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+
+		// //NEW, gradient correction
+			// if (isfirst) {
+				// if (gradKernelCorr){
+          // cout << "Calculating gradient correction matrix"<<endl;
+          // CalcGradCorrMatrix();	}
+				// cout << "Done."<<endl;
+				// isfirst = false;
+			// }		
+
+			
+		// auto end_task = std::chrono::system_clock::now();
+		 // neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
+		// //std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
+		// clock_beg = clock();
+		// GeneralBefore(*this);
+		// bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		// clock_beg = clock();
+		// PrimaryComputeAcceleration();
+		// pr_acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		// clock_beg = clock();
+		// LastComputeAcceleration();
+		// acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		// clock_beg = clock();
+
+    // ThermalCalcs(dt);
+		
+		// clock_beg = clock();
+		// GeneralAfter(*this);
+		// bc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		// steps++;
+		// //cout << "steps: "<<steps<<", time "<< Time<<", tout"<<tout<<endl;
+		// // output
+		// if (Time>=tout){
+			// if (TheFileKey!=NULL) {
+				// String fn;
+				// fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+				// WriteXDMF    (fn.CStr());
+				// //fn.Printf    ("%s_%.5f", TheFileKey, Time);
+				// WriteCSV    (fn.CStr());
+
+			// }
+			// idx_out++;
+			// tout += dtOut;
+			// total_time = std::chrono::steady_clock::now() - start_whole;
+			// std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+			// std::cout << "Current Time Step = " <<deltat<<std::endl;
+			
+			// clock_time_spent += neigbour_time_spent_per_interval;
+			// std::cout << "Total CPU time: "<<total_time.count() << endl <<
+			// ", Nb: " << clock_time_spent << ", StAcc:  " 
+			// << start_acc_time_spent << ", PrAcc: " << pr_acc_time_spent << endl<<
+      // "Total Forces : " << acc_time_spent<< endl<<", Contact Forces: "<< m_contact_forces_time<<
+      // "Artif Visc: "<<m_forces_artifvisc_time << ", Momentum forces: "<<m_forces_momentum_time << 
+      // "Forces Tensor: "<<m_forces_tensors_time<< endl<<
+      // " Forces Update: " << m_forces_update_time <<endl<<", Contact Nb : "<< contact_nb_time_spent << 
+      // "Contact Surf : "<< contact_surf_time_spent  << "Msh: " << trimesh_time_spent <<
+			// ", BC: "<< bc_time_spent << 
+			// ", mv: "<<mov_time_spent <<
+      // ", Contact Force Sum "<<contact_force_sum<<
+      // ", UserDefProp: "<<m_scalar_prop<<
+			// std::endl;
+						
+			// cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
+			
+			// std::cout << "Steps count in this interval: "<<steps-first_step<<"Total Step count"<<steps<<endl;
+			// cout << "Total Nb search time in this interval: " << neigbour_time_spent_per_interval;
+			// cout << "Average Nb search time in this interval: " << neigbour_time_spent_per_interval/(float)(steps-first_step)<<endl;
+
+			// cout << "Avg Neighbour Count"<<AvgNeighbourCount()<<endl;
+			// std::cout << "Max, Min, Avg temps: "<< m_maxT << ", " << m_minT << ", " << (m_maxT+m_minT)/2. <<std::endl;      
+      // cout << "Particle 0 pos and vel "<<endl;
+      // cout << Particles[0]->x<<endl;
+      // cout << Particles[0]->v<<endl;
+      
+      // // cout << "ghost pair 0" << GhostPairs[0].first<<", "<<GhostPairs[0].second<<endl;
+      // // cout << Particles[GhostPairs[0].second]->x<<endl;
+      // // cout << Particles[GhostPairs[0].second]->v<<endl;
+      
+			// first_step=steps;
+			// neigbour_time_spent_per_interval=0.;
+			// cout << "Max Displacements: "<<max_disp<<endl;
+      
+			// if (contact)
+				// cout << "Max Contact Force: "<<max_contact_force<<endl;
+			
+			// for (int p=0;p<Particles.Size();p++){
+				// if (Particles[p]->print_history)
+          // of << Particles[p]->Displacement << ", "<<Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< 
+          // Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
+          // contact_force_sum << endl;
+			// }
+		// }
+		
+		// // if (isyielding)
+			// // cout << "Current Time Step: "<<deltat<<endl;
+		
+		// // for (int i=0; i<Particles.Size(); i++){
+			// // if (Particles[i]->contforce>0.)
+		// if (auto_ts)
+			// AdaptiveTimeStep();
+    // //cout << "delta t"<<deltat<<endl;
+    
+		// clock_beg = clock();
+
+		// Move(deltat); // INCLUDES GHOST PARTICLES
+    // MoveGhost();  //If Symmetry, 
+    
+    
+		// mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		// clock_beg = clock();
+		// // Update velocity, plane coeff pplane and other things
+    // if (contact){
+ 		// //cout << "checking contact"<<endl;
+      // if (contact_mesh_auto_update){
+        // for (int m=0; m<trimesh.size();m++)
+          // trimesh[m]->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals        
+      // }
+      // //cout << "Updating contact particles"<<endl;
+      // UpdateContactParticles(); //Updates normal and velocities
+		// }
+    // //cout << "Done"<<endl;
+
+		// trimesh_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		
+		// Time += deltat;
+		// //if (BC.InOutFlow>0) InFlowBCLeave(); else CheckParticleLeave ();
+		
+		
+		// if (max>MIN_PS_FOR_NBSEARCH){	//TODO: CHANGE TO FIND NEIGHBOURS
+			// if ( ts_i == (ts_nb_inc - 1) ){
+				// ClearNbData();
+			// }
+
+			// ts_i ++;
+			// if ( ts_i > (ts_nb_inc - 1) ) 
+				// ts_i = 0;
+		
+		// }
+		
+	
+	// }
+	
+
+	// of.close();
+	
+	// std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
 
 }
 

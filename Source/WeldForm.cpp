@@ -445,6 +445,12 @@ int main(int argc, char **argv) try {
 	  
 	  dom.Particles[a]->T = IniTemp;
     }
+    
+    cout << "Reduction Type is: ";
+    if (dom.nonlock_sum)
+      cout << "Nishimura "<<endl;
+    else
+      cout << "Locking "<<endl;
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech" || solver=="Mech-Thermal")
       dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);

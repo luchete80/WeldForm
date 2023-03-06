@@ -202,6 +202,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
+    cout << "Str Rate 51 " <<Particles[51]->StrainRate<<endl;
     //#ifdef NONLOCK_SUM
     if (nonlock_sum)
     RateTensorsReduction();
@@ -225,6 +226,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //#ifdef NONLOCK_SUM
     if (nonlock_sum)
     AccelReduction();
+    cout << "Sigma 102 "<<Particles[102]->Sigma<<endl;
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 

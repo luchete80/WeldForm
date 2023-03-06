@@ -7,7 +7,8 @@
  - Now reading constant thermal properties and initial conditions. First thermal-mechanical example ready.
  - Fixed Friction Stir Welding example (greater particle density results in not so negative temp at the begining)
  - Added input reading details (to know in which vars exists an input error)
-
+### Deprecated
+ - Original Simultaneous Solver (All vars calculated at same time)
 
 ## [0.4.0] - 2023-02-03
 ### Core 

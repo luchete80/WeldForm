@@ -73,10 +73,11 @@ SET(EXES
 	#Cylinder_Test
 	#Plate-Yield
   #test_new_sym
-  Cantilever
+  #Cantilever
   #Compression
 	#Compression_XSPH
   #Compression_AVisc
+  #Compression_1010
   #Compression_half_ghost_vel
 	#Compression_thermal
 	#Compression_12_solver_orig

@@ -188,4 +188,7 @@
 20230227 - Fixed cantilever algorithm 
          - Added output reading log
          - Changed box domain to write particles until (Length - r)
+20230228 - Deprecated Standard Solve algorithm in cantilever example
+----------------------------------
+20230306 - Fixed Cantilever.json example bending direction was wrong
  
