@@ -444,6 +444,10 @@ inline void Domain::CalcDensInc() {
       
       double GK	= GradKernel(Dimension, KernelType, rij/h, h);
       double K	= Kernel(Dimension, KernelType, rij/h, h);
+      
+      if (std::min(SMPairs[k][p].first, SMPairs[k][p].second)== 51 && std::max(SMPairs[k][p].first, SMPairs[k][p].second) == 674){
+        cout << "i=51 j=674 xij vij Gk "<<xij <<", " <<vij <<", "<<GK<<endl;
+      }
     
       //NEW
       Mat3_t GKc[2];
@@ -726,14 +730,14 @@ inline void Domain::CalcForceSOA(int &i,int &j) {
 		// NEW
 		if (!gradKernelCorr) {
 		if (GradientType == 0)
-			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
+			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij /*+ TIij */) , temp);
 		else
-			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
+			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij /*+ TIij */) , temp);
 		} else {
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				//Left in vector form and multiply after??
 				for (int i=0;i<2;i++){
-					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
+					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij /*+ TIij */) , temp_c[i]);
 				}
 		}//Grad Corr
     
