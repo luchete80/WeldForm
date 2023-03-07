@@ -101,6 +101,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   for (int i=0; i<Particles.Size(); i++){
     prev_acc[i] = Particles[i]->a;
   }
+  
+  cout << std::setprecision(3)<< "Total allocated memory: " <<sizeof(Particle) * Particles.Size() * 1.0e-6 << " MB. "<<endl;
+  
   while (Time<=tf && idx_out<=maxidx) {
   
 		StartAcceleration(0.);
