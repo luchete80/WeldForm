@@ -242,9 +242,6 @@ inline void Domain::CalcRateTensors() {
     
 		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
 		double K	= Kernel(Dimension, KernelType, rij/h, h);
-	
-    if (i1 == 51)
-      cout  << "i j "<<i1 << ", " <<i2 << "gk "<<GK<<endl;
 
 		Mat3_t Sigmaj,Sigmai;
 		set_to_zero(Sigmaj);
@@ -295,9 +292,6 @@ inline void Domain::CalcRateTensors() {
     
 			// if (StrainRate(2,2)<-1.e-3)
         
-      if (i1 == 51)
-        cout << "StrainRate inc"<<StrainRate<<endl;
-
 			Mat3_t gradv[2],gradvT[2];
 			
 			//cout<<"gradv"<<gradv[0]<<endl;
@@ -511,11 +505,6 @@ inline void Domain::DensReduction(){
   for (int i=0; i<solid_part_count;i++){
     Particles[i]->dDensity = 0.;
     for (int n=0;n<ipair_SM[i];n++){ 
-      if (i == 51)    {
-      cout << "j "<<Anei[i][n] << ", densinc "<<pair_densinc[Aref[i][n]]<<endl;
-      
-      Particles[i]->dDensity += Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density * pair_densinc[Aref[i][n]];
-      }
     }
     for (int n=0;n<jpair_SM[i];n++){   
       Particles[i]->dDensity += Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass / Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Density * pair_densinc[Aref[i][MAX_NB_PER_PART-1-n]];    
@@ -524,7 +513,6 @@ inline void Domain::DensReduction(){
     Particles[i]->dDensity *= Particles[i]->Density;
   }
   
-  cout << "Density 52 "<< Particles[51]->Density<<endl;
 }
 
 inline void Domain::CalcForceSOA(int &i,int &j) {
