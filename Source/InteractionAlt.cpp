@@ -182,10 +182,6 @@ inline void Domain::AccelReduction(){
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<solid_part_count;i++){
       for (int n=0;n<ipair_SM[i];n++){  
-        if (i==50){
-          cout << "sigma j: " << Anei[i][n] << ", " << Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Sigma <<endl;
-          cout << "p i<j rot " <<  Aref[i][n]<<", "<<Anei[i][n] << ", " << pair_force[Aref[i][n]]<<endl;
-        }
         Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
       for (int n=0;n<jpair_SM[i];n++){   
         Particles[i]->a -= Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}    
