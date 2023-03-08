@@ -136,7 +136,7 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  #FSW_red
+  FSW_red
   #FSW_nastran
 	#Elastic
 	#Heat_2D
@@ -173,7 +173,7 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
+	#"Source/WeldForm"
   #"restart_test"
 )
 
