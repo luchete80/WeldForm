@@ -187,8 +187,8 @@ int main(int argc, char **argv) try
       //dom.Particles[a]->Sigmay	= Fy;
       dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			
-      dom.Particles[a]->Alpha		= 1.0;
-			//dom.Particles[a]->Beta		= 2.0;
+      dom.Particles[a]->Alpha		= 2.5;
+			dom.Particles[a]->Beta		= 2.5;
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
       
