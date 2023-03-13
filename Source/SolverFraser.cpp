@@ -188,6 +188,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
     CalcDensInc(); //TODO: USE SAME KERNEL?
+
     //#ifdef NONLOCK_SUM
     if (nonlock_sum) 
       DensReduction();
@@ -198,10 +199,13 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       Particles[i]->Density += deltat*Particles[i]->dDensity;
     }    
     dens_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-
-
+    
+    cout << "Density 51" <<Particles[51]->Density <<endl;
+    cout << "Densinc 51 "<<Particles[51]->dDensity <<endl;
+    
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
+    cout << "Str Rate 51 "<<Particles[51]->StrainRate <<endl;
     //#ifdef NONLOCK_SUM
     if (nonlock_sum)
     RateTensorsReduction();

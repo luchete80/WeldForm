@@ -499,7 +499,9 @@ inline void Domain::DensReduction(){
   #pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int i=0; i<solid_part_count;i++){
     Particles[i]->dDensity = 0.;
-    for (int n=0;n<ipair_SM[i];n++){  
+    for (int n=0;n<ipair_SM[i];n++){ 
+      if (i == 51)
+      cout << "j densinc " << Anei[i][n]<< ", "<<pair_densinc[Aref[i][n]]<<endl;
       Particles[i]->dDensity += Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density * pair_densinc[Aref[i][n]];
     }
     for (int n=0;n<jpair_SM[i];n++){   
