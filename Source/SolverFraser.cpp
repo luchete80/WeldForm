@@ -216,7 +216,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     } 
     stress_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;		
-    
+    printf("peq %lf cs %lf p0 %lf rho %lf rho_0 %lf\n",Particles[51]->PresEq, Particles[51]->Cs, Particles[51]->P0,Particles[51]->Density, Particles[51]->RefDensity);
+    cout << "Pressure 51 "<<Particles[51]->Pressure<<endl;
+    cout << "Sigma 51 "<<Particles[51]->Sigma<<endl;
     
     ////// 9. Update Density and Stress: already done
    

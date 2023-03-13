@@ -111,9 +111,9 @@ inline void Domain::CalcAccel() {
 		// NEW
 		if (!gradKernelCorr) {
 		if (GradientType == 0)
-			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
+			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij) , temp);
 		else
-			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
+			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij) , temp);
 		} else {
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				//Left in vector form and multiply after??
@@ -182,7 +182,10 @@ inline void Domain::AccelReduction(){
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<solid_part_count;i++){
       for (int n=0;n<ipair_SM[i];n++){  
-        //cout << "p i<j rot " <<  Aref[i][n]<<", "<<Anei[i][n] << ", " << pair_force[Aref[i][n]]<<endl;
+        if (i==50){
+          cout << "sigma j: " << Anei[i][n] << ", " << Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Sigma <<endl;
+          cout << "p i<j rot " <<  Aref[i][n]<<", "<<Anei[i][n] << ", " << pair_force[Aref[i][n]]<<endl;
+        }
         Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
       for (int n=0;n<jpair_SM[i];n++){   
         Particles[i]->a -= Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}    
@@ -233,10 +236,15 @@ inline void Domain::CalcRateTensors() {
     mj = P2->Mass;
 
 		Vec3_t vij	= P1->v - P2->v;
-		
+    
+    int i1 = std::min(SMPairs[k][p].first, SMPairs[k][p].second);
+		int i2 = std::max(SMPairs[k][p].first, SMPairs[k][p].second);
+    
 		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
 		double K	= Kernel(Dimension, KernelType, rij/h, h);
 	
+    if (i1 == 51)
+      cout  << "i j "<<i1 << ", " <<i2 << "gk "<<GK<<endl;
 
 		Mat3_t Sigmaj,Sigmai;
 		set_to_zero(Sigmaj);
@@ -286,6 +294,9 @@ inline void Domain::CalcRateTensors() {
     RotationRate	  = -0.5 * GK * RotationRate;
     
 			// if (StrainRate(2,2)<-1.e-3)
+        
+      if (i1 == 51)
+        cout << "StrainRate inc"<<StrainRate<<endl;
 
 			Mat3_t gradv[2],gradvT[2];
 			
@@ -433,6 +444,10 @@ inline void Domain::CalcDensInc() {
       
       double GK	= GradKernel(Dimension, KernelType, rij/h, h);
       double K	= Kernel(Dimension, KernelType, rij/h, h);
+      
+      if (std::min(SMPairs[k][p].first, SMPairs[k][p].second)== 51 && std::max(SMPairs[k][p].first, SMPairs[k][p].second) == 674){
+        cout << "i=51 j=674 xij vij Gk "<<xij <<", " <<vij <<", "<<GK<<endl;
+      }
     
       //NEW
       Mat3_t GKc[2];
@@ -500,9 +515,12 @@ inline void Domain::DensReduction(){
   for (int i=0; i<solid_part_count;i++){
     Particles[i]->dDensity = 0.;
     for (int n=0;n<ipair_SM[i];n++){ 
+
       if (i == 51)
       cout << "j densinc " << Anei[i][n]<< ", "<<pair_densinc[Aref[i][n]]<<endl;
+
       Particles[i]->dDensity += Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density * pair_densinc[Aref[i][n]];
+      }
     }
     for (int n=0;n<jpair_SM[i];n++){   
       Particles[i]->dDensity += Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass / Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Density * pair_densinc[Aref[i][MAX_NB_PER_PART-1-n]];    
@@ -510,6 +528,8 @@ inline void Domain::DensReduction(){
     
     Particles[i]->dDensity *= Particles[i]->Density;
   }
+  
+  cout << "Density 52 "<< Particles[51]->Density<<endl;
 }
 
 inline void Domain::CalcForceSOA(int &i,int &j) {
@@ -711,14 +731,14 @@ inline void Domain::CalcForceSOA(int &i,int &j) {
 		// NEW
 		if (!gradKernelCorr) {
 		if (GradientType == 0)
-			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp);
+			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij /*+ TIij */) , temp);
 		else
-			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp);
+			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij /*+ TIij */) , temp);
 		} else {
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				//Left in vector form and multiply after??
 				for (int i=0;i<2;i++){
-					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
+					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij /*+ TIij */) , temp_c[i]);
 				}
 		}//Grad Corr
     
