@@ -55,7 +55,7 @@ inline void Domain::CalcTempInc () {
 	
 	std::vector < double> temp(Particles.Size());
 	
-	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
+	#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
 		Vec3_t xij;
