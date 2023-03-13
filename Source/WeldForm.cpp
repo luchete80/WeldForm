@@ -26,6 +26,7 @@
 #include "Mesh.h"
 
 #include "SolverFraser.cpp"
+#include "Geometry.cpp"
 
 
 #define TAU		0.005
@@ -224,19 +225,22 @@ int main(int argc, char **argv) try {
     dom.auto_ts = auto_ts[0];
     dom.auto_ts_acc = auto_ts[1];
     dom.auto_ts_cont = auto_ts[2];
-		////////////
+		
+    /////////////-/////////////////////////////////////////////////////////////////////////////////
 		// DOMAIN //
 		////////////
 		Vec3_t start,L;
     int id;
 		string domtype = "Box";
     int matID;
+    string gridCS = "Cartesian";
     bool sym[] = {false,false,false};
 		readValue(domblock[0]["id"], 	id);
 		readVector(domblock[0]["start"], 	start);
 		cout << "Reading Domain dim" << endl;  readVector(domblock[0]["dim"], 	L);
 		cout << "Reading Domain type" << endl; readValue(domblock[0]["type"], 	domtype); //0: Box
     cout << "Reading Domain mat id" << endl;  readValue(domblock[0]["matID"], 	matID); //0: Box
+    cout << "Grid Coordinate System" << endl;  readValue(domblock[0]["gridCoordSys"], 	gridCS); //0: Box
     readBoolVector(domblock[0]["sym"], 	sym); //0: Box
         for (int i=0;i<3;i++) {//TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
@@ -264,7 +268,11 @@ int main(int argc, char **argv) try {
       }
       else {
         cout << "..."<<endl;
-        dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym[2]); 
+        if ( gridCS == "Cartesian")
+          dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym[2]); 
+        else if (gridCS == "Cylindrical")
+          dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h);
+          
       }
     }
 
