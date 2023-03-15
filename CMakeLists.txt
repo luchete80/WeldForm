@@ -152,7 +152,7 @@ SET(EXES
 	#Traction_JC
 	#Thermal_Expansion_2
 	#4-DamBreak3D
-	#Plate-Yield
+	Plate-Yield
 	#Plate-Yield_hcorr
 	#Plate-Yield_CNS
 	#Plate-Yield_Hard
@@ -168,6 +168,7 @@ SET(EXES
 	#SolidBlock_Heat_source
 	#SolidBlock_Heat_conv3faces_Flux
 	#SolidBlock_Heat_source2
+  #SolidBlock_Heat_T
 	#SolidBlock_Heat_source2_boundpart
 	#Thermal_Expansion_2
 	
