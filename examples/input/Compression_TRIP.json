@@ -1,7 +1,6 @@
 {
 "Configuration":
 {
-  "Nproc": 4,
 	"particleRadius": 0.0006, 
 	"hFactor": 1.2,
   "cflMethod": 1,
@@ -27,7 +26,6 @@
 "DomainBlocks": 
 [{
 	"type": "Cylinder",
-  "gridCoordSys": "Cylindrical",
 	"zoneId": 1,
 	"denseMode": 0,
 	"start": [ 0.0, 0.0, 0.0],

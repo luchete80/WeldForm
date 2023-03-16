@@ -19,6 +19,7 @@
 ************************************************************************************/
 
 #include "Domain.h"
+
 #include "InteractionAlt.cpp"
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
@@ -122,9 +123,13 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
     	//dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 			//dom.Solve_orig(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-			//dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-			//dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+
       dom.Domain::SolveDiffUpdateFraser( 0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+
+			dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+      
+			//dom.Solve_orig_Ext(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+
         return 0;
 }
 MECHSYS_CATCH
