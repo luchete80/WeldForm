@@ -99,6 +99,7 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
+  Contact_Compression_1010
   #Contact_Compression_1010_1side
   #Contact_Compression_fast_short
   #Contact_Compression_2surf
@@ -152,7 +153,7 @@ SET(EXES
 	#Traction_JC
 	#Thermal_Expansion_2
 	#4-DamBreak3D
-	Plate-Yield
+	#Plate-Yield
 	#Plate-Yield_hcorr
 	#Plate-Yield_CNS
 	#Plate-Yield_Hard
