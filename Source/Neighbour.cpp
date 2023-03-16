@@ -137,26 +137,26 @@ inline void Domain::ListGenerate ()
 			i= (int) (floor((Particles[a]->x(0) - BLPF(0)) / CellSize(0)));
 			j= (int) (floor((Particles[a]->x(1) - BLPF(1)) / CellSize(1)));
 
-			if (i<0)
-            {
-                    if ((BLPF(0) - Particles[a]->x(0)) <= hmax) i=0;
-                            else std::cout<<"Leaving i<0"<<std::endl;
-            }
-            if (j<0)
-            {
-                    if ((BLPF(1) - Particles[a]->x(1)) <= hmax) j=0;
-                            else std::cout<<"Leaving j<0"<<std::endl;
-            }
-			if (i>=CellNo[0])
-			{
-					if ((Particles[a]->x(0) - TRPR(0)) <= hmax) i=CellNo[0]-1;
-							else std::cout<<"Leaving i>=CellNo"<<std::endl;
-			}
-            if (j>=CellNo[1])
-            {
-                    if ((Particles[a]->x(1) - TRPR(1)) <= hmax) j=CellNo[1]-1;
-                            else std::cout<<"Leaving j>=CellNo"<<std::endl;
-            }
+			if (i<0) i = 0;
+            // {
+                    // if ((BLPF(0) - Particles[a]->x(0)) <= hmax) i=0;
+                            // else std::cout<<"Leaving i<0"<<std::endl;
+            // }
+            if (j<0) j = 0;
+            // {
+                    // if ((BLPF(1) - Particles[a]->x(1)) <= hmax) j=0;
+                            // else std::cout<<"Leaving j<0"<<std::endl;
+            // }
+			if (i>=CellNo[0])i=CellNo[0]-1;
+			// {
+					// if ((Particles[a]->x(0) - TRPR(0)) <= hmax) i=CellNo[0]-1;
+							// else std::cout<<"Leaving i>=CellNo"<<std::endl;
+			// }
+            if (j>=CellNo[1]) j=CellNo[1]-1;
+            // {
+                    // if ((Particles[a]->x(1) - TRPR(1)) <= hmax) j=CellNo[1]-1;
+                            // else std::cout<<"Leaving j>=CellNo"<<std::endl;
+            // }
 
 			temp = HOC[i][j][0];
 			HOC[i][j][0] = a;
