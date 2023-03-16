@@ -46,6 +46,8 @@
 //#define NONLOCK_SUM 
 #define MAX_NB_PER_PART 100
 
+enum domain_bid_type {PlaneStress=0, PlaneStrain=1, AxiSymmetric =2};
+
 //C++ Enum used for easiness of coding in the input files
 enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spline=3};
 enum Viscosity_Eq_Type { Morris=0, Shao=1, Incompressible_Full=2, Takeda=3 };
@@ -287,7 +289,9 @@ public:
 		double 					min_force_ts;		//min time step size due to contact forces
     int             min_ts_acc_part_id;
 		
-    int 					Dimension;    	///< Dimension of the problem
+    int 					  Dimension;    	///< Dimension of the problem
+    domain_bid_type  dom_bid_type;    
+
 
     double					MuMax;		///< Max Dynamic viscosity for calculating the timestep
     double					CsMax;		///< Max speed of sound for calculating the timestep

@@ -160,6 +160,8 @@ inline Domain::Domain ()
   cont_heat_cond  = false;
   accum_cont_heat_cond = 0.;
   
+  dom_bid_type = PlaneStress;
+  
 }
 
 inline Domain::~Domain ()

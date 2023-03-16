@@ -95,6 +95,7 @@ namespace SPH {
 		double 	Densitya;	///< Density of the particle n+1/2 (Leapfrog)
 		double 	Densityb;	///< Density of the particle n-1 (Modified Verlet)
 		double 	dDensity;	///< Rate of density change in time based on state equations n
+    double  etaDens; //Desity in axi-symm problems
 		double 	RefDensity;	///< Reference Density of Particle
 		double 	FPMassC;	///< Mass coefficient for fixed particles to avoid leaving particles
 		double 	Mass;		///< Mass of the particle
