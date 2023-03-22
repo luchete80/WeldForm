@@ -122,11 +122,11 @@ inline void Domain::CalcAccel() {
           Vec3_t wij = GK*xij;
           di = P1->etaDens;
           dj = P2->etaDens;
-          temp[0] = 2.0*M_PI*(Sigmai(0,0)*P1->x(0)*1./(di*di) + Sigmaj(0,0) *P2->x(0)* 1./(dj*dj)) *wij(0) + 
-                    2.0*M_PI*(Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(1);  ////dvr/dt 2PI can go in the reduction
+          temp[0] = (Sigmai(0,0)*P1->x(0)*1./(di*di) + Sigmaj(0,0) *P2->x(0)* 1./(dj*dj)) *wij(0) + 
+                    (Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(1);  ////dvr/dt 2PI can go in the reduction
 
-          temp[1] = 2.0*M_PI*(Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(0) + 
-                    2.0*M_PI*(Sigmai(1,1)*P1->x(0)*1./(di*di) + Sigmaj(1,1) *P2->x(0)* 1./(dj*dj)) *wij(1);  ////dvr/dt 2PI can go in the reduction
+          temp[1] = (Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(0) + 
+                    (Sigmai(1,1)*P1->x(0)*1./(di*di) + Sigmaj(1,1) *P2->x(0)* 1./(dj*dj)) *wij(1);  ////dvr/dt 2PI can go in the reduction
                     
         }
       }//axisymm
@@ -201,6 +201,13 @@ inline void Domain::AccelReduction(){
         Particles[i]->a += Particles[Anei[i][n]]->Mass * pair_force[Aref[i][n]];}
       for (int n=0;n<jpair_SM[i];n++){   
         Particles[i]->a -= Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_force[Aref[i][MAX_NB_PER_PART-1-n]];}    
+    }
+    if (dom_bid_type == AxiSymmetric){
+      //ADD HOOP ACCEL AND MULT BY 2PI
+      #pragma omp parallel for schedule (static) num_threads(Nproc)
+      for (int i=0; i<solid_part_count;i++){
+        Particles[i]->a *= 2.0 * M_PI /*- SigmaThetaTheta*/; //WANG Eqn. 40
+      }
     }
   } else {
     cout << "ERROR, particle count not defined"<<endl;
