@@ -296,10 +296,15 @@ inline void Domain::CalcRateTensors() {
     StrainRate(1,0) = StrainRate(0,1);
     StrainRate(1,1) = 2.0*vab(1)*xij(1);
     StrainRate(1,2) = vab(1)*xij(2)+vab(2)*xij(1);
+    if (dom_bid_type == AxiSymmetric){
+      StrainRate(0,2) = StrainRate(1,2) = 0.;
+    }
     StrainRate(2,0) = StrainRate(0,2);
     StrainRate(2,1) = StrainRate(1,2);
     StrainRate(2,2) = 2.0*vab(2)*xij(2);
     StrainRate	= -0.5 * GK * StrainRate;
+    
+
     
     RotationRate(0,1) = vab(0)*xij(1)-vab(1)*xij(0);
     RotationRate(0,2) = vab(0)*xij(2)-vab(2)*xij(0);
@@ -410,6 +415,16 @@ inline void Domain::RateTensorsReduction(){
       Particles[i]->StrainRate    = Particles[i]->StrainRate   + mjdj * pair_StrainRate[Aref[i][MAX_NB_PER_PART-1-n]];
       Particles[i]->RotationRate  = Particles[i]->RotationRate + mjdj * pair_RotRate[Aref[i][MAX_NB_PER_PART-1-n]];
     } 
+  }
+
+  if (dom_bid_type == AxiSymmetric){
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (int i=0; i<solid_part_count;i++){
+      double psi;
+      if (Particles[i]->x > 0.0) psi =  0.01 * Particles[i]->h;
+      else                       psi = -0.01 * Particles[i]->h;
+      Particles[i]->StrainRate(2,2) = Particles[i]->v/(psi + Particles[i]->x); //DIRECT HOOP STRAIN RATE, Wang 2015
+    }    
   }
 }
 
