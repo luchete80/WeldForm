@@ -120,8 +120,8 @@ inline void Domain::CalcAccel() {
           //etaDens
           //Wang Eqn 40 and Joshi Eqn 27
           Vec3_t wij = GK*xij;
-          di = P1->etaDens;
-          dj = P2->etaDens;
+          // di = P1->etaDens;
+          // dj = P2->etaDens;
           temp[0] = (Sigmai(0,0)*P1->x(0)*1./(di*di) + Sigmaj(0,0) *P2->x(0)* 1./(dj*dj)) *wij(0) + 
                     (Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(1);  ////dvr/dt 2PI can go in the reduction
 
@@ -206,7 +206,8 @@ inline void Domain::AccelReduction(){
       //ADD HOOP ACCEL AND MULT BY 2PI
       #pragma omp parallel for schedule (static) num_threads(Nproc)
       for (int i=0; i<solid_part_count;i++){
-        Particles[i]->a *= 2.0 * M_PI /*- SigmaThetaTheta*/; //WANG Eqn. 40
+        Particles[i]->a *= 2.0 * M_PI;
+        Particles[i]->a(0) -= Particles->Sigma(2,2); //WANG Eqn. 40
       }
     }
   } else {
