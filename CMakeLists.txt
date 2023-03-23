@@ -113,7 +113,7 @@ SET(EXES
   #Contact_Compression_TRIP_2surf
   #Contact_Compression_1010_hlaf_ghost
   #Contact_Compression_1010_unif
-  #Compression_1010
+  Compression_1010
   #Contact_Compression_1010
   #Compression_1010_qt
   #Contact_Compression_1010_half
