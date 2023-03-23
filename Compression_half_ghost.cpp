@@ -125,7 +125,7 @@ int main(int argc, char **argv) try
         Cs	= sqrt(K/rho);
 
         double timestep;
-        timestep = (0.7*h/(Cs));
+        timestep = (1.0*h/(Cs));
 		
 		//timestep = 2.5e-6;
 

@@ -1140,7 +1140,7 @@ inline void Domain::MoveGhost(){
 
       Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
        Particles[gi]-> a  = Particles[i]-> a;
-       Particles[gi]-> a[axis]  = - Particles[i]-> a[axis];
+       
       
       // // // Several parameters
       Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
