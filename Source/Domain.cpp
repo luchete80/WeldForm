@@ -1139,11 +1139,15 @@ inline void Domain::MoveGhost(){
       Particles[gi]-> vb[axis] = - Particles[i]-> vb[axis];
 
       Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
+       Particles[gi]-> a  = Particles[i]-> a;
+       Particles[gi]-> a[axis]  = - Particles[i]-> a[axis];
       
       // // // Several parameters
-      // // // Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
-      // // // Particles[gi]-> Strain  =     Particles[i]-> Strain;
-      // // // Particles[gi]-> Density  =     Particles[i]-> Density;
+      Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
+      Particles[gi]-> Strain  =     Particles[i]-> Strain;
+      Particles[gi]-> StrainRate  =     Particles[i]-> StrainRate;
+      Particles[gi]-> RotationRate  =     Particles[i]-> RotationRate;
+      Particles[gi]-> Density  =     Particles[i]-> Density;
     }
   // int axis = Particles[gi]-> ghost_plane_axis;
     // //ORIG
