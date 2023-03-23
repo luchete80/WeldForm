@@ -194,3 +194,6 @@
 20230307 - Added total memory allocated by particles.
 20230313 - Added Cylindrical grid option in input
            Working on double sided contact compression example
+20230322 - Working on Cylindrical coordinates
+20230323 - Fixed Ghost Symmetry (Added Mirror_XYZ to mesh generator and use new function)
+         - Now Symmetry WORKS BETTER (MIRRORING DIFFERENT VARIABlES)

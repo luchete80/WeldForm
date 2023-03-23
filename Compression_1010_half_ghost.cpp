@@ -5,7 +5,7 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-#define VMAX	1.0
+#define VMAX	0.1
 
 using namespace SPH;
 using namespace std;
