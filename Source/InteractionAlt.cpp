@@ -207,7 +207,7 @@ inline void Domain::AccelReduction(){
       #pragma omp parallel for schedule (static) num_threads(Nproc)
       for (int i=0; i<solid_part_count;i++){
         Particles[i]->a *= 2.0 * M_PI;
-        Particles[i]->a(0) -= Particles->Sigma(2,2); //WANG Eqn. 40
+        Particles[i]->a[0] -= Particles[i]->Sigma(2,2); //WANG Eqn. 40
       }
     }
   } else {
@@ -422,9 +422,9 @@ inline void Domain::RateTensorsReduction(){
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<solid_part_count;i++){
       double psi;
-      if (Particles[i]->x > 0.0) psi =  0.01 * Particles[i]->h;
-      else                       psi = -0.01 * Particles[i]->h;
-      Particles[i]->StrainRate(2,2) = Particles[i]->v/(psi + Particles[i]->x); //DIRECT HOOP STRAIN RATE, Wang 2015
+      if (Particles[i]->x(0) > 0.0) psi =  0.01 * Particles[i]->h;
+      else                          psi = -0.01 * Particles[i]->h;
+      Particles[i]->StrainRate(2,2) = Particles[i]->v(0)/(psi + Particles[i]->x(0)); //DIRECT HOOP STRAIN RATE, Wang 2015
     }    
   }
 }
