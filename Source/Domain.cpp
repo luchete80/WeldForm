@@ -761,8 +761,8 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
           //Particles[id_part]->ID = -50;
           //cout << "part , sym"<<part<<", "<<id_part<<endl;
           Particles[id_part]->ghost_plane_axis = 2;
-          Particles[id_part]->not_write_surf_ID = true; //TO NOT BE WRITTEN BY OUTER SURFACE CALC
-          
+          Particles[id_part]->not_write_surf_ID = true;  //TO NOT BE WRITTEN BY OUTER SURFACE CALC
+          Particles[id_part  ]-> ghost_type = Mirror_XYZ; // IF NEW MOVEGHOST FUNCTION IS USED
           //ONLY FOR TESTING SYMMETRY PLANES!
           //Particles[id_part]->ID = Particles[id_part]->ghost_plane_axis; //ONLY FOR TESTING IN PARAVIEW!   
           GhostPairs.Push(std::make_pair(part,id_part));
@@ -963,6 +963,8 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
           GhostPairs.Push(std::make_pair(symm_y[sym_y_count],id_part  ));
           GhostPairs.Push(std::make_pair(symm_x[sym_x_count],id_part+1));
           
+          Particles[id_part  ]-> ghost_type = Mirror_XYZ;
+          
           Particles[id_part  ]->ghost_plane_axis = 1;
           Particles[id_part+1]->ghost_plane_axis = 0;
           Particles[id_part  ]->is_ghost = true;
@@ -1045,12 +1047,16 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 	R = r;									
 }
 
+////////////////////////////////////////////////////
+//////////// ORIGINAL MOVEGHOST FUNCTION (ONLY IN COORDINATE PLANES)
+//////////// IS NOT VALID FOR SLICE ////////////////////////////////
+
 // inline void Domain::MoveGhost(){
 
 	// for (int gp=0; gp<GhostPairs.Size(); gp++){
 		// int  i = GhostPairs[gp].first;
 		// int gi = GhostPairs[gp].second;
-		
+		// //cout << "part i "<< endl;
     // //ASSUMING SYMMETRY
 		// //See normal direction, if it is vertical
     // // tg axis is the same speed
@@ -1079,7 +1085,8 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 // }
 
 inline void Domain::MoveGhost(){
-
+  //cout << "GhostPairs size "<<GhostPairs.Size()<<endl;
+  
 	for (int gp=0; gp<GhostPairs.Size(); gp++){
 		int  i = GhostPairs[gp].first;
 		int gi = GhostPairs[gp].second;
@@ -1116,15 +1123,27 @@ inline void Domain::MoveGhost(){
       
       //cout << "vi vgi "<<Particles[i]-> v <<", " <<Particles[gi]-> v <<endl;
     }
-    else if (Particles[gi]->ghost_type == Mirror_XY){
-      Particles[gi]-> v(0)  = -Particles[i]-> v(0);
-      Particles[gi]-> v(1)  = -Particles[i]-> v(1);
-      Particles[gi]-> v(2)  =  Particles[i]-> v(2); 
+    else if (Particles[gi]->ghost_type == Mirror_XYZ){//
+      int axis = Particles[gi]-> ghost_plane_axis;
+      //ORIG
+      Particles[gi]-> v  = Particles[i]-> v;
+      Particles[gi]-> va = Particles[i]-> va;
+      Particles[gi]-> vb = Particles[i]-> vb;
       
-      Particles[gi]-> a(0)  = -Particles[i]-> a(0);
-      Particles[gi]-> a(1)  = -Particles[i]-> a(1);
-      Particles[gi]-> a(2)  =  Particles[i]-> a(2); 
+      Particles[gi]-> v[axis]  = - Particles[i]-> v[axis];
+      //NEW
+      // Particles[gi]-> v[axis]  = Particles[i]-> v[axis] = 0.;
+      // Particles[gi]-> a[axis]  = Particles[i]-> a[axis] = 0.;
+      
+      Particles[gi]-> va[axis] = - Particles[i]-> va[axis];
+      Particles[gi]-> vb[axis] = - Particles[i]-> vb[axis];
 
+      Particles[gi]-> a = 0.; //TO NOT INFLUENCE TIME STEP
+      
+      // // // Several parameters
+      // // // Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
+      // // // Particles[gi]-> Strain  =     Particles[i]-> Strain;
+      // // // Particles[gi]-> Density  =     Particles[i]-> Density;
     }
   // int axis = Particles[gi]-> ghost_plane_axis;
     // //ORIG

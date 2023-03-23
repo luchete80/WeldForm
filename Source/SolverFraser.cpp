@@ -148,6 +148,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
 		}
+
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
 
@@ -229,7 +230,6 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //#ifdef NONLOCK_SUM
     if (nonlock_sum)
     AccelReduction();
-
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
@@ -255,7 +255,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     GeneralAfter(*this);//Reinforce BC vel   
     //CorrectVelAcc();
     MoveGhost(); 
-    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
+   #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
       Particles[i]->x_prev = Particles[i]->x;
       du = (Particles[i]->v + Particles[i]->VXSPH)*deltat + 0.5 * Particles[i]->a *deltat*deltat;
