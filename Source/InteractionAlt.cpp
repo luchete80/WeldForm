@@ -510,16 +510,23 @@ inline void Domain::CalcDensInc() {
       //#else
       else {
       // Locking the particle 1 for updating the properties
+      if (dom_bid_type != AxiSymmetric) {
       omp_set_lock(&P1->my_lock);
         if (!gradKernelCorr){
           P1->dDensity	+= mj * (di/dj) * temp1;
         } else{
           P1->dDensity	+= mj * (di/dj) * temp1_c[0];
         }		
-
-
       omp_unset_lock(&P1->my_lock);
-
+      } else{ //HERE DENSITY IS NOT STANDARD DENSITY BUT : 2*PI*r*rho WANG EQN 56
+        omp_set_lock(&P1->my_lock);
+          if (!gradKernelCorr){
+            P1->dDensity	+= mj * temp1;
+          } else{
+            P1->dDensity	+= mj * temp1_c[0];
+          }		
+        omp_unset_lock(&P1->my_lock);        
+      }
       // Locking the particle 2 for updating the properties
       omp_set_lock(&P2->my_lock);
         if (!gradKernelCorr){
@@ -536,17 +543,30 @@ inline void Domain::CalcDensInc() {
 }
 
 inline void Domain::DensReduction(){
-  #pragma omp parallel for schedule (static) num_threads(Nproc)
-  for (int i=0; i<solid_part_count;i++){
-    Particles[i]->dDensity = 0.;
-    for (int n=0;n<ipair_SM[i];n++){ 
-      Particles[i]->dDensity += Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density * pair_densinc[Aref[i][n]];
+  if (dom_bid_type != AxiSymmetric) {
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (int i=0; i<solid_part_count;i++){
+      Particles[i]->dDensity = 0.;
+      for (int n=0;n<ipair_SM[i];n++){ 
+        Particles[i]->dDensity += Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density * pair_densinc[Aref[i][n]];
+      }
+      for (int n=0;n<jpair_SM[i];n++){   
+        Particles[i]->dDensity += Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass / Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Density * pair_densinc[Aref[i][MAX_NB_PER_PART-1-n]];    
+      }      
+      Particles[i]->dDensity *= Particles[i]->Density;
     }
-    for (int n=0;n<jpair_SM[i];n++){   
-      Particles[i]->dDensity += Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass / Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Density * pair_densinc[Aref[i][MAX_NB_PER_PART-1-n]];    
-    }
-    
-    Particles[i]->dDensity *= Particles[i]->Density;
+  } else { //HERE DENSITY IS NOT STANDARD DENSITY BUT : 2*PI*r*rho WANG EQN 56
+    #pragma omp parallel for schedule (static) num_threads(Nproc)
+    for (int i=0; i<solid_part_count;i++){
+      Particles[i]->dDensity = 0.;
+      for (int n=0;n<ipair_SM[i];n++){ 
+        Particles[i]->dDensity += Particles[Anei[i][n]]->Mass * pair_densinc[Aref[i][n]];
+      }
+      for (int n=0;n<jpair_SM[i];n++){   
+        Particles[i]->dDensity += Particles[Anei[i][MAX_NB_PER_PART-1-n]]->Mass * pair_densinc[Aref[i][MAX_NB_PER_PART-1-n]];    
+      }    
+      //Particles[i]->dDensity *= Particles[i]->Density;
+    }    
   }
   
 }
