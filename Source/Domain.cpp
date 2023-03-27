@@ -1043,6 +1043,8 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 		}
 
 	}//Dim 3
+  
+  solid_part_count = Particles.Size();
 
 	R = r;									
 }
