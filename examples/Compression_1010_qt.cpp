@@ -3,6 +3,7 @@
 #include <iostream>
 #include "InteractionAlt.cpp"
 #include "SolverKickDrift.cpp"
+#include "SolverFraser.cpp"
 
 #define VMAX	1.0
 
@@ -82,7 +83,7 @@ int main() try{
                                           
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	dom.gradKernelCorr = true;
+	dom.gradKernelCorr = false;
 
 	int top_part = 0;
 	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -114,7 +115,8 @@ int main() try{
   dom.CFL = 0.7; //For auto ts
 	timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-  dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+  //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
+  dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);    
     
 	dom.WriteXDMF("ContactTest");
 }

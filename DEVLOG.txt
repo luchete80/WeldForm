@@ -197,3 +197,4 @@
 20230322 - Working on Cylindrical coordinates
 20230323 - Fixed Ghost Symmetry (Added Mirror_XYZ to mesh generator and use new function)
          - Now Symmetry WORKS BETTER (MIRRORING DIFFERENT VARIABlES)
+20230327 - Trying to update Quarter Symm example. Error with AddXYSymCylinderLength. Issue 

@@ -115,7 +115,7 @@ SET(EXES
   #Contact_Compression_1010_unif
   #Compression_1010
   #Contact_Compression_1010
-  #Compression_1010_qt
+  Compression_1010_qt
   #Contact_Compression_1010_half
   #Compression_1010_half_ghost
 	#NastranReader_test
@@ -131,7 +131,7 @@ SET(EXES
   #Compression_half  
   #Compression_half_ghost_vel
   #CompressionVel_2sides
-  Compression_half_ghost
+  #Compression_half_ghost
 	#CompressionForces2
 	#Cantilever_comp_contact
 	#Contact_Cantilever
