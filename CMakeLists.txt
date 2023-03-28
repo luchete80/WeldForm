@@ -115,7 +115,7 @@ SET(EXES
   #Contact_Compression_1010_unif
   #Compression_1010
   #Contact_Compression_1010
-  Compression_1010_qt
+  #Compression_1010_qt
   #Contact_Compression_1010_half
   #Compression_1010_half_ghost
 	#NastranReader_test
@@ -172,6 +172,7 @@ SET(EXES
   #SolidBlock_Heat_T
 	#SolidBlock_Heat_source2_boundpart
 	#Thermal_Expansion_2
+  Thick_Cyl_AxiSymm
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
