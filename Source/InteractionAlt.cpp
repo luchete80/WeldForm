@@ -40,6 +40,8 @@ inline void Domain::CalcAccel() {
 		double Alpha	= (P1->Alpha + P2->Alpha)/2.0;
 		double Beta	= (P1->Beta + P2->Beta)/2.0;
 
+    //In axi-Symm mode, real density is only considered
+    
     di = P1->Density;
     mi = P1->Mass;
 
@@ -54,6 +56,11 @@ inline void Domain::CalcAccel() {
 		// double GK	= m_kernel.gradW(rij/h);
 		// double K		= m_kernel.W(rij/h);
 		
+    
+    if (dom_bid_type == AxiSymmetric){
+      di/=(2.0*M_PI*P1->x(0));
+      dj/=(2.0*M_PI*P2->x(0));
+    }
     //m_clock_begin = clock();
 		// Artificial Viscosity
     Mat3_t PIij;
@@ -71,6 +78,12 @@ inline void Domain::CalcAccel() {
     }
     //m_forces_artifvisc_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
 
+    // Back to modified density to make accel calculations
+    if (dom_bid_type == AxiSymmetric){
+      di*=(2.0*M_PI*P1->x(0));
+      dj*=(2.0*M_PI*P2->x(0));
+    }
+    
     Mat3_t Sigmaj,Sigmai;
     set_to_zero(Sigmaj);
     set_to_zero(Sigmai);
@@ -422,10 +435,12 @@ inline void Domain::RateTensorsReduction(){
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<solid_part_count;i++){
       double psi;
-      if (Particles[i]->x(0) > 0.0) psi =  0.01 * Particles[i]->h;
-      else                          psi = -0.01 * Particles[i]->h;
-      Particles[i]->StrainRate(2,2) = Particles[i]->v(0)/(psi + Particles[i]->x(0)); //DIRECT HOOP STRAIN RATE, Wang 2015
-    }    
+      //if (Particles[i]->x(0)*Particles[i]->x(0) < Particles[i]->h*Particles[i]->h){
+        if (Particles[i]->x(0) > 0.0) psi =  0.01 * Particles[i]->h;
+        else                          psi = -0.01 * Particles[i]->h;
+        Particles[i]->StrainRate(2,2) = Particles[i]->v(0)/(psi + Particles[i]->x(0)); //DIRECT HOOP STRAIN RATE, Wang 2015
+      //}    
+    }
   }
 }
 
@@ -608,8 +623,8 @@ inline void Domain::CalcForceSOA(int &i,int &j) {
 		Vec3_t vij	= P1->v - P2->v;
 		
 		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
-		double K	= Kernel(Dimension, KernelType, rij/h, h);
-		
+		double K	= Kernel(Dimension, KernelType, rij/h, h); 
+    
 		// Artificial Viscosity
 		Mat3_t PIij;
 		set_to_zero(PIij);

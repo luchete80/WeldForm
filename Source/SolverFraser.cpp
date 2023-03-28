@@ -228,8 +228,14 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //CalcAccelPP();
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
     //#ifdef NONLOCK_SUM
-    if (nonlock_sum)
-    AccelReduction();
+    if (nonlock_sum) AccelReduction();
+    else {
+      if (dom_bid_type == AxiSymmetric)
+      for (int i=0; i<solid_part_count;i++){
+        Particles[i]->a *= 2.0 * M_PI;
+        Particles[i]->a[0] -= Particles[i]->Sigma(2,2); //WANG Eqn. 40
+      }    
+    }
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 

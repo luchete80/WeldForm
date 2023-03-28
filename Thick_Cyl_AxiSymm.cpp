@@ -10,12 +10,12 @@
 
 void UserAcc(SPH::Domain & domi)
 {
-	double vcompress;
+	double vr;
 
 	if (domi.getTime() < TAU ) 
-		vcompress = VMAX/TAU * domi.getTime();
+		vr = VMAX/TAU * domi.getTime();
 	else
-		vcompress = VMAX;
+		vr = VMAX;
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
@@ -30,9 +30,7 @@ void UserAcc(SPH::Domain & domi)
 		if (domi.Particles[i]->ID == 2)  //FIXED
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress/2.);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress/2.);
-			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress/2.);
+			domi.Particles[i]->v		= Vec3_t(vr,0.0,0.);
 
 		}
     
@@ -95,6 +93,7 @@ int main(int argc, char **argv) try
         
     dom.AddBoxLength(0, Vec3_t(r1,0.,0.), r2-r1, L, 0., 
 									dx/2., rho, h,  1 , 0 , false, false );
+                 
                   
     dom.gradKernelCorr = false; 
         
@@ -126,12 +125,10 @@ int main(int argc, char **argv) try
     // timestep = (1.0*h/(Cs+VMAX)); 
     // dom.CFL = 1.0;
     // //timestep = 2.5e-6;
-    // dom.auto_ts = false;
+    dom.auto_ts = false;
     
-    //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
-		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-2,"test06",1000);
-    //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/timestep,"test06",1000);
+    //dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-2,"test06",1000);
+    dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/timestep,"test06",1000);
     
 		return 0;
 }
