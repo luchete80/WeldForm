@@ -547,9 +547,9 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
     
   if (dom_bid_type == AxiSymmetric){
     for (int i=0; i<solid_part_count;i++){
-      Particles[i]->Density *=2.0*M_PI*Particles[i]->x(0);
-			Particles[i]->Mass    = Particles[i]->Density * (2.0*r)*(2.0*r);
-
+      //Particles[i]->Density *=2.0*M_PI*Particles[i]->x(0);
+			//Particles[i]->Mass    = Particles[i]->Density * (2.0*r)*(2.0*r);
+      Particles[i]->Mass =2.0*M_PI*Particles[i]->x(0)* Particles[i]->Density*(2.0*r)*(2.0*r);
     }
   }
         

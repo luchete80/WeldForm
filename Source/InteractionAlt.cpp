@@ -56,11 +56,8 @@ inline void Domain::CalcAccel() {
 		// double GK	= m_kernel.gradW(rij/h);
 		// double K		= m_kernel.W(rij/h);
 		
-    
-    if (dom_bid_type == AxiSymmetric){
-      di/=(2.0*M_PI*P1->x(0));
-      dj/=(2.0*M_PI*P2->x(0));
-    }
+    //Real density for sound speed calc
+
     //m_clock_begin = clock();
 		// Artificial Viscosity
     Mat3_t PIij;
@@ -70,19 +67,22 @@ inline void Domain::CalcAccel() {
       double MUij = h*dot(vij,xij)/(rij*rij+0.01*h*h);					///<(2.75) Li, Liu Book
       double Cij;
       double Ci,Cj;
+    if (dom_bid_type == AxiSymmetric){
+      di/=(2.0*M_PI*P1->x(0));
+      dj/=(2.0*M_PI*P2->x(0));
+    }
       if (!P1->IsFree) Ci = SoundSpeed(P2->PresEq, P2->Cs, di, P2->RefDensity); else Ci = SoundSpeed(P1->PresEq, P1->Cs, di, P1->RefDensity);
       if (!P2->IsFree) Cj = SoundSpeed(P1->PresEq, P1->Cs, dj, P1->RefDensity); else Cj = SoundSpeed(P2->PresEq, P2->Cs, dj, P2->RefDensity);
       Cij = 0.5*(Ci+Cj);
-      
+
+      //Mod density for artif visc calc
+      if (dom_bid_type == AxiSymmetric){
+        di*=(2.0*M_PI*P1->x(0));
+        dj*=(2.0*M_PI*P2->x(0));
+      }      
       if (dot(vij,xij)<0) PIij = (Alpha*Cij*MUij+Beta*MUij*MUij)/(0.5*(di+dj)) * I;		///<(2.74) Li, Liu Book
     }
     //m_forces_artifvisc_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
-
-    // Back to modified density to make accel calculations
-    if (dom_bid_type == AxiSymmetric){
-      di*=(2.0*M_PI*P1->x(0));
-      dj*=(2.0*M_PI*P2->x(0));
-    }
     
     Mat3_t Sigmaj,Sigmai;
     set_to_zero(Sigmaj);
