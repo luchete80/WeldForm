@@ -5,6 +5,8 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
+bool bottom_contact = false;
+
 #define VFAC			30.0
 //#define VAVA			5.833e-4		//35 mm/min
 #define VAVA			1.e-3		//35 mm/min
@@ -145,6 +147,7 @@ int main(int argc, char **argv) try
   SPH::NastranReader reader("Tool.nas");
   
   SPH::TriMesh mesh(reader);
+  SPH::TriMesh mesh2;//Only if bottom contact
   
   //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
   double cyl_zmax = L/2. + 5.0 * dx/*-1.e-3*/; //If new meshing  
@@ -154,6 +157,7 @@ int main(int argc, char **argv) try
 	cout << "Plane z" << *mesh.node[0]<<endl;
   
   cout << "Mesh node size "<<mesh.node.Size()<<endl;
+ 
 	
 	
 	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
@@ -163,7 +167,13 @@ int main(int argc, char **argv) try
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
 	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-    
+
+  if (bottom_contact){
+    double Lbot=0.015;
+    mesh2.AxisPlaneMesh(1,true,Vec3_t(-Lbot/2.0 ,ybottom-dx/2, -Lbot/2.0),Vec3_t(Lbot,ybottom-dx/2,Lbot),30);
+    mesh2.CalcSpheres();
+    dom.AddTrimeshParticles(&mesh2, hfac, 11); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  }    
   
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
