@@ -143,7 +143,7 @@ SET(EXES
 	#Heat_2D
 	#Impact_Campos
 	#Impact_Contact
-	#Impact_Zhang2017
+	Impact_Zhang2017
   #Kernel_Test
 	#Kernel_Test_2D
 	#Kernel_Test_2D_vel
