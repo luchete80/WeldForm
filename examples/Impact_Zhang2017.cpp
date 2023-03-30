@@ -1,10 +1,6 @@
 #include "Mesh.h"
 #include "Domain.h"
 #include <iostream>
-#include "InteractionAlt.cpp"
-#include "SolverKickDrift.cpp"
-#include "SolverFraser.cpp"
-
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -52,7 +48,7 @@ void UserAcc(SPH::Domain & domi) {
 	
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
-	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
+	domi.trimesh[0]->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
 }
 
 
@@ -201,20 +197,12 @@ int main(){
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
-	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
 	//dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
-  dom.auto_ts = true;
-//  	dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
-  dom.CFL = 0.7; //For auto ts
-	timestep = (0.7*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
-  //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
-  //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);  
-  dom.SolveDiffUpdateFraser(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);    
-  
-	//dom.Solve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
+	dom.Solve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
 	//dom.ThermalStructSolve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
 	
 	dom.WriteXDMF("ContactTest");
