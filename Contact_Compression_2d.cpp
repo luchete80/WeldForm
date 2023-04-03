@@ -115,7 +115,7 @@ int main(){
   
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(1)<<endl;
 
-	double cyl_ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + 1.0800001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+	double cyl_ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + 1.0000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	cout << "Plane z " <<cyl_ymax<<endl;
 	mesh.AxisPlaneMesh(1,false,Vec3_t(-dx,cyl_ymax, 0.),Vec3_t(0.15,0.0, 0.),50);
@@ -167,8 +167,8 @@ int main(){
 	//Contact Penalty and Damping Factors
   if (contact)
     dom.contact = true;
-	dom.friction_dyn = 0.0;
-	dom.friction_sta = 0.0;
+	dom.friction_dyn = 0.2;
+	dom.friction_sta = 0.2;
 	dom.PFAC = 0.5;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;
@@ -194,8 +194,8 @@ int main(){
   //dom.auto_ts_cont = true;
     
 
-  //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,timestep,"test06",1000);
-    dom.SolveDiffUpdateFraser(/*tf*/10.0*timestep,/*dt*/timestep,timestep,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,1.0e-4,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/10.0*timestep,/*dt*/timestep,timestep,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }
