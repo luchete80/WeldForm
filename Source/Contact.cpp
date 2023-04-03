@@ -42,11 +42,11 @@ inline void Domain::UpdateContactParticles(){
   for (int m=0; m<trimesh.size();m++){
     for ( int e = 0; e < trimesh[m]->element.Size(); e++ ){
       Vec3_t v = 0.;
-      for (int en = 0;en<3;en++)
+      for (int en = 0;en<trimesh[m]->dimension;en++)
         v += *trimesh[m] -> node_v[trimesh[m]->element[e] ->node[en]];
       Particles[first_fem_particle_idx[m] + e] -> v = 
       Particles[first_fem_particle_idx[m] + e] -> va = 
-      Particles[first_fem_particle_idx[m] + e] -> vb = v/3.;
+      Particles[first_fem_particle_idx[m] + e] -> vb = v/trimesh[m]->dimension;
       Particles[first_fem_particle_idx[m] + e] -> a = 0.; 
       Particles[first_fem_particle_idx[m] + e] -> normal  = trimesh[m]->element[e] -> normal;
       //cout << "v "<< v/3.<<", n "<<Particles[first_fem_particle_idx + e] -> normal<<endl;
