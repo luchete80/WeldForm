@@ -140,7 +140,7 @@ int main(){
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
-			
+	int bc_part = 0;
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -159,11 +159,13 @@ int main(){
 
     double y = dom.Particles[a]->x(1);
 
-		if ( y < 0 ){
+		if ( y < dx ){
 			dom.Particles[a]->ID=2;
       dom.Particles[a]->not_write_surf_ID = true;		
+      bc_part++;
 		}
 	}
+  cout << "Bc part count "<<bc_part<<endl;
 	//Contact Penalty and Damping Factors
   if (contact)
     dom.contact = true;
