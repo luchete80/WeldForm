@@ -1407,12 +1407,12 @@ void Domain::CalculateSurface(const int &id){
 	int surf_part =0;
   int max_nb = 46;
   
-  //if (Dimension == 2)max_nb = 23;
+  if (Dimension == 2)max_nb = 12;
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 	
 		Particles[i]->normal *= 1./totmass;
 		
-		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= 46) {//3-114 Fraser {
+		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= max_nb) {//3-114 Fraser {
 			if (!Particles[i]->not_write_surf_ID)
       Particles[i]->ID = id;
 			surf_part++;
