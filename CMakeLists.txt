@@ -71,7 +71,7 @@ SET(EXES
 	# 3-DamBreak
 	# 4-DamBreak3D
 	#Cylinder_Test
-	#Plate-Yield
+	Plate-Yield
   #test_new_sym
   #Cantilever
   #Compression
@@ -137,7 +137,7 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  FSW_red
+  #FSW_red
   #FSW_nastran
 	#Elastic
 	#Heat_2D
@@ -172,7 +172,7 @@ SET(EXES
   #SolidBlock_Heat_T
 	#SolidBlock_Heat_source2_boundpart
 	#Thermal_Expansion_2
-  Thick_Cyl_AxiSymm
+  #Thick_Cyl_AxiSymm
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS

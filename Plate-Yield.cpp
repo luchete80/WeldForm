@@ -24,6 +24,8 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
+bool is_2d = false;
+
 void UserAcc(SPH::Domain & domi)
 {
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
@@ -59,10 +61,11 @@ using std::endl;
 int main(int argc, char **argv) try
 {
        SPH::Domain	dom;
-
-        dom.Dimension	= 2;
-        dom.Nproc	= 4;
-    	dom.Kernel_Set(Quintic);
+        if (is_2d)  dom.Dimension	= 2;
+        else        dom.Dimension	= 3;
+        dom.Nproc	= 12;
+    	//dom.Kernel_Set(Quintic);
+      dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 1;
 //     	dom.XSPH	= 0.5; //Very important
 
@@ -92,12 +95,17 @@ int main(int argc, char **argv) try
     	dom.GeneralAfter = & UserAcc;
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
-
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
-		
+      
+      double Lz = 0.;
+      if (!is_2d) Lz = 4.0*dx;
+      
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  Lz , dx/2.0 ,rho, h, 1 , 0 , false, false );
+      
+        
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
      	double x;
 
+      dom.gradKernelCorr = true;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G			= G;
@@ -126,7 +134,7 @@ int main(int argc, char **argv) try
 
       dom.Domain::SolveDiffUpdateFraser( 0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-			dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
+			//dom.Solve(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
       
 			//dom.Solve_orig_Ext(/*tf*/0.011,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
