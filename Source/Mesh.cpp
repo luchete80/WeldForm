@@ -218,7 +218,9 @@ inline void TriMesh::CalcNormals(){
         u = *node [element[e]->node[1]] - *node [element[e]->node[0]];
         v[0] = -u[1];
         v[1] =  u[0];
+        v[2] =  0.0;
         element[e] -> normal = v/norm(v);
+        //cout << "Element normal "<<element[e] -> normal<<endl;
       }
       //x2=cosβx1−sinβy1
       //y2=sinβx1+cosβy1
