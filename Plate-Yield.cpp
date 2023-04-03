@@ -26,6 +26,7 @@
 
 bool is_2d = false;
 
+
 void UserAcc(SPH::Domain & domi)
 {
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
@@ -99,13 +100,14 @@ int main(int argc, char **argv) try
       double Lz = 0.;
       if (!is_2d) Lz = 4.0*dx;
       
-     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-L/20.0 , -H/2.0 , 0.0 ), L + L/10.0 + dx/10.0 , H + dx/10.0 ,  Lz , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t ( -L/2.0-dx, -H/2.0 , 0.0 ), L + 2.*dx, H /*+ dx/10.0*/ ,  Lz , dx/2.0 ,rho, h, 1 , 0 , false, false );
       
         
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
      	double x;
 
       dom.gradKernelCorr = true;
+      int left_part = 0;int right_part = 0;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
     		dom.Particles[a]->G			= G;
@@ -119,12 +121,16 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->TI		= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		x = dom.Particles[a]->x(0);
-    		if (x<-L/2.0)
-    			dom.Particles[a]->ID=2;
-    		if (x>L/2.0)
-    			dom.Particles[a]->ID=3;
-    	}
+    		if (x<-L/2.0){
+    			dom.Particles[a]->ID=2;left_part++;
+        }
+    		if (x>L/2.0){
+    			dom.Particles[a]->ID=3;right_part++;
+        }
+      }
 		
+    cout << "left_part " <<left_part<<endl;
+    cout << "right_part " <<right_part<<endl;
 		dom.m_kernel = SPH::iKernel(dom.Dimension,h);
 
 	

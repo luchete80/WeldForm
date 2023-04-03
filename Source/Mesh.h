@@ -41,7 +41,7 @@ class Element{
 };
 
 
-class TriMesh{
+class TriMesh{ ///////TODO: CHANGE TO MESH
 private:
 friend class NastranReader;
 	public:
@@ -50,7 +50,7 @@ friend class NastranReader;
 	Array <Vec3_t* > 		node;
 	Array <Vec3_t* > 		node_v;				//Node velocities
   int                 id;
-  
+  int                 dimension;
 	
 	Vec3_t							m_v;						//Constant Uniform v
   Vec3_t              m_w;            //Constant axis rotation

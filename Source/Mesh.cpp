@@ -9,6 +9,7 @@ TriMesh::TriMesh(){
 	
   m_v = 0.;
   m_w = 0.;
+  dimension = 3.;
 	
 }
 
@@ -49,7 +50,7 @@ Element::Element(const int &n1, const int &n2, const int &n3){
 void TriMesh::CalcCentroids(){
 	
 	for (int e=0;e<element.Size();e++)
-		element[e]-> centroid = ( *node[element[e]->node[0]] + *node[element[e]->node[1]] + *node[element[e]->node[2]] ) / 3.; 
+		element[e]-> centroid = ( *node[element[e]->node[0]] + *node[element[e]->node[1]] + *node[element[e]->node[2]] ) / dimension; 
 	
 }
 
@@ -147,7 +148,7 @@ inline void TriMesh::CalcSpheres(){
 	for (int e = 0; e < element.Size(); e++){ 
 		max = 0.;
 		Vec3_t rv;
-		for (int n = 0 ;n < 3; n++){
+		for (int n = 0 ;n < dimension; n++){
 			rv = *node [element[e]->node[n]] - element[e] -> centroid;
 			if (norm(rv) > max) max = norm(rv);
 			element[e]-> nfar = n;
@@ -167,14 +168,18 @@ inline void TriMesh::UpdatePlaneCoeff(){
 // TODO: PARALELIZE
 inline void TriMesh::CalcNormals(){
 	Vec3_t u, v, w;
-	for (int e = 0; e < element.Size(); e++) {
-			u = *node [element[e]->node[1]] - *node [element[e]->node[0]];
-			v = *node [element[e]->node[2]] - *node [element[e]->node[0]];
-			w = cross(u,v);
-			element[e] -> normal = w/norm(w);
-			//Fraser Eqn 3.34
-			//Uj x Vj / |UjxVj|
-	}
+  if (dimension==3){
+    for (int e = 0; e < element.Size(); e++) {
+        u = *node [element[e]->node[1]] - *node [element[e]->node[0]];
+        v = *node [element[e]->node[2]] - *node [element[e]->node[0]];
+        w = cross(u,v);
+        element[e] -> normal = w/norm(w);
+        //Fraser Eqn 3.34
+        //Uj x Vj / |UjxVj|
+    }
+  } else {
+    
+  }
 }
 
 // ATENTION: THIS OVERRIDES AUTO UPDATE WITH VELOCITIES 

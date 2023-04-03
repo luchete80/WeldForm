@@ -199,3 +199,5 @@
          - Now Symmetry WORKS BETTER (MIRRORING DIFFERENT VARIABlES)
 20230327 - Trying to update Quarter Symm example. Error with AddXYSymCylinderLength. Issue 
 20230328 - Added Thick wall Axi-Symm example. Not working yet. 
+----------------------------------
+20230403 - Extending contact to 2D
