@@ -25,24 +25,27 @@
 #include "SolverFraser.cpp"
 
 bool is_2d = false;
-
+double tout,dtout = 0.001;
 
 void UserAcc(SPH::Domain & domi)
 {
-	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-
-	#ifdef __GNUC__
-	for (size_t i=0; i<domi.Particles.Size(); i++)
-	#else
+  double normal_acc_sum=0.;
+	double force,sigma;
+  force = sigma = 0.;
+  //#pragma omp parallel for schedule (static) num_threads(domi.Nproc) 
+	//#ifdef __GNUC__
+	// for (size_t i=0; i<domi.Particles.Size(); i++)
+	// #else
 	for (int i=0; i<domi.Particles.Size(); i++)
-	#endif
-	
+	//#endif
 	{
 		if (domi.Particles[i]->ID == 3)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->v		= Vec3_t(1.0e-2,0.0,0.0);
 			domi.Particles[i]->vb		= Vec3_t(1.0e-2,0.0,0.0);
+      //sigma += domi.Particles[i]->Sigma (2,2) * dS;
+      force += domi.Particles[i]->a (0) * domi.Particles[i]->Mass;
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 		if (domi.Particles[i]->ID == 2)
@@ -53,6 +56,13 @@ void UserAcc(SPH::Domain & domi)
 //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
+
+  if (domi.getTime()>=tout){
+    cout << "Normal integrated force " <<force<<endl;
+    cout << "Normal acc sum " << normal_acc_sum<<endl;
+    tout += dtout;
+  }
+
 }
 
 
@@ -61,6 +71,7 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
+  tout = 0.;
        SPH::Domain	dom;
         if (is_2d)  dom.Dimension	= 2;
         else        dom.Dimension	= 3;

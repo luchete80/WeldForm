@@ -147,16 +147,28 @@ inline void Domain::CalcContactForcesWang(){
 					//Find a vector 
 					//Fraser 3-147
 					inside = true;
-					i=0;		
-					while (i<3 && inside){
-						j = i+1;	if (j>2) j = 0;
-						crit = dot (cross ( *trimesh[m]->node[e -> node[j]] 
-                                        - *trimesh[m]->node[e -> node[i]],
-                                        Qj[P1]  - *trimesh[m]->node[e -> node[i]]),
-															Particles[P2]->normal);
-						if (crit < 0.0) inside = false;
-						i++;
-					}
+          if (trimesh[m]->dimension == 3){
+            i=0;		
+            while (i<3 && inside){
+              j = i+1;	if (j>2) j = 0;
+              crit = dot (cross ( *trimesh[m]->node[e -> node[j]] 
+                                          - *trimesh[m]->node[e -> node[i]],
+                                          Qj[P1]  - *trimesh[m]->node[e -> node[i]]),
+                                Particles[P2]->normal);
+              if (crit < 0.0) inside = false;
+              i++;
+            }
+          } else { //MESH DIMENSION = 2
+            i=0;
+            while (i<2 && inside){
+              j = i+1;	if (j>1) j = 0;
+              crit = dot ( *trimesh[m]->node[e -> node[j]] 
+                                          - *trimesh[m]->node[e -> node[i]],
+                                          Qj[P1]  - *trimesh[m]->node[e -> node[i]]);
+              if (crit < 0.0) inside = false;
+              i++;
+            }
+          }
 					
 					if (inside ) { //Contact point inside element, contact proceeds
             inside_geom++;
@@ -237,7 +249,7 @@ inline void Domain::CalcContactForcesWang(){
                //if (ref_accel) ref_tg = atg * Particles[P1]->Mass;
                //else           
                ref_tg = tgforce;
-               
+               //TODO: CHANGE DIMENSION !!!!!!
                double dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119
                  
                

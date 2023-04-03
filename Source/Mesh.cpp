@@ -177,8 +177,17 @@ inline void TriMesh::CalcNormals(){
         //Fraser Eqn 3.34
         //Uj x Vj / |UjxVj|
     }
-  } else {
-    
+  } else {//ROTATE COUNTERCLOCKWISE (SURFACE BOUNDARY IS SORROUNDED COUNTERCLOCKWISE)
+      for (int e = 0; e < element.Size(); e++) {
+        u = *node [element[e]->node[1]] - *node [element[e]->node[0]];
+        v[0] =  u[1];
+        v[1] = -u[0];
+        element[e] -> normal = v/norm(v);
+      }
+      //x2=cosβx1−sinβy1
+      //y2=sinβx1+cosβy1
+      //Sin (-PI/2.) = -1
+      //Cos (-PI/2.) = 0,
   }
 }
 
@@ -205,7 +214,7 @@ inline void TriMesh::Update(const double &dt){
 	for (int n=0;n<node.Size();n++){
     Vec3_t vr 	= cross(m_w, *node[n]);
     *node_v[n] = m_v + vr;
-    for (int i=0;i<3;i++) {
+    for (int i=0;i<dimension;i++) {
       if      ((*node[n])(i) < min(i)) min[i] = (*node[n])(i);
       else if ((*node[n])(i) > max(i)) max[i] = (*node[n])(i);
     } 
