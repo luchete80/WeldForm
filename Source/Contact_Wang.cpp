@@ -189,7 +189,7 @@ inline void Domain::CalcContactForcesWang(){
 						psi_cont = 2. * Particles[P1]->Mass * omega * DFAC; // Fraser Eqn 3-158
             
             //normal_cf = 2.0 * Particles[P1]->Mass /(deltat*deltat )*delta;
-
+            cout << "Normal "<<Particles[P2]->normal<<endl;
 						omp_set_lock(&Particles[P1]->my_lock);
                 Particles[P1] -> contforce = (kij * delta - psi_cont * delta_) * Particles[P2]->normal; // NORMAL DIRECTION, Fraser 3-159    
               Particles[P1] -> delta_cont = delta;

@@ -50,9 +50,12 @@ Element::Element(const int &n1, const int &n2, const int &n3){
 
 void TriMesh::CalcCentroids(){
 	
-	for (int e=0;e<element.Size();e++)
-		element[e]-> centroid = ( *node[element[e]->node[0]] + *node[element[e]->node[1]] + *node[element[e]->node[2]] ) / dimension; 
-	
+	for (int e=0;e<element.Size();e++){
+		element[e]-> centroid = 0.;
+    for (int i=0;i<dimension;i++)
+      element[e]-> centroid += *node[element[e]->node[i]];
+    element[e]-> centroid/= dimension; 
+	}
 }
 
 // TODO: extend to all dirs
