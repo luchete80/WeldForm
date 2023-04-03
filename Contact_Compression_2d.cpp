@@ -65,6 +65,7 @@ void UserAcc(SPH::Domain & domi) {
 int main(){
 	//
 	TriMesh mesh;
+  mesh.dimension = 2;
 
 	cout << "Creating Mesh" << endl;
 
@@ -110,14 +111,14 @@ int main(){
 
 									
 	//dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20.,  dx/2., rho, h, false); 
-  dom.AddBoxLength(1 ,Vec3_t ( 0., 0., 0.0 ), L, L,  0.0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  dom.AddBoxLength(0 ,Vec3_t ( 0., 0., 0.0 ), L, L,  0.0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
   
-	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
+	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(1)<<endl;
 
-	double cyl_ymax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+	double cyl_ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	cout << "Plane z " <<cyl_ymax<<endl;
-	mesh.AxisPlaneMesh(1,false,Vec3_t(-0.01,cyl_ymax, 0.),Vec3_t(0.15,0.0, 0.),20);
+	mesh.AxisPlaneMesh(1,false,Vec3_t(-dx,cyl_ymax, 0.),Vec3_t(0.15,0.0, 0.),20);
 	cout << "Plane z" << *mesh.node[0]<<endl;
 	
 	
@@ -192,12 +193,9 @@ int main(){
   dom.auto_ts=false;
   //dom.auto_ts_cont = true;
     
-	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
-  //THIS DOES NOT WORK WITH FIXED PARTICLES
-  //dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,timestep,"test06",1000);
-  //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+
+  //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,timestep,"test06",1000);
+    dom.SolveDiffUpdateFraser(/*tf*/timestep,/*dt*/timestep,timestep,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
 }

@@ -1405,6 +1405,9 @@ void Domain::CalculateSurface(const int &id){
 	//TODO: Parallelize with lock
 
 	int surf_part =0;
+  int max_nb = 46;
+  
+  //if (Dimension == 2)max_nb = 23;
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 	
 		Particles[i]->normal *= 1./totmass;

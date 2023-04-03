@@ -9,11 +9,12 @@ TriMesh::TriMesh(){
 	
   m_v = 0.;
   m_w = 0.;
-  dimension = 3.;
+  dimension = 3;
 	
 }
 
 TriMesh::TriMesh(NastranReader &nr){
+  dimension = 3;
   //Insert nodes
   for (int n=0;n<nr.node_count;n++){
     node.Push(new Vec3_t(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]));
@@ -57,6 +58,8 @@ void TriMesh::CalcCentroids(){
 // TODO: extend to all dirs
 inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const Vec3_t p1, const Vec3_t p2,  const int &dens){
 	int elemcount = dens * dens;
+  
+  if (dimension == 2) elemcount = dens; 
 	
 	double x1,x2,x3;
 	double l1,l2;
@@ -80,7 +83,7 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
   
 	for (int j=0; j<test; j++) {
 		x1 = p1(dir[0]);
-		for (int i=0; i<test; i++){
+		for (int i=0; i<dens+1; i++){
 			Vec3_t v;
 			v(dir[0])=x1;v(dir[1])=x2;v(dir[2])=x3;
 			//cout << "i,j" << i << ", " << j<<endl; 
@@ -92,11 +95,12 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 		}
 		x2+=dl;
 	}
+  cout << "Created "<<node.Size()<< " nodes "<<endl;
 
 	int n[4];
 	int el =0;
 	int i;
-  
+  cout << "Creating elements "<<endl;
   if (dimension == 3){
     for (size_t j = 0 ;j  < dens; j++ ) {
           // cout <<"j, dens" <<j<<", "<<dens<<endl;
