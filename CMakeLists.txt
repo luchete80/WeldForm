@@ -71,7 +71,8 @@ SET(EXES
 	# 3-DamBreak
 	# 4-DamBreak3D
 	#Cylinder_Test
-	Plate-Yield
+	#Plate-Yield
+  Contact_Compression_2d
   #test_new_sym
   #Cantilever
   #Compression

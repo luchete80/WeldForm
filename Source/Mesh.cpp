@@ -138,11 +138,10 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
         //cout <<" jj" << jj<<endl;
         int elcon[2];	// TODO: check x, y and z normals and node direction 
                           // For all plane orientations
-        //If connectivity  is anticlockwise normal is outwards
         if (positaxisorent) {
           elcon[0] = n[0];elcon[1] = n[1];
         } else {
-          elcon[0] = n[0];elcon[1] = n[2];		
+          elcon[0] = n[1];elcon[1] = n[0];		
         }
 
         element.Push(new Element(elcon[0],elcon[1],0));		
@@ -150,7 +149,7 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
         // for (int en = 0 ; en<3; en++) cout << elcon[e][en]<<", ";
         // cout <<endl;
         
-        Vec3_t v = ( *node[elcon[e][0]] + *node[elcon[e][1]] ) / 2. ;
+        Vec3_t v = ( *node[elcon[0]] + *node[elcon[1]] ) / 2. ;
         element[el] -> centroid = v; 
         //cout << "Centroid" << element[el] -> centroid << endl;
         el++;                
