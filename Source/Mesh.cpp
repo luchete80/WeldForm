@@ -75,6 +75,9 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 	//cout <<"dens: "<<dens<<endl;
 	//Plane is in 0 and 1 dirs
 	int test =dens+1;
+  
+  if (dimension == 2) test = 1;
+  
 	for (int j=0; j<test; j++) {
 		x1 = p1(dir[0]);
 		for (int i=0; i<test; i++){
@@ -93,40 +96,66 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 	int n[4];
 	int el =0;
 	int i;
-	for (size_t j = 0 ;j  < dens; j++ ) {
-				// cout <<"j, dens" <<j<<", "<<dens<<endl;
-				// cout <<"j<dens"<< (j  < dens)<<endl;
-		for ( i = 0; i < dens; i++ ){
-				// cout <<"i, dens" <<i<<", "<<dens<<endl;
-				// cout <<"i <dens"<< (i  < dens)<<endl;
-				n[0] = (dens + 1)* j + i; 		n[1] = n[0] + 1; 
-				n[2] = (dens + 1)* (j+1) + i; n[3] = n[2] + 1;
-			//cout <<" jj" << jj<<endl;
-			int elcon[2][3];	// TODO: check x, y and z normals and node direction 
-												// For all plane orientations
-			//If connectivity  is anticlockwise normal is outwards
-			if (positaxisorent) {
-				elcon[0][0] = n[0];elcon[0][1] = n[1];elcon[0][2] = n[2];
-				elcon[1][0] = n[1];elcon[1][1] = n[3];elcon[1][2] = n[2];
-			} else {
-				elcon[0][0] = n[0];elcon[0][1] = n[2];elcon[0][2] = n[1];
-				elcon[1][0] = n[1];elcon[1][1] = n[2];elcon[1][2] = n[3];				
-			}
-			//cout << "elnodes"<<endl;
-			for ( int e= 0; e<2;e++) { // 2 triangles
-				element.Push(new Element(elcon[e][0],elcon[e][1],elcon[e][2]));		
-				//cout << "Element "<< el <<": ";
-				// for (int en = 0 ; en<3; en++) cout << elcon[e][en]<<", ";
-				// cout <<endl;
-				
-				Vec3_t v = ( *node[elcon[e][0]] + *node[elcon[e][1]] + *node[elcon[e][2]] ) / 3. ;
-				element[el] -> centroid = v; 
-				//cout << "Centroid" << element[el] -> centroid << endl;
-				el++;
-			}
-		}// i for
-		
-	}
+  
+  if (dimension == 3){
+    for (size_t j = 0 ;j  < dens; j++ ) {
+          // cout <<"j, dens" <<j<<", "<<dens<<endl;
+          // cout <<"j<dens"<< (j  < dens)<<endl;
+      for ( i = 0; i < dens; i++ ){
+          // cout <<"i, dens" <<i<<", "<<dens<<endl;
+          // cout <<"i <dens"<< (i  < dens)<<endl;
+          n[0] = (dens + 1)* j + i; 		n[1] = n[0] + 1; 
+          n[2] = (dens + 1)* (j+1) + i; n[3] = n[2] + 1;
+        //cout <<" jj" << jj<<endl;
+        int elcon[2][3];	// TODO: check x, y and z normals and node direction 
+                          // For all plane orientations
+        //If connectivity  is anticlockwise normal is outwards
+        if (positaxisorent) {
+          elcon[0][0] = n[0];elcon[0][1] = n[1];elcon[0][2] = n[2];
+          elcon[1][0] = n[1];elcon[1][1] = n[3];elcon[1][2] = n[2];
+        } else {
+          elcon[0][0] = n[0];elcon[0][1] = n[2];elcon[0][2] = n[1];
+          elcon[1][0] = n[1];elcon[1][1] = n[2];elcon[1][2] = n[3];				
+        }
+        //cout << "elnodes"<<endl;
+        for ( int e= 0; e<2;e++) { // 2 triangles
+          element.Push(new Element(elcon[e][0],elcon[e][1],elcon[e][2]));		
+          //cout << "Element "<< el <<": ";
+          // for (int en = 0 ; en<3; en++) cout << elcon[e][en]<<", ";
+          // cout <<endl;
+          
+          Vec3_t v = ( *node[elcon[e][0]] + *node[elcon[e][1]] + *node[elcon[e][2]] ) / 3. ;
+          element[el] -> centroid = v; 
+          //cout << "Centroid" << element[el] -> centroid << endl;
+          el++;
+        }
+      }// i for
+      
+    }
+  } else {
+    for ( i = 0; i < dens; i++ ){
+          n[0] = i; 		n[1] = n[0] + 1; 
+        //cout <<" jj" << jj<<endl;
+        int elcon[2];	// TODO: check x, y and z normals and node direction 
+                          // For all plane orientations
+        //If connectivity  is anticlockwise normal is outwards
+        if (positaxisorent) {
+          elcon[0] = n[0];elcon[1] = n[1];
+        } else {
+          elcon[0] = n[0];elcon[1] = n[2];		
+        }
+
+        element.Push(new Element(elcon[0],elcon[1],0));		
+        //cout << "Element "<< el <<": ";
+        // for (int en = 0 ; en<3; en++) cout << elcon[e][en]<<", ";
+        // cout <<endl;
+        
+        Vec3_t v = ( *node[elcon[e][0]] + *node[elcon[e][1]] ) / 2. ;
+        element[el] -> centroid = v; 
+        //cout << "Centroid" << element[el] -> centroid << endl;
+        el++;                
+    }  
+  }
 	///////////////////////////////////////////
 	//// MESH GENERATION END
 	cout << "Creating normals"<<endl;
@@ -177,17 +206,18 @@ inline void TriMesh::CalcNormals(){
         //Fraser Eqn 3.34
         //Uj x Vj / |UjxVj|
     }
-  } else {//ROTATE COUNTERCLOCKWISE (SURFACE BOUNDARY IS SORROUNDED COUNTERCLOCKWISE)
+  } else {//ROTATE COUNTERCLOCKWISE (SURFACE BOUNDARY IS SORROUNDED CLOCKWISE to outer normal)
+    /////// i.e. : x.positive line has y positive normal
       for (int e = 0; e < element.Size(); e++) {
         u = *node [element[e]->node[1]] - *node [element[e]->node[0]];
-        v[0] =  u[1];
-        v[1] = -u[0];
+        v[0] = -u[1];
+        v[1] =  u[0];
         element[e] -> normal = v/norm(v);
       }
       //x2=cosβx1−sinβy1
       //y2=sinβx1+cosβy1
-      //Sin (-PI/2.) = -1
-      //Cos (-PI/2.) = 0,
+      //Sin (PI/2.) = -1
+      //Cos (PI/2.) = 0,
   }
 }
 
