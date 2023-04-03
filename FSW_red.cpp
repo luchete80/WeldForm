@@ -5,7 +5,7 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-bool bottom_contact = false;
+bool bottom_contact = true;
 
 #define VFAC			30.0
 //#define VAVA			5.833e-4		//35 mm/min
@@ -24,19 +24,23 @@ void UserAcc(SPH::Domain & domi) {
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
 
-	#ifdef __GNUC__
-	for (size_t i=0; i<domi.Particles.Size(); i++)
-	#else
-	for (int i=0; i<domi.Particles.Size(); i++)
-	#endif	
-	{
-    
-    //BOTTOM
-    if (domi.Particles[i]->ID == 2) {
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);      
+
+  
+  //if (!bottom_contact){//Fixed particles
+    #ifdef __GNUC__
+    for (size_t i=0; i<domi.Particles.Size(); i++)
+    #else
+    for (int i=0; i<domi.Particles.Size(); i++)
+    #endif	
+    {
+      
+      //BOTTOM
+      if (domi.Particles[i]->ID == 2) {
+        domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+        domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);      
+      }
     }
-	}
+  //}
   
  
 	//Mesh is updated automatically
@@ -170,7 +174,7 @@ int main(int argc, char **argv) try
 
   if (bottom_contact){
     double Lbot=0.015;
-    mesh2.AxisPlaneMesh(1,true,Vec3_t(-Lbot/2.0 ,ybottom-dx/2, -Lbot/2.0),Vec3_t(Lbot,ybottom-dx/2,Lbot),30);
+    mesh2.AxisPlaneMesh(1,true,Vec3_t(-Lbot/2.0 ,ybottom-dx/2.0, -Lbot/2.0),Vec3_t(Lbot,ybottom-dx/2.0,Lbot),30);
     mesh2.CalcSpheres();
     dom.AddTrimeshParticles(&mesh2, hfac, 11); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
   }    
@@ -287,6 +291,9 @@ int main(int argc, char **argv) try
   // SET TOOL BOUNDARY CONDITIONS
   dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
   dom.trimesh[0]->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
+  
+  if (bottom_contact)
+    dom.trimesh[1]->SetVel(Vec3_t(0.0,0.0,0.0));              //translation, m_v
 
 
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
