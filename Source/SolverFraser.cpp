@@ -241,8 +241,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
-    if (contact) CalcContactForcesWang();
-    
+    if (contact) CalcContactForcesWang();;
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 
@@ -253,13 +252,14 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     // for (size_t i=0; i<Particles.Size(); i++)
       // Particles[i]->a += Particles[i] -> contforce / Particles[i] -> Mass; 
     // }
-    
+    cout << "Moving particles"<<endl;
     //// UPDATE VEL AND POS
     clock_beg = clock();  
     //BEFORE
     Vec3_t du;    
     GeneralAfter(*this);//Reinforce BC vel   
     //CorrectVelAcc();
+    cout <<"ghost"<<endl;
     MoveGhost(); 
    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (size_t i=0; i<Particles.Size(); i++){
@@ -306,7 +306,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 		Time += deltat;
     clock_beg = clock();      
     if (contact){
- 		//cout << "checking contact"<<endl;
+
       if (contact_mesh_auto_update) {
         for (int m=0; m<trimesh.size();m++)
           trimesh[m]->Update (deltat); //Update Node Pos, NOW includes PosCoeff and normals        

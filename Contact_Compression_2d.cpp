@@ -34,16 +34,7 @@ void UserAcc(SPH::Domain & domi) {
 	#endif
 	
 	{
-		//TODO: Modify this by relating FEM & AND partciles 
-    if (!contact)
-		if (domi.Particles[i]->ID == 3) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
+
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
@@ -57,9 +48,8 @@ void UserAcc(SPH::Domain & domi) {
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
   if (contact)
-    domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
-  
-  of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
+    domi.trimesh[0]->SetVel(Vec3_t(0.0,-vcompress,0.0));
+
 
   double dtout = 1.e-4;
   if (domi.getTime()>=tout){
@@ -120,7 +110,7 @@ int main(){
 
 									
 	//dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20.,  dx/2., rho, h, false); 
-  dom.AddBoxLength(1 ,Vec3_t ( 0., 0., 0.0 ), L, L /*+ dx/10.0*/ ,  L , dx/2.0 ,rho, h, 1 , 0 , false, false );
+  dom.AddBoxLength(1 ,Vec3_t ( 0., 0., 0.0 ), L, L,  0.0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
   
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
