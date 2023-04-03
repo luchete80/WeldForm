@@ -358,6 +358,7 @@ inline void Domain::CalcContactForces(){
 					//Find a vector 
 					//Fraser 3-147
 					inside = true;
+          if (trimesh[m]->dimension == 3){
 					i=0;		
 					while (i<3 && inside){
 						j = i+1;	if (j>2) j = 0;
@@ -368,6 +369,17 @@ inline void Domain::CalcContactForces(){
 						if (crit < 0.0) inside = false;
 						i++;
 					}
+          } else { //MESH DIMENSION = 2
+            i=0;
+            while (i<2 && inside){
+              j = i+1;	if (j>1) j = 0;
+              crit = dot ( *trimesh[m]->node[e -> node[j]] 
+                                          - *trimesh[m]->node[e -> node[i]],
+                                          Qj[P1]  - *trimesh[m]->node[e -> node[i]]);
+              if (crit < 0.0) inside = false;
+              i++;
+            }
+          }
 					
 					if (inside ) { //Contact point inside element, contact proceeds
             inside_geom++;
