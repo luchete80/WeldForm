@@ -35,6 +35,14 @@ void UserAcc(SPH::Domain & domi) {
 	
 	{
 
+		if (domi.Particles[i]->ID == 3)
+		{
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,-vcompress,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		}
+	
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
@@ -44,20 +52,6 @@ void UserAcc(SPH::Domain & domi) {
 		}
 	}
 	
-	//TODO: Modify this by relating FEM & AND partciles 
-	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
-	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  if (contact)
-    domi.trimesh[0]->SetVel(Vec3_t(0.0,-vcompress,0.0));
-
-
-  double dtout = 1.e-4;
-  if (domi.getTime()>=tout){
-    // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
-    // cout << "Normal acc sum " << normal_acc_sum<<endl;
-    tout += dtout;
-    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << ", " <<domi.ext_forces_work<<", " <<domi.plastic_work << ", " <<domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
-  }
 
 }
 
@@ -113,34 +107,13 @@ int main(){
 	//dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/20.), R, L + 2.*L/20.,  dx/2., rho, h, false); 
   dom.AddBoxLength(0 ,Vec3_t ( 0., 0., 0.0 ), L, L,  0.0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
   
-	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(1)<<endl;
 
-	double cyl_ymax = dom.Particles[dom.Particles.Size()-1]->x(1) + 1.0000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
-
-	cout << "Plane z " <<cyl_ymax<<endl;
-	mesh.AxisPlaneMesh(1,false,Vec3_t(-4.*dx,cyl_ymax, 0.),Vec3_t(0.15,0.0, 0.),50);
-	cout << "Plane z" << *mesh.node[0]<<endl;
-	
-	
-	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
-	cout << "Creating Spheres.."<<endl;
-	//mesh.v = Vec3_t(0.,0.,);
-	mesh.CalcSpheres(); //DONE ONCE
-
-	//////////////////////
-
-	//ALWAYS AFTER SPH PARTICLES
-	//TODO: DO THIS INSIDE SOLVER CHECKS
-	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
-											//Not for any force calc in contact formulation
-  cout << "Adding mesh particles ...";
-	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-  cout << "done."<<endl;
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
 	int bc_part = 0;
+  int bc_part2 = 0;
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
 		dom.Particles[a]->G		= G;
@@ -152,8 +125,8 @@ int main(){
 		dom.Particles[a]->Et_m = 0.0;	//In bilinear this is calculate once, TODO: Change to material definition
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
-		dom.Particles[a]->Alpha		= 1.0;
-		dom.Particles[a]->Beta		= 1.0;
+		dom.Particles[a]->Alpha		= 2.5;
+		dom.Particles[a]->Beta		= 2.5;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 
@@ -164,18 +137,23 @@ int main(){
       dom.Particles[a]->not_write_surf_ID = true;		
       bc_part++;
 		}
+		if ( y > L-dx ){
+			dom.Particles[a]->ID=3;
+      dom.Particles[a]->not_write_surf_ID = true;		
+      bc_part2++;
+		}
 	}
   cout << "Bc part count "<<bc_part<<endl;
+  cout << "Bc part 2 count "<<bc_part2<<endl;
 	//Contact Penalty and Damping Factors
-  if (contact)
-    dom.contact = true;
+
 	dom.friction_dyn = 0.0;
 	dom.friction_sta = 0.0;
 	dom.PFAC = 0.5;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;
 
-	
+	dom.nonlock_sum=false;
 	dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 	dom.BC.InOutFlow = 0;
 

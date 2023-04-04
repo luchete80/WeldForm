@@ -122,6 +122,7 @@ SET(EXES
 	#NastranReader_test
 	#CompressionForces
   #Compression 
+  Compression_2d
 	#CompressionVel
   #CompressionVel_Implicit
 	#CompressionForces_Ghost
