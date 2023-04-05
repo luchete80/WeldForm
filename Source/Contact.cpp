@@ -510,29 +510,29 @@ inline void Domain::CalcContactForces(){
                 
               }
               
-              // if (friction_dyn > 0.) {
-                // //if (fric_type==Fr_Dyn){
-                  // if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
+              if (friction_dyn > 0.) {
+                //if (fric_type==Fr_Dyn){
+                  if (norm_tgvr > /*0.0*/VMIN_FOR_FRICTION){
 
-                  // // //TG DIRECTION
-                    // tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
-                    // omp_set_lock(&Particles[P1]->my_lock);
-                    // Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
-                    // omp_unset_lock(&Particles[P1]->my_lock);
-                    // //cout << "tg force "<< tgforce <<endl;
+                  // //TG DIRECTION
+                    tgforce = friction_dyn * norm(Particles[P1] -> contforce) * tgdir;
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1] -> a -= tgforce / Particles[P1] -> Mass; 
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                    //cout << "tg force "<< tgforce <<endl;
                     
-                    // if (cont_heat_gen) {
-                    // //Fraser Eqns 3.109 to 3.111
-                    // //lambda is fraction passed to 
-                    // omp_set_lock(&Particles[P1]->my_lock);
-                    // Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
-                    // //cout<< Particles[P1]->q_fric_work<<endl;
-                    // omp_unset_lock(&Particles[P1]->my_lock);
-                    // }
+                    if (cont_heat_gen) {
+                    //Fraser Eqns 3.109 to 3.111
+                    //lambda is fraction passed to 
+                    omp_set_lock(&Particles[P1]->my_lock);
+                    Particles[P1]->q_fric_work = dot(tgforce,vr); //J/(m3.s)
+                    //cout<< Particles[P1]->q_fric_work<<endl;
+                    omp_unset_lock(&Particles[P1]->my_lock);
+                    }
                   
-                  // }
-                // //}
-              // }
+                  }
+                //}
+              }
 						}//Friction type
 						if   (force2 > max_contact_force ) max_contact_force = force2;
 						else if (force2 < min_contact_force ) min_contact_force = force2;

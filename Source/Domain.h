@@ -57,6 +57,7 @@ enum Gradient_Type { Squared_density=0, Multiplied_density=1 };
 enum Function_Type { Constant=0, Linear=1, Multilinear=2};
 
 enum Friction_Type{Fr_Sta=0,Fr_Dyn,Fr_StaDyn,Fr_Bound};
+enum Contact_Alg{Fraser=0, Wang, Seo, Zhan};
 
 namespace SPH {
   
@@ -325,7 +326,7 @@ public:
     bool					FSI;						///< Selecting variable to choose Fluid-Structure Interaction
 		int						contact_type;		//0: no contact 1: node to surface 2: node 2 node
 		bool					thermal_solver;
-
+    Contact_Alg   contact_alg;
     
    std::vector <boundaryCondition> bConds;  //NEW, For BCond
 	

@@ -162,6 +162,8 @@ inline Domain::Domain ()
   
   dom_bid_type = PlaneStress;
   
+  contact_alg = Wang;
+  
 }
 
 inline Domain::~Domain ()
