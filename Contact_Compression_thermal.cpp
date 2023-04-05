@@ -13,10 +13,6 @@ using namespace std;
 
 std::ofstream of;
 
-double tout;
-
-bool contact = true; //NOT WORKING WITH CONTACT = FALSE
-
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
 
@@ -35,15 +31,14 @@ void UserAcc(SPH::Domain & domi) {
 	
 	{
 		//TODO: Modify this by relating FEM & AND partciles 
-    if (!contact)
-		if (domi.Particles[i]->ID == 3) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
+		// if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+// //			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }
 		if (domi.Particles[i]->ID == 2)
 		{
 			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
@@ -56,19 +51,8 @@ void UserAcc(SPH::Domain & domi) {
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
-  if (contact)
-    domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
-  
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
   of << domi.getTime() << ", "<<domi.Particles[12419]->contforce(2)<< ", " << domi.Particles[12419]->v(2)<<endl;
-
-  double dtout = 1.e-4;
-  if (domi.getTime()>=tout){
-    // cout << "Normal integrated force " <<domi.m_scalar_prop<<endl;
-    // cout << "Normal acc sum " << normal_acc_sum<<endl;
-    tout += dtout;
-    of << domi.getTime()<< ", " << domi.max_disp[2]<<", " << domi.contact_force_sum << ", " << ", " <<domi.ext_forces_work<<", " <<domi.plastic_work << ", " <<domi.accum_cont_heat_cond << ", " << domi.contact_friction_work<<endl;
-  }
-
 }
 
 
@@ -82,7 +66,7 @@ int main(){
 	 SPH::Domain	dom;
 
 	dom.Dimension	= 3;
-	dom.Nproc	= 8;
+	dom.Nproc	= 4;
 	dom.Kernel_Set(Qubic_Spline);
 	dom.Scheme	= 1;	//Mod Verlet
 	//dom.XSPH	= 0.1; //Very important
@@ -160,9 +144,15 @@ int main(){
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
 		dom.Particles[a]->Alpha		= 1.0;
-		dom.Particles[a]->Beta		= 0.0;
+		dom.Particles[a]->Beta		= 1.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
+    
+    dom.Particles[a]->k_T			=	150.;
+    dom.Particles[a]->cp_T			=	960.;
+    dom.Particles[a]->th_exp 		= 0.;	
+		dom.Particles[a]->T					= 20.0;
+        
     double x = dom.Particles[a]->x(0);
     double y = dom.Particles[a]->x(1);
 		double z = dom.Particles[a]->x(2);
@@ -175,16 +165,9 @@ int main(){
 		if ( z > L - dx  && abs(x) < 2*dx && y > R - 2*dx && a < dom.first_fem_particle_idx[0]){
       cout << "CONTROL, particle "<< a << "x "<<x<< ", y " << y<<", z "<<z<<endl;
     }
-    if (!contact) {
-      if ( z > L ){
-        dom.Particles[a]->ID=3;
-        dom.Particles[a]->not_write_surf_ID = true;  
-      }    
-    }
 	}
 	//Contact Penalty and Damping Factors
-  if (contact)
-    dom.contact = true;
+	dom.contact = true;
 	dom.friction_dyn = 0.2;
 	dom.friction_sta = 0.2;
 	dom.PFAC = 0.5;
@@ -197,8 +180,8 @@ int main(){
 
 
 	of = std::ofstream ("cf.csv", std::ios::out);
-    of << "Time, disp, cf, ext_f_wk, plastic_wk, heat_cond, friction_wk"<<endl;
-    tout = 0.;  
+  of << "Time, cf, vypart"<<endl;
+  
 
 	//ID 	0 Internal
 	//		1	Outer Surface
@@ -208,14 +191,17 @@ int main(){
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
   //dom.auto_ts=false;
 
-  dom.auto_ts=false;
+  dom.pl_work_heat_frac = 0.9;
+  dom.cont_heat_cond = false;
+
+  dom.thermal_solver = true;    
+  dom.auto_ts=true;
   //dom.auto_ts_cont = true;
     
 	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-5,"test06",1000);
   //THIS DOES NOT WORK WITH FIXED PARTICLES
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,timestep,"test06",1000);
   //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");

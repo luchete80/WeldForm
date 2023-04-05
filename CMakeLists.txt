@@ -72,7 +72,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-  Contact_Compression_2d
+  #Contact_Compression_2d
   #test_new_sym
   #Cantilever
   #Compression
@@ -99,7 +99,7 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	#Contact_Compression
+	Contact_Compression
   #Contact_Compression_1010
   #Contact_Compression_1010_1side
   #Contact_Compression_fast_short
@@ -122,7 +122,7 @@ SET(EXES
 	#NastranReader_test
 	#CompressionForces
   #Compression 
-  Compression_2d
+  #Compression_2d
 	#CompressionVel
   #CompressionVel_Implicit
 	#CompressionForces_Ghost
