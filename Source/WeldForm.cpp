@@ -97,7 +97,7 @@ int main(int argc, char **argv) try {
 		nlohmann::json domzones 	= j["DomainZones"];
 		nlohmann::json amplitudes 	= j["Amplitudes"];
 		nlohmann::json rigbodies 		= j["RigidBodies"];
-    nlohmann::json contact 		= j["Contact"];
+    nlohmann::json contact_ 		= j["Contact"];
 		nlohmann::json bcs 			= j["BoundaryConditions"];
 		nlohmann::json ics 			= j["InitialConditions"];
 
