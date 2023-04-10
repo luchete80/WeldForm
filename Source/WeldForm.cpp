@@ -438,6 +438,7 @@ int main(int argc, char **argv) try {
       else if ( mattype == "JohnsonCook" )  dom.Particles[a]->Material_model  = JOHNSON_COOK;
 			if (mattype == "Hollomon" || mattype == "JohnsonCook"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
         dom.Particles[a]->mat             = mat;
+       dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,0.0);    
       }
       dom.Particles[a]->Sigmay		      = Fy;
             
