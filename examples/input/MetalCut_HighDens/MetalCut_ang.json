@@ -32,7 +32,7 @@
 	"type": "Box",
 	"id": 0,
 	"denseMode": 0,
-	"start": [ -9.942, -3.5, 0.0],
+	"start": [ -9.884, -3.5, 0.0],
 	"dim": [10.0, 5.0, 1.5],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
@@ -41,7 +41,7 @@
 "RigidBodies": 
 [{
 	"type": "File",
-	"fileName": "tool_r0.05_ang.nas",
+	"fileName": "tool_r0.1_ang_26deg.nas",
 	"zoneId": 10
 }],
 
