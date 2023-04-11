@@ -134,9 +134,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 					MainNeighbourSearch/*_Ext*/();
           //
           CalcPairPosList(); //For min TS Vel
-          // if (h_update){                
-            // UpdateSmoothingLength();          
-          // }
+          if (h_update){                
+            UpdateSmoothingLength();          
+          }
           //#ifdef NONLOCK_TEST 
           //CheckParticlePairs(0);
           //#endif

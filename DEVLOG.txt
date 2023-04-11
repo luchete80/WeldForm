@@ -202,3 +202,4 @@
 ----------------------------------
 20230403 - Extending contact to 2D
 20230410 - Working on Metal Cut example
+20230411 - Added Smoothing length update to Fraser Solver and Kickdrift

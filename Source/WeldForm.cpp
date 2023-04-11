@@ -27,6 +27,7 @@
 
 #include "SolverFraser.cpp"
 #include "Geometry.cpp"
+#include "SolverKickDrift.cpp"
 
 
 #define TAU		0.005
@@ -218,15 +219,19 @@ int main(int argc, char **argv) try {
     readBoolVector(config["autoTS"], auto_ts);
     double alpha = 1.;
     double beta = 0.;
+    bool h_upd = false;
     bool kernel_grad_corr = false;
     readValue(config["artifViscAlpha"],alpha);
     readValue(config["artifViscBeta"],beta);
     readValue(config["contAlgorithm"],cont_alg);
     readValue(config["kernelGradCorr"],kernel_grad_corr);
+    readValue(config["smoothlenUpdate"],h_upd);
     dom.auto_ts = auto_ts[0];
     dom.auto_ts_acc = auto_ts[1];
     dom.auto_ts_cont = auto_ts[2];
 		
+    if (h_upd) //default is false...
+      dom.h_update = true;
     /////////////-/////////////////////////////////////////////////////////////////////////////////
 		// DOMAIN //
 		////////////
@@ -464,6 +469,8 @@ int main(int argc, char **argv) try {
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech" || solver=="Mech-Thermal")
       dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+    else if (solver=="Mech" || solver=="Mech-Thermal-KickDrift")
+      dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     else if (solver=="Thermal")
       dom.ThermalSolve(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     else 

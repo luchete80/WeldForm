@@ -157,9 +157,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 					MainNeighbourSearch/*_Ext*/();
           //
           CalcPairPosList(); //For min TS Vel
-          // if (h_update){                
-            // UpdateSmoothingLength();          
-          // }
+          if (h_update){                
+            UpdateSmoothingLength();          
+          }
           //#ifdef NONLOCK_TEST 
           //CheckParticlePairs(0);
           //#endif
