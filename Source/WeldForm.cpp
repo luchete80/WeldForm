@@ -220,6 +220,7 @@ int main(int argc, char **argv) try {
     double alpha = 1.;
     double beta = 0.;
     bool h_upd = false;
+    double tensins = 0.3;
     bool kernel_grad_corr = false;
     readValue(config["artifViscAlpha"],alpha);
     readValue(config["artifViscBeta"],beta);
@@ -230,6 +231,7 @@ int main(int argc, char **argv) try {
     dom.auto_ts_acc = auto_ts[1];
     dom.auto_ts_cont = auto_ts[2];
 		
+    readValue(config["tensileInstability"],tensins);
     if (h_upd) //default is false...
       dom.h_update = true;
     /////////////-/////////////////////////////////////////////////////////////////////////////////
@@ -450,7 +452,7 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->Fail			= 1;
       dom.Particles[a]->Alpha			= alpha;
       dom.Particles[a]->Beta			= beta;
-      dom.Particles[a]->TI			= 0.3;
+      dom.Particles[a]->TI			= tensins;
       dom.Particles[a]->TIInitDist	= dx;
       dom.Particles[a]->hfac = 1.2; //Only for h update, not used
       
