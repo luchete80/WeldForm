@@ -1,0 +1,83 @@
+{
+"Configuration":
+{
+  "Nproc": 12,
+	"particleRadius": 0.05, 
+	"hFactor": 1.2,
+  "cflMethod": 1,
+  "cflFactor": 0.7,
+  "autoTS": [false,false,false],
+  "simTime": 2.0,
+  "outTime": 1.0e-3,
+  "artifViscAlpha": 1.5,
+  "artifViscBeta": 0.5,
+  "solver": "Mech-Thermal"
+}
+,
+"Materials":[ 
+{
+	"id": "Solid",
+	"type": "JohnsonCook",
+  "const": [0.601, 0.0134,0.234,1.0,1480.0,20.0,1.0],
+  "thermalCond": 4.7e-5,
+  "thermalHeatCap": 642.0,
+	"density0": 7.81E-6, 
+	"youngsModulus": 204.0, 
+	"poissonsRatio": 0.3,
+	"yieldStress0": 0.553
+}],
+
+"DomainBlocks": 
+[{
+	"type": "Box",
+	"id": 0,
+	"denseMode": 0,
+	"start": [ -9.942, -3.5, 0.0],
+	"dim": [10.0, 5.0, 1.5],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1]
+}],
+
+"RigidBodies": 
+[{
+	"type": "File",
+	"fileName": "tool_r0.05_ang.nas",
+	"zoneId": 10
+}],
+
+"DomainZones": [
+{
+	"id": 2,
+	"start":[-20.0,-10.0, -10.0],
+	"end": 	[ 0.0, -3.0, 10.0]
+}
+],
+
+"Amplitudes": [
+{
+	"id": 		1,
+	"valueType": 1,
+	"time": 	[ 0.0, 0.0, 0.0],
+	"value": 	[ 0.0, 0.0, 0.0]
+}
+],
+"BoundaryConditions": [
+{
+	"zoneId": 	2,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, 0.0],
+	"free": 		true
+},
+{
+	"zoneId": 		10,
+	"valuetype": 	"Constant",
+	"value": 		[ -5.0, 0.0, 0.0]
+}
+],
+"InitialConditions": [
+{
+	"Temp": 20.0
+}
+]
+
+}
