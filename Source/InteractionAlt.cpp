@@ -515,9 +515,10 @@ inline void Domain::DensReduction(){
   for (int i=0; i<solid_part_count;i++){
     Particles[i]->dDensity = 0.;
     for (int n=0;n<ipair_SM[i];n++){ 
-      if (i == 51)    {
-      cout << "j "<<Anei[i][n] << ", densinc "<<pair_densinc[Aref[i][n]]<<endl;
-      
+
+      if (i == 51)
+      cout << "j densinc " << Anei[i][n]<< ", "<<pair_densinc[Aref[i][n]]<<endl;
+
       Particles[i]->dDensity += Particles[Anei[i][n]]->Mass /Particles[Anei[i][n]]->Density * pair_densinc[Aref[i][n]];
       }
     }

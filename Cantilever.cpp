@@ -97,7 +97,7 @@ int main(int argc, char **argv) try
 							Lx + Lx/20.0 , Ly /*+dx*/,  Lz /*+dx*/, 
 							dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-		dom.gradKernelCorr = true;
+		dom.gradKernelCorr = false;
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 
     	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -128,7 +128,8 @@ int main(int argc, char **argv) try
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
 
 
-    	dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/0.00001,"test06",999);
+    //dom.Solve(/*tf*/0.0101,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
+    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/timestep,"test06",10000);	
         return 0;
 }
 MECHSYS_CATCH
