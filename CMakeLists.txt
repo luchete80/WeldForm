@@ -72,13 +72,13 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-  #Contact_Compression_2d
+  Contact_Compression_2d
   #test_new_sym
   #Cantilever
   #Compression
 	#Compression_XSPH
   #Compression_AVisc
-  Compression_1010
+  #Compression_1010
   #Compression_half_ghost_vel
 	#Compression_thermal
 	#Compression_12_solver_orig
@@ -178,7 +178,7 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
+	#"Source/WeldForm"
   #"restart_test"
 )
 
