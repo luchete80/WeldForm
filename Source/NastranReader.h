@@ -95,12 +95,12 @@ void NastranReader::read( char* fName){
           start_node = true;
           line_start_node = l;
         }
-      } else if (line.substr(0,5) == string("CTRIA") || line.substr(0,5) == string("CBEAM")){
+      } else if (line.substr(0,5) == string("CTRIA") || line.substr(0,5) == string("CBEAM") || line.substr(0,4) == string("CBAR") ){
         if (!start_elem){
           start_elem = true;
 					line_start_elem = l;
 				}
-        if (line.substr(0,5) == string("CBEAM"))
+        if (line.substr(0,5) == string("CBEAM") || line.substr(0,4) == string("CBAR"))
           dim = 2;
         //cout << "Element found!"<<endl;
         elem_count++;
