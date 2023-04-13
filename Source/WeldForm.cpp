@@ -262,6 +262,12 @@ int main(int argc, char **argv) try {
 												
 		//dom.AddCylinderLength(1, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10. + dx, r, rho, h, false); 
 		
+    if (abs(L[2]) < h ) {
+      dom.Dimension = 2;
+      cout << "Z Value is less than h. Dimension is set to 2. "<<endl;
+      cout << "Dimension also could be set in config section." <<endl;
+    }
+    
 		cout << "Dimensions: "<<endl;
 		PRINTVEC(L)
 		if (domtype == "Box"){

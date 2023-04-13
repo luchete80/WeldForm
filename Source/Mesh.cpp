@@ -22,6 +22,7 @@ TriMesh::TriMesh(NastranReader &nr){
   }
   cout << "Generated "<<node.Size()<< " trimesh nodes. "<<endl;
   //cout << "Normals"<<endl;
+  cout << "Writing elements..."<<endl;
   for (int e=0;e<nr.elem_count;e++){
     element.Push(new Element(nr.elcon[3*e],nr.elcon[3*e+1],nr.elcon[3*e+2]));		  
 		Vec3_t v = ( *node[nr.elcon[3*e]] + *node[nr.elcon[3*e+1]] + *node[nr.elcon[3*e+2]] ) / 3. ;

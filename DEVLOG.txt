@@ -205,4 +205,4 @@
 20230411 - Added Smoothing length update to Fraser Solver and Kickdrift
 20230413 - Fixed friction partcile surface for 2D plain strain (TODO: AXI-SYMM)
          - Modified reader to work with CBEAM (2d file mesh)
-         
+         - automatically set dimension to 2 when Z value is zero.

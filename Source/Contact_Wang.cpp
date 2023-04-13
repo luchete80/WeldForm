@@ -270,7 +270,7 @@ inline void Domain::CalcContactForcesWang(){
                   omp_unset_lock(&Particles[P1]->my_lock);
 
                   if (thermal_solver){
-                    id (Dimension==3) dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.666666666);  
+                    if (Dimension==3) dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.666666666);  
                     else              dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.5);  ////TODO: SELECT AXI-SYMM VS PL STRAIN
                     //atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;                      
                     omp_set_lock(&Particles[P1]->my_lock);
