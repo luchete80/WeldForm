@@ -215,6 +215,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     printf("peq %lf cs %lf p0 %lf rho %lf rho_0 %lf\n",Particles[51]->PresEq, Particles[51]->Cs, Particles[51]->P0,Particles[51]->Density, Particles[51]->RefDensity);
     cout << "Pressure 51 "<<Particles[51]->Pressure<<endl;
     cout << "Sigma 51 "<<Particles[51]->Sigma<<endl;
+    cout << "shear Stress 51  "<<Particles[51]->ShearStress<<endl;
+    
     
     ////// 9. Update Density and Stress: already done
    
@@ -229,6 +231,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     AccelReduction();
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+
+cout << "Accel 51  "<<Particles[51]->a<<endl;
 
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
@@ -336,7 +340,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			idx_out++;
 			tout += dtOut;
 			total_time = std::chrono::steady_clock::now() - start_whole;		
-			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
+			std::cout << "\n-------------CCCC-------------------------\n Total CPU time: "<<total_time.count() << endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
       std::cout << std::setprecision(2);
       cout << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";

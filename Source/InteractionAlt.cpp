@@ -111,9 +111,9 @@ inline void Domain::CalcAccel() {
 		// NEW
 		if (!gradKernelCorr) {
 		if (GradientType == 0)
-			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij) , temp);
+			Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj /*+ PIij + TIij*/) , temp);
 		else
-			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij) , temp);
+			Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           /*+ PIij + TIij*/) , temp);
 		} else {
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				//Left in vector form and multiply after??
