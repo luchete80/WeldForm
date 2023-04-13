@@ -72,6 +72,8 @@ void NastranReader::read( char* fName){
   node_count = 0;
   elem_count = 0;
   
+  int dim = 3;
+  
   bool start_node = false;
   bool start_elem = false;
   
@@ -93,11 +95,13 @@ void NastranReader::read( char* fName){
           start_node = true;
           line_start_node = l;
         }
-      } else if (line.substr(0,5) == string("CTRIA")){
+      } else if (line.substr(0,5) == string("CTRIA") || line.substr(0,5) == string("CBEAM")){
         if (!start_elem){
           start_elem = true;
 					line_start_elem = l;
 				}
+        if (line.substr(0,5) == string("CBEAM"))
+          dim = 2;
         //cout << "Element found!"<<endl;
         elem_count++;
       }
@@ -182,7 +186,7 @@ void NastranReader::read( char* fName){
 	l = curr_line;
   for (int n=0;n<elem_count;n++){
     //cout << n+1<< " ";
-		for (int en=0;en<3;en++){
+		for (int en=0;en<dim;en++){
 			int pos = 3*(FIELD_LENGTH)+ en*FIELD_LENGTH;
 			string temp = rawData[l].substr(pos,FIELD_LENGTH); //Second field, id
 			int d = atoi(temp.c_str());
