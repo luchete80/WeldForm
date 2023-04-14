@@ -6,7 +6,7 @@
 #include "SolverFraser.cpp"
 
 #define TAU		0.005
-#define VMAX	1.0
+#define VMAX	0.1
 
 using namespace SPH;
 using namespace std;
@@ -108,6 +108,8 @@ int main(){
   dom.AddBoxLength(0 ,Vec3_t ( 0., 0., 0.0 ), L, L,  0.0 , dx/2.0 ,rho, h, 1 , 0 , false, false );
   
 
+  for (size_t a=0; a<dom.Particles.Size(); a++)
+    dom.Particles[a]->Mass*=0.0025;
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
@@ -174,7 +176,7 @@ int main(){
   //dom.auto_ts_cont = true;
     
 
-  dom.SolveDiffUpdateFraser(/*tf*/0.0205,/*dt*/timestep,1.0e-4,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/1.005,/*dt*/timestep,1.0e-3,"test06",1000);
   //dom.SolveDiffUpdateFraser(/*tf*/10.0*timestep,/*dt*/timestep,timestep,"test06",1000);
 	
 	dom.WriteXDMF("ContactTest");
