@@ -329,11 +329,13 @@ int main(int argc, char **argv) try {
     
 		readVector(rigbodies[0]["start"], 	start);       
 		readVector(rigbodies[0]["dim"], 	dim); 
+    bool flipnormals = false;
+    readValue(rigbodies[0]["flipNormals"],flipnormals);
     if (rigbody_type == "File"){
-      string filename = "";
-      readValue(rigbodies[0]["fileName"], 	filename); 
-      cout << "Reading Mesh input file..." << endl;
-      SPH::NastranReader reader("Tool.nas");
+      // string filename = "";
+      // readValue(rigbodies[0]["fileName"], 	filename); 
+      // cout << "Reading Mesh input file..." << endl;
+      // SPH::NastranReader reader("Tool.nas", flipnormals);
     }
     else {
       if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
@@ -358,7 +360,7 @@ int main(int argc, char **argv) try {
         readValue(rigbodies[0]["fileName"], 	filename); 
         cout << "Reading Mesh input file " << filename <<endl;
         SPH::NastranReader reader(filename.c_str());
-          mesh.push_back (new SPH::TriMesh(reader));
+          mesh.push_back (new SPH::TriMesh(reader,flipnormals ));
       }
       cout << "Creating Spheres.."<<endl;
       //mesh.v = Vec3_t(0.,0.,);
