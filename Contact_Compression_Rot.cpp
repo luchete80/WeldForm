@@ -260,7 +260,7 @@ int main(){
   
   //IF THERMAL CONTACT
   if (thermal_contact){
-    dom.cont_heat_cond  = false;
+    dom.cont_heat_cond  = true;
     dom.contact_hc      = 1000.; 
   }
   //dom.auto_ts_cont = true;

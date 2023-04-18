@@ -331,6 +331,10 @@ int main(int argc, char **argv) try {
 		readVector(rigbodies[0]["dim"], 	dim); 
     bool flipnormals = false;
     readValue(rigbodies[0]["flipNormals"],flipnormals);
+    
+    double heatcap = 1.;
+    readValue(rigbodies[0]["thermalHeatCap"],heatcap);
+    //TODO: WRitE TO PArTiclES
     if (rigbody_type == "File"){
       // string filename = "";
       // readValue(rigbodies[0]["fileName"], 	filename); 
@@ -370,9 +374,21 @@ int main(int argc, char **argv) try {
       int id;
       readValue(rigbodies[0]["zoneId"],id);
       dom.AddTrimeshParticles(mesh[0], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-
-      dom.friction_dyn = 0.15;
-      dom.friction_sta = 0.15;
+        
+      
+      std::vector<double> fric_sta(1), fric_dyn(1), heat_cond(1);
+      readValue(contact_[0]["fricCoeffStatic"], 	fric_sta[0]); 
+      readValue(contact_[0]["fricCoeffDynamic"], 	fric_dyn[0]); 
+      readValue(contact_[0]["heatCondCoeff"], 	  heat_cond[0]);
+      
+      bool heat_cond_ = false;
+      if (readValue(contact_[0]["heatConductance"], 	heat_cond_)){
+        dom.cont_heat_cond = true;
+        dom.contact_hc = heat_cond[0];
+      }
+      
+      dom.friction_dyn = fric_dyn[0];
+      dom.friction_sta = fric_sta[0];
       dom.PFAC = 0.8;
       dom.DFAC = 0.0;
       
