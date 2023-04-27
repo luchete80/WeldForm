@@ -33,7 +33,7 @@
   "fricCoeffStatic": 0.15,
   "fricCoeffDynamic": 0.15,
   "heatConductance": false,
-  "heatCondCoeff": 10.0
+  "heatCondCoeff": 0.01
   
 }],
 

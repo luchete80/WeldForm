@@ -5,9 +5,9 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-bool bottom_contact = true;
+bool bottom_contact = false;
 
-#define VFAC			30.0
+#define VFAC			1.0
 //#define VAVA			5.833e-4		//35 mm/min
 #define VAVA			1.e-3		//35 mm/min
 #define WROT 			1200.0 	    //rpm
@@ -17,6 +17,8 @@ bool bottom_contact = true;
 double tout, dtout;
 
 ofstream ofprop("fsw_force.csv", std::ios::out);
+
+bool cf_cte = true;
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -274,12 +276,14 @@ int main(int argc, char **argv) try
 	dom.contact = true;
 	//dom.friction = 0.15;
   
-  dom.friction_function = Linear;
-	// dom.friction_dyn = 0.2;
-  // dom.friction_sta = 0.2;
-  dom.friction_b = 0.3;
-  dom.friction_m = (0.1-0.3)/500.;
-  
+  if (cf_cte) {
+    dom.friction_dyn = 0.2;
+    dom.friction_sta = 0.2;
+  } else {
+    dom.friction_function = Linear;
+    dom.friction_b = 0.3;
+    dom.friction_m = (0.1-0.3)/500.;
+  }
 	dom.PFAC = 0.6;
 	dom.DFAC = 0.0;
 	dom.update_contact_surface = false;
@@ -309,8 +313,8 @@ int main(int argc, char **argv) try
   dom.auto_ts=false;
   
   //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,timestep,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,/*dtOut*/1.e-3  ,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
 }

@@ -243,9 +243,6 @@ inline void Domain::CalcTempIncSOA () {
 	int imax;
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	for (int i=0; i<Particles.Size(); i++){
-		*m_dTdt[i] = 1./((*m_rho[i])* (*m_cpT[i]) )*( temp[i] + (*m_qconvT[i]));
-		if (contact)
-			Particles[i]->dTdt += Particles[i]->q_fric_work;
 		if (Particles[i]->dTdt>max){
 			max= Particles[i]->dTdt;
 			imax=i;
