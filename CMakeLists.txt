@@ -93,8 +93,8 @@ SET(EXES
   #Compression_TRIP_vel
   #Compression_thermal
   #Compression_nastran
-  #Contact_Compression_thermal
-  Contact_Compression_Rot
+  Contact_Compression_thermal
+  #Contact_Compression_Rot
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
@@ -139,7 +139,7 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  FSW_red
+  #FSW_red
   #FSW_nastran
 	#Elastic
 	#Heat_2D
@@ -152,7 +152,7 @@ SET(EXES
 	#Traction
 	#traction_app
 	#Traction_Hollomon
-	#Traction_JC
+	Traction_JC
 	#Thermal_Expansion_2
 	#4-DamBreak3D
 	#Plate-Yield

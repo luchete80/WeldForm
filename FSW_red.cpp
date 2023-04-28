@@ -7,7 +7,7 @@
 
 bool bottom_contact = false;
 
-#define VFAC			1.0
+#define VFAC			10.0
 //#define VAVA			5.833e-4		//35 mm/min
 #define VAVA			1.e-3		//35 mm/min
 #define WROT 			1200.0 	    //rpm
@@ -18,7 +18,7 @@ double tout, dtout;
 
 ofstream ofprop("fsw_force.csv", std::ios::out);
 
-bool cf_cte = true;
+bool cf_cte = false;
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -182,7 +182,7 @@ int main(int argc, char **argv) try
   }    
   
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
   dom.nonlock_sum = true;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
@@ -203,8 +203,8 @@ int main(int argc, char **argv) try
       //dom.Particles[a]->Sigmay	= Fy;
       dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			
-      dom.Particles[a]->Alpha		= 2.5;
-			dom.Particles[a]->Beta		= 2.5;
+      dom.Particles[a]->Alpha		= 1.0;
+			dom.Particles[a]->Beta		= 0.0;
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
       
@@ -313,7 +313,7 @@ int main(int argc, char **argv) try
   dom.auto_ts=false;
   
   //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,timestep,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
   //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;

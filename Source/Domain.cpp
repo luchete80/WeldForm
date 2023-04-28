@@ -1351,7 +1351,7 @@ inline void Domain::AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy
 		}
 
 	}//Dim 3
-
+  solid_part_count = Particles.Size();
 	R = r;
 }
 
