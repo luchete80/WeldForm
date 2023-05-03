@@ -424,11 +424,13 @@ int main(int argc, char **argv) try {
 			SPH::boundaryCondition bcon;
       bcon.type = 0;        //DEFAULT: VELOCITY
       bcon.valueType = 0;   //DEFAULT: CONSTANT
+      bcon.value_ang = 0.0;
 			readValue(bc["zoneId"], 	bcon.zoneId);
       //type 0 means velocity vc
 			readValue(bc["valueType"], 	bcon.valueType);
 			if (bcon.valueType == 0){//Constant
-        readVector(bc["value"], 	  bcon.value);
+        readVector(bc["value"], 	      bcon.value);      //Or value linear
+        readVector(bc["valueAng"], 	    bcon.value_ang);  //Or Angular value
       } else 
         if ( bcon.valueType == 1){ //Amplitude
 				readValue(bc["amplitudeId"], 		bcon.ampId);

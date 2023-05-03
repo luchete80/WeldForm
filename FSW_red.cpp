@@ -7,7 +7,7 @@
 
 bool bottom_contact = false;
 
-#define VFAC			10.0
+#define VFAC			30.0
 //#define VAVA			5.833e-4		//35 mm/min
 #define VAVA			1.e-3		//35 mm/min
 #define WROT 			1200.0 	    //rpm
@@ -77,7 +77,7 @@ int main(int argc, char **argv) try
   double H,L,n;
 
   H	= 0.003;
-  L	= 0.03;
+  L	= 0.02;
 
   n	= 30.0;		//in length, radius is same distance
 
@@ -95,7 +95,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.0005; //If dx = 0.0006 then 
+	dx = 0.0003; //If dx = 0.0006 then 
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -143,14 +143,15 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
   //double ybottom = -H - 1.2 * dx;  /////LARGE PIN, Original Tool
-  double ybottom = -H - 0.7 * dx;  /////SMALL PIN, New Tool
+  double ybottom = -H - 0.7 * dx;  /////SMALL PIN, New Tool, IF dx = 0.0005; //If dx = 0.0006 then 
+  
   //TODO: make gap adjustment automatic
   
   double ytop = ybottom + H ; 
   
   dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-  SPH::NastranReader reader("Tool.nas");
+  SPH::NastranReader reader("tool_dens_0.3.nas");
   
   SPH::TriMesh mesh(reader);
   SPH::TriMesh mesh2;//Only if bottom contact
@@ -313,7 +314,7 @@ int main(int argc, char **argv) try
   dom.auto_ts=false;
   
   //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,timestep,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.03,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
   //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;

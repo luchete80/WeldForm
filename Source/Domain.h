@@ -77,6 +77,7 @@ struct boundaryCondition {
 	bool 	free;	//is necessary??
 	int 	valueType;		//0: Constant, 1 amplitude table
 	Vec3_t value;       //If constant
+  Vec3_t value_ang;       //Angular value
 	int 	ampId;			//if valuetype == 1
 	double 	ampFactor;		//if valuetype == 1
 };

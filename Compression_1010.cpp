@@ -108,7 +108,7 @@ int main() try{
 		dom.Particles[a]->TIInitDist	= dx;
 		double z = dom.Particles[a]->x(2);
     
-		if ( z > L- 2*dx){
+		if ( z > L-dx){
       top_part++;
 			dom.Particles[a]->ID=3;
     }
@@ -125,9 +125,9 @@ int main() try{
   dom.CFL = 0.6;
   timestep = (0.6*h/(Cs+VMAX)); //CHANGED WITH VELOCITY
   
-  dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
 	//dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01205,/*dt*/timestep,/*dtOut*/1.e-4,"test06",1000);
 	
   dom.WriteXDMF("ContactTest");
 }
