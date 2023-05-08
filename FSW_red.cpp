@@ -95,7 +95,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.0002; //If dx = 0.0006 then 
+	dx = 0.0003; //If dx = 0.0006 then 
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -143,9 +143,9 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
   //double ybottom = -H - 1.2 * dx;  /////LARGE PIN, Original Tool
-  //double ybottom = -H - 0.7 * dx;  /////SMALL PIN, New Tool, IF dx = 0.0005; //If dx = 0.0006 then 
+  double ybottom = -H - 0.7 * dx;  /////SMALL PIN, New Tool, IF dx = 0.0005; //If dx = 0.0006 then 
   
-  double ybottom = -H +0.3*dx; //if dx = 0.0002
+  //double ybottom = -H +0.3*dx; //if dx = 0.0002
   
   //TODO: make gap adjustment automatic
   
@@ -185,7 +185,7 @@ int main(int argc, char **argv) try
   }    
   
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
   dom.nonlock_sum = true;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
