@@ -41,6 +41,7 @@ void UserAcc(SPH::Domain & domi) {
   
   dtout = 1.0e-4;
   if (domi.getTime()>=tout){
+    tout += dtout;
     cout << "Time: "<<  domi.getTime()<<"Sigma sum "<<sigma_sum<<endl;
   }
 }
