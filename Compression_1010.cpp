@@ -5,13 +5,15 @@
 #include "SolverFraser.cpp"
 #include "SolverKickDrift.cpp"
 
-#define VMAX	0.1
+#define VMAX	1.0
 
 using namespace SPH;
 using namespace std;
 
 #define DX 0.0012
 double tout, dtout;
+
+ofstream ofprop("cont_comp_1010.csv", std::ios::out);
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -43,6 +45,7 @@ void UserAcc(SPH::Domain & domi) {
   if (domi.getTime()>=tout){
     tout += dtout;
     cout << "Time: "<<  domi.getTime()<<"Sigma sum "<<sigma_sum<<endl;
+    ofprop << domi.max_disp[2]<<", " <<  domi.m_scalar_prop << endl;
   }
 }
 
@@ -101,7 +104,7 @@ int main() try{
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 
 	int top_part = 0;
   int bottom_part = 0;
