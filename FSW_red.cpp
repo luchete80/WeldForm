@@ -5,7 +5,7 @@
 #include "SolverKickDrift.cpp"
 #include "SolverFraser.cpp"
 
-bool bottom_contact = true;
+bool bottom_contact = false;
 
 #define VFAC			30.0
 //#define VAVA			5.833e-4		//35 mm/min
@@ -17,6 +17,8 @@ bool bottom_contact = true;
 double tout, dtout;
 
 ofstream ofprop("fsw_force.csv", std::ios::out);
+
+bool cf_cte = false;
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -75,7 +77,7 @@ int main(int argc, char **argv) try
   double H,L,n;
 
   H	= 0.003;
-  L	= 0.03;
+  L	= 0.02;
 
   n	= 30.0;		//in length, radius is same distance
 
@@ -93,7 +95,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.0005; //If dx = 0.0006 then 
+	dx = 0.0003; //If dx = 0.0006 then 
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -141,14 +143,15 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
   //double ybottom = -H - 1.2 * dx;  /////LARGE PIN, Original Tool
-  double ybottom = -H - 0.7 * dx;  /////SMALL PIN, New Tool
+  double ybottom = -H - 0.7 * dx;  /////SMALL PIN, New Tool, IF dx = 0.0005; //If dx = 0.0006 then 
+  
   //TODO: make gap adjustment automatic
   
   double ytop = ybottom + H ; 
   
   dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
-  SPH::NastranReader reader("Tool.nas");
+  SPH::NastranReader reader("tool_dens_0.3.nas");
   
   SPH::TriMesh mesh(reader);
   SPH::TriMesh mesh2;//Only if bottom contact
@@ -180,7 +183,7 @@ int main(int argc, char **argv) try
   }    
   
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
   dom.nonlock_sum = true;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
@@ -201,8 +204,8 @@ int main(int argc, char **argv) try
       //dom.Particles[a]->Sigmay	= Fy;
       dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			
-      dom.Particles[a]->Alpha		= 2.5;
-			dom.Particles[a]->Beta		= 2.5;
+      dom.Particles[a]->Alpha		= 1.0;
+			dom.Particles[a]->Beta		= 0.0;
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
       
@@ -274,12 +277,14 @@ int main(int argc, char **argv) try
 	dom.contact = true;
 	//dom.friction = 0.15;
   
-  dom.friction_function = Linear;
-	// dom.friction_dyn = 0.2;
-  // dom.friction_sta = 0.2;
-  dom.friction_b = 0.3;
-  dom.friction_m = (0.1-0.3)/500.;
-  
+  if (cf_cte) {
+    dom.friction_dyn = 0.2;
+    dom.friction_sta = 0.2;
+  } else {
+    dom.friction_function = Linear;
+    dom.friction_b = 0.3;
+    dom.friction_m = (0.1-0.3)/500.;
+  }
 	dom.PFAC = 0.6;
 	dom.DFAC = 0.0;
 	dom.update_contact_surface = false;
@@ -309,8 +314,8 @@ int main(int argc, char **argv) try
   dom.auto_ts=false;
   
   //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,timestep,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,/*dtOut*/1.e-3  ,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.03,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
 }

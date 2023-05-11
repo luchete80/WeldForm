@@ -329,11 +329,17 @@ int main(int argc, char **argv) try {
     
 		readVector(rigbodies[0]["start"], 	start);       
 		readVector(rigbodies[0]["dim"], 	dim); 
+    bool flipnormals = false;
+    readValue(rigbodies[0]["flipNormals"],flipnormals);
+    
+    double heatcap = 1.;
+    readValue(rigbodies[0]["thermalHeatCap"],heatcap);
+    //TODO: WRitE TO PArTiclES
     if (rigbody_type == "File"){
-      string filename = "";
-      readValue(rigbodies[0]["fileName"], 	filename); 
-      cout << "Reading Mesh input file..." << endl;
-      SPH::NastranReader reader("Tool.nas");
+      // string filename = "";
+      // readValue(rigbodies[0]["fileName"], 	filename); 
+      // cout << "Reading Mesh input file..." << endl;
+      // SPH::NastranReader reader("Tool.nas", flipnormals);
     }
     else {
       if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
@@ -358,7 +364,7 @@ int main(int argc, char **argv) try {
         readValue(rigbodies[0]["fileName"], 	filename); 
         cout << "Reading Mesh input file " << filename <<endl;
         SPH::NastranReader reader(filename.c_str());
-          mesh.push_back (new SPH::TriMesh(reader));
+          mesh.push_back (new SPH::TriMesh(reader,flipnormals ));
       }
       cout << "Creating Spheres.."<<endl;
       //mesh.v = Vec3_t(0.,0.,);
@@ -368,9 +374,21 @@ int main(int argc, char **argv) try {
       int id;
       readValue(rigbodies[0]["zoneId"],id);
       dom.AddTrimeshParticles(mesh[0], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-
-      dom.friction_dyn = 0.15;
-      dom.friction_sta = 0.15;
+        
+      
+      std::vector<double> fric_sta(1), fric_dyn(1), heat_cond(1);
+      readValue(contact_[0]["fricCoeffStatic"], 	fric_sta[0]); 
+      readValue(contact_[0]["fricCoeffDynamic"], 	fric_dyn[0]); 
+      readValue(contact_[0]["heatCondCoeff"], 	  heat_cond[0]);
+      
+      bool heat_cond_ = false;
+      if (readValue(contact_[0]["heatConductance"], 	heat_cond_)){
+        dom.cont_heat_cond = true;
+        dom.contact_hc = heat_cond[0];
+      }
+      
+      dom.friction_dyn = fric_dyn[0];
+      dom.friction_sta = fric_sta[0];
       dom.PFAC = 0.8;
       dom.DFAC = 0.0;
       
@@ -406,11 +424,13 @@ int main(int argc, char **argv) try {
 			SPH::boundaryCondition bcon;
       bcon.type = 0;        //DEFAULT: VELOCITY
       bcon.valueType = 0;   //DEFAULT: CONSTANT
+      bcon.value_ang = 0.0;
 			readValue(bc["zoneId"], 	bcon.zoneId);
       //type 0 means velocity vc
 			readValue(bc["valueType"], 	bcon.valueType);
 			if (bcon.valueType == 0){//Constant
-        readVector(bc["value"], 	  bcon.value);
+        readVector(bc["value"], 	      bcon.value);      //Or value linear
+        readVector(bc["valueAng"], 	    bcon.value_ang);  //Or Angular value
       } else 
         if ( bcon.valueType == 1){ //Amplitude
 				readValue(bc["amplitudeId"], 		bcon.ampId);

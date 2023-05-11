@@ -41,7 +41,8 @@ protected:
   //TriMesh trimesh;
 	
 	public:
-  NastranReader(){}
+  int     dim;
+  NastranReader(){dim=3;}
 	NastranReader(char* fName){read(fName);}
 	
 	void WriteCSV(char const * FileKey);
@@ -72,7 +73,7 @@ void NastranReader::read( char* fName){
   node_count = 0;
   elem_count = 0;
   
-  int dim = 3;
+  dim = 3;
   
   bool start_node = false;
   bool start_elem = false;

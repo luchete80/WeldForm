@@ -2,15 +2,16 @@
 "Configuration":
 {
   "Nproc": 12,
-	"particleRadius": 0.10, 
+	"particleRadius": 0.04, 
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.7,
   "autoTS": [false,false,false],
   "simTime": 2.0,
   "outTime": 1.0e-3,
-  "artifViscAlpha": 1.0,
-  "artifViscBeta": 2.0,
+  "artifViscAlpha": 1.5,
+  "artifViscBeta": 0.0,
+  "sumType": "Locking",
   "solver": "Mech-Thermal"
 }
 ,
@@ -27,12 +28,21 @@
 	"yieldStress0": 0.300
 }],
 
+"Contact":[ 
+{
+  "fricCoeffStatic": 0.15,
+  "fricCoeffDynamic": 0.15,
+  "heatConductance": false,
+  "heatCondCoeff": 0.01
+  
+}],
+
 "DomainBlocks": 
 [{
 	"type": "Box",
 	"id": 0,
 	"denseMode": 0,
-	"start": [ -9.905, -3.5, 0.0],
+	"start": [ -9.965, -3.5, 0.0],
 	"dim": [10.0, 5.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
@@ -42,7 +52,9 @@
 [{
 	"type": "File",
 	"fileName": "tool_metal_cut_2d_mm.nas",
-	"zoneId": 10
+	"zoneId": 10,
+  "flipNormals": true,
+  "thermalHeatCap" : 640.0
 }],
 
 "DomainZones": [

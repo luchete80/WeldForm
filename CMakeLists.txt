@@ -72,7 +72,7 @@ SET(EXES
 	# 4-DamBreak3D
 	#Cylinder_Test
 	#Plate-Yield
-  Contact_Compression_2d
+  #Contact_Compression_2d
   #test_new_sym
   #Cantilever
   #Compression
@@ -152,7 +152,7 @@ SET(EXES
 	#Traction
 	#traction_app
 	#Traction_Hollomon
-	#Traction_JC
+	Traction_JC
 	#Thermal_Expansion_2
 	#4-DamBreak3D
 	#Plate-Yield
@@ -178,7 +178,7 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
+	#"Source/WeldForm"
   #"restart_test"
 )
 

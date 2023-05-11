@@ -166,7 +166,7 @@ int main() try{
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 	int top, bottom, center;
   top = bottom = center = 0;   
   int center_top = 0;			
@@ -185,8 +185,8 @@ int main() try{
         
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
-		dom.Particles[a]->Alpha		= 2.5;
-		dom.Particles[a]->Beta		= 2.5;
+		dom.Particles[a]->Alpha		= 1.0;
+		dom.Particles[a]->Beta		= 0.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 
