@@ -166,6 +166,10 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
           SaveNeighbourData();
           //cout << "nb search"<<endl;
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+          
+          if (gradKernelCorr){
+            CalcGradCorrMatrix();	}
+          
           if (contact) {
             clock_beg = clock();
             ContactNbUpdate(this);

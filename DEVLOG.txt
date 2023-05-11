@@ -206,3 +206,7 @@
 20230413 - Fixed friction partcile surface for 2D plain strain (TODO: AXI-SYMM)
          - Modified reader to work with CBEAM (2d file mesh)
          - automatically set dimension to 2 when Z value is zero.
+-----------------------------------
+20230511 - Found 2 critical errors in gradient correction. 
+           Contact force was wrong (about double)
+           matrix m() is not updated. (See call Domain::CalcGradCorrMatrix in Fraser solver)

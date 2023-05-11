@@ -180,10 +180,10 @@ inline void Domain::CalcContactForcesWang(){
 						// DAMPING
 						//Calculate SPH and FEM elements stiffness (series)
 						//Since FEM is assumed as rigid, stiffness is simply the SPH one 
-            //if (!gradKernelCorr)
+            if (!gradKernelCorr)
               kij = 2.0 * Particles[P1]->Mass / (deltat * deltat);
-            //else //TESTING PHASE
-            //  kij = Particles[P1]->Mass / (deltat * deltat);
+            else //TESTING PHASE
+              kij = Particles[P1]->Mass / (deltat * deltat);
 						
             //kij = PFAC * Particles[P1]-> cont_stiff;
 						omega = sqrt (kij/Particles[P1]->Mass);
