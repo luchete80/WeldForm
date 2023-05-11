@@ -5,31 +5,47 @@
 #include "SolverFraser.cpp"
 #include "SolverKickDrift.cpp"
 
-#define VMAX	0.1
+#define VMAX	1.0
 
 using namespace SPH;
 using namespace std;
 
+#define DX 0.0012
+double tout, dtout;
+
+ofstream ofprop("cont_comp_1010.csv", std::ios::out);
+
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
+  double dS = DX * DX;
+  double sigma_sum = 0.;
 		vcompress = VMAX;
-	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-	#ifdef __GNUC__
-	for (size_t i=0; i<domi.Particles.Size(); i++)
-	#else
+    double normal_acc_sum=0.;
+	//#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
+	//#ifdef __GNUC__
+	//for (size_t i=0; i<domi.Particles.Size(); i++)
+	//#else
 	for (int i=0; i<domi.Particles.Size(); i++)
-	#endif
+	//#endif
 	
 	{
     //In fraser algorithm acceleration should be fixed
 		if (domi.Particles[i]->ID == 2) {
 			domi.Particles[i]->v			= Vec3_t(0.0,0.0,0.0);
 			domi.Particles[i]->a			= Vec3_t(0.0,0.0,0.0);
+      sigma_sum += domi.Particles[i]->Sigma (2,2) * dS;
     }
     else if (domi.Particles[i]->ID == 3) {
 			domi.Particles[i]->v			= Vec3_t(0.0,0.0,-vcompress);
 			domi.Particles[i]->a			= Vec3_t(0.0,0.0,0.0);
     }
+  }
+  
+  dtout = 1.0e-4;
+  if (domi.getTime()>=tout){
+    tout += dtout;
+    cout << "Time: "<<  domi.getTime()<<"Sigma sum "<<sigma_sum<<endl;
+    ofprop << domi.max_disp[2]<<", " <<  domi.m_scalar_prop << endl;
   }
 }
 
@@ -37,7 +53,8 @@ void UserAcc(SPH::Domain & domi) {
 int main() try{
 	//
 	TriMesh mesh;
-
+  tout = 0.;
+  
 	cout << "Creating Mesh" << endl;
 
 
@@ -61,7 +78,7 @@ int main() try{
   K= E / ( 3.*(1.-2*nu) );
   G= E / (2.* (1.+nu));
 
-	dx = 0.0012;  //Tenth of radius
+	dx = DX;  //Tenth of radius
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -87,7 +104,7 @@ int main() try{
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 
 	int top_part = 0;
   int bottom_part = 0;

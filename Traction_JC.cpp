@@ -163,7 +163,8 @@ int main(int argc, char **argv) try
 		dom.Particles[4081]->print_history = true;
 		//dom.Particles[2421]->print_history = true;
 		//dom.Particles[6777]->ID = 1;
-		
+			dom.gradKernelCorr = true;
+      
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				

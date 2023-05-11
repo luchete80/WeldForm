@@ -7,7 +7,7 @@
 
 #define TAU		0.0005
 #define VMAX	1.00
-#define DX 0.0009
+#define DX 0.0012
 
 using namespace SPH;
 using namespace std;
@@ -164,7 +164,7 @@ int main() try{
 	mesh.CalcSpheres(); //DONE ONCE
   mesh2.CalcSpheres();
   
-	cout << "Done."<<endl;
+	cout << "Done."<<endl; 
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = true;
 	int top, bottom, center;
@@ -185,8 +185,8 @@ int main() try{
         
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
-		dom.Particles[a]->Alpha		= 1.0;
-		dom.Particles[a]->Beta		= 0.0;
+		dom.Particles[a]->Alpha		= 2.5;
+		dom.Particles[a]->Beta		= 2.5;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
 

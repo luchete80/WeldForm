@@ -145,6 +145,8 @@ int main(int argc, char **argv) try
   //double ybottom = -H - 1.2 * dx;  /////LARGE PIN, Original Tool
   double ybottom = -H - 0.7 * dx;  /////SMALL PIN, New Tool, IF dx = 0.0005; //If dx = 0.0006 then 
   
+  //double ybottom = -H +0.3*dx; //if dx = 0.0002
+  
   //TODO: make gap adjustment automatic
   
   double ytop = ybottom + H ; 
@@ -152,6 +154,7 @@ int main(int argc, char **argv) try
   dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
 
   SPH::NastranReader reader("tool_dens_0.3.nas");
+  //SPH::NastranReader reader("Tool.nas");
   
   SPH::TriMesh mesh(reader);
   SPH::TriMesh mesh2;//Only if bottom contact
@@ -183,14 +186,14 @@ int main(int argc, char **argv) try
   }    
   
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true;
+	dom.gradKernelCorr = false;
   dom.nonlock_sum = true;
 			
 	cout << "Particle count: "<<dom.Particles.Size()<<endl;
   int bottom_particles = 0;
   int top_particles = 0;
   int side_particles  =0;
-		for (size_t a=0; a<dom.Particles.Size(); a++)
+		for (size_t a=0; a<dom.solid_part_count; a++)
 		{
       dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
       dom.Particles[a]->mat = &mat;
@@ -241,24 +244,24 @@ int main(int argc, char **argv) try
 			
 			
 			//SIDES
-			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/25.0/*- dx*/){ 
+			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/25.0- dx){ 
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
    			dom.Particles[a]->IsFree=false;
         
         dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-        dom.Particles[a]->h_conv		= 200.0 * VFAC; //W/m2-K
+        dom.Particles[a]->h_conv		= 5000.0 * VFAC; //W/m2-K
         dom.Particles[a]->T_inf 		= 20.;
         
         side_particles++;
 			}
-			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/25.0/*- 2.*dx*/){
+			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/25.0- dx){
 				dom.Particles[a]->ID=3;
 				dom.Particles[a]->not_write_surf_ID = true;
         dom.Particles[a]->IsFree=false;
 
         dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-        dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+        dom.Particles[a]->h_conv		= 5000.0 * VFAC; //W/m2-K
         dom.Particles[a]->T_inf 		= 20.;
 
         side_particles++;
@@ -312,9 +315,9 @@ int main(int argc, char **argv) try
   //dom.auto_ts=false;
 
   dom.auto_ts=false;
-  
+   
   //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,timestep,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.03,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
   //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
