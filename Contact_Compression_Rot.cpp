@@ -176,17 +176,17 @@ int main(){
   
 	cout << "Done."<<endl;
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
+	dom.gradKernelCorr = true; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
 			
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
     //IF JOHNSON COOK
-    dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
-    dom.Particles[a]->mat = &mat;
-    dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.0);    
+    // dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
+    // dom.Particles[a]->mat = &mat;
+    // dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.0);    
     //--ELSE IF BILINEAR
-    // dom.Particles[a]->Ep 			= Ep;//HARDENING
- 		// dom.Particles[a]->Sigmay	= Fy;
+    dom.Particles[a]->Ep 			= Ep;//HARDENING
+ 		dom.Particles[a]->Sigmay	= Fy;
     /////-----------------------------------
     
 		dom.Particles[a]->G		= G;

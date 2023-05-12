@@ -166,7 +166,7 @@ int main() try{
   
 	cout << "Done."<<endl; 
 	dom.ts_nb_inc = 5;
-	dom.gradKernelCorr = true;
+	dom.gradKernelCorr = false;
 	int top, bottom, center;
   top = bottom = center = 0;   
   int center_top = 0;			

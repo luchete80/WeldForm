@@ -139,7 +139,8 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  FSW_red
+  #FSW_red
+  Drilling
   #FSW_nastran
 	#Elastic
 	#Heat_2D
