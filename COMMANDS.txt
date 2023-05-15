@@ -1,7 +1,13 @@
-
+WINDOWS
 set PATH=%PATH%;D:\Luciano\Programas\mingw64\bin
 set SPH=D:/Luciano/Numerico/WeldForm
 set PKG=D:/Luciano/Numerico/Libs
+
+LINUX
+export PKG=/media/luciano/Datos/Luciano/Numerico/Libs-Linux
+export SPH=/media/luciano/Datos/Luciano/Numerico/WeldForm
+
+echo PATH=$PATH:/media/luciano/Datos/Luciano/Numerico/WeldForm
 
 locate GSL, HDF5-1.12.0, LAPACK-3.9.0 & BLITZ++ IN d:\LUCIANO\numerico\libs
 download and build blitz
