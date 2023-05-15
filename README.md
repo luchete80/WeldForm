@@ -29,8 +29,10 @@ Has been exclusively adapted to solid mechaincs, and it includes:
 We're going to need 4 libraries:
 1 - BLITZ++   --- VERSION 0.9!!! (NOT Current/Last version) 	https://github.com/luchete80/blitz-0.9-cmake.git
 2 - HDF5		
-3 - GSL											https://github.com/ampl/gsl/tags
+3 - GSL https://github.com/ampl/gsl/tags
 4 - LAPACK
+
+For each library compile and install in PKG dir, with -DCMAKE_INSTALL_PREFIX=$PKG/libxxx
 
 GCC Config (Working on Linux and MinGW):
 - 1 - Download precompiled libraries [here](https://drive.google.com/drive/folders/16FoY47D_TQOd_0Cb_1ltLr--S6OVOaSi?usp=sharing): 
