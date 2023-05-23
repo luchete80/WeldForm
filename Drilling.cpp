@@ -189,7 +189,7 @@ int main(int argc, char **argv) try
   SPH::NastranReader reader("mecha.nas");
   // //SPH::NastranReader reader("Tool.nas");
   
-  SPH::TriMesh mesh(reader);
+  SPH::TriMesh mesh(reader/*,true*/); //flip normals
   // SPH::TriMesh mesh2;//Only if bottom contact
   
   // //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
@@ -198,7 +198,7 @@ int main(int argc, char **argv) try
 	// cout << "Creating Spheres.."<<endl;
 	// //mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE, BEFORE ANY MOVE!
-  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 2.0*h)); //Original Z is zero : CRASH
+  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 3.0*h)); //Original Z is zero : CRASH
   	// for (int n=0;n<mesh.node.Size();n++){
 		// *mesh.node[n] += Vec3_t(0.0,0.0,2.0*Z_TIP - h);
 	// } 
@@ -309,8 +309,8 @@ int main(int argc, char **argv) try
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
 
-  dom.SolveDiffUpdateFraser(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
 }

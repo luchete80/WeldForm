@@ -242,13 +242,14 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     }
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-
+    
+    cout << "calculate contact " <<endl;
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
     if (contact) CalcContactForcesWang();
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
-
+    cout << "done ."<<endl;
     
     //14. Add contact
     // if (contact ){
@@ -284,7 +285,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     }
     //CorrectVelAcc();
     MoveGhost();   
-    
+
     GeneralAfter(*this);//Reinforce BC vel   
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
 
