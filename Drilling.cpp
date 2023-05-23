@@ -15,11 +15,16 @@ bool bottom_contact = false;
 #define TOOLRAD   0.0062
 #define SUPPRAD   0.01
 
+#define ANG_CORTE  20.0  //degrees
+#define Z_TIP     0.0015 //
+
+//drill bit points to z positive 
+
 double tout, dtout;
 
-ofstream ofprop("fsw_force.csv", std::ios::out);
+ofstream ofprop("drill_force.csv", std::ios::out);
 
-bool cf_cte = false;
+bool cf_cte = true;
 
 void UserAcc(SPH::Domain & domi) {
 	double vcompress;
@@ -75,10 +80,10 @@ int main(int argc, char **argv) try
   //dom.XSPH	= 0.1; //Very important
 
   double dx,h,rho,K,G,Cs,Fy;
-  double H,L,n;
+  double L,R, n;
 
-  H	= 0.003;
-  L	= 0.02;
+  L	= 0.002;
+  R = 0.004;
 
   n	= 30.0;		//in length, radius is same distance
 
@@ -96,7 +101,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.00014; //If dx = 0.0006 then 
+	dx = 0.0001;  
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -107,9 +112,9 @@ int main(int argc, char **argv) try
 ///// MATERIAL CONSTANTS EXAMPLE FROM
 ///// Zhang_2017 (Aluminium) ?
   double A,B,C,n_,m,T_m,T_t,eps_0;
-  A = 276.e6; B = 255.0e6; C = 0.0015;
-  m = 1.0;  n_ = 0.3; eps_0 = 1.0;
-  T_m = 582.; T_t = 0.;
+  A = 352.0e6; B = 440.0e6; C = 0.0083;
+  m = 1.0;  n_ = 0.42; eps_0 = 1.0;
+  T_m = 502.; T_t = 0.;
 			
   // 𝐴
   // 𝐽𝐶 276.0 MPa
@@ -144,26 +149,60 @@ int main(int argc, char **argv) try
 									// double r, double Density, double h, bool Fixed, bool symlength = false);
   
   //double ybottom = -H - 1.2 * dx;  /////LARGE PIN, Original Tool
-  double ybottom = -H - 0.7 * dx;  /////SMALL PIN, New Tool, IF dx = 0.0005; //If dx = 0.0006 then 
+  double ybottom = -L - 0.7 * dx;  /////SMALL PIN, New Tool, IF dx = 0.0005; //If dx = 0.0006 then 
   
   //double ybottom = -H +0.3*dx; //if dx = 0.0002
   
   //TODO: make gap adjustment automatic
   
-  double ytop = ybottom + H ; 
+  double ytop = ybottom + L ; 
   
-  //dom.AddBoxLength(0 ,Vec3_t ( -L/2.0-L/20.0 , ybottom, -L/2.0-L/20.0 ), L + L/10.0 + dx/10.0 , H ,  L + L/10., dx/2.0 ,rho, h, 1 , 0 , false, false );
-  dom.AddCylUniformLength(0., 0.0045, 0.003, dx/2.0, rho, h);
+  // void Domain::AddCylUniformLength(int tag, double Rxy, double Lz, 
+																				// double r, double Density, double h) {
+  //Rxy LZ
+  dom.AddCylUniformLength(0., R, L, dx/2.0, rho, h);
+  cout << "Created. "<<endl;
+  ///////////////////// DELETE MATERIAL 
+  double angle = ANG_CORTE * M_PI / 180.0;
+  
+  for (size_t i=0; i<dom.Particles.Size(); i++) {
+    double r = sqrt(pow(dom.Particles[i]->x(0), 2.0) + pow(dom.Particles[i]->x(1),2.0));
+    if (r < 0.00375){
 
-  SPH::NastranReader reader("tool_dens_0.3.nas");
-  //SPH::NastranReader reader("Tool.nas");
+      if (dom.Particles[i]->x(2) < Z_TIP - r*tan(angle)){
+        dom.Particles[i]->ID = 2;
+      }
+    } else {//radius
+      if (dom.Particles[i]->x(2) < Z_TIP - 0.00375 * tan(angle)){
+        dom.Particles[i]->ID = 2;
+      }
+    }
+  }
+  // MASS RECALC??
+  //PRINT TOTMASS
+  dom.DelParticles (2); //
+  
+  cout << "New mesh size: "<<dom.Particles.Size()<<endl;
+  dom.solid_part_count = dom.Particles.Size();
+  
+  
+  SPH::NastranReader reader("mecha.nas");
+  // //SPH::NastranReader reader("Tool.nas");
   
   SPH::TriMesh mesh(reader);
-  SPH::TriMesh mesh2;//Only if bottom contact
+  // SPH::TriMesh mesh2;//Only if bottom contact
   
-  //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
-  double cyl_zmax = L/2. + 5.0 * dx/*-1.e-3*/; //If new meshing  
-
+  // //double cyl_zmax = L/2. + 4.94e-4; //ORIGINAL
+  // double cyl_zmax = L/2. + 5.0 * dx/*-1.e-3*/; //If new meshing  
+  cout <<"Moving mesh"<<endl;
+	// cout << "Creating Spheres.."<<endl;
+	// //mesh.v = Vec3_t(0.,0.,);
+	mesh.CalcSpheres(); //DONE ONCE, BEFORE ANY MOVE!
+  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - h)); //Original Z is zero : CRASH
+  	// for (int n=0;n<mesh.node.Size();n++){
+		// *mesh.node[n] += Vec3_t(0.0,0.0,2.0*Z_TIP - h);
+	// } 
+  
 	cout << "Creating contact mesh.."<<endl;
 	
 	cout << "Plane z" << *mesh.node[0]<<endl;
@@ -171,22 +210,12 @@ int main(int argc, char **argv) try
   cout << "Mesh node size "<<mesh.node.Size()<<endl;
  
 	
-	
-	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
-	cout << "Creating Spheres.."<<endl;
-	//mesh.v = Vec3_t(0.,0.,);
-	mesh.CalcSpheres(); //DONE ONCE
+
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
 	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 
-  if (bottom_contact){
-    double Lbot=0.015;
-    mesh2.AxisPlaneMesh(1,true,Vec3_t(-Lbot/2.0 ,ybottom-dx/2.0, -Lbot/2.0),Vec3_t(Lbot,ybottom-dx/2.0,Lbot),30);
-    mesh2.CalcSpheres();
-    dom.AddTrimeshParticles(&mesh2, hfac, 11); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-  }    
-  
+ 
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = false;
   dom.nonlock_sum = true;
@@ -206,7 +235,7 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->Shepard	= false;
 			dom.Particles[a]->Material	= 2;
 			dom.Particles[a]->Fail		= 1;
-      //dom.Particles[a]->Sigmay	= Fy;
+
       dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			
       dom.Particles[a]->Alpha		= 1.0;
@@ -214,8 +243,8 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
       
-      dom.Particles[a]->k_T			  =	130.*VFAC;  //[W/(m.K)]
-			dom.Particles[a]->cp_T			=	960.;       //[J/(kg.K)]
+      dom.Particles[a]->k_T			  =	121.*VFAC;  //[W/(m.K)]
+			dom.Particles[a]->cp_T			=	875.;       //[J/(kg.K)]
 			// dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			// dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				  = 20.0;			
@@ -224,57 +253,23 @@ int main(int argc, char **argv) try
 			double y = dom.Particles[a]->x(1);
 			double z = dom.Particles[a]->x(2);
 			
-      double r = sqrt (x*x+z*z);      
-      if (/*r < TOOLRAD && */y < (ybottom +dx ) ){
+      double r = sqrt (x*x+y*y);      
+      if (r > R - dx ){
         dom.Particles[a]->ID=2; //ID 1 is free surface  
         dom.Particles[a]->not_write_surf_ID = true;
         bottom_particles++;
         
 
-        dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-        dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
-        dom.Particles[a]->T_inf 		= 20.;
-
+        // dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
+        // dom.Particles[a]->h_conv		= 1000.0 * VFAC; //W/m2-K
+        // dom.Particles[a]->T_inf 		= 20.;
       }
-      
-      ////// TOP
-      // if (r > SUPPRAD && y > ( ytop - dx ) ){
-        // dom.Particles[a]->ID=4; //ID 1 is free surface  
-        // dom.Particles[a]->not_write_surf_ID = true;
-        // top_particles++;
-      // }
-			
-			
-			//SIDES
-			if ( z < -L/2. -L/30/*+ dx */|| z > L/2. +L/25.0- dx){ 
-				dom.Particles[a]->ID=3;
-				dom.Particles[a]->not_write_surf_ID = true;
-   			dom.Particles[a]->IsFree=false;
-        
-        dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-        dom.Particles[a]->h_conv		= 5000.0 * VFAC; //W/m2-K
-        dom.Particles[a]->T_inf 		= 20.;
-        
-        side_particles++;
-			}
-			else if ( x < -L/2.-L/30/* + 2.*dx*/ || x > L/2. +L/25.0- dx){
-				dom.Particles[a]->ID=3;
-				dom.Particles[a]->not_write_surf_ID = true;
-        dom.Particles[a]->IsFree=false;
-
-        dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
-        dom.Particles[a]->h_conv		= 5000.0 * VFAC; //W/m2-K
-        dom.Particles[a]->T_inf 		= 20.;
-
-        side_particles++;
-			}			
+      	
 			         
 		}
     
   cout << "Bottom particles: " << bottom_particles << endl;
-  cout << "Top particles: " << top_particles << endl;
-  cout << "Side particles: " << side_particles<<endl;
-		
+
     // dom.Particles[0]->IsFree=false;
     // dom.Particles[0]->NoSlip=true;			
 	//Contact Penalty and Damping Factors
@@ -293,19 +288,18 @@ int main(int argc, char **argv) try
 	dom.PFAC = 0.6;
 	dom.DFAC = 0.0;
 	dom.update_contact_surface = false;
-
+  
+  cout << "Writing output "<<endl;
   dom.WriteXDMF("maz");
+  cout << "Done. "<<endl;
+
   dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   dom.BC.InOutFlow = 0;
   
   // SET TOOL BOUNDARY CONDITIONS
-  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,WROT*M_PI/30.*VFAC,0.));  //axis rotation m_w
-  dom.trimesh[0]->SetVel(Vec3_t(0.0,-VAVA * VFAC,0.));              //translation, m_v
+  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.0,WROT*M_PI/30.*VFAC));  //axis rotation m_w
+  dom.trimesh[0]->SetVel(Vec3_t(0.0,0.0,VAVA * VFAC));              //translation, m_v
   
-  if (bottom_contact)
-    dom.trimesh[1]->SetVel(Vec3_t(0.0,0.0,0.0));              //translation, m_v
-
-
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
   dom.thermal_solver = true;
   dom.cont_heat_gen = true;
@@ -314,13 +308,9 @@ int main(int argc, char **argv) try
   //dom.contact_hc      = 1000.*VFAC; 
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
-  //dom.auto_ts=false;
 
-  dom.auto_ts=false;
-   
-  //dom.SolveDiffUpdateFraser(/*tf*/0.4,/*dt*/timestep,timestep,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
+  // //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
 }
