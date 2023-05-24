@@ -236,7 +236,7 @@ inline void Domain::CalcContactForces(){
 
 	////////////////////////
 	// DEBUG THINGS //////
-	int inside_part[Particles.Size()];
+	std::vector<int> inside_part(Particles.Size());
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
@@ -266,7 +266,6 @@ inline void Domain::CalcContactForces(){
 	
 	int P1,P2;
   Vec3_t tgforce;
-  Vec3_t Qj[Particles.Size()]; //Things not allowed
   //Vec3_t vr[Particles.Size()];
   Vec3_t vr;
   double dt_fext;
@@ -588,7 +587,7 @@ inline void Domain::CalcContactForces2(){
 
 	////////////////////////
 	// DEBUG THINGS //////
-	int inside_part[Particles.Size()];
+	std::vector<int> inside_part(Particles.Size());
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
@@ -617,7 +616,7 @@ inline void Domain::CalcContactForces2(){
 	
 	int P1,P2;
   Vec3_t tgforce;
-  Vec3_t Qj[Particles.Size()]; //Things not allowed
+  
   //Vec3_t vr[Particles.Size()];
   Vec3_t vr;
   double dt_fext;
@@ -894,7 +893,7 @@ inline void Domain::CalcContactForcesAnalytic(){
 
 	////////////////////////
 	// DEBUG THINGS //////
-	int inside_part[Particles.Size()];
+	std::vector <int> inside_part(Particles.Size());
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
@@ -924,7 +923,7 @@ inline void Domain::CalcContactForcesAnalytic(){
 	
 	int P1,P2;
   Vec3_t tgforce;
-  Vec3_t Qj[Particles.Size()]; //Things not allowed
+
   //Vec3_t vr[Particles.Size()];
   Vec3_t vr;
   double dt_fext;
@@ -946,7 +945,7 @@ inline void Domain::CalcContactForcesAnalytic(){
   int stra_restr = 0; //restricted static
   #pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int p=0; p<Particles.Size(); p++) {
-		Vec3_t xij;
+		Vec3_t xij,qj;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
@@ -973,7 +972,7 @@ inline void Domain::CalcContactForcesAnalytic(){
         inside_time++;
         //cout << "Inside dt contact" <<endl;
         //Find point of contact Qj
-        Qj[p] = Particles[p]->x + (Particles[p]->v * deltat_cont) - ( Particles[p]->h * Particles[P2]->normal); //Fraser 3-146
+        qj = Particles[p]->x + (Particles[p]->v * deltat_cont) - ( Particles[p]->h * Particles[P2]->normal); //Fraser 3-146
         
         //Calculate penetration depth (Fraser 3-49)
         delta = (deltat - deltat_cont) * delta_;

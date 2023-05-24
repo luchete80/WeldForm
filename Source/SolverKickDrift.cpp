@@ -185,7 +185,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     // else        factor = 2.;
     clock_beg = clock();
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*deltat/2.*factor;
       //Particles[i]->LimitVel();
     }
@@ -197,7 +197,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     //If density is calculated AFTER displacements, it fails
     CalcDensInc(); //TODO: USE SAME KERNEL?
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
       Particles[i]->Density += deltat*Particles[i]->dDensity*factor;
     }    
@@ -207,7 +207,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     
     clock_beg = clock();   
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       Particles[i]->x_prev = Particles[i]->x;
       du = (Particles[i]->v + Particles[i]->VXSPH)*deltat*factor;
       Particles[i]->Displacement += du;
@@ -215,7 +215,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     }
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a*deltat/2.*factor;
       //Particles[i]->LimitVel();
     }
@@ -229,7 +229,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     //RateTensorsReduction();
     #endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     } 

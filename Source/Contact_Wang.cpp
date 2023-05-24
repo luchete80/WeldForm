@@ -19,7 +19,7 @@ inline void Domain::CalcContactForcesWang(){
 
 	////////////////////////
 	// DEBUG THINGS //////
-	int inside_part[Particles.Size()];
+	std::vector <int> inside_part(Particles.Size());
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
