@@ -208,7 +208,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       DensReduction();
     //#endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
       Particles[i]->Density += deltat*Particles[i]->dDensity;
     }    
@@ -223,7 +223,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     RateTensorsReduction();
     //#endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     } 
@@ -270,7 +270,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //CorrectVelAcc();
     MoveGhost(); 
    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       Particles[i]->x_prev = Particles[i]->x;
       du = (Particles[i]->v + Particles[i]->VXSPH)*deltat + 0.5 * Particles[i]->a *deltat*deltat;
       Particles[i]->Displacement += du;
@@ -285,7 +285,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     clock_beg = clock();
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a * deltat;
     }
     //CorrectVelAcc();
@@ -295,7 +295,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++)
+    for (int i=0; i<Particles.Size(); i++)
       prev_acc[i] = Particles[i]->a;
 
 		CalcPlasticWorkHeat(deltat);   //Before Thermal increment because it is used
