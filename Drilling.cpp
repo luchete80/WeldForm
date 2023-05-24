@@ -8,15 +8,15 @@
 
 bool bottom_contact = false;
 
-#define VFAC			30.0
+#define VFAC			10.0 
 //#define VAVA			5.833e-4		//35 mm/min
-#define VAVA			1.e-3		//35 mm/min
-#define WROT 			1200.0 	    //rpm
+#define VAVA			14.0e-3		//35 mm/min
+#define WROT 			3600.0 	    //rpm
 #define TOOLRAD   0.0062
 #define SUPPRAD   0.01
 
-#define ANG_CORTE  20.0  //degrees
-#define Z_TIP     0.0015 //
+#define ANG_CORTE  15.0  //degrees
+#define Z_TIP     0.0010 //
 
 //drill bit points to z positive 
 
@@ -198,7 +198,7 @@ int main(int argc, char **argv) try
 	// cout << "Creating Spheres.."<<endl;
 	// //mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE, BEFORE ANY MOVE!
-  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 3.0*h)); //Original Z is zero : CRASH
+  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 1.925 *h)); //Original Z is zero : CRASH
   	// for (int n=0;n<mesh.node.Size();n++){
 		// *mesh.node[n] += Vec3_t(0.0,0.0,2.0*Z_TIP - h);
 	// } 

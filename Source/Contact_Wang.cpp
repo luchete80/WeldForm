@@ -87,7 +87,7 @@ inline void Domain::CalcContactForcesWang(){
   Vec3_t x_pred, vr_pred;
   Vec3_t ref_tg;
   double dS2;
-  cout << "main loop "<<endl;
+
 	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, abs_fv, x_pred, imp_force, fr_sta, fr_dyn, ref_tg, vr_pred, du, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgforce_dyn,tgvr,norm_tgvr,tgdir,atg, dS2) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__

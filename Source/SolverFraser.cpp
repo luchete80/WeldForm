@@ -243,13 +243,11 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     
-    cout << "calculate contact " <<endl;
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
     if (contact) CalcContactForcesWang();
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
-    cout << "done ."<<endl;
     
     //14. Add contact
     // if (contact ){
@@ -352,6 +350,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       double acc_time_spent_perc = acc_time_spent/total_time.count();
       std::cout << std::setprecision(2);
       cout << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
+      float step_per_sec = steps/total_time.count();
+      float rem_steps = (tf - Time)/deltat;
+      cout << "Step Count: "<<steps<<", Estimated remaining solve time: "<<(rem_steps/step_per_sec)/3600.0<<" hours "<<endl;
       cout << "Density: "<<dens_time_spent/total_time.count()<<"%,  ";
       cout << "Stress: "  <<stress_time_spent/total_time.count()<<"%,  "<<endl;
       cout << "Energy: "  <<energy_time_spent/total_time.count()<<"%,  ";
