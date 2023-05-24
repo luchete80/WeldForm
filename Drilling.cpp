@@ -69,6 +69,10 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
+  
+
+    
+    
   SPH::Domain	dom;
 
   dom.Dimension	= 3;
@@ -76,7 +80,13 @@ int main(int argc, char **argv) try
   dom.Kernel_Set(Qubic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
   //dom.XSPH	= 0.1; //Very important
-
+  if (argc > 1) {
+    string input=argv[1];	
+    int proc = atoi(input.c_str());
+    dom.Nproc	= proc;
+  }
+  
+  cout << "Threads "<<dom.Nproc	<<endl;
   double dx,h,rho,K,G,Cs,Fy;
   double L,R, n;
 
@@ -307,8 +317,8 @@ int main(int argc, char **argv) try
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
 
-  //dom.SolveDiffUpdateFraser(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.005,/*dt*/timestep,/*dtOut*/1.e-5  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/40.*timestep  ,"test06",1000);
     
   return 0;
 }

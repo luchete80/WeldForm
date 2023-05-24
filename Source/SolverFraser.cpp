@@ -19,9 +19,11 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 	clock_t clock_beg;
   double clock_time_spent,start_acc_time_spent, nb_time_spent ,pr_acc_time_spent,acc_time_spent, 
           contact_time_spent, trimesh_time_spent, bc_time_spent,
-          mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent, thermal_time_spent;
+          mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent, thermal_time_spent,
+          ini_time_spent;
           
-  clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = mov_time_spent = thermal_time_spent = 0.;	
+  clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = mov_time_spent = thermal_time_spent =
+  ini_time_spent = 0.;	
 
 	InitialChecks();
 	CellInitiate();
@@ -105,6 +107,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   cout << std::setprecision(3)<< "Total allocated memory: " <<sizeof(Particle) * Particles.Size() * 1.0e-6 << " MB. "<<endl;
   
   while (Time<=tf && idx_out<=maxidx) {
+    
+    clock_beg = clock();
   
 		StartAcceleration(0.);
 
@@ -139,6 +143,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     }
     else 
       check_nb_every_time = false;
+    
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
@@ -148,10 +153,12 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
 		}
+    
+    ini_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
-
+        
 				if (m_isNbDataCleared){
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
@@ -360,6 +367,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       cout << "Contact: " <<contact_time_spent/total_time.count()*100<<"%,  ";
       cout << "Nb: "      <<nb_time_spent/total_time.count()*100<<"%,  ";
       cout << "Update: " <<mov_time_spent/total_time.count()*100<<"%,  ";
+      cout << "Initial calcs: "<<ini_time_spent/total_time.count()*100<<"%,  ";
+      
       cout <<endl;
       
 			std::cout << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;
