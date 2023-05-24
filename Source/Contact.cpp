@@ -294,7 +294,7 @@ inline void Domain::CalcContactForces(){
 	for (int k=0; k<Nproc;k++) 
 	#endif	
 	{
-		Vec3_t xij;
+		Vec3_t xij, qj;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
