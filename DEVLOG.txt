@@ -426,8 +426,7 @@
 20230511 - Found 2 critical errors in gradient correction. 
            Contact force was wrong (about double)
            matrix m() is not updated. (See call Domain::CalcGradCorrMatrix in Fraser solver)
-<<<<<<< HEAD
-
-=======
 20230522 - Fixed merge errors
->>>>>>> test2
+         - Fixed error which affects drilling contact (qj vector assingment, now is dynamic)
+         - Added estimated solved size
+

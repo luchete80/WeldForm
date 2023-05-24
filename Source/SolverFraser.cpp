@@ -19,9 +19,11 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 	clock_t clock_beg;
   double clock_time_spent,start_acc_time_spent, nb_time_spent ,pr_acc_time_spent,acc_time_spent, 
           contact_time_spent, trimesh_time_spent, bc_time_spent,
-          mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent;
+          mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent, thermal_time_spent,
+          ini_time_spent;
           
-  clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = mov_time_spent = 0.;	
+  clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = mov_time_spent = thermal_time_spent =
+  ini_time_spent = 0.;	
 
 	InitialChecks();
 	CellInitiate();
@@ -105,6 +107,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   cout << std::setprecision(3)<< "Total allocated memory: " <<sizeof(Particle) * Particles.Size() * 1.0e-6 << " MB. "<<endl;
   
   while (Time<=tf && idx_out<=maxidx) {
+    
+    clock_beg = clock();
   
 		StartAcceleration(0.);
 
@@ -139,6 +143,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     }
     else 
       check_nb_every_time = false;
+    
 		
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
@@ -148,10 +153,12 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
 		}
+    
+    ini_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
-
+        
 				if (m_isNbDataCleared){
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
@@ -201,7 +208,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       DensReduction();
     //#endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
       Particles[i]->Density += deltat*Particles[i]->dDensity;
     }    
@@ -216,7 +223,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     RateTensorsReduction();
     //#endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     } 
@@ -243,13 +250,11 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     
-    cout << "calculate contact " <<endl;
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
     if (contact) CalcContactForcesWang();
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
-    cout << "done ."<<endl;
     
     //14. Add contact
     // if (contact ){
@@ -265,7 +270,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //CorrectVelAcc();
     MoveGhost(); 
    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       Particles[i]->x_prev = Particles[i]->x;
       du = (Particles[i]->v + Particles[i]->VXSPH)*deltat + 0.5 * Particles[i]->a *deltat*deltat;
       Particles[i]->Displacement += du;
@@ -280,7 +285,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     clock_beg = clock();
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++){
+    for (int i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a * deltat;
     }
     //CorrectVelAcc();
@@ -290,11 +295,13 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<Particles.Size(); i++)
+    for (int i=0; i<Particles.Size(); i++)
       prev_acc[i] = Particles[i]->a;
 
 		CalcPlasticWorkHeat(deltat);   //Before Thermal increment because it is used
     ThermalCalcs(deltat);
+    
+    thermal_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
 		clock_beg = clock();        
     CalcKinEnergyEqn();    
@@ -349,15 +356,19 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			tout += dtOut;
 			total_time = std::chrono::steady_clock::now() - start_whole;		
 			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
+      float step_per_sec = steps/total_time.count();
+      float rem_steps = (tf - Time)/deltat;
+      cout << "Step Count: "<<steps<<", Estimated remaining solve time: "<<(rem_steps/step_per_sec)/3600.0<<" hours "<<endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
       std::cout << std::setprecision(2);
-      cout << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
-      cout << "Density: "<<dens_time_spent/total_time.count()<<"%,  ";
-      cout << "Stress: "  <<stress_time_spent/total_time.count()<<"%,  "<<endl;
-      cout << "Energy: "  <<energy_time_spent/total_time.count()<<"%,  ";
-      cout << "Contact: " <<contact_time_spent/total_time.count()<<"%,  ";
-      cout << "Nb: "      <<nb_time_spent/total_time.count()<<"%,  ";
-      cout << "Update: " <<mov_time_spent/total_time.count()<<"%,  ";
+      cout << "Calculation Times\nAccel: "<<acc_time_spent_perc*100<<"%,  "<< "Density: "<<dens_time_spent/total_time.count()*100<<"%,  ";
+      cout << "Stress: "  <<stress_time_spent/total_time.count()*100<<"%,  Thermal "<<thermal_time_spent/total_time.count()*100<<"% "<<endl;
+      cout << "Energy: "  <<energy_time_spent/total_time.count()*100<<"%,  ";
+      cout << "Contact: " <<contact_time_spent/total_time.count()*100<<"%,  ";
+      cout << "Nb: "      <<nb_time_spent/total_time.count()*100<<"%,  ";
+      cout << "Update: " <<mov_time_spent/total_time.count()*100<<"%,  ";
+      cout << "Initial calcs: "<<ini_time_spent/total_time.count()*100<<"%,  ";
+      
       cout <<endl;
       
 			std::cout << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;

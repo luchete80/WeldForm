@@ -56,7 +56,7 @@ inline void Domain::CalcTempInc () {
 	std::vector < double> temp(Particles.Size());
 	
 	#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
-	for ( size_t k = 0; k < Nproc ; k++) {
+	for ( int k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
 		Vec3_t xij;
 		double h,GK;
@@ -174,7 +174,7 @@ inline void Domain::CalcTempIncSOA () {
 	
 	//cout << "calc temp inc"<<endl;
 	#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
-	for ( size_t k = 0; k < Nproc ; k++) {
+	for ( int k = 0; k < Nproc ; k++) {
 		int P1,P2;
 		Vec3_t xij;
 		double h,GK;
@@ -392,7 +392,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		double max=0,min=1000.; 
     
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-		for (size_t i=0; i<Particles.Size(); i++){
+		for (int i=0; i<Particles.Size(); i++){
 			Particles[i]->T+= dt*Particles[i]->dTdt;
 			//Particles[i]->TempCalcLeapfrog(dt);
 			//*m_T[i]+= (*m_dTdt[i])*dt;
@@ -463,7 +463,7 @@ inline void Domain::ThermalCalcs(const double &dt){
     m_minT =1000.; 
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)    
-    for (size_t i=0; i < solid_part_count; i++){
+    for (int i=0; i < solid_part_count; i++){
 			Particles[i]->T += dt*Particles[i]->dTdt;
 			//Particles[i]->TempCalcLeapfrog(dt);
 			if (Particles[i]->T > m_maxT)
@@ -478,7 +478,7 @@ inline void Domain::ThermalCalcs(const double &dt){
   
     if (contact && cont_heat_cond){
       #pragma omp parallel for schedule (static) num_threads(Nproc)    
-      for (size_t i = solid_part_count; i < Particles.Size(); i++){
+      for (int i = solid_part_count; i < Particles.Size(); i++){
         Particles[i]->T += tot_cont_heat_cond[Particles[i]->mesh] / Particles[i]->mcp_t * deltat;
       }
     }

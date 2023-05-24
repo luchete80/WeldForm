@@ -197,7 +197,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     if (isfirst)  dt = deltat/2.0;
     else          dt = deltat;
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<first_fem_particle_idx[0]; i++){
+    for (int i=0; i<first_fem_particle_idx[0]; i++){
       Particles[i]->v += Particles[i]->a*dt;
       //Particles[i]->LimitVel();
     }
@@ -215,7 +215,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     #endif
 
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<first_fem_particle_idx[0]; i++){
+    for (int i=0; i<first_fem_particle_idx[0]; i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
       Particles[i]->Density += deltat*Particles[i]->dDensity*factor;
     }    
@@ -225,7 +225,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     
     clock_beg = clock();   
     #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
-    for (size_t i=0; i<first_fem_particle_idx[0]; i++){
+    for (int i=0; i<first_fem_particle_idx[0]; i++){
       Particles[i]->x_prev = Particles[i]->x;
       du = (Particles[i]->v + Particles[i]->VXSPH)*deltat*factor;
       Particles[i]->Displacement += du;
@@ -242,7 +242,7 @@ inline void Domain::SolveDiffUpdateLeapfrog (double tf, double dt, double dtOut,
     RateTensorsReduction();
     #endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (size_t i=0; i<first_fem_particle_idx[0]; i++){
+    for (int i=0; i<first_fem_particle_idx[0]; i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     } 

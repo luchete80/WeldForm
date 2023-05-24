@@ -19,11 +19,11 @@ inline void Domain::CalcContactForcesWang(){
 
 	////////////////////////
 	// DEBUG THINGS //////
-	int inside_part[Particles.Size()];
+	std::vector <int> inside_part(Particles.Size());
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
-	
+
   #pragma omp parallel for num_threads(Nproc)
   for (int i = 0;i<Particles.Size();i++){
 		//omp_set_lock(&Particles[i]->my_lock);
@@ -38,7 +38,7 @@ inline void Domain::CalcContactForcesWang(){
     Particles[i] -> q_cont_conv = 0.;
     Particles[i] -> friction_hfl = 0.;
   }
- 
+
   for (int m=0;m<meshcount;m++) tot_cont_heat_cond[m] = 0.;
   
   
@@ -55,8 +55,7 @@ inline void Domain::CalcContactForcesWang(){
 	int P1,P2;
   Vec3_t tgforce, tgforce_dyn;
   Vec3_t imp_force;
-  Vec3_t Qj[Particles.Size()]; //Things not allowed
-  //Vec3_t vr[Particles.Size()];
+
   Vec3_t vr;
   double dt_fext;
   Element* e;
@@ -88,6 +87,7 @@ inline void Domain::CalcContactForcesWang(){
   Vec3_t x_pred, vr_pred;
   Vec3_t ref_tg;
   double dS2;
+
 	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, abs_fv, x_pred, imp_force, fr_sta, fr_dyn, ref_tg, vr_pred, du, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgforce_dyn,tgvr,norm_tgvr,tgdir,atg, dS2) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
@@ -96,7 +96,7 @@ inline void Domain::CalcContactForcesWang(){
 	for (int k=0; k<Nproc;k++) 
 	#endif	
 	{
-		Vec3_t xij;
+		Vec3_t xij, qj;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
@@ -143,7 +143,7 @@ inline void Domain::CalcContactForcesWang(){
         //cout << "dist "<<dist<<", h "<<Particles[P1]->h<<endl;
         if( dist  < Particles[P1]->h) {
 
-          Qj[P1] = Particles[P1]->x - dist * Particles[P2]->normal;
+          qj = Particles[P1]->x - dist * Particles[P2]->normal;
                                  //Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
@@ -154,7 +154,7 @@ inline void Domain::CalcContactForcesWang(){
               j = i+1;	if (j>2) j = 0;
               crit = dot (cross ( *trimesh[m]->node[e -> node[j]] 
                                           - *trimesh[m]->node[e -> node[i]],
-                                          Qj[P1]  - *trimesh[m]->node[e -> node[i]]),
+                                          qj  - *trimesh[m]->node[e -> node[i]]),
                                 Particles[P2]->normal);
               if (crit < 0.0) inside = false;
               i++;
@@ -165,7 +165,7 @@ inline void Domain::CalcContactForcesWang(){
               j = i+1;	if (j>1) j = 0;
               crit = dot ( *trimesh[m]->node[e -> node[j]] 
                                           - *trimesh[m]->node[e -> node[i]],
-                                          Qj[P1]  - *trimesh[m]->node[e -> node[i]]);
+                                          qj  - *trimesh[m]->node[e -> node[i]]);
               if (crit < 0.0) inside = false;
               i++;
             }

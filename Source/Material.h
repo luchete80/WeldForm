@@ -23,12 +23,12 @@ class Material_{
 	public:
 	Material_(){}
 	Material_(const Elastic_ el):elastic_m(el){}
-	virtual inline double CalcTangentModulus(){};
-	virtual inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp){};
-	virtual inline double CalcTangentModulus(const double &strain){};
-	virtual inline double CalcYieldStress();
-	virtual inline double CalcYieldStress(const double &strain);
-	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){}
+	virtual inline double CalcTangentModulus(){return 0.0;};
+	virtual inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp){return 0.0;};
+	virtual inline double CalcTangentModulus(const double &strain){return 0.0;};
+	virtual inline double CalcYieldStress(){return 0.0;}
+	virtual inline double CalcYieldStress(const double &strain){return 0.0;};
+	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){return 0.0;}
 	const Elastic_& Elastic()const{return elastic_m;}
   //~Material_();
 };
@@ -59,8 +59,16 @@ public Material_{
 	Material_(el),A(a),B(b),C(c),
   m(m_),n(n_),eps_0(eps_0_),T_m(T_m_),T_t(T_t_)
   {}
-	inline double CalcYieldStress(){}	
-	inline double CalcYieldStress(const double &strain){}	
+	inline double CalcYieldStress(){return 0.0;}	
+	inline double CalcYieldStress(const double &plstrain){
+     double Et =0.;
+
+    if (plstrain > 0.)
+      Et = n * B * pow(plstrain,n-1.);
+    else 
+      Et = Elastic().E()*0.1; //ARBITRARY! TODO: CHECK MATHEMATICALLY
+    return Et;
+  } //TODO: SEE IF INCLUDE	
 	inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp);	
 	inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp);
   //~JohnsonCook(){}
@@ -84,7 +92,7 @@ public Material_{
 	Hollomon(const Elastic_ &el, const double sy0_, const double &k_, const double &m_);
   
 	inline double CalcTangentModulus(const double &strain);
-	inline double CalcYieldStress(){}	
+	inline double CalcYieldStress(){return 0.0;}	
 	inline double CalcYieldStress(const double &strain);	
 };
 

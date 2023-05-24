@@ -236,7 +236,7 @@ inline void Domain::CalcContactForces(){
 
 	////////////////////////
 	// DEBUG THINGS //////
-	int inside_part[Particles.Size()];
+	std::vector<int> inside_part(Particles.Size());
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
@@ -266,7 +266,6 @@ inline void Domain::CalcContactForces(){
 	
 	int P1,P2;
   Vec3_t tgforce;
-  Vec3_t Qj[Particles.Size()]; //Things not allowed
   //Vec3_t vr[Particles.Size()];
   Vec3_t vr;
   double dt_fext;
@@ -294,7 +293,7 @@ inline void Domain::CalcContactForces(){
 	for (int k=0; k<Nproc;k++) 
 	#endif	
 	{
-		Vec3_t xij;
+		Vec3_t xij, qj;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
@@ -353,7 +352,7 @@ inline void Domain::CalcContactForces(){
 					inside_time++;
 					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
-					Qj[P1] = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
+					qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
 					//Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
@@ -364,7 +363,7 @@ inline void Domain::CalcContactForces(){
 						j = i+1;	if (j>2) j = 0;
 						crit = dot (cross ( *trimesh[m]->node[e -> node[j]] 
                                         - *trimesh[m]->node[e -> node[i]],
-                                        Qj[P1]  - *trimesh[m]->node[e -> node[i]]),
+                                        qj  - *trimesh[m]->node[e -> node[i]]),
 															Particles[P2]->normal);
 						if (crit < 0.0) inside = false;
 						i++;
@@ -375,7 +374,7 @@ inline void Domain::CalcContactForces(){
               j = i+1;	if (j>1) j = 0;
               crit = dot ( *trimesh[m]->node[e -> node[j]] 
                                           - *trimesh[m]->node[e -> node[i]],
-                                          Qj[P1]  - *trimesh[m]->node[e -> node[i]]);
+                                          qj  - *trimesh[m]->node[e -> node[i]]);
               if (crit < 0.0) inside = false;
               i++;
             }
@@ -588,7 +587,7 @@ inline void Domain::CalcContactForces2(){
 
 	////////////////////////
 	// DEBUG THINGS //////
-	int inside_part[Particles.Size()];
+	std::vector<int> inside_part(Particles.Size());
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
@@ -617,7 +616,7 @@ inline void Domain::CalcContactForces2(){
 	
 	int P1,P2;
   Vec3_t tgforce;
-  Vec3_t Qj[Particles.Size()]; //Things not allowed
+  
   //Vec3_t vr[Particles.Size()];
   Vec3_t vr;
   double dt_fext;
@@ -653,6 +652,7 @@ inline void Domain::CalcContactForces2(){
 	#endif	
 	{
 		Vec3_t xij;
+    Vec3_t qj;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
@@ -695,7 +695,7 @@ inline void Domain::CalcContactForces2(){
         dist =  dot (Particles[P2]->normal, Particles[P1]->x ) - trimesh[m]-> element[Particles[P2]->element] -> pplane;
         if( dist  < Particles[P1]->h) {
 
-          Qj[P1] = Particles[P1]->x - dist * Particles[P2]->normal;
+          qj = Particles[P1]->x - dist * Particles[P2]->normal;
                                  //Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
@@ -705,7 +705,7 @@ inline void Domain::CalcContactForces2(){
 						j = i+1;	if (j>2) j = 0;
 						crit = dot (cross ( *trimesh[m]->node[e -> node[j]] 
                                         - *trimesh[m]->node[e -> node[i]],
-                                        Qj[P1]  - *trimesh[m]->node[e -> node[i]]),
+                                        qj  - *trimesh[m]->node[e -> node[i]]),
 															Particles[P2]->normal);
 						if (crit < 0.0) inside = false;
 						i++;
@@ -893,7 +893,7 @@ inline void Domain::CalcContactForcesAnalytic(){
 
 	////////////////////////
 	// DEBUG THINGS //////
-	int inside_part[Particles.Size()];
+	std::vector <int> inside_part(Particles.Size());
 	double min_delta,max_delta;
 	min_delta = 1000.; max_delta = 0.;
 	int inside_time,inside_geom;
@@ -923,7 +923,7 @@ inline void Domain::CalcContactForcesAnalytic(){
 	
 	int P1,P2;
   Vec3_t tgforce;
-  Vec3_t Qj[Particles.Size()]; //Things not allowed
+
   //Vec3_t vr[Particles.Size()];
   Vec3_t vr;
   double dt_fext;
@@ -945,7 +945,7 @@ inline void Domain::CalcContactForcesAnalytic(){
   int stra_restr = 0; //restricted static
   #pragma omp parallel for schedule (static) num_threads(Nproc)
   for (int p=0; p<Particles.Size(); p++) {
-		Vec3_t xij;
+		Vec3_t xij,qj;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
@@ -972,7 +972,7 @@ inline void Domain::CalcContactForcesAnalytic(){
         inside_time++;
         //cout << "Inside dt contact" <<endl;
         //Find point of contact Qj
-        Qj[p] = Particles[p]->x + (Particles[p]->v * deltat_cont) - ( Particles[p]->h * Particles[P2]->normal); //Fraser 3-146
+        qj = Particles[p]->x + (Particles[p]->v * deltat_cont) - ( Particles[p]->h * Particles[P2]->normal); //Fraser 3-146
         
         //Calculate penetration depth (Fraser 3-49)
         delta = (deltat - deltat_cont) * delta_;

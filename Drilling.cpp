@@ -8,15 +8,13 @@
 
 bool bottom_contact = false;
 
-#define VFAC			30.0
+#define VFAC			10.0 
 //#define VAVA			5.833e-4		//35 mm/min
-#define VAVA			1.e-3		//35 mm/min
-#define WROT 			1200.0 	    //rpm
-#define TOOLRAD   0.0062
-#define SUPPRAD   0.01
+#define VAVA			14.0e-3		//35 mm/min
+#define WROT 			3600.0 	    //rpm
 
-#define ANG_CORTE  20.0  //degrees
-#define Z_TIP     0.0015 //
+#define ANG_CORTE  15.0  //degrees
+#define Z_TIP     0.0010 //
 
 //drill bit points to z positive 
 
@@ -71,6 +69,10 @@ using std::endl;
 
 int main(int argc, char **argv) try
 {
+  
+
+    
+    
   SPH::Domain	dom;
 
   dom.Dimension	= 3;
@@ -78,7 +80,13 @@ int main(int argc, char **argv) try
   dom.Kernel_Set(Qubic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
   //dom.XSPH	= 0.1; //Very important
-
+  if (argc > 1) {
+    string input=argv[1];	
+    int proc = atoi(input.c_str());
+    dom.Nproc	= proc;
+  }
+  
+  cout << "Threads "<<dom.Nproc	<<endl;
   double dx,h,rho,K,G,Cs,Fy;
   double L,R, n;
 
@@ -198,7 +206,7 @@ int main(int argc, char **argv) try
 	// cout << "Creating Spheres.."<<endl;
 	// //mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE, BEFORE ANY MOVE!
-  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 3.0*h)); //Original Z is zero : CRASH
+  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 1.925 *h)); //Original Z is zero : CRASH
   	// for (int n=0;n<mesh.node.Size();n++){
 		// *mesh.node[n] += Vec3_t(0.0,0.0,2.0*Z_TIP - h);
 	// } 
@@ -309,8 +317,8 @@ int main(int argc, char **argv) try
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
 
-  //dom.SolveDiffUpdateFraser(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-4  ,"test06",1000);
-  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.005,/*dt*/timestep,/*dtOut*/1.e-5  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/40.*timestep  ,"test06",1000);
     
   return 0;
 }
