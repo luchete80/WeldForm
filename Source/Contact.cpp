@@ -353,7 +353,7 @@ inline void Domain::CalcContactForces(){
 					inside_time++;
 					//cout << "Inside dt contact" <<endl;
 					//Find point of contact Qj
-					Qj[P1] = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
+					qj = Particles[P1]->x + (Particles[P1]->v * deltat_cont) - ( Particles[P1]->h * Particles[P2]->normal); //Fraser 3-146
 					//Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
@@ -364,7 +364,7 @@ inline void Domain::CalcContactForces(){
 						j = i+1;	if (j>2) j = 0;
 						crit = dot (cross ( *trimesh[m]->node[e -> node[j]] 
                                         - *trimesh[m]->node[e -> node[i]],
-                                        Qj[P1]  - *trimesh[m]->node[e -> node[i]]),
+                                        qj  - *trimesh[m]->node[e -> node[i]]),
 															Particles[P2]->normal);
 						if (crit < 0.0) inside = false;
 						i++;
@@ -375,7 +375,7 @@ inline void Domain::CalcContactForces(){
               j = i+1;	if (j>1) j = 0;
               crit = dot ( *trimesh[m]->node[e -> node[j]] 
                                           - *trimesh[m]->node[e -> node[i]],
-                                          Qj[P1]  - *trimesh[m]->node[e -> node[i]]);
+                                          qj  - *trimesh[m]->node[e -> node[i]]);
               if (crit < 0.0) inside = false;
               i++;
             }
@@ -653,6 +653,7 @@ inline void Domain::CalcContactForces2(){
 	#endif	
 	{
 		Vec3_t xij;
+    Vec3_t qj;
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
@@ -695,7 +696,7 @@ inline void Domain::CalcContactForces2(){
         dist =  dot (Particles[P2]->normal, Particles[P1]->x ) - trimesh[m]-> element[Particles[P2]->element] -> pplane;
         if( dist  < Particles[P1]->h) {
 
-          Qj[P1] = Particles[P1]->x - dist * Particles[P2]->normal;
+          qj = Particles[P1]->x - dist * Particles[P2]->normal;
                                  //Check if it is inside triangular element
 					//Find a vector 
 					//Fraser 3-147
@@ -705,7 +706,7 @@ inline void Domain::CalcContactForces2(){
 						j = i+1;	if (j>2) j = 0;
 						crit = dot (cross ( *trimesh[m]->node[e -> node[j]] 
                                         - *trimesh[m]->node[e -> node[i]],
-                                        Qj[P1]  - *trimesh[m]->node[e -> node[i]]),
+                                        qj  - *trimesh[m]->node[e -> node[i]]),
 															Particles[P2]->normal);
 						if (crit < 0.0) inside = false;
 						i++;

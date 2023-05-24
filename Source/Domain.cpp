@@ -839,7 +839,7 @@ void Domain::AddFixedMassScaling(const double &factor){
 //////////////////////////////////////
 // HERE PARTICLE DISTRIBUTION IS RADIAL (DIFFERENT FROM PREVIOUS )
 void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz, 
-																				double r, double Density, double h, bool Fixed, bool symlength = false) {
+																				double r, double Density, double h, bool Fixed, bool symlength) {
 	//Util::Stopwatch stopwatch;
 	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
 
@@ -1858,8 +1858,8 @@ inline void Domain::CalcGradCorrMixedMatrix () {
 	//cout << "Applying grad corr"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
   const int pcount = Particles.Size();
-  double sumden[pcount];
-  Vec3_t gamma [pcount];
+  std::vector<double> sumden(pcount);
+  std::vector<Vec3_t> gamma (pcount);
   
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
@@ -2393,7 +2393,7 @@ inline void Domain::UpdateSmoothingLength(){
   double sum;
   double d;
   #pragma omp parallel for schedule (static) private (min, d, max, sum) num_threads(Nproc)
-  for (size_t i=0; i<Particles.Size(); i++){
+  for (int i=0; i<Particles.Size(); i++){
     min = 1000.;
     sum = 0.;
     if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
