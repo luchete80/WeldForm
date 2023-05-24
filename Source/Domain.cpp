@@ -690,7 +690,7 @@ inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, dou
 	
 	//// GHOST THING
 
-	int ghost_rows = 3; 
+  const int ghost_rows = 3; 
 
 	int xy_ghost_part_count[ghost_rows];
 	//cout << "X/Y Particles: " << numpartxy<<endl;
@@ -1857,8 +1857,9 @@ inline void Domain::CalcGradCorrMixedMatrix () {
 	
 	//cout << "Applying grad corr"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
-  double sumden[Particles.Size()];
-  Vec3_t gamma [Particles.Size()];
+  const int pcount = Particles.Size();
+  double sumden[pcount];
+  Vec3_t gamma [pcount];
   
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
