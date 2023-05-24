@@ -178,8 +178,8 @@ int main(int argc, char **argv) try
       }
     }
   }
-  // MASS RECALC??
-  //PRINT TOTMASS
+  // // // MASS RECALC??
+  // // //PRINT TOTMASS
   dom.DelParticles (2); //
   
   cout << "New mesh size: "<<dom.Particles.Size()<<endl;
