@@ -12,8 +12,6 @@ bool bottom_contact = false;
 //#define VAVA			5.833e-4		//35 mm/min
 #define VAVA			14.0e-3		//35 mm/min
 #define WROT 			3600.0 	    //rpm
-#define TOOLRAD   0.0062
-#define SUPPRAD   0.01
 
 #define ANG_CORTE  15.0  //degrees
 #define Z_TIP     0.0010 //
