@@ -13,11 +13,12 @@ bool bottom_contact = false;
 #define VAVA			14.0e-3		//35 mm/min
 #define WROT 			3600.0 	    //rpm
 
-#define ANG_CORTE   15.0  //degrees
-#define Z_TIP       0.0010 //
+#define ANG_CORTE   10.0  //degrees
+#define Z_TIP       0.001 //
 #define TAU         0.005 //
 
-#define  DTOUT       1.0e-5 //WITHOUT VFAC
+#define   TTOT       2.0e-2
+#define  DTOUT       1.0e-4 //WITHOUT VFAC
 //drill bit points to z positive 
 
 double tout, dtout;
@@ -219,7 +220,7 @@ int main(int argc, char **argv) try
 	// cout << "Creating Spheres.."<<endl;
 	// //mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE, BEFORE ANY MOVE!
-  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 1.8 *h)); //Original Z is zero : CRASH
+  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 1.1 *h)); //Original Z is zero : CRASH
   	// for (int n=0;n<mesh.node.Size();n++){
 		// *mesh.node[n] += Vec3_t(0.0,0.0,2.0*Z_TIP - h);
 	// } 
@@ -330,7 +331,7 @@ int main(int argc, char **argv) try
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
 
-  dom.SolveDiffUpdateFraser(/*tf*/0.002,/*dt*/timestep,/*dtOut*/DTOUT/VFAC  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/TTOT/VFAC,/*dt*/timestep,/*dtOut*/DTOUT/VFAC  ,"test06",1000);
   //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
