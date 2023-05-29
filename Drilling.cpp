@@ -13,9 +13,11 @@ bool bottom_contact = false;
 #define VAVA			14.0e-3		//35 mm/min
 #define WROT 			3600.0 	    //rpm
 
-#define ANG_CORTE  15.0  //degrees
-#define Z_TIP     0.0010 //
+#define ANG_CORTE   15.0  //degrees
+#define Z_TIP       0.0010 //
+#define TAU         0.005 //
 
+#define  DTOUT       1.0e-5 //WITHOUT VFAC
 //drill bit points to z positive 
 
 double tout, dtout;
@@ -25,28 +27,24 @@ ofstream ofprop("drill_force.csv", std::ios::out);
 bool cf_cte = true;
 
 void UserAcc(SPH::Domain & domi) {
-	double vcompress;
+	double vava, wrot;
 
+ 
 	//cout << "time: "<< domi.getTime() << "V compress "<< vcompress <<endl;
 	#pragma omp parallel for schedule (static) num_threads(domi.Nproc)
-
-
-  
-  //if (!bottom_contact){//Fixed particles
-    #ifdef __GNUC__
-    for (size_t i=0; i<domi.Particles.Size(); i++)
-    #else
-    for (int i=0; i<domi.Particles.Size(); i++)
-    #endif	
-    {
-      
-      //BOTTOM
-      if (domi.Particles[i]->ID == 2) {
-        domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-        domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);      
-      }
+  #ifdef __GNUC__
+  for (size_t i=0; i<domi.Particles.Size(); i++)
+  #else
+  for (int i=0; i<domi.Particles.Size(); i++)
+  #endif	
+  {
+    
+    //BOTTOM
+    if (domi.Particles[i]->ID == 2) {
+      domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+      domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);      
     }
-  //}
+  }
   
  
 	//Mesh is updated automatically
@@ -56,11 +54,26 @@ void UserAcc(SPH::Domain & domi) {
     // //domi.Particles[i]->v = domi.Particles[i]->va = domi.Particles[i]->vb = Vec3_t(0.0,- VAVA * VFAC,0.);
   // }
   //domi.trimesh[0]->SetVel(Vec3_t(0.0,0.,-vcompress));
-  dtout = 1.0e-4;
-  if (domi.getTime()>=tout){
-    tout += dtout;
-    ofprop << domi.max_disp[2]<<", " << domi.contact_force_sum << endl;
+
+  
+	if (domi.getTime() <(TAU /VFAC)){ 
+		vava  = VAVA/TAU * domi.getTime()         * (VFAC*VFAC);
+    wrot  = WROT/TAU *domi.getTime() *M_PI/30.* (VFAC*VFAC);
+	} else {
+    vava  = VAVA * VFAC;
+    wrot  = WROT*M_PI/30.*VFAC;
   }
+
+  if (domi.getTime()>=tout){
+    tout += DTOUT/VFAC;
+    ofprop << domi.max_disp[2]<<", " << domi.contact_force_sum << endl;
+    cout << "V ava: "<<vava<<endl;
+  }
+  
+  /////// SET TOOL BOUNDARY CONDITIONS
+  domi.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.0,wrot));  //axis rotation m_w
+  domi.trimesh[0]->SetVel(Vec3_t(0.0,0.0,vava));              //translation, m_v
+  
 }
 
 
@@ -206,7 +219,7 @@ int main(int argc, char **argv) try
 	// cout << "Creating Spheres.."<<endl;
 	// //mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE, BEFORE ANY MOVE!
-  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 1.925 *h)); //Original Z is zero : CRASH
+  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 1.8 *h)); //Original Z is zero : CRASH
   	// for (int n=0;n<mesh.node.Size();n++){
 		// *mesh.node[n] += Vec3_t(0.0,0.0,2.0*Z_TIP - h);
 	// } 
@@ -304,9 +317,9 @@ int main(int argc, char **argv) try
   dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
   dom.BC.InOutFlow = 0;
   
-  // SET TOOL BOUNDARY CONDITIONS
-  dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.0,WROT*M_PI/30.*VFAC));  //axis rotation m_w
-  dom.trimesh[0]->SetVel(Vec3_t(0.0,0.0,VAVA * VFAC));              //translation, m_v
+  // // // SET TOOL BOUNDARY CONDITIONS
+  // // dom.trimesh[0]->SetRotAxisVel(Vec3_t(0.,0.0,WROT*M_PI/30.*VFAC));  //axis rotation m_w
+  // // dom.trimesh[0]->SetVel(Vec3_t(0.0,0.0,VAVA * VFAC));              //translation, m_v
   
   dom.auto_ts = false;        //AUTO TS FAILS IN THIS PROBLEM (ISSUE)
   dom.thermal_solver = true;
@@ -317,8 +330,8 @@ int main(int argc, char **argv) try
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
 
-  dom.SolveDiffUpdateFraser(/*tf*/0.005,/*dt*/timestep,/*dtOut*/1.e-5  ,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/40.*timestep  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.002,/*dt*/timestep,/*dtOut*/DTOUT/VFAC  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
 }
