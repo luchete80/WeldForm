@@ -123,7 +123,7 @@ int main(int argc, char **argv) try
 	//Fy	= 300.e6;
 	//dx	= L / (n-1);
 	//dx = L/(n-1);
-	dx = 0.0001;  
+	dx = 0.00008;  
 	h	= dx*1.2; //Very important
 	Cs	= sqrt(K/rho);
 
@@ -220,7 +220,7 @@ int main(int argc, char **argv) try
 	// cout << "Creating Spheres.."<<endl;
 	// //mesh.v = Vec3_t(0.,0.,);
 	mesh.CalcSpheres(); //DONE ONCE, BEFORE ANY MOVE!
-  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 1.1 *h)); //Original Z is zero : CRASH
+  mesh.Move(Vec3_t(0.0,0.0,Z_TIP - 1.2 *h)); //Original Z is zero : CRASH
   	// for (int n=0;n<mesh.node.Size();n++){
 		// *mesh.node[n] += Vec3_t(0.0,0.0,2.0*Z_TIP - h);
 	// } 
@@ -260,9 +260,9 @@ int main(int argc, char **argv) try
 
       dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			
-      dom.Particles[a]->Alpha		= 1.0;
-			dom.Particles[a]->Beta		= 0.0;
-			dom.Particles[a]->TI		= 0.3;
+      dom.Particles[a]->Alpha		= 1.5;
+			dom.Particles[a]->Beta		= 0.6;
+			dom.Particles[a]->TI		= 0.4;
 			dom.Particles[a]->TIInitDist	= dx;
       
       dom.Particles[a]->k_T			  =	121.*VFAC;  //[W/(m.K)]
