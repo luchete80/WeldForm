@@ -331,8 +331,8 @@ int main(int argc, char **argv) try
    
   timestep = (0.7*h/(Cs)); //Standard modified Verlet do not accept such step
 
-  dom.SolveDiffUpdateFraser(/*tf*/TTOT/VFAC,/*dt*/timestep,/*dtOut*/DTOUT/VFAC  ,"test06",1000);
-  //dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
+  //dom.SolveDiffUpdateFraser(/*tf*/TTOT/VFAC,/*dt*/timestep,/*dtOut*/DTOUT/VFAC  ,"test06",1000);
+  dom.SolveDiffUpdateFraser(/*tf*/0.01,/*dt*/timestep,/*dtOut*/timestep  ,"test06",1000);
     
   return 0;
 }
