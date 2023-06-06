@@ -1793,6 +1793,7 @@ inline void Domain::CalcGradCorrMatrix () {
 		}
 	}//Nproc
 	//cout << "Fixed Pairs"<<endl;
+  int nulldetcount =0;
 	for ( size_t k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
 		Vec3_t xij;
@@ -1838,14 +1839,18 @@ inline void Domain::CalcGradCorrMatrix () {
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
 		if (Particles[i]->IsFree){
-			Inv(temp[i],m);	
+			if (!InvLog(temp[i],m)) {//TODO: CHANGE THIS
+        m = I;
+        nulldetcount++;
+      }
 
 			Particles[i] ->gradCorrM = m;
 			//cout << "Corr Matrix: " << m <<endl;
 		} else {
 			Particles[i] ->gradCorrM = I;
 		}
-	}	
+	}
+  if (nulldetcount>0) cout << nulldetcount << " particles with correction matrix determinant."<<endl;	
 }
 
 //New, for Bonet gradient correction
@@ -1929,6 +1934,7 @@ inline void Domain::CalcGradCorrMixedMatrix () {
 	//cout << "Inverting"<<endl;
 	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	//cout << "Inverting"<<endl;
+  int nulldetcount = 0;
 	for (int i=0; i<Particles.Size(); i++){
 		// cout << "part "<<i<<endl;
 		//cout << "x: "<<Particles[i]->x<<endl;
@@ -1940,14 +1946,19 @@ inline void Domain::CalcGradCorrMixedMatrix () {
 		/** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
 		if (Particles[i]->IsFree){
-			Inv(temp[i],m);	
-
-			Particles[i] ->gradCorrM = m;
+			if (!InvLog(temp[i],m)) {//TODO: CHANGE THIS
+        m = I;
+        nulldetcount++;
+      }
+        
+      Particles[i] ->gradCorrM = m;
+      
 			//cout << "Corr Matrix: " << m <<endl;
 		} else {
 			Particles[i] ->gradCorrM = I;
 		}
 	}	
+  if (nulldetcount>0) cout << nulldetcount << " particles with correction matrix determinant."<<endl;
 }
 
 inline void Domain::Move (double dt) {

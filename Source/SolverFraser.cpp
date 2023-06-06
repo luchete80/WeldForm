@@ -106,6 +106,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   
   cout << std::setprecision(3)<< "Total allocated memory: " <<sizeof(Particle) * Particles.Size() * 1.0e-6 << " MB. "<<endl;
   
+  // if (gradKernelCorr){
+    // CalcGradCorrMatrix();	}
+          
   while (Time<=tf && idx_out<=maxidx) {
     
     clock_beg = clock();
@@ -174,8 +177,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
           //cout << "nb search"<<endl;
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
           
-          // if (gradKernelCorr){
-            // CalcGradCorrMatrix();	}
+          if (gradKernelCorr){
+            CalcGradCorrMatrix();	}
           
           if (contact) {
             clock_beg = clock();
