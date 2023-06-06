@@ -670,6 +670,29 @@ inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)
     Mi(2,0)=(M(1,0)*M(2,1)-M(1,1)*M(2,0))/det;  Mi(2,1)=(M(0,1)*M(2,0)-M(0,0)*M(2,1))/det;  Mi(2,2)=(M(0,0)*M(1,1)-M(0,1)*M(1,0))/det;
 }
 
+inline bool InvLog (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)
+{
+  bool ret = true;
+    double det =   M(0,0)*(M(1,1)*M(2,2) - M(1,2)*M(2,1))
+                 - M(0,1)*(M(1,0)*M(2,2) - M(1,2)*M(2,0))
+                 + M(0,2)*(M(1,0)*M(2,1) - M(1,1)*M(2,0));
+
+    if (fabs(det)<Tol)
+    {
+        ret = false;
+        std::ostringstream oss;
+        oss << PrintMatrix(M);
+        //throw new Fatal("matvec.h::Inv: 3x3 matrix inversion failed with null (%g) determinat. M =\n%s",Tol,oss.str().c_str());
+    }
+
+    Mi(0,0)=(M(1,1)*M(2,2)-M(1,2)*M(2,1))/det;  Mi(0,1)=(M(0,2)*M(2,1)-M(0,1)*M(2,2))/det;  Mi(0,2)=(M(0,1)*M(1,2)-M(0,2)*M(1,1))/det;
+    Mi(1,0)=(M(1,2)*M(2,0)-M(1,0)*M(2,2))/det;  Mi(1,1)=(M(0,0)*M(2,2)-M(0,2)*M(2,0))/det;  Mi(1,2)=(M(0,2)*M(1,0)-M(0,0)*M(1,2))/det;
+    Mi(2,0)=(M(1,0)*M(2,1)-M(1,1)*M(2,0))/det;  Mi(2,1)=(M(0,1)*M(2,0)-M(0,0)*M(2,1))/det;  Mi(2,2)=(M(0,0)*M(1,1)-M(0,1)*M(1,0))/det;
+    
+    return ret;
+}
+
+
 /** Linear Solver. {X} = [M]^{-1}{B}  */
 inline void Sol (Mat3_t const & M, Vec3_t const & B, Vec3_t & X, double Tol=1.0e-10)
 {

@@ -122,7 +122,7 @@ SET(EXES
   #Compression_1010_half_ghost
 	#NastranReader_test
 	#CompressionForces
-  #Compression 
+  Compression 
   #Compression_2d
 	#CompressionVel
   #CompressionVel_Implicit
@@ -180,7 +180,7 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
+	#"Source/WeldForm"
   #"restart_test"
 )
 

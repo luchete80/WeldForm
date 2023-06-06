@@ -130,6 +130,8 @@ int main(int argc, char **argv) try
   dom.GeneralAfter = & UserAcc;
   dom.DomMax(0) = L;
   dom.DomMin(0) = -L;
+  
+  dom.Gradient_Approach_Set( 2); 
 
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
