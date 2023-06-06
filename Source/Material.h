@@ -53,9 +53,9 @@ public Material_{
 	//You provide the values of A, B, n, m, 
 	//θmelt, and  θ_transition
 	//as part of the metal plasticity material definition.
-	JohnsonCook(const Elastic_ &el,const double &a, const double &b, const double &c, 
-              const double &m_, const double &n_, const double &eps_0_, 
-              const double &T_m_, const double &T_t_):
+	JohnsonCook(const Elastic_ &el,const double &a, const double &b, const double &n_, 
+              const double &c, const double &eps_0_,
+              const double &m_, const double &T_m_, const double &T_t_):
 	Material_(el),A(a),B(b),C(c),
   m(m_),n(n_),eps_0(eps_0_),T_m(T_m_),T_t(T_t_)
   {}

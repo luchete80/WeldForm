@@ -179,10 +179,11 @@ int main(int argc, char **argv) try {
       mat = new Hollomon(el,Fy,c[0],c[1]);
       cout << "Material Constants, K: "<<c[0]<<", n: "<<c[1]<<endl;
     } else if (mattype == "JohnsonCook") {
-      //Order is 
-                                 //A(sy0) ,B,  ,C,   m   ,n   ,eps_0,T_m, T_transition
-      mat = new JohnsonCook(el,Fy, c[0],c[1],c[3],c[2],c[6], c[4],c[5]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	 //FIRST IS n_ than m
-      cout << "Material Constants, B: "<<c[0]<<", C: "<<c[1]<<", n: "<<c[2]<<", m: "<<c[3]<<", T_m: "<<c[4]<<", T_t: "<<c[5]<<", eps_0: "<<c[6]<<endl;
+      //Order of input is: [A,B,n,C,eps_0,m,Tm,Tt] //FIRST STRAIN, THEN STRAIN RATE AND THEN THERMAL
+      /////INPUT IN CONSTRUCTOR IS A,B,C,
+                               //A ,B,,n, c,eps_0,m,T_m, T_transition
+      mat = new JohnsonCook(el,c[0],c[1],c[2],c[3],c[4], c[5],c[6],c[7]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	 //FIRST IS n_ than m
+      cout << "Material Constants, A: "<<c[0]<<", B: "<<c[1]<<", n: "<<c[2]<<"C: "<<c[3]<<", eps_0: "<<c[4]<<"m: "<<c[5]<<", T_m: "<<c[6]<<", T_t: "<<c[7]<<endl;
     } else                              throw new Fatal("Invalid material type.");
     
     
@@ -366,6 +367,13 @@ int main(int argc, char **argv) try {
         SPH::NastranReader reader(filename.c_str());
           mesh.push_back (new SPH::TriMesh(reader,flipnormals ));
       }
+
+      double scalefactor = 1.0d;
+      readValue(rigbodies[0]["scaleFactor"],scalefactor);
+      if (scalefactor != 1.0){
+        cout << "Scaling mesh..."<<endl;
+        mesh[0]->Scale(scalefactor);
+      }
       cout << "Creating Spheres.."<<endl;
       //mesh.v = Vec3_t(0.,0.,);
       mesh[0]->CalcSpheres(); //DONE ONCE
@@ -374,7 +382,7 @@ int main(int argc, char **argv) try {
       int id;
       readValue(rigbodies[0]["zoneId"],id);
       dom.AddTrimeshParticles(mesh[0], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-        
+
       
       std::vector<double> fric_sta(1), fric_dyn(1), heat_cond(1);
       readValue(contact_[0]["fricCoeffStatic"], 	fric_sta[0]); 

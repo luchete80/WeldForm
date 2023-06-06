@@ -429,4 +429,5 @@
 20230522 - Fixed merge errors
          - Fixed error which affects drilling contact (qj vector assingment, now is dynamic)
          - Added estimated solved size
-
+------------------------------------------------------------------------
+20230606 - Changed 

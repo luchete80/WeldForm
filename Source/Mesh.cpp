@@ -295,6 +295,21 @@ inline void TriMesh::Move(const Vec3_t &v){
   CalcNormals();        //From node positions
   UpdatePlaneCoeff();   //pplane
 }
+
+inline void TriMesh::Scale(const double &f){
+	//Seems to be More accurate to do this by node vel
+	//This is used by normals
+
+	for (int n=0;n<node.Size();n++){
+		*node[n] *= f;
+	} 
+  cout << "calc centroids"<<endl;
+  CalcCentroids();
+  cout << "calc normals"<<endl;
+  CalcNormals();        //From node positions
+  cout << "generate plane coeffs"<<endl;
+  //UpdatePlaneCoeff();   //pplane
+}
  
   
   

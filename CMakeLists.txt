@@ -141,7 +141,7 @@ SET(EXES
 	#FreeSurface
   #FSW
   #FSW_red
-  Drilling
+  #Drilling
   #FSW_nastran
 	#Elastic
 	#Heat_2D
