@@ -8,7 +8,8 @@
 
 bool bottom_contact = false;
 
-#define VFAC			10.0 
+#define RHOFAV		1000.0 
+#define VFAC			1.0 
 //#define VAVA			5.833e-4		//35 mm/min
 #define VAVA			14.0e-3		//35 mm/min
 #define WROT 			3600.0 	    //rpm
@@ -109,7 +110,7 @@ int main(int argc, char **argv) try
 
   n	= 30.0;		//in length, radius is same distance
 
-	rho	= 2700.0;
+	rho	= 2700.0*RHOFAV;
 	// K	= 6.7549e10;
 	// G	= 2.5902e10;
 	double E  = 70.e9;
@@ -134,9 +135,9 @@ int main(int argc, char **argv) try
 ///// MATERIAL CONSTANTS EXAMPLE FROM
 ///// Zhang_2017 (Aluminium) ?
   double A,B,C,n_,m,T_m,T_t,eps_0;
-  A = 352.0e6; B = 440.0e6; C = 0.0083;
-  m = 1.0;  n_ = 0.42; eps_0 = 1.0;
-  T_m = 502.; T_t = 0.;
+  A = 8.0e6; B = 90.0e6; C = 0.2;
+  m = 0.7;  n_ = 0.35; eps_0 = 1.0;
+  T_m = 660.; T_t = 0.;
 			
   // 𝐴
   // 𝐽𝐶 276.0 MPa
@@ -266,7 +267,7 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->TIInitDist	= dx;
       
       dom.Particles[a]->k_T			  =	121.*VFAC;  //[W/(m.K)]
-			dom.Particles[a]->cp_T			=	875.;       //[J/(kg.K)]
+			dom.Particles[a]->cp_T			=	875./RHOFAV;       //[J/(kg.K)]
 			// dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			// dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				  = 20.0;			
