@@ -85,6 +85,8 @@ namespace SPH {
 		double	P0;		///< background pressure for equation of state
 		double 	Pressure;	///< Pressure of the particle n+1
     
+    Mat3_t  Bmat;   //////Randles & Libersky, CAMPBELL (2000), boundary correction matrix
+    
     //Boundary corrections
     bool correct_vel_acc;
     bool is_fixed;

@@ -7,6 +7,8 @@
 
 #define ID_TEST 2000
 namespace SPH{
+  
+  
 inline void Domain::CalcAccel() {
   Particle *P1, *P2;
   
@@ -126,10 +128,12 @@ inline void Domain::CalcAccel() {
       if (dom_bid_type != AxiSymmetric){
         if (GradientType == 0)
           Mult( GK*xij , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij) , temp);
-        else
+        else if (GradientType == 1)
           Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij) , temp);
+        else 
+          Mult( GK*xij , ( 1.0/(di*dj)*(Sigmai - Sigmaj)           + PIij + TIij) , temp); ////////// SEEE CAMPBELL 2000
       } else { //Only w/o gradient corr
-        if (GradientType == 0){
+        //if (GradientType == 0 ){
           //etaDens
           //Wang Eqn 40 and Joshi Eqn 27
           Vec3_t wij = GK*xij;
@@ -141,7 +145,7 @@ inline void Domain::CalcAccel() {
           temp[1] = (Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(0) + 
                     (Sigmai(1,1)*P1->x(0)*1./(di*di) + Sigmaj(1,1) *P2->x(0)* 1./(dj*dj)) *wij(1);  ////dvr/dt 2PI can go in the reduction
                     
-        }
+        //}
       }//axisymm
 		} else {
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
