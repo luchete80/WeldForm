@@ -163,6 +163,7 @@ inline Domain::Domain ()
   dom_bid_type = PlaneStress;
   
   contact_alg = Wang;
+  manual_min_ts = 1000.;
   
 }
 
@@ -220,11 +221,12 @@ inline void Domain::AdaptiveTimeStep()
     }
 	}
 
-	if (deltat<(deltatint/1.0e5)){
-		cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
-    cout << "Min Force ts" << min_force_ts<<", Vel TS & Acc TS: " <<deltatmin<<endl;
-    deltat = deltatint/1.0e5;
-    throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
+	if (deltat<manual_min_ts/*(deltatint/1.0e5)*/){
+    deltat = manual_min_ts;
+		// cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
+    // cout << "Min Force ts" << min_force_ts<<", Vel TS & Acc TS: " <<deltatmin<<endl;
+    // deltat = deltatint/1.0e5;
+    // throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
   }
 		// throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
 }

@@ -204,11 +204,14 @@ int main(int argc, char **argv) try {
 
         double timestep,cflFactor;
 		int cflMethod;
+    double min_ts_manual = 1000.0;
     double output_time;
     double sim_time;
     string cont_alg = "Fraser";
-    bool auto_ts[] = {true, true, false}; //IN SOME METAL CUTS HAS BEEN FOUND THAT ONLY VELOCITY CRITERIA DIVERGES.
+    bool auto_ts[] = {true, false, false}; //IN SOME METAL CUTS HAS BEEN FOUND THAT ONLY VELOCITY CRITERIA DIVERGES.
 		readValue(config["cflMethod"], cflMethod);
+    readValue(config["minTS"], min_ts_manual);
+      dom.manual_min_ts = min_ts_manual;
 		if (cflMethod == 0)
 			readValue(config["timeStepSize"], timestep);
 		else {

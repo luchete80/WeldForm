@@ -289,6 +289,7 @@ public:
 
 		double					sqrt_h_a;				//Coefficient for determining Time Step based on acceleration (can be defined by user)
 		double 					min_force_ts;		//min time step size due to contact forces
+    int             manual_min_ts;
     int             min_ts_acc_part_id;
 		
     int 					  Dimension;    	///< Dimension of the problem
