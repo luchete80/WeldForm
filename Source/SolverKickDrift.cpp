@@ -239,6 +239,11 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     } 
     stress_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
+		CalcPlasticWorkHeat(deltat);   //Before Thermal increment because it is used
+    ThermalCalcs(deltat);
+    
+    thermal_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+
 		clock_beg = clock();        
     CalcKinEnergyEqn();    
     CalcIntEnergyEqn();    
