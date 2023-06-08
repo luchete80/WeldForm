@@ -11,10 +11,13 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 	clock_t clock_beg;
   double clock_time_spent,start_acc_time_spent, nb_time_spent ,pr_acc_time_spent,acc_time_spent, 
           contact_time_spent, trimesh_time_spent, bc_time_spent,
-          mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent;
+          mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent, thermal_time_spent,
+          ini_time_spent;
+  
           
   clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = mov_time_spent = 0.;	
-
+  double last_output_time;
+  
 	InitialChecks();
 	CellInitiate();
 	ListGenerate();
@@ -240,6 +243,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     stress_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
 		CalcPlasticWorkHeat(deltat);   //Before Thermal increment because it is used
+    
+    clock_beg = clock();   
     ThermalCalcs(deltat);
     
     thermal_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
@@ -255,7 +260,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 
 
 		Time += deltat;
-    clock_beg = clock();      
+    clock_beg = clock();    
+    
+    if (isfirst) isfirst = false;    
+    
     if (contact){
  		//cout << "checking contact"<<endl;
       if (contact_mesh_auto_update) {
@@ -284,17 +292,22 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     }
 		if (isfirst) isfirst = false;
 
-		if (Time>=tout){
-			if (TheFileKey!=NULL) {
-				String fn;
-				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
-				WriteXDMF    (fn.CStr());
-				//fn.Printf    ("%s_%.5f", TheFileKey, Time);
-				WriteCSV    (fn.CStr());
+		//if (Time>=tout){
+    if (Time>=tout || (double)((clock() - last_output_time) / CLOCKS_PER_SEC) > 60.0) {
+      last_output_time = clock();  
+      if (Time>=tout ){      
+        if (TheFileKey!=NULL) {
+          String fn;
+          fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+          WriteXDMF    (fn.CStr());
+          //fn.Printf    ("%s_%.5f", TheFileKey, Time);
+          WriteCSV    (fn.CStr());
 
-			}
-			idx_out++;
-			tout += dtOut;
+        }
+        idx_out++;
+        tout += dtOut;
+      }
+      
 			total_time = std::chrono::steady_clock::now() - start_whole;		
 			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
@@ -314,6 +327,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			cout << "Max Displacements: "<<max_disp<<endl;
       if (contact) cout<<"Contact Force Sum "<<contact_force_sum<<endl;
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
+      cout << endl<<"Elapsed since last output: "<< (clock() - last_output_time) / CLOCKS_PER_SEC<<endl;
       
       ofprop <<getTime() << ", "<<m_scalar_prop<<endl;
 			

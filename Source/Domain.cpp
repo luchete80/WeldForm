@@ -224,6 +224,7 @@ inline void Domain::AdaptiveTimeStep()
 		cout << "WARNING: Too small time step, please choose a smaller time step initially to make the simulation more stable"<<endl;
     cout << "Min Force ts" << min_force_ts<<", Vel TS & Acc TS: " <<deltatmin<<endl;
     deltat = deltatint/1.0e5;
+    throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
   }
 		// throw new Fatal("Too small time step, please choose a smaller time step initially to make the simulation more stable");
 }
