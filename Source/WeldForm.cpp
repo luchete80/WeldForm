@@ -137,7 +137,7 @@ int main(int argc, char **argv) try {
     string solver = "Mech";
     readValue(config["solver"],solver);
     
-    if (solver=="Mech-Thermal")
+    if (solver=="Mech-Thermal" || solver=="Mech-Thermal-KickDrift")
       dom.thermal_solver = true;
 		
 		readValue(config["integrationMethod"], dom.Scheme); //0:Verlet, 1:LeapFrog, 2: Modified Verlet

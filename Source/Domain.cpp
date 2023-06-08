@@ -289,6 +289,9 @@ inline void Domain::CheckMinTSVel() {
   //cout << "deltatmin " << deltatmin<<endl;
 }
 
+///// ACCORDING TO: Smoothed Particle Hydrodynamics
+/////for Ductile Solid Continua
+///// EBERHARD
 inline void Domain::CheckMinTSAccel () {
 		double test	= 0.0;
 		deltatmin	= deltatint;
