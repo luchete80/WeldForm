@@ -1,5 +1,6 @@
 namespace SPH {
-  
+////// ACCORDING TO ROBUST AND EFFICIENT MESHFREE SOLID THERMO-MECHANICS
+/////////////////// SIMULATION OF FRICTION STIR WELDING  
 ///////////////////////////////////////
 //This calculates all in same time step
 //IMPORTANT: x is updated with previous accel!
@@ -7,6 +8,16 @@ namespace SPH {
 // 2. Calc a(t+dt) using x(t+dt)
 // 3. v(t+dt) = v(t) dt + 1/2 (a(t) +a(t+dt)) * dt
 ///////////////////////////////////////
+
+// // // CalcDensInc(); //TODO: USE SAME KERNEL?
+// // // CalcRateTensors();  //With v and xn+1
+  // // // Particles[i]->CalcStressStrain(deltat); //Uses density  
+
+// // // CalcAccel(); //Nor density or neither strain rates
+  // // // x+= (Particles[i]->v + Particles[i]->VXSPH)*deltat + 0.5 * Particles[i]->a *deltat*deltat;
+  // // // Particles[i]->v += Particles[i]->a * deltat;
+
+
 inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
