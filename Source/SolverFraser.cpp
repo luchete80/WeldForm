@@ -10,6 +10,7 @@ namespace SPH {
 inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
 
+
 	size_t idx_out = 1;
 	double tout = Time;
 
@@ -21,7 +22,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
           contact_time_spent, trimesh_time_spent, bc_time_spent,
           mov_time_spent,stress_time_spent,energy_time_spent, dens_time_spent, thermal_time_spent,
           ini_time_spent;
-          
+  
+  double last_output_time;
   clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = mov_time_spent = thermal_time_spent =
   ini_time_spent = 0.;	
 
@@ -95,7 +97,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   }
     
   int ct=30;
-  std::chrono::duration<double> total_time;
+  std::chrono::duration<double> total_time, elapsed_output;
 	auto start_whole = std::chrono::steady_clock::now();  
   
   std::vector <Vec3_t> prev_acc(Particles.Size()); 
@@ -108,7 +110,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   
   // if (gradKernelCorr){
     // CalcGradCorrMatrix();	}
-          
+  last_output_time = clock();      
   while (Time<=tf && idx_out<=maxidx) {
     
     clock_beg = clock();
@@ -345,18 +347,31 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       Particles[i]->FirstStep = false;
     }
 		if (isfirst) isfirst = false;
+    
+    //auto last_output_time = start_whole;
+    
+    
+    
+		//if (Time>=tout || std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - last_output_time).count() > 60.0){
+    //cout << "elapsed "<<(double)((clock() - last_output_time) / CLOCKS_PER_SEC)<<endl;
+    if (Time>=tout || (double)((clock() - last_output_time) / CLOCKS_PER_SEC) > 60.0) {
+      //cout << "ELAPSED "<<std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - last_output_time).count()<<endl;
+      //elapsed_output = std::chrono::steady_clock::now() - last_output_time;
+      //last_output_time = std::chrono::steady_clock::now();
+      last_output_time = clock(); 
+      if (Time>=tout ){
+        if (TheFileKey!=NULL) {
+          String fn;
+          fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+          WriteXDMF    (fn.CStr());
+          //fn.Printf    ("%s_%.5f", TheFileKey, Time);
+          WriteCSV    (fn.CStr());
 
-		if (Time>=tout){
-			if (TheFileKey!=NULL) {
-				String fn;
-				fn.Printf    ("%s_%04d", TheFileKey, idx_out);
-				WriteXDMF    (fn.CStr());
-				//fn.Printf    ("%s_%.5f", TheFileKey, Time);
-				WriteCSV    (fn.CStr());
-
-			}
-			idx_out++;
-			tout += dtOut;
+        }
+        idx_out++;
+        tout += dtOut;
+      }
+      
 			total_time = std::chrono::steady_clock::now() - start_whole;		
 			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
       float step_per_sec = steps/total_time.count();
@@ -371,7 +386,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       cout << "Nb: "      <<nb_time_spent/total_time.count()*100<<"%,  ";
       cout << "Update: " <<mov_time_spent/total_time.count()*100<<"%,  ";
       cout << "Initial calcs: "<<ini_time_spent/total_time.count()*100<<"%,  ";
-      
+      //cout << "Elapsed since last output: "<< elapsed_output.count() <<endl;
+      cout << endl<<"Elapsed since last output: "<< (clock() - last_output_time) / CLOCKS_PER_SEC<<endl;
       cout <<endl;
       
 			std::cout << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;

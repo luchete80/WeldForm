@@ -430,4 +430,7 @@
          - Fixed error which affects drilling contact (qj vector assingment, now is dynamic)
          - Added estimated solved size
 ------------------------------------------------------------------------
-20230606 - Changed 
+20230608 - Changed autots to velocity and accel check.      
+         - Has been found that metal cut example with no accel check is not converging (even vel check with real particle distance or updated h). 
+         - Added additional output after 60 seconds from last one (without writing results)
+         - Fixed input in solver (Added "Mech-KickDrift")

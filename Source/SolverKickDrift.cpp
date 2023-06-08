@@ -169,9 +169,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     CalcAccel(); //Nor density or neither strain rates
     //CalcAccelPP();
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
-    #ifdef NONLOCK_SUM
-    AccelReduction();
-    #endif
+    //#ifdef NONLOCK_SUM
+    if (nonlock_sum)AccelReduction();
+    //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     GeneralAfter(*this); //Fix free accel
     
@@ -196,6 +196,10 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
     CalcDensInc(); //TODO: USE SAME KERNEL?
+    //#ifdef NONLOCK_SUM
+    if (nonlock_sum) 
+      DensReduction();
+    //#endif    
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
@@ -225,9 +229,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
-    #ifdef NONLOCK_SUM
-    //RateTensorsReduction();
-    #endif
+    //#ifdef NONLOCK_SUM
+    if (nonlock_sum) RateTensorsReduction();
+    //#endif
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->Mat2Leapfrog(deltat); //Uses density  
