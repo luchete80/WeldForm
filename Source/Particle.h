@@ -165,7 +165,7 @@ namespace SPH {
 
 		double	V;		///< Volume of a particle
 
-		double 	h;		///< Smoothing length of the particle
+		double 	h,hmin,hmax,hini;		///< Smoothing length of the particle
 		int    	LL;		///< Linked-List variable to show the next particle in the list of a cell
 		int    	CC[3];		///< Current cell No for the particle (linked-list)
 		int		ct;		///< Correction step for the Modified Verlet Algorithm

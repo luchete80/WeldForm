@@ -205,6 +205,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 		
     } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
 
+    if (h_update){                
+      UpdateSmoothingLength();          
+    }
 		// //NEW, gradient correction
 			if (isfirst) {
 				if (gradKernelCorr){

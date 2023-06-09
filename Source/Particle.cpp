@@ -56,6 +56,10 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
     FPMassC = 1.0;
     IsFree = !Fixed;
     h = h0;
+    hini = h0;
+    hmin = 0.1*h0;
+    hmax = h0;
+    
     Pressure=0.0;
     ID = Tag;
     CC[0]= CC[1] = CC[2] = 0;

@@ -2412,12 +2412,14 @@ void ContactNbUpdate(SPH::Domain *dom){
   dom->SaveContNeighbourData();	//Again Save Nb data
 }
 
+
+// // /////////////////////// WITH MIN 
 inline void Domain::UpdateSmoothingLength(){
   double min;
   double max;
   double sum;
-  double d;
-  #pragma omp parallel for schedule (static) private (min, d, max, sum) num_threads(Nproc)
+  double d, htent;
+  #pragma omp parallel for schedule (static) private (min, d, max, htent, sum) num_threads(Nproc)
   for (int i=0; i<Particles.Size(); i++){
     min = 1000.;
     sum = 0.;
@@ -2440,13 +2442,59 @@ inline void Domain::UpdateSmoothingLength(){
         // if (d>max)
           // max = d;
       }
-      Particles[i]->h = min*Particles[i]->hfac;  
+      htent = Cellfac*min*Particles[i]->hfac;
+      if (htent > Particles[i]->hmin || htent<Particles[i]->hmax)
+        Particles[i]->h = min*Particles[i]->hfac;  
       //Particles[i]->h = sum/(ipair_SM[i]+jpair_SM[i])*Particles[i]->hfac;       
       //Particles[i]->h = max*0.707/(2.*Particles[i]->hfac);  
       //cout << "max dist " <<max<<endl;      
     }
   }
 }
+
+/////////////////////// WITH MAX
+// inline void Domain::UpdateSmoothingLength(){
+  // double min;
+  // double max;
+  // double sum;
+  // double d, htent;
+  // Vec3_t   dv;
+  // #pragma omp parallel for schedule (static) private (min, d, dv, max, htent,sum) num_threads(Nproc)
+  // for (int i=0; i<Particles.Size(); i++){
+    // min = 1000.;
+    // sum = 0.;
+    // if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
+      // max = 0.;
+      // //if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
+      // for (int n=0;n<ipair_SM[i];n++){
+        // dv = Particles[Anei[i][n]]->x - Particles[i]->x;
+        // d = dot(dv,dv);
+        // //sum +=d;
+        // if (  d >  max)
+          // max = d;
+        // // if (d>max)
+          // // max=d;
+      // }
+      // for (int n=0;n<jpair_SM[i];n++) {
+        // dv = Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x;
+        // d = dot(dv,dv);
+        // //sum +=d;
+        // if ( d >  max)
+          // max = d;
+        // // if (d>max)
+          // // max = d;
+      // }
+      // ////// in nb search 	if ((rij/h)<=Cellfac) ret = true;
+      // ////// in the limit  h = (dist/cellfac)
+      // htent = sqrt(max)/Cellfac;
+        // if (htent > Particles[i]->hmin || htent<Particles[i]->hmax)
+          // Particles[i]->h = htent;  
+      // //Particles[i]->h = sum/(ipair_SM[i]+jpair_SM[i])*Particles[i]->hfac;       
+      // //Particles[i]->h = max*0.707/(2.*Particles[i]->hfac);  
+      // //cout << "max dist " <<max<<endl;      
+    // }
+  // }
+// }
 
 inline void Domain::UpdateFrictionCoeff(){
    // #pragma omp parallel for schedule (static) private (min, d, max, sum) num_threads(Nproc)
