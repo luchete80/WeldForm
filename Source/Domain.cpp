@@ -163,7 +163,7 @@ inline Domain::Domain ()
   dom_bid_type = PlaneStress;
   
   contact_alg = Wang;
-  manual_min_ts = 1000.;
+  manual_min_ts = 1.e-10;
   
 }
 

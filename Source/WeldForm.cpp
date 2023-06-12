@@ -204,20 +204,21 @@ int main(int argc, char **argv) try {
 
         double timestep,cflFactor;
 		int cflMethod;
-    double min_ts_manual = 1000.0;
     double output_time;
     double sim_time;
     string cont_alg = "Fraser";
     bool auto_ts[] = {true, false, false}; //IN SOME METAL CUTS HAS BEEN FOUND THAT ONLY VELOCITY CRITERIA DIVERGES.
 		readValue(config["cflMethod"], cflMethod);
-    readValue(config["minTS"], min_ts_manual);
-      dom.manual_min_ts = min_ts_manual;
+
 		if (cflMethod == 0)
 			readValue(config["timeStepSize"], timestep);
 		else {
 			readValue(config["cflFactor"], cflFactor);
 			timestep = (cflFactor*h/(Cs));
 		}
+    double min_ts_manual = timestep/1.e-5;
+    readValue(config["minTS"], min_ts_manual);
+      dom.manual_min_ts = min_ts_manual;
     readValue(config["outTime"], output_time);
     readValue(config["simTime"], sim_time);
     readBoolVector(config["autoTS"], auto_ts);
