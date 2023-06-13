@@ -435,3 +435,4 @@
          - Added additional output after 60 seconds from last one (without writing results)
          - Fixed input in solver (Added "Mech-KickDrift")
 20230609 - Changin h update to all steps have SIGNIFICANT IMPROVEMENT. 
+20230613 - Added multilinear amplitudes to input reading

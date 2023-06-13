@@ -47,6 +47,7 @@ using namespace SPH;
 // }
 
 
+
 void UserAcc(SPH::Domain & domi)
 {
 	double vcompress;
@@ -78,9 +79,21 @@ void UserAcc(SPH::Domain & domi)
     for (int bc=0;bc<domi.bConds.size();bc++){
       for (int m=0;m<domi.trimesh.size();m++){
         if (domi.trimesh[m]->id == domi.bConds[bc].zoneId)
-          domi.trimesh[m]->SetVel(domi.bConds[bc].value);
+          if (domi.bConds[bc].valueType == 0) ///constant
+            domi.trimesh[m]->SetVel(domi.bConds[bc].value);
+          else if (domi.bConds[bc].valueType == 1) {///amplitude
+            for (int i=0;i<domi.amps.size();i++)
+              if(domi.amps[i].id == domi.bConds[bc].ampId){
+                double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
+                Vec3_t vec = val * domi.bConds[bc].value;
+                domi.trimesh[m]->SetVel(vec);
+              }
+ 				// readValue(bc["amplitudeId"], 		bcon.ampId);
+				// readValue(bc["amplitudeFactor"], 	bcon.ampFactor);           
+          }
       }//mesh
     }//bcs
+    
   }//contact
 }
 
@@ -408,7 +421,7 @@ int main(int argc, char **argv) try {
     else 
       cout << "false. "<<endl;
     
-		std::vector <SPH::amplitude> amps;
+		
 		
 		for (auto& ampl : amplitudes) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
@@ -420,10 +433,12 @@ int main(int argc, char **argv) try {
 			readValue(ampl["value"], 	value);
 			SPH::amplitude amp;
 			for (int i=0;i<time.size();i++){
+        amp.id =  zoneid;
 				amp.time.push_back(time[i]);
 				amp.value.push_back(value[i]);
 			}
-			amps.push_back(amp);
+			dom.amps.push_back(amp);
+      //cout << "Amplitude Id "<<zoneid<<" read, "<<i << " values."<<endl;
 			//std::cout<< "Zone "<<zoneid<< ", particle count: "<<partcount<<std::	endl;
 		}
 
@@ -440,9 +455,11 @@ int main(int argc, char **argv) try {
 			readValue(bc["zoneId"], 	bcon.zoneId);
       //type 0 means velocity vc
 			readValue(bc["valueType"], 	bcon.valueType);
+      readVector(bc["value"], 	      bcon.value);      //Or value linear
+      readVector(bc["valueAng"], 	    bcon.value_ang);  //Or Angular value
 			if (bcon.valueType == 0){//Constant
-        readVector(bc["value"], 	      bcon.value);      //Or value linear
-        readVector(bc["valueAng"], 	    bcon.value_ang);  //Or Angular value
+        // readVector(bc["value"], 	      bcon.value);      //Or value linear
+        // readVector(bc["valueAng"], 	    bcon.value_ang);  //Or Angular value
       } else 
         if ( bcon.valueType == 1){ //Amplitude
 				readValue(bc["amplitudeId"], 		bcon.ampId);

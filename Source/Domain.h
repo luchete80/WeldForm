@@ -61,10 +61,26 @@ enum Contact_Alg{Fraser=0, Wang, Seo, Zhan};
 
 namespace SPH {
   
+  //template <typename T>
   struct amplitude {
 	int id;
-	std::vector <double> time;
-	std::vector <double> value;
+	std::vector <double> time; ///set??
+	//std::vector <T> value;
+  //T getValAtTime(const double &t){
+  std::vector <double> value;
+  double getValAtTime(const double &t){
+    //assumed ordered
+    int i=0;
+    bool end = false;
+    while (!end){
+      i++;
+      if (i>=time.size()-2 || t > time[i]) end =true;
+    }
+    //cout << "i = "<<i<<endl;
+    // cout << "time i i+1 "<<time[i] << " ,"<<time[i+1]<<endl;
+    // cout << "valu i i+1 "<<value[i] << " ,"<<value[i+1]<<endl;
+    return value[i-1]+ (value[i] - value[i-1])/(time[i] - time[i-1])*(t-time[i-1]);
+  }
 	//std::map;
 };
 
@@ -437,7 +453,10 @@ public:
   inline void CheckMinTSVel();
   inline void CheckMinTSAccel();
   int AssignZone(Vec3_t &start, Vec3_t &end, int &id);
-	private:
+	
+  std::vector <SPH::amplitude> amps; ////maybe move to domain
+  
+  private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
 		void Periodic_X_Correction	(Vec3_t & x, double const & h, Particle * P1, Particle * P2);		//Corrects xij for the periodic boundary condition
 		void AdaptiveTimeStep				();		//Uses the minimum time step to smoothly vary the time step
@@ -462,7 +481,7 @@ public:
 		bool enable_plastic_heat_gen;
 		void AllocateNbPair(const int &temp1, const int &temp2, const int &T);
     
-    
+
 
 		
 
