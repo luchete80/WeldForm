@@ -86,6 +86,7 @@ void UserAcc(SPH::Domain & domi)
               if(domi.amps[i].id == domi.bConds[bc].ampId){
                 double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
                 Vec3_t vec = val * domi.bConds[bc].value;
+                //cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
                 domi.trimesh[m]->SetVel(vec);
               }
  				// readValue(bc["amplitudeId"], 		bcon.ampId);
@@ -400,11 +401,13 @@ int main(int argc, char **argv) try {
       readValue(rigbodies[0]["zoneId"],id);
       dom.AddTrimeshParticles(mesh[0], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 
-      
+      double penaltyfac = 0.5;
       std::vector<double> fric_sta(1), fric_dyn(1), heat_cond(1);
       readValue(contact_[0]["fricCoeffStatic"], 	fric_sta[0]); 
       readValue(contact_[0]["fricCoeffDynamic"], 	fric_dyn[0]); 
       readValue(contact_[0]["heatCondCoeff"], 	  heat_cond[0]);
+      
+      readValue(contact_[0]["penaltyFactor"], 	penaltyfac); 
       
       bool heat_cond_ = false;
       if (readValue(contact_[0]["heatConductance"], 	heat_cond_)){
@@ -412,11 +415,14 @@ int main(int argc, char **argv) try {
         dom.contact_hc = heat_cond[0];
       }
       
+
       dom.friction_dyn = fric_dyn[0];
       dom.friction_sta = fric_sta[0];
-      dom.PFAC = 0.8;
-      dom.DFAC = 0.0;
+      cout << "Contact Friction Coefficients, Static: "<<dom.friction_sta<<", Dynamic: "<< dom.friction_sta<<endl;
       
+      dom.PFAC = penaltyfac;
+      dom.DFAC = 0.0;
+      cout << "Contact Penalty Factor: "<<dom.PFAC<<", Damping Factor: " << dom.DFAC<<endl;      
 		} 
     else 
       cout << "false. "<<endl;
