@@ -187,7 +187,7 @@ int main(int argc, char **argv) try
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
-    timestep = (1.0*h/(Cs+VMAX)); 
+    timestep = (0.7*h/(Cs+VMAX)); 
     dom.CFL = 1.0;
     //timestep = 2.5e-6;
     dom.auto_ts = false;

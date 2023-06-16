@@ -195,8 +195,6 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
     //#ifdef NONLOCK_SUM
     if (nonlock_sum)AccelReduction();
-
-      
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     GeneralAfter(*this); //Fix free accel
