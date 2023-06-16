@@ -436,3 +436,6 @@
          - Fixed input in solver (Added "Mech-KickDrift")
 20230609 - Changin h update to all steps have SIGNIFICANT IMPROVEMENT. 
 20230613 - Added multilinear amplitudes to input reading
+         - HUGE FIX IN KICKDRIFT SOLVER. Now variable time steps are a fact. 
+         - Still not working on non coupled mechanical problems (diverging)
+         - DEFAULT SOLVER HAS CHANGED TO KICKDRFIT RANDLES 

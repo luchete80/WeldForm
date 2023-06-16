@@ -38,6 +38,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
           
   clock_time_spent = contact_time_spent = acc_time_spent = stress_time_spent = energy_time_spent = dens_time_spent = mov_time_spent = 0.;	
   double last_output_time;
+  double prev_deltat;
   
 	InitialChecks();
 	CellInitiate();
@@ -107,6 +108,8 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
   int ct=30;
   std::chrono::duration<double> total_time;
 	auto start_whole = std::chrono::steady_clock::now();  
+  prev_deltat = deltat;
+  cout << "Solver KickDrift Randles & Libersky Update Style" <<endl;
 	while (Time<=tf && idx_out<=maxidx) {
   
 		StartAcceleration(0.);
@@ -203,6 +206,11 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     if (contact) CalcContactForcesWang();
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
+    
+    prev_deltat=deltat;
+    if (auto_ts)      CheckMinTSVel();
+    if (auto_ts_acc)  CheckMinTSAccel();
+    if (auto_ts || auto_ts_acc)  AdaptiveTimeStep();
 		
     double factor = 1.;
     // if (ct==30) factor = 1.;
@@ -210,12 +218,15 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     clock_beg = clock();
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<Particles.Size(); i++){
-      Particles[i]->v += Particles[i]->a*deltat/2.*factor;
+      //Particles[i]->v += Particles[i]->a*deltat/2.*factor; ////ORIGINAL ALL WITH SAME DELTAT
+      Particles[i]->v += Particles[i]->a*0.5*(deltat+prev_deltat)*factor;
       //Particles[i]->LimitVel();
     }
     MoveGhost();   
     GeneralAfter(*this);//Reinforce BC vel   
     mov_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;  
+
+    
     
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
@@ -359,9 +370,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
           contact_force_sum << endl;
 			}
 		}
-    if (auto_ts)      CheckMinTSVel();
-    if (auto_ts_acc)  CheckMinTSAccel();
-    if (auto_ts || auto_ts_acc)  AdaptiveTimeStep();
+    // if (auto_ts)      CheckMinTSVel();
+    // if (auto_ts_acc)  CheckMinTSAccel();
+    // if (auto_ts || auto_ts_acc)  AdaptiveTimeStep();
     
 	
 	}
