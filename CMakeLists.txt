@@ -76,7 +76,7 @@ SET(EXES
   #Contact_Compression_2d
   #test_new_sym
   #Cantilever
-  #Compression
+  Compression
 	#Compression_XSPH
   #Compression_AVisc
   #Compression_1010
@@ -180,7 +180,7 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
+	#"Source/WeldForm"
   #"restart_test"
 )
 
