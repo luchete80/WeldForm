@@ -219,7 +219,7 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->v += Particles[i]->a*deltat/2.*factor; ////ORIGINAL ALL WITH SAME DELTAT
-      Particles[i]->v += Particles[i]->a*0.5*(deltat+prev_deltat)*factor;
+      Particles[i]->v += Particles[i]->a*0.5*prev_deltat*factor;
       //Particles[i]->LimitVel();
     }
     MoveGhost();   
