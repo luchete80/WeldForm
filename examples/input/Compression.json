@@ -50,8 +50,8 @@
 {
 	"id": 		1,
 	"valueType": 1,
-	"time": 	[ 0.0, 0.0, 0.0],
-	"value": 	[ 0.0, 0.0, 0.0]
+	"time": 	[ 0.0, 5.0e-3, 1.0],
+	"value": 	[ 0.0, 1.0, 1.0]
 }
 ],
 "BoundaryConditions": [
@@ -64,7 +64,7 @@
 {
 	"zoneId": 	3,
 	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, -1.0],
+	"value": 		[ 0.0, 0.0, -10.0],
 	"free": 		true
 }
 ]
