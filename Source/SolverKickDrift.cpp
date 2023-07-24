@@ -103,7 +103,11 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
   bool check_nb_every_time = false;
 
   cout << "Main Loop"<<endl;
-  
+
+  if (nonlock_sum && gradKernelCorr){
+    cout << "WARNING: Nishimura summation is not working with Gradient Kernel Correction. Summation changed to Locking." <<endl;
+    nonlock_sum = false;
+  }  
 
   int ct=30;
   std::chrono::duration<double> total_time;
