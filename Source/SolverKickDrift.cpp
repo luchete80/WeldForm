@@ -127,13 +127,14 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		}
 
     Vec3_t max_disp = Vec3_t(0.,0.,0.);
-		for (int i=0; i<Particles.Size(); i++){
+		for (int i=0; i < solid_part_count; i++){
       for (int j=0;j<3;j++)
-        if (Particles[i]->Displacement[j]>max_disp[j]){
-          max_disp[j] = Particles[i]->Displacement [j];
+        if (Particles[i]->Displacement[j] * Particles[i]->Displacement[j]>max_disp[j]){
+          max_disp[j] = Particles[i]->Displacement [j] * Particles[i]->Displacement [j];
           imax=i;
 			}
 		}
+    for (int j=0;j<3;j++) max_disp[j] = sqrt(max_disp[j]);
     
     // // // ATTENTION! COULD BE LARGE DISPLACEMENTS AND SMALL STRAINS 
     // // // EXAMPLE COMPRESSION WITH NO FRICTION, SO CONTACTS NBs SHOULD BE RECALCULATED
@@ -356,10 +357,20 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 			std::cout << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;
 			std::cout << "Current Time Step = " <<deltat<<std::endl;
 			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
-			cout << "Max Displacements: "<<max_disp<<endl;
-      if (contact) cout<<"Contact Force Sum "<<contact_force_sum<<endl;
+      if (max > 0.)
+        cout<<"Plastic Work "<<plastic_work<<endl;
+      cout.precision(6);
+			cout << "Max Displacements (No Cont Surf): "<<max_disp<<endl;
+      if (contact) {
+        cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
+        cout<<"Contact Friction Work "<<contact_friction_work<<endl;
+        cout<<"External Forces Work "<< ext_forces_work<<endl;
+        if (cont_heat_cond)
+          cout << "Total contact heat flux" << accum_cont_heat_cond <<endl;
+      }
       cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
-      cout << endl<<"Elapsed since last output: "<< (clock() - last_output_time) / CLOCKS_PER_SEC<<endl;
+      if (thermal_solver)
+        std::cout << "Max, Min, Avg temps: "<< m_maxT << ", " << m_minT << ", " << (m_maxT+m_minT)/2. <<std::endl;    
       
       ofprop <<getTime() << ", "<<m_scalar_prop<<endl;
 			
