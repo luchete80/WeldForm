@@ -2412,47 +2412,69 @@ void ContactNbUpdate(SPH::Domain *dom){
   dom->SaveContNeighbourData();	//Again Save Nb data
 }
 
-
-// // /////////////////////// WITH MIN 
-///////////////////////////// WORKS BETTER THAN WITH MIN
-
+/////////////////////////////////////////////////
+///////////////////////////// WITH U DIVERGENCE /////////////////////////
+/////// ACCORDING TO RANDLES AND LIBERSKY (1996)
+/////// THIS SHOULD BE DONE AFTER DENSITY UPDATE
 inline void Domain::UpdateSmoothingLength(){
   double min;
   double max;
   double sum;
   double d, htent;
   #pragma omp parallel for schedule (static) private (min, d, max, htent, sum) num_threads(Nproc)
-  for (int i=0; i<Particles.Size(); i++){
-    min = 1000.;
-    sum = 0.;
-    if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
-      max = 0.;
-      //if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
-      for (int n=0;n<ipair_SM[i];n++){
-        d = norm(Particles[Anei[i][n]]->x - Particles[i]->x);
-        //sum +=d;
-        if (  d<  min)
-          min = d;
-        // if (d>max)
-          // max=d;
-      }
-      for (int n=0;n<jpair_SM[i];n++) {
-        d = norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
-        //sum +=d;
-        if ( d <  min)
-          min = d;
-        // if (d>max)
-          // max = d;
-      }
-      htent = Cellfac*min*Particles[i]->hfac;
-      if (htent > Particles[i]->hmin || htent<Particles[i]->hmax)
-        Particles[i]->h = min*Particles[i]->hfac;  
-      //Particles[i]->h = sum/(ipair_SM[i]+jpair_SM[i])*Particles[i]->hfac;       
-      //Particles[i]->h = max*0.707/(2.*Particles[i]->hfac);  
-      //cout << "max dist " <<max<<endl;      
-    }
+  for (int i=0; i<solid_part_count; i++){
+      //Mass conservation: 
+      //drhodt = - rho divU
+      //Div Ui  = - drhodt / rho_i
+
+      htent = Particles[i]->h - Particles[i]->h * 0.33333333 * Particles[i]->dDensity/Particles[i]->Density * deltat;
+      //cout << "htent " <<htent<<endl;
+      if (htent > Particles[i]->hmin && htent<Particles[i]->hmax)
+        Particles[i]->h = htent;  
+
   }
 }
+
+
+// // /////////////////////// WITH MIN 
+// inline void Domain::UpdateSmoothingLength(){
+  // double min;
+  // double max;
+  // double sum;
+  // double d, htent;
+  // #pragma omp parallel for schedule (static) private (min, d, max, htent, sum) num_threads(Nproc)
+  // for (int i=0; i< solid_part_count; i++){
+    // min = 1000.;
+    // sum = 0.;
+    // if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
+      // max = 0.;
+      // //if (Particles[i]->pl_strain > DELTA_PL_STRAIN ){
+      // for (int n=0;n<ipair_SM[i];n++){
+        // d = norm(Particles[Anei[i][n]]->x - Particles[i]->x);
+        // //sum +=d;
+        // if (  d<  min)
+          // min = d;
+        // // if (d>max)
+          // // max=d;
+      // }
+      // for (int n=0;n<jpair_SM[i];n++) {
+        // d = norm(Particles[Anei[i][MAX_NB_PER_PART-1-n]]->x - Particles[i]->x);
+        // //sum +=d;
+        // if ( d <  min)
+          // min = d;
+        // // if (d>max)
+          // // max = d;
+      // }
+      // //htent = Cellfac*min*Particles[i]->hfac;
+      // htent = min*Particles[i]->hfac; 
+      // if (htent > Particles[i]->hmin && htent<Particles[i]->hmax)
+        // Particles[i]->h = htent;  
+      // //Particles[i]->h = sum/(ipair_SM[i]+jpair_SM[i])*Particles[i]->hfac;       
+      // //Particles[i]->h = max*0.707/(2.*Particles[i]->hfac);  
+      // //cout << "max dist " <<max<<endl;      
+    // }
+  // }
+// }
 
 /////////////////////// WITH MAX
 // inline void Domain::UpdateSmoothingLength(){
@@ -2489,7 +2511,7 @@ inline void Domain::UpdateSmoothingLength(){
       // ////// in nb search 	if ((rij/h)<=Cellfac) ret = true;
       // ////// in the limit  h = (dist/cellfac)
       // htent = sqrt(max)/Cellfac;
-        // if (htent > Particles[i]->hmin || htent<Particles[i]->hmax)
+        // if (htent > Particles[i]->hmin && htent<Particles[i]->hmax)
           // Particles[i]->h = htent;  
       // //Particles[i]->h = sum/(ipair_SM[i]+jpair_SM[i])*Particles[i]->hfac;       
       // //Particles[i]->h = max*0.707/(2.*Particles[i]->hfac);  

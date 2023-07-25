@@ -444,3 +444,4 @@
 20230725 - FIRST SUCCESFUL 
          - Changed h update to frequency 1
          - Added option to change frequency in Neighbour search
+         - Fixed Error in h update condition
