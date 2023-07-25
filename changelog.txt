@@ -1,6 +1,11 @@
-20210608 -	Added Euler Time Integrations. 
-20210609 - 	CRITAL BUG IS FOUND IN PREVIOUS VERSIONS (see 4cc446c). Neighour search is performed TWICE without deleting.
-			This causes results to be wrong.
+0.4.1 [WIP]
+- Randles and Libersky variable time step integrator working
+- Nb frequency update option on input 
+- 
+- Added Cylindrical grid option in input 
 
-20220316 	- Added particle history
-					- Added ts_nb_inc in domain
+0.4.0 - 20230204
+- Fraser integration working.
+- Wang Frictional contact algorithm working, giving same results that FEM solvers.
+- First imput file reader.
+- Windows x64 binaries included.

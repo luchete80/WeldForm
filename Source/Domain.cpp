@@ -2414,6 +2414,8 @@ void ContactNbUpdate(SPH::Domain *dom){
 
 
 // // /////////////////////// WITH MIN 
+///////////////////////////// WORKS BETTER THAN WITH MIN
+
 inline void Domain::UpdateSmoothingLength(){
   double min;
   double max;

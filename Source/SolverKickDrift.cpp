@@ -166,9 +166,6 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 					MainNeighbourSearch/*_Ext*/();
           //
           CalcPairPosList(); //For min TS Vel
-          if (h_update){                
-            UpdateSmoothingLength();          
-          }
           //#ifdef NONLOCK_TEST 
           //CheckParticlePairs(0);
           //#endif
@@ -294,7 +291,9 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		steps++;
     if (ct == 30) ct = 0; else ct++;
     
-
+    if (h_update){                
+      UpdateSmoothingLength();          
+    }
 
 		Time += deltat;
     clock_beg = clock();    

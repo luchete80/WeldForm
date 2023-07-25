@@ -442,3 +442,5 @@
 -------------------------------------------------------------
 20230705 - Changed delta t in randles & libersky solver, first velocity update is with prev deltat
 20230725 - FIRST SUCCESFUL 
+         - Changed h update to frequency 1
+         - Added option to change frequency in Neighbour search
