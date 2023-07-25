@@ -9,7 +9,7 @@
   - Randles and Libersky variable time step integrator working
 ### Input File 
   - Nb frequency update option on input 
-  - 
+  - Changed Sjohnson Cook constant order
   - Added Cylindrical grid option in input 
   ### Deprecated
  - Original Simultaneous Solver (All vars calculated at same time)

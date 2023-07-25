@@ -300,8 +300,9 @@ inline void Domain::CalcContactForcesWang(){
 
             }//friction
             
-              omp_set_lock(&dom_lock);            
+            omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);
+              //contact_force_sum_v += Particles[P1] ->contforce;
               contact_reaction_sum += dot (Particles[P1] -> a,Particles[P2]->normal)* Particles[P1]->Mass;
               //ext_forces_work_step += dot (Particles[P1] -> contforce,//Particles[P2]->v);
               //ext_forces_work_step += /*dot(*/Particles[P1] -> contforce/*,1./norm(Particles[P2]->v)*Particles[P2]->v)*/ * Particles[P2]->v; //Assuming v2 and forces are parallel
@@ -312,6 +313,8 @@ inline void Domain::CalcContactForcesWang(){
 					}// if inside
         } //If distance is less than h
     }//Contact Pairs
+    
+    //contact_force_sum = norm (contact_force_sum_v);
 	}//Nproc
   //cout << "END CONTACT----------------------"<<endl;
 	max_contact_force = sqrt (max_contact_force);
