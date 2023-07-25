@@ -439,3 +439,6 @@
          - HUGE FIX IN KICKDRIFT SOLVER. Now variable time steps are a fact. 
          - Still not working on non coupled mechanical problems (diverging)
          - DEFAULT SOLVER HAS CHANGED TO KICKDRFIT RANDLES 
+-------------------------------------------------------------
+20230705 - Changed delta t in randles & libersky solver, first velocity update is with prev deltat
+20230725 - FIRST SUCCESFUL 
