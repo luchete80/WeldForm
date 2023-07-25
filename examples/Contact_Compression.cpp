@@ -82,7 +82,7 @@ int main(){
 	 SPH::Domain	dom;
 
 	dom.Dimension	= 3;
-	dom.Nproc	= 4;
+	dom.Nproc	= 8;
 	dom.Kernel_Set(Qubic_Spline);
 	dom.Scheme	= 1;	//Mod Verlet
 	//dom.XSPH	= 0.1; //Very important
@@ -160,7 +160,7 @@ int main(){
 		dom.Particles[a]->Fail		= 1;
 		dom.Particles[a]->Sigmay	= Fy;
 		dom.Particles[a]->Alpha		= 1.0;
-		dom.Particles[a]->Beta		= 1.0;
+		dom.Particles[a]->Beta		= 0.0;
 		dom.Particles[a]->TI		= 0.3;
 		dom.Particles[a]->TIInitDist	= dx;
     double x = dom.Particles[a]->x(0);
@@ -185,8 +185,8 @@ int main(){
 	//Contact Penalty and Damping Factors
   if (contact)
     dom.contact = true;
-	dom.friction_dyn = 0.0;
-	dom.friction_sta = 0.0;
+	dom.friction_dyn = 0.2;
+	dom.friction_sta = 0.2;
 	dom.PFAC = 0.5;
 	dom.DFAC = 0.0;
   dom.fric_type = Fr_Dyn;
@@ -216,7 +216,7 @@ int main(){
   //dom.SolveDiffUpdateLeapfrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
   dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,timestep,"test06",1000);
-  //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+
 	
 	dom.WriteXDMF("ContactTest");
 }

@@ -76,7 +76,7 @@ SET(EXES
   #Contact_Compression_2d
   #test_new_sym
   #Cantilever
-  Compression
+  examples/Compression
 	#Compression_XSPH
   #Compression_AVisc
   #Compression_1010
@@ -101,7 +101,7 @@ SET(EXES
 	#Cantilever2_pl
 	#Contact_Neighbours
 	#Contact_Compression
-  #Contact_Compression_1010
+  examples/Contact_Compression_1010
   #Contact_Compression_1010_1side
   #Contact_Compression_fast_short
   #Contact_Compression_2surf

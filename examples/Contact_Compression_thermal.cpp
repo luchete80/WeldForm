@@ -192,6 +192,7 @@ int main(){
   //dom.auto_ts=false;
 
   dom.pl_work_heat_frac = 0.9;
+  dom.cont_heat_cond = false;
 
   dom.thermal_solver = true;    
   dom.auto_ts=true;

@@ -130,6 +130,8 @@ int main(int argc, char **argv) try
   dom.GeneralAfter = & UserAcc;
   dom.DomMax(0) = L;
   dom.DomMin(0) = -L;
+  
+  dom.Gradient_Approach_Set( 2); 
 
 
 		// inline void Domain::AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
@@ -185,14 +187,14 @@ int main(int argc, char **argv) try
     //dom.Solve_orig_Ext(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
-    timestep = (1.0*h/(Cs+VMAX)); 
+    timestep = (0.7*h/(Cs+VMAX)); 
     dom.CFL = 1.0;
     //timestep = 2.5e-6;
     dom.auto_ts = false;
-    //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
-    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-3,"test06",10000);	
     //dom.SolveDiffUpdateFraser(5*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",10000);	
   
   

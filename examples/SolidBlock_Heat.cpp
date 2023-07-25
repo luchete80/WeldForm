@@ -19,7 +19,7 @@
 ************************************************************************************/
 
 #include "Domain.h"
-#include "Mesh.cuh"
+//#include "Mesh.cuh"
 
 void UserAcc(SPH::Domain & domi)
 {
@@ -61,7 +61,7 @@ int main(int argc, char **argv) try
     	double H,L,n;
 
     	H	= 1.;
-    	n	= 15.0;
+    	n	= 20.;
 
     	rho	= 1000.0;
     	dx	= H / n;
@@ -79,8 +79,7 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = H;
         dom.DomMin(0) = -H;
 
-     	dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20., -H/2.0 -H/20. ), H + H/20., H +H/20.,  H + H/20. , dx/2.0 ,rho, h, 1 , 0 , false, false );
-		//dom.AddBoxLength(1 ,Vec3_t ( -H/2.0 -H/20., -H/2.0 -H/20.,0. ), H + H/20., H +H/20.,  0. , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	dom.AddBoxLength(1 ,Vec3_t (0.,0.,0.), H ,H,H , dx/2.0 ,rho, h, 1 , 0 , false, false );
      	
 // dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
 							// H , H ,  H , 
@@ -96,7 +95,7 @@ int main(int argc, char **argv) try
 			dom.Particles[a]->h_conv		= 100.0; //W/m2-K
 			dom.Particles[a]->T_inf 		= 500.;
 			dom.Particles[a]->T				= 20.0;			
-    		if ( x < -H/2.0 ) {
+    		if ( x < dx ) {
     			dom.Particles[a]->ID 			= 2;
     			dom.Particles[a]->Thermal_BC 	= TH_BC_CONVECTION;
 				// cout << "Particle " << a << "is convection BC" <<endl;
@@ -113,7 +112,7 @@ int main(int argc, char **argv) try
 //    	dom.WriteXDMF("maz");
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
-		dom.ThermalSolve(/*tf*/1.01,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
+		dom.ThermalSolve(/*tf*/2.001,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
 //		dom.ThermalSolve(/*tf*/10.,/*dt*/timestep,/*dtOut*/0.1,"test06",999);
 

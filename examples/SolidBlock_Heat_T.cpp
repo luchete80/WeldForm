@@ -52,7 +52,7 @@ int main(int argc, char **argv) try
        SPH::Domain	dom;
 
         dom.Dimension	= 3;
-        dom.Nproc	= 4;
+        dom.Nproc	= 32;
     	dom.Kernel_Set(Qubic_Spline);
     	dom.Scheme	= 1;
 //     	dom.XSPH	= 0.5; //Very important
@@ -61,7 +61,7 @@ int main(int argc, char **argv) try
     	double H,L,n;
 
     	H	= 1.;
-    	n	= 10.0;
+    	n	= 50.0;
 
     	rho	= 1000.0;
     	dx	= H / n;
@@ -105,7 +105,7 @@ int main(int argc, char **argv) try
     	}
 
         timestep = (0.3*h*h*rho*dom.Particles[0]->cp_T/dom.Particles[0]->k_T);	
-				timestep = 0.001;	
+				//timestep = 0.001;	
 		cout << "Time Step: "<<timestep<<endl;
 		//timestep=1.e-6;
 		//0.3 rho cp h^2/k
@@ -115,7 +115,7 @@ int main(int argc, char **argv) try
 //    	dom.Solve(/*tf*/0.01,/*dt*/timestep,/*dtOut*/0.001,"test06",999);
 
 		//dom.ThermalSolve(/*tf*/timestep + 1.0e-5,/*dt*/timestep,/*dtOut*/timestep,"test06",999);
-    dom.ThermalSolve(/*tf*/2.001,/*dt*/timestep,/*dtOut*/2.,"test06",999);
+    dom.ThermalSolve(/*tf*/1001.0*timestep,/*dt*/timestep,/*dtOut*/1000.*timestep,"test06",999);
     cout << "dom.BLPF "<<dom.BLPF<<endl;
     cout << "dom.TRPR "<<dom.TRPR<<endl;
     for (int k=0;k<4;k++)

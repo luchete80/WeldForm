@@ -164,7 +164,7 @@ int main() try{
 	mesh.CalcSpheres(); //DONE ONCE
   mesh2.CalcSpheres();
   
-	cout << "Done."<<endl;
+	cout << "Done."<<endl; 
 	dom.ts_nb_inc = 5;
 	dom.gradKernelCorr = true;
 	int top, bottom, center;

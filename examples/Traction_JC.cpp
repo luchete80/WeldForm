@@ -20,6 +20,8 @@
 
 #include "Domain.h"
 #include "InteractionAlt.cpp"
+#include "SolverFraser.cpp"
+#include "SolverKickDrift.cpp"
 
 #define TAU		0.005
 #define VMAX	1.0
@@ -161,7 +163,8 @@ int main(int argc, char **argv) try
 		dom.Particles[4081]->print_history = true;
 		//dom.Particles[2421]->print_history = true;
 		//dom.Particles[6777]->ID = 1;
-		
+			dom.gradKernelCorr = true;
+      
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
 				
@@ -199,7 +202,8 @@ int main(int argc, char **argv) try
       timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
       dom.auto_ts=false; 
     	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-      dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+      //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+      dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
         return 0;
 }
 MECHSYS_CATCH
