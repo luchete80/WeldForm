@@ -5,10 +5,11 @@
 	"particleRadius": 0.01e-3, 
 	"hFactor": 1.2,
   "cflMethod": 1,
-  "cflFactor": 0.5,
+  "cflFactor": 0.4,
   "autoTS": [true,false,false],
+  "kernelGradCorr": true,
   "simTime": 1.0e-1,
-  "outTime": 5.0e-5,
+  "outTime": 1.0e-5,
   "artifViscAlpha": 1.2,
   "artifViscBeta": 0.05,
   "tensileInstability": 0.3,
@@ -21,8 +22,8 @@
 	"type": "JohnsonCook",
   "const": [110.0e6,150.0e6,0.36,0.014,1.0,1.0,645.0,0.0],
   "thermalCond": 120.0,
-  "thermalHeatCap": 0.8750,
-	"density0": 2700000.0, 
+  "thermalHeatCap": 2.1875,
+	"density0": 1080000.0, 
 	"youngsModulus": 70.0e9, 
 	"poissonsRatio": 0.3
 }],
@@ -32,8 +33,8 @@
 	"type": "Box",
 	"id": 0,
 	"denseMode": 0,
-	"start": [ -2.001001e-3, -0.85e-3, 0.0],
-	"dim": [2.0e-3, 1.0e-3,0.0],
+	"start": [ -4.981000e-3, -0.85e-3, 0.0],
+	"dim": [5.0e-3, 1.0e-3,0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
 }],
@@ -64,7 +65,7 @@
 {
 	"id": 3,
 	"start":[-20.0,-10.0, -10.0],
-	"end": 	[ -1.95e-3, 10.0, 10.0]
+	"end": 	[ -4.95e-3, 10.0, 10.0]
 }
 ],
 
@@ -94,7 +95,7 @@
 	"valueType": 	0,
   "amplitudeId" : 1,
   "amplitudeFactor": 1.0,
-	"value": 		[ -300.0e-3, 0.0, 0.0]
+	"value": 		[ -0.30, 0.0, 0.0]
 }
 ],
 "InitialConditions": [
