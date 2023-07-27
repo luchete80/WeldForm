@@ -97,7 +97,7 @@ void UserAcc(SPH::Domain & domi)
               if(domi.amps[i].id == domi.bConds[bc].ampId){
                 double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
                 Vec3_t vec = val * domi.bConds[bc].value;
-                cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
+                //cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
                 domi.trimesh[m]->SetVel(vec);
               }
  				// readValue(bc["amplitudeId"], 		bcon.ampId);
