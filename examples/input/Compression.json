@@ -4,18 +4,19 @@
 	"particleRadius": 0.0075, 
 	"hFactor": 1.2,
   "cflMethod": 1,
-  "cflFactor": 0.4,
-  "autoTS": [false,false,false],
+  "cflFactor": 0.7,
+  "autoTS": [true,false,false],
+  "kernelGradCorr": true,  
   "simTime": 0.01,
-  "outTime": 1.0e-4
+  "outTime": 1.0e-4,
+  "solver": "Mech-LeapFrog"
 }
 ,
 "Materials":[ 
 {
 	"id": "Solid",
 	"type": "Bilinear",
-  "const1": 7.18e8,
-  "const2": 0.22,
+  "const1": 0.0,
 	"density0": 2700.0, 
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.3,
@@ -57,15 +58,16 @@
 "BoundaryConditions": [
 {
 	"zoneId": 	2,
-	"valuetype": 	"Constant",
+	"valueType": 0,
 	"value": 		[ 0.0, 0.0, 0.0],
 	"free": 		true
 },
 {
 	"zoneId": 	3,
-	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, -10.0],
-	"free": 		true
+	"valueType": 	1,
+  "amplitudeId" : 1,
+  "amplitudeFactor": 1.0,
+	"value": 		[ 0.0, 0.0, -10.0]
 }
 ]
 
