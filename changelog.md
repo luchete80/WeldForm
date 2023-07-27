@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.2] - WIP - Bug Fixed and Improvements
+
+### Solver 
+ - CORRECTED Randles and Libersky Central Differences (Leapfrog form) solver. Now 
+   accepts as Fraser Solver (fixed ts) a CFL up until 1 in some cases.
+### Input File 
+ - Added amplitude function to standard velocity BC (no contact)
+  ### Deprecated
+ - KickDrift Randles & Libersky Solver (which was in Verlet Form), was a low CFL 
+ 
 ## [0.4.1] - 20230725
 
 ### Solver 
