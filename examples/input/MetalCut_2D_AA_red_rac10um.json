@@ -5,7 +5,7 @@
 	"particleRadius": 0.01e-3, 
 	"hFactor": 1.2,
   "cflMethod": 1,
-  "cflFactor": 0.4,
+  "cflFactor": 0.6,
   "autoTS": [true,false,false],
   "kernelGradCorr": true,
   "simTime": 1.0e-1,
@@ -13,7 +13,7 @@
   "artifViscAlpha": 1.2,
   "artifViscBeta": 0.05,
   "tensileInstability": 0.3,
-  "solver": "Mech-Thermal-KickDrift"
+  "solver": "Mech-Thermal-LeapFrog"
 }
 ,
 "Materials":[ 
@@ -22,8 +22,8 @@
 	"type": "JohnsonCook",
   "const": [110.0e6,150.0e6,0.36,0.014,1.0,1.0,645.0,0.0],
   "thermalCond": 120.0,
-  "thermalHeatCap": 2.1875,
-	"density0": 1080000.0, 
+  "thermalHeatCap": 0.899,
+	"density0": 2700000.0, 
 	"youngsModulus": 70.0e9, 
 	"poissonsRatio": 0.3
 }],
