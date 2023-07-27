@@ -67,18 +67,23 @@ void UserAcc(SPH::Domain & domi)
 		for (int bc=0;bc<domi.bConds.size();bc++){
 			if (domi.Particles[i]->ID == domi.bConds[bc].zoneId ) {
 				if (domi.bConds[bc].type == 0 ){ //VELOCITY
-					domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-					domi.Particles[i]->v		= domi.bConds[bc].value;
-				}
-			} else if (domi.bConds[bc].valueType == 1) {///amplitude
-        double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
-        Vec3_t vec = val * domi.bConds[bc].value;      
-        domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-        domi.Particles[i]->v		= vec;     
-        cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
-      }
-			
-		}
+					if (domi.bConds[bc].valueType == 0) {
+            domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+            domi.Particles[i]->v		= domi.bConds[bc].value;          
+          } else if (domi.bConds[bc].valueType == 1) {///amplitude
+            for (int j=0;j<domi.amps.size();j++){
+              if(domi.amps[j].id == domi.bConds[bc].ampId){
+                double val = domi.bConds[bc].ampFactor * domi.amps[j].getValAtTime(domi.getTime());
+                Vec3_t vec = val * domi.bConds[bc].value;
+                domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+                domi.Particles[i]->v		= vec;
+              }//if if match
+            }//for amps
+          } //VALUE TYPE == AMPLITUDE 
+				}//TYPE == VELOCITY
+        
+			}//ZoneID 			
+		}//BC
 	}
   
   if (domi.contact){
@@ -92,7 +97,7 @@ void UserAcc(SPH::Domain & domi)
               if(domi.amps[i].id == domi.bConds[bc].ampId){
                 double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
                 Vec3_t vec = val * domi.bConds[bc].value;
-                //cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
+                cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
                 domi.trimesh[m]->SetVel(vec);
               }
  				// readValue(bc["amplitudeId"], 		bcon.ampId);
@@ -446,8 +451,9 @@ int main(int argc, char **argv) try {
 			readArray(ampl["time"], 	time);
 			readValue(ampl["value"], 	value);
 			SPH::amplitude amp;
+      cout << "Time Size "<<time.size()<<endl;
+      amp.id =  zoneid;
 			for (int i=0;i<time.size();i++){
-        amp.id =  zoneid;
 				amp.time.push_back(time[i]);
 				amp.value.push_back(value[i]);
 			}
@@ -483,7 +489,7 @@ int main(int argc, char **argv) try {
 			readValue(bc["free"], 	bcon.free);
 			dom.bConds.push_back(bcon);
 			
-      std::cout<< "BCs "<<  ", Zone ID: "<<bcon.zoneId<<", Value :" <<bcon.value<<std::endl;
+      std::cout<< "BCs "<<  ", Zone ID: "<<bcon.zoneId<<", Value :" <<bcon.value<<", Value Type:" <<bcon.valueType<<std::endl;
 		}//Boundary Conditions
 		
 		double IniTemp = 0.;

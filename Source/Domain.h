@@ -69,17 +69,17 @@ namespace SPH {
   //T getValAtTime(const double &t){
   std::vector <double> value;
   double getValAtTime(const double &t){
+    double ret;
     //assumed ordered
-    int i=0;
+    int i=time.size()-1;
     bool end = false;
     while (!end){
-      i++;
-      if (i>=time.size()-2 || t > time[i]) end =true;
+      i--;
+      if (i==0 || t > time[i]) end =true;
     }
-    //cout << "i = "<<i<<endl;
-    // cout << "time i i+1 "<<time[i] << " ,"<<time[i+1]<<endl;
-    // cout << "valu i i+1 "<<value[i] << " ,"<<value[i+1]<<endl;
-    return value[i-1]+ (value[i] - value[i-1])/(time[i] - time[i-1])*(t-time[i-1]);
+    ret =  value[i]+ (value[i+1] - value[i])/(time[i+1] - time[i])*(t-time[i]);
+    return ret;
+    
   }
 	//std::map;
 };
@@ -494,6 +494,7 @@ public:
 #include "Interaction.cpp"
 #include "InteractionTest.cpp"
 #include "Domain.cpp"
+
 #include "Neighbour.cpp"
 //#include "Input.cpp"
 #include "Output.cpp"
