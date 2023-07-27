@@ -191,10 +191,10 @@ int main(int argc, char **argv) try
     dom.CFL = 1.0;
     //timestep = 2.5e-6;
     dom.auto_ts = false;
-    dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
-    //dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-3,"test06",10000);	
+    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-3,"test06",10000);	
     //dom.SolveDiffUpdateFraser(5*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",10000);	
   
   

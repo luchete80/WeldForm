@@ -445,3 +445,4 @@
          - Changed h update to frequency 1
          - Added option to change frequency in Neighbour search
          - Fixed Error in h update condition
+20230727 - IMPROVED LEAPFROG SOLVER; NOW IT SUPPORTS LARGER CFL

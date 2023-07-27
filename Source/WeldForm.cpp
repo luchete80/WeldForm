@@ -28,7 +28,7 @@
 #include "SolverFraser.cpp"
 #include "Geometry.cpp"
 #include "SolverKickDrift.cpp"
-
+#include "SolverLeapfrog.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -70,7 +70,13 @@ void UserAcc(SPH::Domain & domi)
 					domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
 					domi.Particles[i]->v		= domi.bConds[bc].value;
 				}
-			}
+			} else if (domi.bConds[bc].valueType == 1) {///amplitude
+        double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
+        Vec3_t vec = val * domi.bConds[bc].value;      
+        domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+        domi.Particles[i]->v		= vec;     
+        cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
+      }
 			
 		}
 	}
@@ -534,6 +540,8 @@ int main(int argc, char **argv) try {
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech-Fraser" || solver=="Mech-Thermal-Fraser")
       dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+    if (solver=="Mech-LeapFrog" || solver=="Mech-Thermal-LeapFrog")
+      dom.SolveDiffUpdateLeapFrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     else if (solver=="Mech" || solver=="Mech-Thermal" || solver=="Mech-KickDrift" || solver=="Mech-Thermal-KickDrift")
       dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     else if (solver=="Thermal")

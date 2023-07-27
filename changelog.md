@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.4.1] - TBD
+## [0.4.1] - 20230725
 
 ### Solver 
   - Now reading constant thermal properties and initial conditions. First thermal-mechanical example ready.

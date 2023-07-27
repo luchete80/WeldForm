@@ -100,7 +100,7 @@ SET(EXES
 	#Cantilever2
 	#Cantilever2_pl
 	#Contact_Neighbours
-	#Contact_Compression
+	examples/Contact_Compression
   # examples/Contact_Compression_1010
   #Contact_Compression_1010_1side
   #Contact_Compression_fast_short
@@ -122,7 +122,7 @@ SET(EXES
   #Compression_1010_half_ghost
 	#NastranReader_test
 	#CompressionForces
-  # Compression 
+  Compression 
   #Compression_2d
 	#CompressionVel
   #CompressionVel_Implicit

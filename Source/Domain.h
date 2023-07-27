@@ -180,6 +180,7 @@ public:
   void Solve					(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);		///< The solving function
   void SolveDiffUpdateLeapfrog(double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
   void SolveDiffUpdateKickDrift (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
+  void SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
   void SolveDiffUpdateVerlet  (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
   void SolveDiffUpdateModEuler (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
   void SolveDiffUpdateFraser (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx);
@@ -493,7 +494,6 @@ public:
 #include "Interaction.cpp"
 #include "InteractionTest.cpp"
 #include "Domain.cpp"
-#include "SolverLeapfrog.cpp"
 #include "Neighbour.cpp"
 //#include "Input.cpp"
 #include "Output.cpp"
