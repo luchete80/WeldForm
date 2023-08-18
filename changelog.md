@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.4.2] - WIP - Bug Fixed and Improvements
+## [0.4.2] - 20230818 - Bug Fixed and Improvements
 
 ### Solver 
  - CORRECTED Randles and Libersky Central Differences (Leapfrog form) solver. Now 
