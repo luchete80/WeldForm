@@ -446,3 +446,6 @@
          - Added option to change frequency in Neighbour search
          - Fixed Error in h update condition
 20230727 - IMPROVED LEAPFROG SOLVER; NOW IT SUPPORTS LARGER CFL
+-------------------------------------------------------------
+20230822 - Fixed thermal coupled solver default to Leapfrog (was kickdrift with gives wrong results)
+         - Fixed input to account for "Mech-Thermal-Fraser"

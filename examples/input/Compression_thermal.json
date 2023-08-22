@@ -1,13 +1,14 @@
 {
 "Configuration":
 {
-  "solver": "Mech-Thermal",
+  "solver": "Mech-Thermal-Fraser",
 	"particleRadius": 0.0075, 
 	"hFactor": 1.2,
   "cflMethod": 1,
-  "cflFactor": 0.4,
-  "autoTS": [false,false,false],
+  "cflFactor": 1.0,
+  "autoTS": [true,false,false],
   "simTime": 0.01,
+  "Nproc": 12,
   "outTime": 1.0e-4
 }
 ,
@@ -15,8 +16,7 @@
 {
 	"id": "Solid",
 	"type": "Bilinear",
-  "const1": 7.18e8,
-  "const2": 0.22,
+  "const1": 0.0,
 	"density0": 2700.0, 
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.3,
@@ -53,8 +53,8 @@
 {
 	"id": 		1,
 	"valueType": 1,
-	"time": 	[ 0.0, 0.0, 0.0],
-	"value": 	[ 0.0, 0.0, 0.0]
+	"time": 	[ 0.0, 5.0e-3, 1.0],
+	"value": 	[ 0.0, 1.0, 1.0]
 }
 ],
 "BoundaryConditions": [
@@ -66,8 +66,8 @@
 },
 {
 	"zoneId": 	3,
-	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, -1.0],
+	"valuetype": 	1,
+	"value": 		[ 0.0, 0.0, -10.0],
 	"free": 		true
 }
 ],

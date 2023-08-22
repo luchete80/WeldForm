@@ -101,6 +101,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   bool check_nb_every_time = false;
 
   cout << "Main Loop"<<endl;
+  cout << "Solver: Fraser "<<endl;
   
   if (nonlock_sum && gradKernelCorr){
     cout << "WARNING: Nishimura summation is not working with Gradient Kernel Correction. Summation changed to Locking." <<endl;
