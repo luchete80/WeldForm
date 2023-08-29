@@ -1,6 +1,14 @@
 # Changelog
 
-## [0.4.2] - WIP - Bug Fixed and Improvements
+## [0.4.2.1] - 20230822 - Hot Fixes
+
+### Solver 
+ - Deprecated KickDrift (was erroneously the default coupled thermal-mechanical)
+   
+### Input File 
+ - Now "Thermal" is default Leapfrog thermal mechanical
+ 
+## [0.4.2] - 20230818 - Bug Fixed and Improvements
 
 ### Solver 
  - CORRECTED Randles and Libersky Central Differences (Leapfrog form) solver. Now 

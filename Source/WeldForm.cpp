@@ -97,7 +97,7 @@ void UserAcc(SPH::Domain & domi)
               if(domi.amps[i].id == domi.bConds[bc].ampId){
                 double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
                 Vec3_t vec = val * domi.bConds[bc].value;
-                cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
+                //cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
                 domi.trimesh[m]->SetVel(vec);
               }
  				// readValue(bc["amplitudeId"], 		bcon.ampId);
@@ -137,7 +137,7 @@ int main(int argc, char **argv) try {
     
     cout << "--------------------------------------------"<<endl;
     cout << "----------------- WELDFORM -----------------"<<endl;
-    cout << "----------------- v. 0.4.1 -----------------"<<endl;
+    cout << "----------------- v. 0.4.2.1 ---------------"<<endl;
     cout << "--------------------------------------------"<<endl<<endl<<endl;
     
     cout << "Reading Configuration parameters..."<<endl; 
@@ -495,7 +495,7 @@ int main(int argc, char **argv) try {
 		double IniTemp = 0.;
 		for (auto& ic : ics){
 			double temp;
-			if (solver == "Mech-Thermal"){
+			if (solver == "Mech-Thermal" || solver == "Mech-Thermal-Fraser"){
 				readValue(ic["Temp"], IniTemp);
 				cout << "Initial Temp: "<<IniTemp<<endl;
 			}
@@ -546,10 +546,12 @@ int main(int argc, char **argv) try {
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech-Fraser" || solver=="Mech-Thermal-Fraser")
       dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
-    if (solver=="Mech" || solver=="Mech-LeapFrog" || solver=="Mech-Thermal-LeapFrog")
+    if (solver=="Mech" || solver=="Mech-Thermal" || solver=="Mech-LeapFrog" || solver=="Mech-Thermal-LeapFrog")
       dom.SolveDiffUpdateLeapFrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
-    else if ( solver=="Mech-Thermal" || solver=="Mech-KickDrift" || solver=="Mech-Thermal-KickDrift")
+    else if ( solver=="Mech-Thermal" || solver=="Mech-KickDrift" || solver=="Mech-Thermal-KickDrift"){
       dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      cout << "Solver-KickDrift is deprecated"<<endl;
+    }
     else if (solver=="Thermal")
       dom.ThermalSolve(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     else 

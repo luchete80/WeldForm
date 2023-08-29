@@ -80,7 +80,7 @@ SET(EXES
   #Compression_AVisc
   #Compression_1010
   #Compression_half_ghost_vel
-	#Compression_thermal
+	Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL

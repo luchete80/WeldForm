@@ -113,7 +113,7 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
   std::chrono::duration<double> total_time;
 	auto start_whole = std::chrono::steady_clock::now();  
   prev_deltat = deltat;
-  cout << "Solver KickDrift Randles & Libersky Update Style" <<endl;
+  cout << "Solver Leapfrog Randles & Libersky Update Style" <<endl;
 	while (Time<=tf && idx_out<=maxidx) {
   
 		StartAcceleration(0.);
