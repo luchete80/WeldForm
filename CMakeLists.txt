@@ -182,7 +182,7 @@ SET(EXES
   #"restart_test"
 )
 
-add_subdirectory("examples")
+# add_subdirectory("examples")
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -fstrict-aliasing -ftree-vectorize -funroll-loops -mmmx -msse -msse2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -fopenmp -march=native -pthread")
 
