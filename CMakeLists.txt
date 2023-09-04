@@ -78,7 +78,7 @@ SET(EXES
   # examples/Compression
 	#Compression_XSPH
   #Compression_AVisc
-  #Compression_1010
+  Compression_1010
   #Compression_half_ghost_vel
 	Compression_thermal
 	#Compression_12_solver_orig
@@ -150,9 +150,9 @@ SET(EXES
   #Kernel_Test
 	#Kernel_Test_2D
 	#Kernel_Test_2D_vel
-	Traction
+	#Traction
 	#traction_app
-	#Traction_Hollomon
+	Traction_Hollomon
 	#Traction_JC
 	#Thermal_Expansion_2
 	#4-DamBreak3D
