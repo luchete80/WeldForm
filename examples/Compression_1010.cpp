@@ -195,7 +195,7 @@ int main() try{
 	 SPH::Domain	dom;
 
 	dom.Dimension	= 3;
-	dom.Nproc	= 4;
+	dom.Nproc	= 12;
 	dom.Kernel_Set(Qubic_Spline);
 	dom.Scheme	= 0;	//Mod Verlet
 	//dom.XSPH	= 0.1; //Very important
@@ -238,7 +238,7 @@ int main() try{
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,0.), R, L,  dx/2., rho, h, false, ghost); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	dom.gradKernelCorr = false;
+	dom.gradKernelCorr = true;
 
 	int top_part = 0;
   int bottom_part = 0;
