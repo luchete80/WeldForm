@@ -7,9 +7,9 @@
 	"cflFactor": 0.4,
   "sumType": "Nisadsdhimura",
 	"autoTS": [false,false,false],
-	"simTime": 5.0e-7,
+	"simTime": 5.0e-3,
   "artifViscAlpha": 0.0,
-	"outTime": 1.94e-7
+	"outTime": 1.0e-4
 }
 ,
 "Materials": 

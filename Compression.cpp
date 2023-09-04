@@ -24,6 +24,7 @@
 #include "SolverKickDrift.cpp"
 #include "SolverVerlet.cpp"
 #include "SolverFraser.cpp"
+#include "SolverLeapfrog.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -94,7 +95,7 @@ int main(int argc, char **argv) try
   SPH::Domain	dom;
 
   dom.Dimension	= 3;
-  dom.Nproc	= 4;
+  dom.Nproc	= 12;
   dom.Kernel_Set(Qubic_Spline);
   //dom.Kernel_Set(Hyperbolic_Spline);
   dom.Scheme	= 1;	//Mod Verlet
@@ -188,13 +189,13 @@ int main(int argc, char **argv) try
 		//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
     
     timestep = (0.4*h/(Cs+VMAX)); 
-    dom.CFL = 1.0;
+    dom.CFL = 0.4;
     //timestep = 2.5e-6;
     dom.auto_ts = false;
     //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
-    //dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateLeapFrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
-    dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    //dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateFraser(5*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",10000);	
   
   
