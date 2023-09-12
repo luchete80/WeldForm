@@ -32,19 +32,18 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 MESSAGE("Using GNU compiler")
-include_directories("D:/Luciano/Numerico/blitz/include")
-link_directories("D:/Luciano/Numerico/blitz/lib")
-link_directories("$ENV{PKG}/blitz-0.9/lib")
+include_directories("$ENV{PKG}/blitz/include")
+link_directories("$ENV{PKG}/blitz/lib")
   # using GCC
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   # using Intel C++
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 MESSAGE("Using MSVC compilers")
 # using Visual Studio C++
-include_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/include")
-include_directories("D:/Luciano/Numerico/Libs/gsl-2.5_install_mswin/include")
-include_directories("D:/Luciano/Numerico/Libs/hdf5-1.12.0_install_mswin/include")
-link_directories("D:/Luciano/Numerico/Libs/blitz-0.9_install_mswin/lib")
+include_directories("$ENV{PKG}/blitz-0.9_install_mswin/include")
+include_directories("$ENV{PKG}/gsl-2.5_install_mswin/include")
+include_directories("$ENV{PKG}/hdf5-1.12.0_install_mswin/include")
+link_directories("$ENV{PKG}/blitz-0.9_install_mswin/lib")
 
 include_directories("Source")
 include_directories("External")
@@ -67,11 +66,10 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
-	"Source/WeldForm"
   #"restart_test"
 )
 
-add_subdirectory("examples")
+# add_subdirectory("examples")
 
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -fstrict-aliasing -ftree-vectorize -funroll-loops -mmmx -msse -msse2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -fopenmp -march=native -pthread")
 
@@ -84,6 +82,15 @@ FOREACH(var ${EXES})
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 ENDFOREACH(var)
+
+
+    ADD_EXECUTABLE        (WeldForm "Source/WeldForm.cpp" 
+	#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
+  #"${CMAKE_SOURCE_DIR}/Source/NastranVolReader.cpp"
+  
+	)
+    TARGET_LINK_LIBRARIES (WeldForm ${LIBS} blitz)
+    SET_TARGET_PROPERTIES (WeldForm PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 
 
 
