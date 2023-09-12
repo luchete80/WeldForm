@@ -25,7 +25,7 @@
 #define TAU		0.005
 #define VMAX	1.0
 
-#define DX 0.008
+#define DX 0.010
 double tout, dtout;
 
 ofstream ofprop("traction.csv", std::ios::out);

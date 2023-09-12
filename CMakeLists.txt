@@ -56,41 +56,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GPU_NEIBSEARCH")
 
 endif()
 
+add_subdirectory("examples")
 
 
 include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 
 
-SET(EXES
 
-	
-	#Neighbour_Test
-	#Neighbour_Test_CNS
-  #"restart_test"
+  ADD_EXECUTABLE        (WeldForm "Source/WeldForm.cpp" 
+#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
+#"${CMAKE_SOURCE_DIR}/Source/NastranVolReader.cpp"
+
 )
-
-add_subdirectory("examples")
-
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -fstrict-aliasing -ftree-vectorize -funroll-loops -mmmx -msse -msse2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -fopenmp -march=native -pthread")
-
-FOREACH(var ${EXES})
-    ADD_EXECUTABLE        (${var} "${var}.cpp" 
-	#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
-  #"${CMAKE_SOURCE_DIR}/Source/NastranVolReader.cpp"
-  
-	)
-    TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
-    SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
-ENDFOREACH(var)
-
-
-    ADD_EXECUTABLE        (WeldForm "Source/WeldForm.cpp" 
-	#"${CMAKE_SOURCE_DIR}/Source/Mesh.cpp"	#Contact Problems
-  #"${CMAKE_SOURCE_DIR}/Source/NastranVolReader.cpp"
-  
-	)
-    TARGET_LINK_LIBRARIES (WeldForm ${LIBS} blitz)
-    SET_TARGET_PROPERTIES (WeldForm PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
+  TARGET_LINK_LIBRARIES (WeldForm ${LIBS} blitz)
+  SET_TARGET_PROPERTIES (WeldForm PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 
 
 
