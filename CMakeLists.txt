@@ -56,7 +56,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GPU_NEIBSEARCH")
 
 endif()
 
-#add_subdirectory("examples")
+add_subdirectory("examples")
 
 include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 
@@ -78,9 +78,9 @@ SET(EXES
   # examples/Compression
 	#Compression_XSPH
   #Compression_AVisc
-  Compression_1010
+  #Compression_1010
   #Compression_half_ghost_vel
-	Compression_thermal
+	#Compression_thermal
 	#Compression_12_solver_orig
 	#Compression_smallD
 	#Compression_smallL
@@ -121,7 +121,7 @@ SET(EXES
   #Compression_1010_half_ghost
 	#NastranReader_test
 	#CompressionForces
-  Compression 
+  #Compression 
   #Compression_2d
 	#CompressionVel
   #CompressionVel_Implicit
@@ -150,9 +150,9 @@ SET(EXES
   #Kernel_Test
 	#Kernel_Test_2D
 	#Kernel_Test_2D_vel
-	#Traction
+	Traction
 	#traction_app
-	Traction_Hollomon
+	#Traction_Hollomon
 	#Traction_JC
 	#Thermal_Expansion_2
 	#4-DamBreak3D

@@ -1,6 +1,7 @@
-#include "Mesh.h"
 #include "Domain.h"
-#include <iostream>
+#include "InteractionAlt.cpp"
+#include "SolverFraser.cpp"
+#include "SolverLeapfrog.cpp"
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -202,7 +203,8 @@ int main(){
 	//		1	Outer Surface
 	//		2,3 //Boundaries
 	//dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
-	dom.Solve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
+	//dom.Solve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
+  dom.SolveDiffUpdateLeapFrog(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.e-6 ,"test06",1000);                
 	//dom.ThermalStructSolve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
 	
 	dom.WriteXDMF("ContactTest");
