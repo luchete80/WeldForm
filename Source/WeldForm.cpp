@@ -542,7 +542,7 @@ int main(int argc, char **argv) try {
     if (dom.nonlock_sum)
       cout << "Nishimura "<<endl;
     else
-      cout << "Locking "<<endl;
+      cout << "Locking "<<endl; 
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech-Fraser" || solver=="Mech-Thermal-Fraser")
       dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);

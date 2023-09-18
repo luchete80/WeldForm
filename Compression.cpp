@@ -26,6 +26,8 @@
 #include "SolverFraser.cpp"
 #include "SolverLeapfrog.cpp"
 
+#include "SolverLeapFrog.cpp"
+
 #define TAU		0.005
 #define VMAX	10.0
 
@@ -193,7 +195,9 @@ int main(int argc, char **argv) try
     //timestep = 2.5e-6;
     dom.auto_ts = false;
     //dom.SolveDiffUpdateKickDrift(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
-    dom.SolveDiffUpdateLeapFrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+    dom.SolveDiffUpdateLeapfrog(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
+
+
     //dom.SolveDiffUpdateVerlet(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateFraser(/*tf*/0.105,/*dt*/timestep,/*dtOut*/1.e-4,"test06",10000);	
     //dom.SolveDiffUpdateFraser(5*timestep,/*dt*/timestep,/*dtOut*/timestep,"test06",10000);	

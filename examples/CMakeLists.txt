@@ -1,4 +1,6 @@
+
 # add_subdirectory(input)
+
 
 
 SET(EXES
@@ -55,13 +57,7 @@ SET(EXES
   #Contact_Compression_1010_hlaf_ghost
   #Contact_Compression_1010_unif
   #Compression_1010
-  #Contact_Compression_1010
-  #Compression_1010_qt
-  #Contact_Compression_1010_half
-  #Compression_1010_half_ghost
-	#NastranReader_test
-	#CompressionForces
-  #Compression 
+
   #Compression_2d
 	#CompressionVel
   #CompressionVel_Implicit
@@ -119,12 +115,9 @@ SET(EXES
 	
 	#Neighbour_Test
 	#Neighbour_Test_CNS
+
   #"restart_test"
 )
-
-# add_subdirectory("examples")
-
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ffast-math -fstrict-aliasing -ftree-vectorize -funroll-loops -mmmx -msse -msse2 -msse3 -mssse3 -msse4.1 -msse4.2 -mavx -fopenmp -march=native -pthread")
 
 FOREACH(var ${EXES})
     ADD_EXECUTABLE        (${var} "${var}.cpp" 
@@ -134,4 +127,5 @@ FOREACH(var ${EXES})
 	)
     TARGET_LINK_LIBRARIES (${var} ${LIBS} blitz)
     SET_TARGET_PROPERTIES (${var} PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
+
 ENDFOREACH(var)

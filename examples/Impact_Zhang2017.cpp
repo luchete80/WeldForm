@@ -1,19 +1,35 @@
+<<<<<<< HEAD
 #include "Domain.h"
 #include "InteractionAlt.cpp"
 #include "SolverFraser.cpp"
 #include "SolverLeapfrog.cpp"
+=======
+>>>>>>> 467f306b4976a9a4400aa4f44e8409d0ab4d1678
 
+#include <iostream>
+#include "Domain.h"
+#include "Input.h"
+
+#include "Input.h"
+#include "InteractionAlt.cpp"
+#include "Mesh.h"
+
+#include "SolverFraser.cpp"
+#include "Geometry.cpp"
+#include "SolverKickDrift.cpp"
+#include "SolverLeapfrog.cpp"
 #define TAU		0.005
-#define VMAX	10.0
+#define VMAX	190.0
 
 using namespace SPH;
 using namespace std;
 
+
 //////////////////////////////////
 ///// EXAMPLE FROM 
-
+ 
 void UserAcc(SPH::Domain & domi) {
-	double vcompress = 190.0;
+	double vcompress = VMAX;
 
 	// if (domi.getTime() < TAU ) 
 		// vcompress = VMAX/TAU * domi.getTime();
@@ -198,13 +214,19 @@ int main(){
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
 	dom.AddTrimeshParticles(&mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+  
+  timestep = (0.6*h/(Cs+VMAX)); 
+  dom.CFL = 0.6;
+  //timestep = 2.5e-6;
+  dom.auto_ts = true;
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
 	//dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
 	//dom.Solve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
+
   dom.SolveDiffUpdateLeapFrog(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.e-7 ,"test06",1000);                
-	//dom.ThermalStructSolve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
+
 	
 	dom.WriteXDMF("ContactTest");
 }
