@@ -5,7 +5,7 @@
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.6,
-  "autoTS": [true,false,false],
+  "autoTS": [false,false,false],
   "simTime": 0.01,
   "outTime": 1.0e-6,
   "artifViscAlpha": 1.5,
@@ -50,7 +50,7 @@
 {
 	"id": 2,
 	"start":[-1.0,-1.0, -0.03],
-	"end": 	[ 1.0, 1.0, 0.0000]
+	"end": 	[ 1.0, 1.0, 0.00020]
 }
 ],
 
@@ -66,13 +66,13 @@
 {
 	"zoneId": 	2,
 	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, 0.0],
+	"value": 		[ 0.0, 0.0, 227.0],
 	"free": 		true
 },
 {
 	"zoneId": 	10,
 	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, -227.0],
+	"value": 		[ 0.0, 0.0, 0.0],
 	"free": 		true
 }
 ]
