@@ -30,20 +30,20 @@ void UserAcc(SPH::Domain & domi) {
 	
 	{
 		//TODO: Modify this by relating FEM & AND partciles 
-		if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
-		{
-			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
-			domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
-//			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
-		}
+		// if (domi.Particles[i]->ID == 10) // "FEM", fictitious SPH PARTICLES FROM TRIMESH
+		// {
+			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,-vcompress);
+			// domi.Particles[i]->va		= Vec3_t(0.0,0.0,-vcompress);
+// //			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,-vcompress);
+// //			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+		// }
 		if (domi.Particles[i]->ID == 2)
 		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
 	
@@ -136,12 +136,11 @@ int main(){
 	dom.AddCylinderLength(0, Vec3_t(0.,0.,-L/10.), R, L + 2.*L/10.,  dx/2., rho, h, false); 
 	cout << "Max z plane position: " <<dom.Particles[dom.Particles.Size()-1]->x(2)<<endl;
 
-	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 1.000001 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
+	double cyl_zmax = dom.Particles[dom.Particles.Size()-1]->x(2) + 0.9999995 * dom.Particles[dom.Particles.Size()-1]->h /*- 1.e-6*/;
 
 	
 	mesh.AxisPlaneMesh(2,false,Vec3_t(-0.01,-0.01, cyl_zmax),Vec3_t(0.01,0.01, cyl_zmax),40);
 	cout << "Plane z" << *mesh.node[0]<<endl;
-	
 	
 	//mesh.AxisPlaneMesh(2,true,Vec3_t(-R-R/10.,-R-R/10.,-L/10.),Vec3_t(R + R/10., R + R/10.,-L/10.),4);
 	cout << "Creating Spheres.."<<endl;
@@ -204,7 +203,7 @@ int main(){
 	//		2,3 //Boundaries
 	//dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
 	//dom.Solve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
-  dom.SolveDiffUpdateLeapFrog(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.e-6 ,"test06",1000);                
+  dom.SolveDiffUpdateLeapFrog(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.e-7 ,"test06",1000);                
 	//dom.ThermalStructSolve(/*tf*/60.01e-6,/*dt*/timestep,/*dtOut*/1.0e-6,"test06",999);
 	
 	dom.WriteXDMF("ContactTest");
