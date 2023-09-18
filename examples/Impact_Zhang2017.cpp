@@ -1,10 +1,8 @@
-<<<<<<< HEAD
+
 #include "Domain.h"
 #include "InteractionAlt.cpp"
 #include "SolverFraser.cpp"
 #include "SolverLeapfrog.cpp"
-=======
->>>>>>> 467f306b4976a9a4400aa4f44e8409d0ab4d1678
 
 #include <iostream>
 #include "Domain.h"

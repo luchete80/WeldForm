@@ -1,6 +1,8 @@
-#include "Mesh.h"
 #include "Domain.h"
-#include <iostream>
+#include "InteractionAlt.cpp"
+#include "SolverFraser.cpp"
+#include "SolverLeapfrog.cpp"
+
 
 #define TAU		0.005
 #define VMAX	10.0
@@ -42,16 +44,16 @@ void UserAcc(SPH::Domain & domi) {
 		}
 		if (domi.Particles[i]->ID == 2)
 		{
-			// domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
-			// domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
-			//domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->v		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->vb		= Vec3_t(0.0,0.0,0.0);
+			domi.Particles[i]->VXSPH	= Vec3_t(0.0,0.0,0.0);
 		}
 	}
 	
 	//TODO: Modify this by relating FEM & AND partciles 
 	//domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,0.0));
-	domi.trimesh->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
+	//domi.trimesh[0]->ApplyConstVel(Vec3_t(0.0,0.0,-vcompress));
 }
 
 
@@ -151,11 +153,11 @@ int main(){
 			dom.Particles[a]->NoSlip=true;			
 		
 		}
-		// if ( z > L )
-			// dom.Particles[a]->ID=3;
+		if ( z > L -h/2.0)
+			dom.Particles[a]->ID=10;
 	}
 	//Contact Penalty and Damping Factors
-	dom.contact = true;
+	dom.contact = false;
 	dom.friction = 0.0;
 	dom.PFAC = 1.0;
 	dom.DFAC = 0.2;
@@ -171,11 +173,12 @@ int main(){
 	//TODO: DO THIS INSIDE SOLVER CHECKS
 	double hfac = 1.1;	//Used only for Neighbour search radius cutoff
 											//Not for any force calc in contact formulation
-	dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+	//dom.AddTrimeshParticles(mesh, hfac, 10); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 	//ID 	0 Internal
 	//		1	Outer Surface
 	//		2,3 //Boundaries
-	dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
+	//dom.Solve(/*tf*/40.e-6,/*dt*/timestep,/*dtOut*/1.e-6,"test06",1000);
+  dom.SolveDiffUpdateLeapFrog(/*tf*/40.01e-6,/*dt*/timestep,/*dtOut*/1.e-7 ,"test06",1000);        
 	
 	dom.WriteXDMF("ContactTest");
 }
