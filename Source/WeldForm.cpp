@@ -493,12 +493,31 @@ int main(int argc, char **argv) try {
 		}//Boundary Conditions
 		
 		double IniTemp = 0.;
+    int ics_count = 0;
 		for (auto& ic : ics){
 			double temp;
+      
 			if (solver == "Mech-Thermal" || solver == "Mech-Thermal-Fraser"){
 				readValue(ic["Temp"], IniTemp);
 				cout << "Initial Temp: "<<IniTemp<<endl;
 			}
+      cout << "Initial condition "<<ics_count<<endl;
+			std::vector<double> value;
+			readValue(ic["value"], 	    value);
+      
+      int zoneid = -1; //if NO ZONE ID IS ALL SOLID PARTICLES
+      readValue(ic["zoneId"], 		zoneid);
+      int count = 0;
+      cout << "zone id "<<zoneid<<endl;
+      if (zoneid == -1){
+        for (size_t a=0; a<dom.solid_part_count; a++){
+          dom.Particles[a]->a		= 0.0;
+          dom.Particles[a]->v		= Vec3_t(value[0],value[1],value[2]);  
+          count ++;
+        }
+      }
+        cout << "Initial condition set for "<<count<<" particles."<<endl;
+        ics_count++;
 		}
     
     //Add fixed particles, these have priority

@@ -40,19 +40,11 @@
 	"type": "Plane",
 	"zoneId": 10,
 	"start": [-0.0075, -0.0075, 0.0324],
-  "partSide": 20,
+  "partSide": 40,
 	"dim":   [0.015, 0.015, 0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
 }],
-
-"DomainZones": [
-{
-	"id": 2,
-	"start":[-1.0,-1.0, -0.03],
-	"end": 	[ 1.0, 1.0, 0.00020]
-}
-],
 
 "Amplitudes": [
 {
@@ -62,17 +54,16 @@
 	"value": 	[ 0.0, 0.0, 0.0]
 }
 ],
-"BoundaryConditions": [
+"InitialConditions": [
 {
-	"zoneId": 	2,
-	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, 0.0],
-	"free": 		true
-},
+	"value": 		[ 0.0, 0.0, 227.0]
+}
+],
+"BoundaryConditions": [
 {
 	"zoneId": 	10,
 	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, -227.0],
+	"value": 		[ 0.0, 0.0, 0.0],
 	"free": 		true
 }
 ]

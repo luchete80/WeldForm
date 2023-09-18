@@ -452,3 +452,4 @@
 -------------------------------------------------------------
 20230918 - Organize CMAKELISTS
          - Adding Campos Impact JSON 
+         - Added initial velocity to input
