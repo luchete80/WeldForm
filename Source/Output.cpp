@@ -521,7 +521,7 @@ inline void Domain::WriteCSV(char const * FileKey)
 		oss << 		Particles[i]->ID<<", "<<Particles[i]->Sigma_eq<< ", "<< Particles[i]->pl_strain << ", "<<
     Particles[i]-> v(0) << ", " << Particles[i]-> v(1) << ", " << Particles[i]-> v(2) << ", " <<
     Particles[i]-> a(0) << ", " << Particles[i]-> a(1) << ", " <<Particles[i]-> a(2) << ", " << 
-    Particles[i]->contforce(0)<< ", " << Particles[i]->contforce(1)<< ", " <<Particles[i]->contforce(2)<<endl<<
+    Particles[i]->contforce(0)<< ", " << Particles[i]->contforce(1)<< ", " <<Particles[i]->contforce(2)<<
     Particles[i]->Pressure<<endl;
 	}
 
