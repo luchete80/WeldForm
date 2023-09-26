@@ -87,15 +87,15 @@ int main(int argc, char **argv) try
 		L = 6.0;
     Lh = 1.0;
 		
-		double E  = 210.e9;
+		double E  = 17.e6;
 		//double Et = 0.1 * E;
     double Et = 0.0 * E;
 		
 		double 	Ep = E*Et/(E-Et);		//TODO: Move To Material
 				
-		double nu = 0.3;
+		double nu = 0.45;
 		
-    	rho	= 7850.0;
+    	rho	= 1100.0;
 		K= E / ( 3.*(1.-2*nu) );
 		G= E / (2.* (1.+nu));
 		Fy	= 350.e6;
@@ -126,7 +126,9 @@ int main(int argc, char **argv) try
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
 
-		dom.ts_nb_inc = 1.;
+	dom.ts_nb_inc = 5.;
+	dom.gradKernelCorr = true; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
+  
 		cout << "Ep: " <<Ep<<endl;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
@@ -149,9 +151,15 @@ int main(int argc, char **argv) try
 				}
 				if ( z > L )
     			dom.Particles[a]->ID=3;
+        
+        double omega = 105.0*sin(M_PI*z/(2.0*L));
+        //Set initial vel
+        dom.Particles[a]->v = cross (omega,dom.Particles[a]->xc );
     	}
 		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
+  
+  
 
 	of = std::ofstream ("cf.csv", std::ios::out);
   of << "Time, int_energy, kin_energy, ext_work"<<endl;
@@ -160,7 +168,7 @@ int main(int argc, char **argv) try
     timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
     dom.auto_ts=false; 
     
-    dom.SolveDiffUpdateLeapFrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);                
+    dom.SolveDiffUpdateLeapFrog(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-2 ,"test06",1000);                
     //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);      
         return 0;
 }
