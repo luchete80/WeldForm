@@ -101,7 +101,7 @@ int main(int argc, char **argv) try
 		Fy	= 350.e6;
 
 		//dx = 0.0085;
-		dx = Lh/6.0;
+		dx = Lh/10.0;
     h	= dx*1.2; //Very important
 
         Cs	= sqrt(K/rho);
@@ -121,13 +121,13 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = L;
         dom.DomMin(0) = -L;
 
-    dom.AddBoxLength(1 ,Vec3_t (0.,-0.5,-0.5), L ,Lh,Lh , dx/2.0 ,rho, h, 1 , 0 , false, false );
+    dom.AddBoxLength(1 ,Vec3_t (-0.5,-0.5,0.0), Lh ,Lh,L , dx/2.0 ,rho, h, 1 , 0 , false, false );
       
 		cout << "Particle count: "<<dom.Particles.Size()<<endl;
 		
 
-	dom.ts_nb_inc = 5.;
-	dom.gradKernelCorr = true; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
+	dom.ts_nb_inc = 1.;
+	dom.gradKernelCorr = false; //ATTENTION! USE CFL = 0.7 AND NOT 1.0, IF 1.0 IS USED RESULT DIVERGES
   
 		cout << "Ep: " <<Ep<<endl;
     	for (size_t a=0; a<dom.Particles.Size(); a++)
@@ -140,11 +140,12 @@ int main(int argc, char **argv) try
     		dom.Particles[a]->Material	= 2;
     		dom.Particles[a]->Fail		= 1;
     		dom.Particles[a]->Sigmay	= Fy;
-    		dom.Particles[a]->Alpha		= 1.0; 
+    		dom.Particles[a]->Alpha		= 2.5; 
+    		dom.Particles[a]->Beta		= 2.5; 
     		dom.Particles[a]->TI			= 0.3;
     		dom.Particles[a]->TIInitDist	= dx;
     		double z = dom.Particles[a]->x(2);
-    		if ( z < 0 ){
+    		if ( z < dx ){
     			dom.Particles[a]->ID=2;
     			// dom.Particles[a]->IsFree=false;
     			// dom.Particles[a]->NoSlip=true;    		
@@ -152,9 +153,10 @@ int main(int argc, char **argv) try
 				if ( z > L )
     			dom.Particles[a]->ID=3;
         
-        double omega = 105.0*sin(M_PI*z/(2.0*L));
+        Vec3_t omega (0.0,0.0,105.0*sin(M_PI*z/(2.0*L)) );
         //Set initial vel
-        dom.Particles[a]->v = cross (omega,dom.Particles[a]->xc );
+        Vec3_t vr = Vec3_t(dom.Particles[a]->x[0],dom.Particles[a]->x[1],0.0);
+        dom.Particles[a]->v = cross (omega,vr );
     	}
 		dom.WriteXDMF("maz");
 //		dom.m_kernel = SPH::iKernel(dom.Dimension,h);	
@@ -165,10 +167,10 @@ int main(int argc, char **argv) try
   of << "Time, int_energy, kin_energy, ext_work"<<endl;
 
    //dom.Solve(/*tf*/0.0505,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
-    timestep = (0.4*h/(Cs)); //Standard modified Verlet do not accept such step
-    dom.auto_ts=false; 
+    timestep = (0.3*h/(Cs)); //Standard modified Verlet do not accept such step
+    dom.auto_ts=true; 
     
-    dom.SolveDiffUpdateLeapFrog(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-2 ,"test06",1000);                
+    dom.SolveDiffUpdateLeapFrog(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-3 ,"test06",1000);                
     //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);      
         return 0;
 }
