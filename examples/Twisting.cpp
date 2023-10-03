@@ -170,7 +170,7 @@ int main(int argc, char **argv) try
     timestep = (0.3*h/(Cs)); //Standard modified Verlet do not accept such step
     dom.auto_ts=true; 
     
-    dom.SolveDiffUpdateLeapFrog(/*tf*/0.1,/*dt*/timestep,/*dtOut*/1.e-3 ,"test06",1000);                
+    dom.SolveDiffUpdateLeapFrog(/*tf*/0.2,/*dt*/timestep,/*dtOut*/1.e-3 ,"test06",1000);                
     //dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);      
         return 0;
 }

@@ -75,7 +75,7 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  #FSW_red
+  FSW_red
   #Drilling
   #FSW_nastran
 	#Elastic
@@ -86,8 +86,8 @@ SET(EXES
   #Kernel_Test
 	#Kernel_Test_2D
 	#Kernel_Test_2D_vel
-	Traction
-  Twisting
+	#Traction
+  # Twisting
 	#traction_app
 	#Traction_Hollomon
 	#Traction_JC
