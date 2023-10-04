@@ -506,7 +506,7 @@ inline void Domain::WriteCSV(char const * FileKey)
 	//Writing in a Log file
 	String fn(FileKey);
 	
-	oss << "X, Y, Z, ID, Sigma_eq, Pl_Strain, vx, vy, vz, ax, ay, az, CFx, CFy, CZFz"<<endl;;
+	oss << "X, Y, Z, ID, Sigma_eq, Pl_Strain, vx, vy, vz, ax, ay, az, CFx, CFy, CZFz, p"<<endl;;
 	
 	//#pragma omp parallel for schedule(static) num_threads(Nproc)
 	// #ifdef __GNUC__
@@ -521,7 +521,8 @@ inline void Domain::WriteCSV(char const * FileKey)
 		oss << 		Particles[i]->ID<<", "<<Particles[i]->Sigma_eq<< ", "<< Particles[i]->pl_strain << ", "<<
     Particles[i]-> v(0) << ", " << Particles[i]-> v(1) << ", " << Particles[i]-> v(2) << ", " <<
     Particles[i]-> a(0) << ", " << Particles[i]-> a(1) << ", " <<Particles[i]-> a(2) << ", " << 
-    Particles[i]->contforce(0)<< ", " << Particles[i]->contforce(1)<< ", " <<Particles[i]->contforce(2)<<endl;
+    Particles[i]->contforce(0)<< ", " << Particles[i]->contforce(1)<< ", " <<Particles[i]->contforce(2)<<
+    Particles[i]->Pressure<<endl;
 	}
 
 	fn = FileKey;

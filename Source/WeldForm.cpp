@@ -284,7 +284,8 @@ int main(int argc, char **argv) try {
     cout << "Reading Domain mat id" << endl;  readValue(domblock[0]["matID"], 	matID); //0: Box
     cout << "Grid Coordinate System" << endl;  readValue(domblock[0]["gridCoordSys"], 	gridCS); //0: Box
     readBoolVector(domblock[0]["sym"], 	sym); //0: Box
-        for (int i=0;i<3;i++) {//TODO: Increment by Start Vector
+    
+    for (int i=0;i<3;i++){ //TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
 			dom.DomMin(0) = -L[i];
 		}		

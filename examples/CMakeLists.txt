@@ -36,7 +36,7 @@ SET(EXES
   #Compression_thermal
   #Compression_nastran
   #Contact_Compression_thermal
-  #Contact_Compression_Rot
+  Contact_Compression_Rot
 	#Cantilever
 	#Cantilever2
 	#Cantilever2_pl
@@ -75,18 +75,19 @@ SET(EXES
 	#Contact_Cantilever
 	#FreeSurface
   #FSW
-  #FSW_red
+  FSW_red
   #Drilling
   #FSW_nastran
 	#Elastic
 	#Heat_2D
-	Impact_Campos
+	#Impact_Campos
 	#Impact_Contact
 	#Impact_Zhang2017
   #Kernel_Test
 	#Kernel_Test_2D
 	#Kernel_Test_2D_vel
 	#Traction
+  # Twisting
 	#traction_app
 	#Traction_Hollomon
 	#Traction_JC
