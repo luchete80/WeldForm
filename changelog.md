@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.3] - TBR
+
+### Input File 
+ - Added Angular Velocity reading
+ 
 ## [0.4.2.1] - 20230822 - Hot Fixes
 
 ### Solver 

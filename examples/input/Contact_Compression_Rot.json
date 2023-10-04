@@ -7,7 +7,7 @@
   "cflFactor": 0.4,
   "autoTS": [false,false,false],
   "simTime": 0.01,
-  "outTime": 1.0e-5
+  "outTime": 1.0e-4
 }
 ,
 "Materials":[ 
@@ -70,7 +70,8 @@
 {
 	"zoneId": 	10,
 	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, -1.0],
+	"value": 		    [ 0.0, 0.0, -1.0],
+	"valueAng": 		[ 0.0, 0.0, 125.8318],
 	"free": 		true
 }
 ]

@@ -90,8 +90,10 @@ void UserAcc(SPH::Domain & domi)
     for (int bc=0;bc<domi.bConds.size();bc++){
       for (int m=0;m<domi.trimesh.size();m++){
         if (domi.trimesh[m]->id == domi.bConds[bc].zoneId)
-          if (domi.bConds[bc].valueType == 0) ///constant
+          if (domi.bConds[bc].valueType == 0) { ///constant
             domi.trimesh[m]->SetVel(domi.bConds[bc].value);
+            domi.trimesh[m]->SetRotAxisVel(domi.bConds[bc].value_ang);
+          }
           else if (domi.bConds[bc].valueType == 1) {///amplitude
             for (int i=0;i<domi.amps.size();i++)
               if(domi.amps[i].id == domi.bConds[bc].ampId){
