@@ -119,6 +119,10 @@ inline void Domain::CellInitiate () {
 			
 			ContPairs.Push(Initial);
       
+      if (model_damage){
+        dam_D.Push(dam_initial);
+        dam_rf0.Push(dam_initial); //IF NOT UNIFORM MESH
+      }
       //New integration/sum
       Array <size_t> a;
       //ilist_temp_SM.Push(a);jlist_temp_SM.Push(a);
@@ -392,6 +396,10 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 				{
 					if (Particles[temp1]->IsFree*Particles[temp2]->IsFree) {//Both free, most common
 						SMPairs[T].Push(std::make_pair(temp1, temp2));
+            if (model_damage){
+              dam_D[T].Push(0.0);
+              dam_rf0[T].Push(0.0);
+            }
           }
 					else
 						FSMPairs[T].Push(std::make_pair(temp1, temp2)); //TEMPORARY

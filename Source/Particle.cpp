@@ -149,6 +149,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
   mcp_t = 1.;
   
   ps_energy = 0.;
+  
 }
 
 inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin, size_t Scheme, Mat3_t I)
@@ -1062,6 +1063,8 @@ inline void Particle::AddBMat(const Vec3_t &d_dx){
   m_B.Add(3,1, d_dx(2));        m_B.Add(3,2, d_dx(1));
   m_B.Add(4,0, d_dx(2));        m_B.Add(4,1, d_dx(2));
   m_B.Add(5,0, d_dx(2));        m_B.Add(5,1, d_dx(0)); 
+
 }
 
 }; // namespace SPH
+

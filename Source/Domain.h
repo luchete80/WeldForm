@@ -53,6 +53,8 @@ enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spli
 enum Viscosity_Eq_Type { Morris=0, Shao=1, Incompressible_Full=2, Takeda=3 };
 enum Gradient_Type { Squared_density=0, Multiplied_density=1 };
 
+enum Damage_Model { None=0, Rankine=1 };
+
 //TODO: Add from which it depends
 enum Function_Type { Constant=0, Linear=1, Multilinear=2};
 
@@ -357,6 +359,8 @@ public:
 
     double					AvgVelocity;	///< Average velocity of the last two column for x periodic constant velocity
 	double 					getCellfac(){return Cellfac;}
+  
+  bool  model_damage; //Include or not a damage model, ENUM
 
 	#ifdef __GNUC__
     size_t					Nproc;		///< No of threads which are going to use in parallel calculation
@@ -382,10 +386,18 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	NSMPairs;
     Array<Array<std::pair<size_t,size_t> > >	FSMPairs;
     
+    ////// IF DAMAGE!!
+    Array<Array<double>>                      dam_D;            //DAMAGE FACTOR!(processor, pair)
+    ////// THERE ARE TWO INITIAL DISTANCES, CRACK
+    Array<Array<double>>                      dam_r0;          //Initial distance BETWEEN PARTICLES; IF UNIFORM THIS ARRAY IS NOT ALLOCATED
+    Array<Array<double>>                      dam_rf0;         //Initial failure distance
+    double                                    dam_r0_unif;      //IF MESH IS UNIFORM rij_0 is also uniform
+    bool                                      is_grid_uniform;  
+    
 		Array<Array<std::pair<size_t,size_t> > >	RIGPairs;	//Previous instance to contact pairs, because outer surface should be located
 																												//based on original neighbours
 		
-    Array<Array<std::pair<size_t,size_t> > >	ContPairs;
+    Array<Array<std::pair<size_t,size_t> > >	ContPairs;//Asuming same material
     
     //NEW: For parallel sum/reduction
     std::vector<size_t> first_pair_perproc;                   // Almost like pair count        
@@ -408,6 +420,8 @@ public:
 		bool 									update_contact_surface;
 
     Array<std::pair<size_t,size_t> >		Initial;
+    Array<double>                       dam_initial;  //if damage
+    
     Mat3_t I;
     String					OutputName[3];
 	double T_inf;			//LUCIANO: IN CASE OF ONLY ONE CONVECTION TEMPERAURE
@@ -453,6 +467,8 @@ public:
   inline void CalcStiffMat();
   inline void CheckMinTSVel();
   inline void CheckMinTSAccel();
+  inline void CalcDamage();
+  
   int AssignZone(Vec3_t &start, Vec3_t &end, int &id);
 	
   std::vector <SPH::amplitude> amps; ////maybe move to domain
@@ -505,5 +521,7 @@ public:
 #include "Contact.cpp"
 
 #include "ImplicitSolver.cpp"
+
+#include "Damage.cpp"
 
 #endif // SPH_DOMAIN_H

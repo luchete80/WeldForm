@@ -165,6 +165,9 @@ inline Domain::Domain ()
   contact_alg = Wang;
   manual_min_ts = 1.e-10;
   
+  model_damage = false;
+  is_grid_uniform = true; //IN ORDER TO NOT ALLOCATE ALL INITIAL DISTANCES (LOT OF RAM)
+  
 }
 
 inline Domain::~Domain ()

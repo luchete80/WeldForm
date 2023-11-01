@@ -3,6 +3,11 @@
 
 class Particle;
 
+class DamageModel {
+  
+  
+};
+
 class Elastic_{
 	private:
 	double E_m, nu_m;	//Poisson and young
