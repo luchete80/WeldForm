@@ -4,7 +4,14 @@
 class Particle;
 
 class DamageModel {
+  double Gf; //Fracture Energ
+	double sigma_max;
+	double delta_max;  // being calculated for example delta_max = 2GF/(sigmamax) 
   
+};
+
+class RankineDamage:
+public DamageModel {
   
 };
 
@@ -24,6 +31,7 @@ class Material_{
 	
 	protected:
 	Elastic_ elastic_m;
+	DamageModel *damage_model;
 	double E_m, nu;	//TODO, move to elastic class
 	public:
 	Material_(){}
