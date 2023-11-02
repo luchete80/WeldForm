@@ -478,6 +478,8 @@ inline void Domain::ClearNbData(){
 		NSMPairs[i].Clear();
 		RIGPairs[i].Clear();
 		ContPairs[i].Clear();//New
+		dam_D[i].Clear();
+		dam_rf0[i].Clear();
 	}
 	CellReset();
 	ListGenerate();

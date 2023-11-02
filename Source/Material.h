@@ -4,6 +4,7 @@
 class Particle;
 
 class DamageModel {
+public:
   double Gf; //Fracture Energ
 	double sigma_max;
 	double delta_max;  // being calculated for example delta_max = 2GF/(sigmamax) 
@@ -31,9 +32,10 @@ class Material_{
 	
 	protected:
 	Elastic_ elastic_m;
-	DamageModel *damage_model;
+
 	double E_m, nu;	//TODO, move to elastic class
 	public:
+	DamageModel *damage;
 	Material_(){}
 	Material_(const Elastic_ el):elastic_m(el){}
 	virtual inline double CalcTangentModulus(){return 0.0;};
