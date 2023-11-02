@@ -123,7 +123,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   // if (gradKernelCorr){
     // CalcGradCorrMatrix();	}
   last_output_time = clock();   
-	if (model_damage)  	
+
   while (Time<=tf && idx_out<=maxidx) {
     
     clock_beg = clock();
