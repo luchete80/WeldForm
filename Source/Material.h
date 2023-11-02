@@ -35,7 +35,7 @@ class Material_{
 
 	double E_m, nu;	//TODO, move to elastic class
 	public:
-	DamageModel *damage;
+	//DamageModel *damage;
 	Material_(){}
 	Material_(const Elastic_ el):elastic_m(el){}
 	virtual inline double CalcTangentModulus(){return 0.0;};

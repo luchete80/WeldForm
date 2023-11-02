@@ -150,7 +150,7 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
     else 
       check_nb_every_time = false;
 		
-		if (!model_damage) {
+		// if (!model_damage) {
 		if (max > MIN_PS_FOR_NBSEARCH && !isyielding){ //First time yielding, data has not been cleared from first search
 			ClearNbData(); 
 			MainNeighbourSearch/*_Ext*/();
@@ -159,9 +159,9 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
 		}
-		}
+		// }
 		
-		if (model_damage && !isfirst) ts_nb_inc = 1; //NEVER SEARCH NBs
+		// if (model_damage && !isfirst) ts_nb_inc = 1; //NEVER SEARCH NBs
 		
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
