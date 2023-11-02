@@ -3,15 +3,20 @@
 
 class Particle;
 
+enum Damage_Model { Rankine=1, JohnsonCook=2};
 // TODO: SEE WHAT ABOUT SMAX
 //SOULD BE PASSED TO INHERITED RANKINE OR NOT?
+//Johson Cook Damage Ratio according to Islam 2017 and 
 class DamageModel {
 public:
+  Damage_Model criterion;
   double Gf; //Fracture Energ
 	double sigma_max;
 	double delta_max;  // being calculated for example delta_max = 2GF/(sigmamax) 
+  DamageModel(){};
   DamageModel(const double &smax_, const double &Gf_)
 	:sigma_max(smax_),Gf(Gf_){}  
+  double calcFractureStrain(const double &pl_strain);
 	virtual ~DamageModel(){}
 };
 
@@ -19,9 +24,25 @@ class RankineDamage:
 public DamageModel {
 	public:
   RankineDamage(const double &smax_, const double &Gf_)
-	:DamageModel(smax_,Gf_){}
+	:DamageModel(smax_,Gf_){
+    criterion = Rankine;
+  }
 	
 	virtual ~RankineDamage(){}
+};
+
+class JohnsonCookDamage:
+public DamageModel {
+  double m_D1,m_D2,m_D3,m_D4,m_D5; 
+	public:
+  JohnsonCookDamage(const double &D1, const double &D2, const double &D3, const double &D4, const double &D5)
+	:m_D1(D1),m_D2(D2),m_D3(D3),m_D4(D4),m_D5(D5){
+    criterion = JohnsonCook;
+  }
+	double calcFractureStrain(const double &pl_strain, const double &sig_as,const double &T) { //sig_as is stress triaxiality
+    return ( (m_D1 + pow(m_D2, m_D3*sig_as)) * (pow, 1. + pl_strain) );
+  }
+	virtual ~JohnsonCookDamage(){}
 };
 
 class Elastic_{

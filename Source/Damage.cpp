@@ -51,6 +51,7 @@ inline void Domain::CalcDamage(){
 				double urij = -f * (dot(xij,vij));
 				double ci[2];
 				double ffi[2];
+        if (PP[0]->mat->damage->criterion == Rankine)
 				for (int i=0;i<2 ;i++){
 					//P1->Sigma eqn. 24
 					sig = PP[i]->Sigma;
