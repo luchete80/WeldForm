@@ -225,6 +225,7 @@ int main(int argc, char **argv) try {
 			mat->damage = &(*damage);
 			cout << "Assigned Rankine Damage Model"<<endl;
 			dom.model_damage = true;
+			dom.nonlock_sum = false;
 		}
 			
     // THERMAL PROPERTIES

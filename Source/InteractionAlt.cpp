@@ -451,6 +451,7 @@ inline void Domain::RateTensorsReduction(){
 
 // TODO: USED CALCULATED KERNELKS
 inline void Domain::CalcDensInc() {
+	double dam_f = 1.0; //if not damage
   Particle *P1, *P2;
 	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
 	#ifdef __GNUC__
@@ -532,17 +533,17 @@ inline void Domain::CalcDensInc() {
       if (dom_bid_type != AxiSymmetric) {
       omp_set_lock(&P1->my_lock);
         if (!gradKernelCorr){
-          P1->dDensity	+= mj * (di/dj) * temp1;
+          P1->dDensity	+= dam_f * mj * (di/dj) * temp1;
         } else{
-          P1->dDensity	+= mj * (di/dj) * temp1_c[0];
+          P1->dDensity	+= dam_f *mj * (di/dj) * temp1_c[0];
         }		
       omp_unset_lock(&P1->my_lock);
       } else{ //HERE DENSITY IS NOT STANDARD DENSITY BUT : 2*PI*r*rho WANG EQN 56
         omp_set_lock(&P1->my_lock);
           if (!gradKernelCorr){
-            P1->dDensity	+= mj * temp1;
+            P1->dDensity	+= dam_f * mj * temp1;
           } else{
-            P1->dDensity	+= mj * temp1_c[0];
+            P1->dDensity	+= dam_f * mj * temp1_c[0];
           }		
         omp_unset_lock(&P1->my_lock);        
       }
