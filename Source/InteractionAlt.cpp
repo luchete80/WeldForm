@@ -11,8 +11,9 @@ namespace SPH{
   
 inline void Domain::CalcAccel() {
   Particle *P1, *P2;
-  
-	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+  double dam_f = 1.0; //if not damage
+	
+  #pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -49,7 +50,13 @@ inline void Domain::CalcAccel() {
 
     dj = P2->Density;
     mj = P2->Mass;
+    
+    if (model_damage) {
+      if (dam_D[k][p] > 0.0 ) dam_f = 1.0 - dam_D[k][p];
+      // if (dam_D[k][p]     
+    }
 		
+    if (dam_f > 0.0) {
 
 		Vec3_t vij	= P1->v - P2->v;
 		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
@@ -202,6 +209,8 @@ inline void Domain::CalcAccel() {
 		omp_unset_lock(&P2->my_lock);
     //#endif
     }//nonlock_sum
+    
+    }//dam_f
   }//MAIN FOR IN PAIR
   }//MAIN FOR PROC
 
@@ -525,8 +534,13 @@ inline void Domain::CalcDensInc() {
         }
       }
       //#ifdef NONLOCK_SUM
+      if (model_damage) {
+        if (dam_D[k][p] > 0.0 ) dam_f = 1.0 - dam_D[k][p];
+        // if (dam_D[k][p]     
+      }
+      if (dam_f > 0.0){
       if (nonlock_sum)
-      pair_densinc[first_pair_perproc[k] + p] = temp1;
+        pair_densinc[first_pair_perproc[k] + p] = temp1;
       //#else
       else {
       // Locking the particle 1 for updating the properties
@@ -550,13 +564,14 @@ inline void Domain::CalcDensInc() {
       // Locking the particle 2 for updating the properties
       omp_set_lock(&P2->my_lock);
         if (!gradKernelCorr){
-          P2->dDensity	+= mi * (dj/di) * temp1;							
+          P2->dDensity	+= dam_f * mi * (dj/di) * temp1;							
         }else {
-          P2->dDensity	+= mi * (dj/di) * temp1_c[1];
+          P2->dDensity	+= dam_f * mi * (dj/di) * temp1_c[1];
         }
       omp_unset_lock(&P2->my_lock);
       //#endif
       }//nonlock_sum
+      } //if dam_f > 0.0
     }//FOR PAIRS
   }//FOR NPROC
 
