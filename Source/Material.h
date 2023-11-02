@@ -3,17 +3,25 @@
 
 class Particle;
 
+// TODO: SEE WHAT ABOUT SMAX
+//SOULD BE PASSED TO INHERITED RANKINE OR NOT?
 class DamageModel {
 public:
   double Gf; //Fracture Energ
 	double sigma_max;
 	double delta_max;  // being calculated for example delta_max = 2GF/(sigmamax) 
-  
+  DamageModel(const double &smax_, const double &Gf_)
+	:sigma_max(smax_),Gf(Gf_){}  
+	virtual ~DamageModel(){}
 };
 
 class RankineDamage:
 public DamageModel {
-  
+	public:
+  RankineDamage(const double &smax_, const double &Gf_)
+	:DamageModel(smax_,Gf_){}
+	
+	virtual ~RankineDamage(){}
 };
 
 class Elastic_{
@@ -35,7 +43,7 @@ class Material_{
 
 	double E_m, nu;	//TODO, move to elastic class
 	public:
-	//DamageModel *damage;
+	DamageModel *damage;
 	Material_(){}
 	Material_(const Elastic_ el):elastic_m(el){}
 	virtual inline double CalcTangentModulus(){return 0.0;};

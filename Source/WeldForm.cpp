@@ -196,13 +196,15 @@ int main(int argc, char **argv) try {
     readValue(material[0]["poissonsRatio"], 	nu);
     readValue(material[0]["yieldStress0"], 	Fy);
     readArray(material[0]["const"], 		c);
-    Material_ *mat;
+    Material_ *mat; //SINCE DAMAGE MATERIAL, MATERIAL ALWAYS HAS TO BE ASSIGNED
     Elastic_ el(E,nu);
     cout << "Mat type  "<<mattype<<endl;
     if      (mattype == "Bilinear")    {
       Ep = E*c[0]/(E-c[0]);		                              //only constant is tangent modulus
       cout << "Material Constants, Et: "<<c[0]<<endl;
-    } else if (mattype == "Hollomon")    {
+			mat = new Material_();	//THIS IS NEW WITH DAMAGE; 
+														//AND IS COHERENT WITH BILINEAR MATERIAL WHICH DID NOT HAVE ITS OWN Material Class    
+		} else if (mattype == "Hollomon")    {
       mat = new Hollomon(el,Fy,c[0],c[1]);
       cout << "Material Constants, K: "<<c[0]<<", n: "<<c[1]<<endl;
     } else if (mattype == "JohnsonCook") {
@@ -213,7 +215,18 @@ int main(int argc, char **argv) try {
       cout << "Material Constants, A: "<<c[0]<<", B: "<<c[1]<<", n: "<<c[2]<<"C: "<<c[3]<<", eps_0: "<<c[4]<<"m: "<<c[5]<<", T_m: "<<c[6]<<", T_t: "<<c[7]<<endl;
     } else                              throw new Fatal("Invalid material type.");
     
-    
+		string damage_mod = "Rankine";
+		DamageModel *damage;
+    if      (damage_mod == "Rankine"){
+			double smax, Gf;
+			readValue(material[0]["smax"], 				smax);
+			readValue(material[0]["fracEnergy"], 	Gf);
+			damage= new DamageModel(smax,Gf);
+			mat->damage = &(*damage);
+			cout << "Assigned Rankine Damage Model"<<endl;
+			dom.model_damage = true;
+		}
+			
     // THERMAL PROPERTIES
 
     double k_T, cp_T;
@@ -552,6 +565,9 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->TI			= tensins;
       dom.Particles[a]->TIInitDist	= dx;
       dom.Particles[a]->hfac = 1.2; //Only for h update, not used
+			
+			// if (model_damage)
+			// dom.Particles[a]->mat->damage = damage;
       
       // THERMAL PROPS
       dom.Particles[a]->k_T = k_T;

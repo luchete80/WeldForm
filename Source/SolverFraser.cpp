@@ -322,6 +322,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     for (int i=0; i<Particles.Size(); i++)
       prev_acc[i] = Particles[i]->a;
 
+		if (model_damage) CalcDamage();
+		
 		CalcPlasticWorkHeat(deltat);   //Before Thermal increment because it is used
     ThermalCalcs(deltat);
     
