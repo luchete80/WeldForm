@@ -16,7 +16,7 @@ public:
   DamageModel(){};
   DamageModel(const double &smax_, const double &Gf_)
 	:sigma_max(smax_),Gf(Gf_){}  
-  virtual double calcFractureStrain(const double &pl_strain);
+  virtual double calcFractureStrain(const double &pl_strain){}
 	virtual ~DamageModel(){}
 };
 
@@ -27,7 +27,7 @@ public DamageModel {
 	:DamageModel(smax_,Gf_){
     criterion = Rankine_dam;
   }
-	
+	double calcFractureStrain(const double &pl_strain){}
 	virtual ~RankineDamage(){}
 };
 
