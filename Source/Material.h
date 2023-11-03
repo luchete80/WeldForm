@@ -24,6 +24,7 @@ public:
 	:sigma_max(smax_),Gf(Gf_){}  
   std::string  & getDamageCriterion() {return m_dam_crit_str;}  
   virtual double CalcFractureStrain(const double &pl_strain){}
+  virtual double CalcFractureStrain(const double &str_rate, const double &sig_as,const double &T){}
 	virtual ~DamageModel(){}
   
 };
@@ -49,8 +50,8 @@ public DamageModel {
 	:m_D1(D1),m_D2(D2),m_D3(D3),m_D4(D4),m_D5(D5), m_eps0(m_eps0_){
     m_dam_crit_str = "JohnsonCook";
   }
-	double CalcFractureStrain(const double &pl_strain, const double &sig_as,const double &T) { //sig_as is stress triaxiality
-    return ( (m_D1 + pow(m_D2, m_D3*sig_as)) * (pow (1. + pl_strain, m_D4)) ); //Islam 2017 eq. 35, 
+	double CalcFractureStrain(const double &str_rate, const double &sig_as,const double &T) { //sig_as is stress triaxiality
+    return ( (m_D1 + pow(m_D2, m_D3*sig_as)) * (pow (1.0 + (str_rate/m_eps0), m_D4)) ); //Islam 2017 eq. 35, 
   }
 	virtual ~JohnsonCookDamage(){}
 };
@@ -83,7 +84,7 @@ class Material_{
 	virtual inline double CalcYieldStress(){return 0.0;}
 	virtual inline double CalcYieldStress(const double &strain){return 0.0;};
 	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){return 0.0;}
-  virtual double &getRefStrainRate();//only for JC
+  virtual double &getRefStrainRate() {}//only for JC
 	const Elastic_& Elastic()const{return elastic_m;}
   //~Material_();
 };
