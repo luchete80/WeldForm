@@ -149,6 +149,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
   mcp_t = 1.;
   
   ps_energy = 0.;
+  dam_D = 0.0;
   
 }
 

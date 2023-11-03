@@ -223,6 +223,9 @@ namespace SPH {
 		bool    impose_vel;
     
     SPH::Plane *plane_ghost;
+    
+    //// DAMAGE (NOT USED BY RANKINE METHOD)
+    double dam_D;
 			
 		// Constructor
 		Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);

@@ -1,23 +1,31 @@
 #ifndef _MATERIAL_H_
 #define _MATERIAL_H_
+#include <string>
 
 class Particle;
 
-enum Damage_Criterion { Rankine_dam=1, JohnsonCook_dam=2};
+class Material_;
+class JohnsonCook;
+
 // TODO: SEE WHAT ABOUT SMAX
 //SOULD BE PASSED TO INHERITED RANKINE OR NOT?
 //Johson Cook Damage Ratio according to Islam 2017 and 
 class DamageModel {
+protected:
+  std::string m_dam_crit_str;
 public:
-  Damage_Criterion criterion;
   double Gf; //Fracture Energ
 	double sigma_max;
 	double delta_max;  // being calculated for example delta_max = 2GF/(sigmamax) 
+
+  
   DamageModel(){};
   DamageModel(const double &smax_, const double &Gf_)
 	:sigma_max(smax_),Gf(Gf_){}  
-  virtual double calcFractureStrain(const double &pl_strain){}
+  std::string  & getDamageCriterion() {return m_dam_crit_str;}  
+  virtual double CalcFractureStrain(const double &pl_strain){}
 	virtual ~DamageModel(){}
+  
 };
 
 class RankineDamage:
@@ -25,22 +33,24 @@ public DamageModel {
 	public:
   RankineDamage(const double &smax_, const double &Gf_)
 	:DamageModel(smax_,Gf_){
-    criterion = Rankine_dam;
+    m_dam_crit_str = "Rankine";
   }
-	double calcFractureStrain(const double &pl_strain){}
+	double CalcFractureStrain(const double &pl_strain){}
 	virtual ~RankineDamage(){}
 };
 
 class JohnsonCookDamage:
 public DamageModel {
   double m_D1,m_D2,m_D3,m_D4,m_D5; 
+  double m_eps0;  //REFERENCE STRAIN RATE, SAME AS JOHNSON COOK COUNTERPART, REDUNDANT
+  JohnsonCook *mat; //ONLY TO OBTAIN EPS_0, NOT USED
 	public:
-  JohnsonCookDamage(const double &D1, const double &D2, const double &D3, const double &D4, const double &D5)
-	:m_D1(D1),m_D2(D2),m_D3(D3),m_D4(D4),m_D5(D5){
-    criterion = JohnsonCook_dam;
+  JohnsonCookDamage(const double &D1, const double &D2, const double &D3, const double &D4, const double &D5, const double &m_eps0_)
+	:m_D1(D1),m_D2(D2),m_D3(D3),m_D4(D4),m_D5(D5), m_eps0(m_eps0_){
+    m_dam_crit_str = "JohnsonCook";
   }
-	double calcFractureStrain(const double &pl_strain, const double &sig_as,const double &T) { //sig_as is stress triaxiality
-    return ( (m_D1 + pow(m_D2, m_D3*sig_as)) * (pow (1. + pl_strain,m_D4)) );
+	double CalcFractureStrain(const double &pl_strain, const double &sig_as,const double &T) { //sig_as is stress triaxiality
+    return ( (m_D1 + pow(m_D2, m_D3*sig_as)) * (pow (1. + pl_strain, m_D4)) ); //Islam 2017 eq. 35, 
   }
 	virtual ~JohnsonCookDamage(){}
 };
@@ -73,6 +83,7 @@ class Material_{
 	virtual inline double CalcYieldStress(){return 0.0;}
 	virtual inline double CalcYieldStress(const double &strain){return 0.0;};
 	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){return 0.0;}
+  virtual double &getRefStrainRate();//only for JC
 	const Elastic_& Elastic()const{return elastic_m;}
   //~Material_();
 };
@@ -90,7 +101,7 @@ public Material_{
 	double T_t,T_m;	//transition and melting temps
 	double A, B, C;
 	double n, m;
-	double eps_0;
+	double eps_0; //ONLY FOR JC DAMAGE , CORRECT THIS
 	
 	public:
 	JohnsonCook(){}
@@ -115,6 +126,7 @@ public Material_{
   } //TODO: SEE IF INCLUDE	
 	inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp);	
 	inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp);
+  double &getRefStrainRate(){return eps_0;}//only for JC
   //~JohnsonCook(){}
 };
 

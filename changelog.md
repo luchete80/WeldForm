@@ -4,6 +4,8 @@
 
 ### Input File 
  - Added Angular Velocity reading
+ - Added Johnson Cook Damage models
+   - First the one from Islam 2017
  
 ## [0.4.2.1] - 20230822 - Hot Fixes
 

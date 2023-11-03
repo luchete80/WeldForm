@@ -34,7 +34,8 @@ inline void Domain::CalcDamage(){
 		Vec3_t vij	= PP[0]->v - PP[1]->v;
     
     double rij	= norm(xij);
-    
+
+    if (PP[0]->mat->damage->getDamageCriterion() == "Rankine")    
     // CHECK INITIATION CRITERIA
     if (dam_D[k][p] == 0.0){ //OR dam_df0[][] == 0.0
       //Average ef_max for each particle? 
@@ -51,7 +52,7 @@ inline void Domain::CalcDamage(){
 				double urij = -f * (dot(xij,vij));
 				double ci[2];
 				double ffi[2];
-        if (PP[0]->mat->damage->criterion == Rankine)
+
 				for (int i=0;i<2 ;i++){
 					//P1->Sigma eqn. 24
 					sig = PP[i]->Sigma;
@@ -76,10 +77,18 @@ inline void Domain::CalcDamage(){
 					if (delta < PP[0]->mat->damage->delta_max)
 						dam_D[k][p] = 1.0 - sig_al_t / sijrr;
 					else dam_D[k][p] = 1.0;
-				}
-				
+				}				
 			} //if D < 1
-    }//Evolution
+    }//Evolution (D!= 0.0)
+    else     if (PP[0]->mat->damage->getDamageCriterion() == "JohnsonCook")    {
+      //FIRST WE IMPLEMENT JOHNSON COOK FAILURE AS ISLAM 2017
+      if (dam_D[k][p] <1.0){ //OR dam_df0[][] == 0.0
+        for (int i=0;i<2 ;i++){
+          PP[i]->mat->damage->CalcFractureStrain(PP[i]->pl_strain);
+          //dam_D[k][p] += ;
+        }
+      } 
+    }  
     // }//nonlock sum -> only way coded
   }//for pair p
   } //proc k

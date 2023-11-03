@@ -221,8 +221,18 @@ int main(int argc, char **argv) try {
 			double smax, Gf;
 			readValue(material[0]["smax"], 				smax);
 			readValue(material[0]["fracEnergy"], 	Gf);
-			damage= new DamageModel(smax,Gf);
-			mat->damage = &(*damage);
+			damage= new RankineDamage(smax,Gf);
+			mat->damage = damage;
+			cout << "Assigned Rankine Damage Model"<<endl;
+			dom.model_damage = true;
+			dom.nonlock_sum = false;
+		} else if      (damage_mod == "JohnsonCook"){
+			double smax, Gf;
+      double D[5];
+			readValue(material[0]["smax"], 				smax);
+			readValue(material[0]["fracEnergy"], 	Gf);
+			damage= new JohnsonCookDamage(D[0],D[1],D[2],D[3],D[4],mat->getRefStrainRate()); //Correct this
+			mat->damage = damage;
 			cout << "Assigned Rankine Damage Model"<<endl;
 			dom.model_damage = true;
 			dom.nonlock_sum = false;
