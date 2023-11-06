@@ -84,11 +84,14 @@ inline void Domain::CalcDamage(){
       //FIRST WE IMPLEMENT JOHNSON COOK FAILURE AS ISLAM 2017
       if (dam_D[k][p] <1.0){ //OR dam_df0[][] == 0.0
         for (int i=0;i<2 ;i++){
-          double sig_as;
-          PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate);
+					PP[i]->dam_D += PP[i]->delta_pl_strain/PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate);
           //dam_D[k][p] += ;
         }
-      } 
+				dam_D[k][p] = (PP[0]->dam_D + PP[1]->dam_D) /2.0;
+      } else {
+				dam_D[k][p] = 1.0;
+			}
+			
     }  
     // }//nonlock sum -> only way coded
   }//for pair p
