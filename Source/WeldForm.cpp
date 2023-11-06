@@ -333,6 +333,7 @@ int main(int argc, char **argv) try {
 		if (domtype == "Box"){
       cout << "Adding Box ..."<<endl;      
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
+			cout << "Solid Part count "<<dom.solid_part_count<<endl;
 		}
 		else if (domtype == "Cylinder"){
       cout << "Adding Cylinder";      
@@ -385,30 +386,33 @@ int main(int argc, char **argv) try {
     bool contact = false;
     if (readValue(rigbodies[0]["type"],rigbody_type))
       contact = true;
-    Vec3_t dim;
-    
-		readVector(rigbodies[0]["start"], 	start);       
-		readVector(rigbodies[0]["dim"], 	dim); 
-    bool flipnormals = false;
-    readValue(rigbodies[0]["flipNormals"],flipnormals);
-    
-    double heatcap = 1.;
-    readValue(rigbodies[0]["thermalHeatCap"],heatcap);
-    //TODO: WRitE TO PArTiclES
-    if (rigbody_type == "File"){
-      // string filename = "";
-      // readValue(rigbodies[0]["fileName"], 	filename); 
-      // cout << "Reading Mesh input file..." << endl;
-      // SPH::NastranReader reader("Tool.nas", flipnormals);
-    }
-    else {
-      if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
-        throw new Fatal("ERROR: Contact Plane Surface should have one null dimension");
-    }
-    std::vector<TriMesh *> mesh;
-    
-    cout << "Set contact to ";
-    if (contact){
+		
+		if (contact){
+			Vec3_t dim;
+			
+			readVector(rigbodies[0]["start"], 	start);       
+			readVector(rigbodies[0]["dim"], 	dim); 
+			bool flipnormals = false;
+			readValue(rigbodies[0]["flipNormals"],flipnormals);
+			
+			double heatcap = 1.;
+			readValue(rigbodies[0]["thermalHeatCap"],heatcap);
+			cout << "Reading Contact surface "<<endl;
+			//TODO: WRitE TO PArTiclES
+			if (rigbody_type == "File"){
+				// string filename = "";
+				// readValue(rigbodies[0]["fileName"], 	filename); 
+				// cout << "Reading Mesh input file..." << endl;
+				// SPH::NastranReader reader("Tool.nas", flipnormals);
+			}
+			else {
+				if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
+					throw new Fatal("ERROR: Contact Plane Surface should have one null dimension");
+			}
+			std::vector<TriMesh *> mesh;
+			
+			cout << "Set contact to ";
+
       cout << "true."<<endl;
       dom.contact = true;
       cout << "Reading contact mesh..."<<endl;
@@ -525,18 +529,20 @@ int main(int argc, char **argv) try {
 		for (auto& ic : ics){
 			double temp;
       
-			if (solver == "Mech-Thermal" || solver == "Mech-Thermal-Fraser"){
+			if (solver == "Mech-Thermal" || solver == "Mech-Thermal-Fraser" || solver == "Mech-Thermal-Leapfrog"){
 				readValue(ic["Temp"], IniTemp);
 				cout << "Initial Temp: "<<IniTemp<<endl;
 			}
       cout << "Initial condition "<<ics_count<<endl;
-			std::vector<double> value;
+			std::vector<double> value(3);
+			value[0]=value[1]=value[2]=0.0;
 			readValue(ic["value"], 	    value);
       
       int zoneid = -1; //if NO ZONE ID IS ALL SOLID PARTICLES
       readValue(ic["zoneId"], 		zoneid);
       int count = 0;
       cout << "zone id "<<zoneid<<endl;
+			if (dom.Particles.Size()>0)
       if (zoneid == -1){
         for (size_t a=0; a<dom.solid_part_count; a++){
           dom.Particles[a]->a		= 0.0;

@@ -1018,7 +1018,7 @@ inline void Particle::CalcStressStrain(double dt) {
 			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
 			if (Material_model == BILINEAR )
 			  Sigmay += dep*Ep;
-			cout << "sigma"<<Sigmay<<"ep "<<Ep<<endl;
+			//cout << "sigma"<<Sigmay<<"ep "<<Ep<<endl;
 			// dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			// pl_strain += dep;
 			// Sigmay += dep*Ep;
