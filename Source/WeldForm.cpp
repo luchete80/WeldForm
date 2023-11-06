@@ -202,7 +202,7 @@ int main(int argc, char **argv) try {
     if      (mattype == "Bilinear")    {
       Ep = E*c[0]/(E-c[0]);		                              //only constant is tangent modulus
       cout << "Material Constants, Et: "<<c[0]<<endl;
-			mat = new Material_();	//THIS IS NEW WITH DAMAGE; 
+			mat = new Material_(el);	//THIS IS NEW WITH DAMAGE; 
 														//AND IS COHERENT WITH BILINEAR MATERIAL WHICH DID NOT HAVE ITS OWN Material Class    
 		} else if (mattype == "Hollomon")    {
       mat = new Hollomon(el,Fy,c[0],c[1]);
@@ -215,7 +215,8 @@ int main(int argc, char **argv) try {
       cout << "Material Constants, A: "<<c[0]<<", B: "<<c[1]<<", n: "<<c[2]<<"C: "<<c[3]<<", eps_0: "<<c[4]<<"m: "<<c[5]<<", T_m: "<<c[6]<<", T_t: "<<c[7]<<endl;
     } else                              throw new Fatal("Invalid material type.");
     
-		string damage_mod = "Rankine";
+		string damage_mod="";
+		readValue(material[0]["damageModel"],damage_mod);
 		DamageModel *damage;
     if      (damage_mod == "Rankine"){
 			double smax, Gf;
@@ -232,7 +233,8 @@ int main(int argc, char **argv) try {
 			readArray(material[0]["damageParams"], 		D);
 			damage= new JohnsonCookDamage(D[0],D[1],D[2],D[3],D[4],mat->getRefStrainRate()); //Correct this
 			mat->damage = damage;
-			cout << "Assigned Rankine Damage Model"<<endl;
+			cout << "Assigned Johnson Cook Damage Model"<<endl;
+			cout << "Damage Model Params: "<<D[0]<<", "<<D[1]<<", "<<D[2]<<", "<<D[3]<<", "<<D[4]<<endl;
 			dom.model_damage = true;
 			dom.nonlock_sum = false;
 		}
@@ -563,8 +565,8 @@ int main(int argc, char **argv) try {
       if      ( mattype == "Bilinear" )     dom.Particles[a]->Ep 			= Ep;//HARDENING 
       else if ( mattype == "Hollomon" )     dom.Particles[a]->Material_model  = HOLLOMON;
       else if ( mattype == "JohnsonCook" )  dom.Particles[a]->Material_model  = JOHNSON_COOK;
+			dom.Particles[a]->mat             = mat; //NOW MATERIAL IS GIVEN FOR EVERY MATERIAL MODEL (SINCE DAMAGE USES IT)
 			if (mattype == "Hollomon" || mattype == "JohnsonCook"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
-        dom.Particles[a]->mat             = mat;
        dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,0.0);    
       }
       dom.Particles[a]->Sigmay		      = Fy;

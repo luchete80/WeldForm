@@ -7,6 +7,8 @@ class Particle;
 class Material_;
 class JohnsonCook;
 
+using namespace std;
+
 // TODO: SEE WHAT ABOUT SMAX
 //SOULD BE PASSED TO INHERITED RANKINE OR NOT?
 //Johson Cook Damage Ratio according to Islam 2017 and 
@@ -22,7 +24,8 @@ public:
   DamageModel(){};
   DamageModel(const double &smax_, const double &Gf_)
 	:sigma_max(smax_),Gf(Gf_){}  
-  std::string  & getDamageCriterion() {return m_dam_crit_str;}  
+  //std::string & getDamageCriterion() {return m_dam_crit_str;}  
+	virtual std::string getDamageCriterion() {return string("");}  
   virtual double CalcFractureStrain(const double &pl_strain){}
   virtual double CalcFractureStrain(const double &str_rate, const double &sig_as,const double &T){}
 	virtual ~DamageModel(){}
@@ -36,6 +39,7 @@ public DamageModel {
 	:DamageModel(smax_,Gf_){
     m_dam_crit_str = "Rankine";
   }
+	std::string getDamageCriterion() {return string("Rankine");} 
 	double CalcFractureStrain(const double &pl_strain){}
 	virtual ~RankineDamage(){}
 };
@@ -50,6 +54,7 @@ public DamageModel {
 	:m_D1(D1),m_D2(D2),m_D3(D3),m_D4(D4),m_D5(D5), m_eps0(m_eps0_){
     m_dam_crit_str = "JohnsonCook";
   }
+	std::string getDamageCriterion() {return string("JohnsonCook");} 
 	double CalcFractureStrain(const double &str_rate, const double &sig_as,const double &T) { //sig_as is stress triaxiality
     return ( (m_D1 + pow(m_D2, m_D3*sig_as)) * (pow (1.0 + (str_rate/m_eps0), m_D4)) ); //Islam 2017 eq. 35, 
   }

@@ -7,6 +7,7 @@ namespace SPH {
 ///// calculate dam_D factor for each pair
 /////  THIS SHOULD BE CALLED AFTER STRESS AND STRAIN ARE CALCULATED
 inline void Domain::CalcDamage(){
+	//cout << "Calc damage"<<endl;
   Particle *PP[2];
   //int pp[2];
     
@@ -23,7 +24,7 @@ inline void Domain::CalcDamage(){
 	#endif	
 	{
   for (size_t p=0; p<SMPairs[k].Size();p++) {
-    
+
     // //#ifndef NONLOCK_SUM
     // if (!nonlock_sum){
     PP[0]	= Particles[SMPairs[k][p].first];
@@ -34,8 +35,8 @@ inline void Domain::CalcDamage(){
     
     Vec3_t xij	= PP[0]->x - PP[1]->x;
 		Vec3_t vij	= PP[0]->v - PP[1]->v;
-    
-    double rij	= norm(xij);
+
+		double rij	= norm(xij);
 
     if (PP[0]->mat->damage->getDamageCriterion() == "Rankine")    
     // CHECK INITIATION CRITERIA
@@ -82,6 +83,7 @@ inline void Domain::CalcDamage(){
 			} //if D < 1
     }//Evolution (D!= 0.0)
     else     if (PP[0]->mat->damage->getDamageCriterion() == "JohnsonCook")    {
+
 			#pragma omp parallel for schedule(static) num_threads(Nproc)
 			#ifdef __GNUC__
 			for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
@@ -103,8 +105,8 @@ inline void Domain::CalcDamage(){
 				dam_D[k][p] = 1.0;
 			}
 			
-    }  
-    // }//nonlock sum -> only way coded
+    }//Johnson Cook damage  
+    // //}//nonlock sum -> only way coded
   }//for pair p
   } //proc k
 }

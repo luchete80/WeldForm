@@ -970,7 +970,7 @@ inline void Particle::CalcStressStrain(double dt) {
 		// ShearStressa	= -dt/2.0*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStress;
 	// ShearStressb	= ShearStressa;
 	// ShearStressa	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStressa;
-
+	
 	ShearStress	= dt*(2.0*G*(StrainRate-1.0/3.0*(StrainRate(0,0)+StrainRate(1,1)+StrainRate(2,2))*OrthoSys::I)+SRT+RS) + ShearStress;
   
   eff_strain_rate = sqrt ( 	0.5*( (StrainRate(0,0)-StrainRate(1,1))*(StrainRate(0,0)-StrainRate(1,1)) +
@@ -978,7 +978,7 @@ inline void Particle::CalcStressStrain(double dt) {
                                 (StrainRate(2,2)-StrainRate(0,0))*(StrainRate(2,2)-StrainRate(0,0))) + 
                           3.0 * (StrainRate(0,1)*StrainRate(0,1) + StrainRate(1,2)*StrainRate(1,2) + StrainRate(2,0)*StrainRate(2,0))
                         );
-                        
+
 	if (Fail == 1) {
 		double J2	= 0.5*(ShearStress(0,0)*ShearStress(0,0) + 2.0*ShearStress(0,1)*ShearStress(1,0) +
 						2.0*ShearStress(0,2)*ShearStress(2,0) + ShearStress(1,1)*ShearStress(1,1) +
@@ -1018,7 +1018,7 @@ inline void Particle::CalcStressStrain(double dt) {
 			//if (Material_model < JOHNSON_COOK ) //In johnson cook there are several fluences per T,eps,strain rate
 			if (Material_model == BILINEAR )
 			  Sigmay += dep*Ep;
-   
+			cout << "sigma"<<Sigmay<<"ep "<<Ep<<endl;
 			// dep=( sig_trial - Sigmay)/ (3.*G + Ep);	//Fraser, Eq 3-49 TODO: MODIFY FOR TANGENT MODULUS = 0
 			// pl_strain += dep;
 			// Sigmay += dep*Ep;

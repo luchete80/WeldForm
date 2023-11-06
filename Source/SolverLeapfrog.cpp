@@ -282,7 +282,7 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
       Particles[i]->CalcStressStrain(deltat); //Uses density  
     } 
     stress_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-		
+
 		if (model_damage) CalcDamage();
 		CalcPlasticWorkHeat(deltat);   //Before Thermal increment because it is used
     
