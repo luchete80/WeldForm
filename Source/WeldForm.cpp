@@ -229,8 +229,7 @@ int main(int argc, char **argv) try {
 		} else if      (damage_mod == "JohnsonCook"){
 			double smax, Gf;
       double D[5];
-			readValue(material[0]["smax"], 				smax);
-			readValue(material[0]["fracEnergy"], 	Gf);
+			readArray(material[0]["damageParams"], 		D);
 			damage= new JohnsonCookDamage(D[0],D[1],D[2],D[3],D[4],mat->getRefStrainRate()); //Correct this
 			mat->damage = damage;
 			cout << "Assigned Rankine Damage Model"<<endl;
