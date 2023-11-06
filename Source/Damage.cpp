@@ -5,7 +5,7 @@ using namespace std;
 namespace SPH {
 
 ///// calculate dam_D factor for each pair
-///// 
+/////  THIS SHOULD BE CALLED AFTER STRESS AND STRAIN ARE CALCULATED
 inline void Domain::CalcDamage(){
   Particle *PP[2];
   //int pp[2];
@@ -13,7 +13,9 @@ inline void Domain::CalcDamage(){
   double eps_max;
   Mat3_t sig;
   
-	#pragma omp parallel for schedule (static) private (PP) num_threads(Nproc)
+	double sig_as;
+	
+	#pragma omp parallel for schedule (static) private (PP, sig_as) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -55,10 +57,9 @@ inline void Domain::CalcDamage(){
 
 				for (int i=0;i<2 ;i++){
 					//P1->Sigma eqn. 24
-					sig = PP[i]->Sigma;
-					for (int j=0;j<3;j++) siRR[i] += xij2(j)*sig(j,j);
+					for (int j=0;j<3;j++) siRR[i] += xij2(j)*PP[i]->Sigma(j,j);
 					
-					siRR[i] += 2.0*(sig(0,1)*xij(0)*xij(1) + sig(1,2)*xij(1)*xij(2) + sig(2,0)*xij(2)*xij(0));
+					siRR[i] += 2.0*(PP[i]->Sigma(0,1)*xij(0)*xij(1) + PP[i]->Sigma(1,2)*xij(1)*xij(2) + PP[i]->Sigma(2,0)*xij(2)*xij(0));
 					siRR[i] *= f; 
 					ci[i] = SoundSpeed(PP[i]->PresEq, PP[i]->Cs, PP[i]->Density, PP[i]->RefDensity); //TODO: CALCULATE THIS ONCE! (IN THE ACCEL CALC IS ALREADY DONE)
 					ffi[i] = PP[i]->Density * ci[i];
@@ -81,10 +82,20 @@ inline void Domain::CalcDamage(){
 			} //if D < 1
     }//Evolution (D!= 0.0)
     else     if (PP[0]->mat->damage->getDamageCriterion() == "JohnsonCook")    {
+			#pragma omp parallel for schedule(static) num_threads(Nproc)
+			#ifdef __GNUC__
+			for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+			#else
+			for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+			#endif	
+				PP[i]->CalculateEquivalentStress();
+				
       //FIRST WE IMPLEMENT JOHNSON COOK FAILURE AS ISLAM 2017
       if (dam_D[k][p] <1.0){ //OR dam_df0[][] == 0.0
         for (int i=0;i<2 ;i++){
-					PP[i]->dam_D += PP[i]->delta_pl_strain/PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate);
+					//IN CASE OF NO DAMAGE INCLUDED; IT IS NOT CALCULATED
+					sig_as = 1.0/3.0* (PP[i]->Sigma(0,0)+PP[i]->Sigma(1,1)+PP[i]->Sigma(2,2))/PP[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
+					PP[i]->dam_D += PP[i]->delta_pl_strain/PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T);
           //dam_D[k][p] += ;
         }
 				dam_D[k][p] = (PP[0]->dam_D + PP[1]->dam_D) /2.0;
