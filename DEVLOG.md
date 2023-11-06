@@ -455,3 +455,8 @@
          - Added initial velocity to input
 -------------------------------------------------------------
 20231004 - Added ROTATION VELOCITY TO INPUT
+-------------------------------------------------------------
+20231106 - Added Johnson Cook Damage Model.
+         - Corrected fracture strain and add incremental plastic strain to particle damage
+				 - Added dmage param input reading
+				 - Corrected a problem with velocity initial conditions

@@ -6,6 +6,8 @@
  - Added Angular Velocity reading
  - Added Johnson Cook Damage models
    - First the one from Islam 2017
+### Solver
+ - Fixed a crash introduced with initial velocity (vector not dimensioned).
  
 ## [0.4.2.1] - 20230822 - Hot Fixes
 
