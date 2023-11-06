@@ -228,7 +228,7 @@ int main(int argc, char **argv) try {
 			dom.nonlock_sum = false;
 		} else if      (damage_mod == "JohnsonCook"){
 			double smax, Gf;
-      double D[5];
+      std::vector <double> D(5);
 			readArray(material[0]["damageParams"], 		D);
 			damage= new JohnsonCookDamage(D[0],D[1],D[2],D[3],D[4],mat->getRefStrainRate()); //Correct this
 			mat->damage = damage;
