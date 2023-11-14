@@ -18,7 +18,7 @@ inline void Domain::CalcDamage(){
 	double sig_as;
 	
 	//USED IN JOHNSON COOK DAMAGE
-	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	#pragma omp parallel for schedule(static) private(sig_as) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t i=0; i< solid_part_count ; i++)	{ //Like in Domain::Move
 	#else
@@ -27,9 +27,13 @@ inline void Domain::CalcDamage(){
 		if (Particles[i]->delta_pl_strain>0.0) {
 			Particles[i]->CalculateEquivalentStress(); //Set Particles[i]->Sigma_eq
 			if (Particles[i]->Sigma_eq>1.0e-3) {
-				sig_as = 1.0/3.0* (Particles[i]->Sigma(0,0)+Particles[i]->Sigma(1,1)+Particles[i]->Sigma(2,2))/Particles[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
+				//sig_as = 1.0/3.0* (Particles[i]->Sigma(0,0)+Particles[i]->Sigma(1,1)+Particles[i]->Sigma(2,2))/Particles[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
+				//cout << "sig_as"<<sig_as<<", "<<"pressure "<< Particles[i]->Pressure<<endl;
+				//cout << "sig_as press "<<-Particles[i]->Pressure/Particles[i]->Sigma_eq<<endl<<endl;
 				// Particles[i]->eps_f = Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, sig_as, PP[i]->T);
-				Particles[i]->dam_D += Particles[i]->delta_pl_strain/Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, sig_as, Particles[i]->T);
+				Particles[i]->dam_D += Particles[i]->delta_pl_strain/Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, 
+																																																					-Particles[i]->Pressure/Particles[i]->Sigma_eq, 
+																																																					Particles[i]->T);
 				// if (Particles[i]->dam_D > 0.0 && Particles[i]->pl_strain ==0.0)
 					// cout <<"dam " <<Particles[i]->dam_D<<", Pl Strain: "<<Particles[i]->pl_strain<<endl;
 				if (Particles[i]->dam_D > 1.0) Particles[i]->dam_D = 1.0;
