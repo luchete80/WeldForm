@@ -389,6 +389,18 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
           Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
           contact_force_sum << endl;
 			}
+			if (model_damage){
+				double max_dam = 0.;
+				int dam_count =0;
+				for (int p=0;p<Particles.Size();p++){
+					if (Particles[p]->dam_D>max_dam) 
+						max_dam = Particles[p]->dam_D;
+					if (Particles[p]->dam_D>1.0) 
+						dam_count++;
+				}
+			cout << "Max damage is "<<max_dam<<", full damage count: "<<dam_count<<endl;
+			}
+
 		}
     // if (auto_ts)      CheckMinTSVel();
     // if (auto_ts_acc)  CheckMinTSAccel();

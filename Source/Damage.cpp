@@ -13,6 +13,7 @@ inline void Domain::CalcDamage(){
     
   double eps_max;
   Mat3_t sig;
+	int i;
   
 	double sig_as;
 	
@@ -25,7 +26,7 @@ inline void Domain::CalcDamage(){
 	#endif	
 		Particles[i]->CalculateEquivalentStress();
 				
-	#pragma omp parallel for schedule (static) private (PP, sig_as) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private (PP, sig_as, i) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -96,12 +97,19 @@ inline void Domain::CalcDamage(){
 				
       //FIRST WE IMPLEMENT JOHNSON COOK FAILURE AS ISLAM 2017
       if (dam_D[k][p] <1.0){ //OR dam_df0[][] == 0.0
-        for (int i=0;i<2 ;i++){
+        for (i=0;i<2 ;i++){
 					//IN CASE OF NO DAMAGE INCLUDED; IT IS NOT CALCULATED
-					sig_as = 1.0/3.0* (PP[i]->Sigma(0,0)+PP[i]->Sigma(1,1)+PP[i]->Sigma(2,2))/PP[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
-					cout << "PP[i]->dam_D " <<PP[i]->dam_D <<endl;
-					cout << "Fr strain "<<PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T)<<endl;
+					// cout << "sig_00"<<PP[i]->Sigma(0,0)<<endl;
+					if (PP[i]->Sigma_eq>1.0e-3)
+						sig_as = 1.0/3.0* (PP[i]->Sigma(0,0)+PP[i]->Sigma(1,1)+PP[i]->Sigma(2,2))/PP[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
+					else
+						sig_as = 0.0;
+					// cout << "Fr strain "<<PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T)<<endl;
+					// cout << "str_rate, sig_as, ppi "<< PP[i]->eff_strain_rate<<", " <<sig_as<< ", "<<PP[i]->T<<endl;
+					omp_set_lock(&PP[i]->my_lock);
 					PP[i]->dam_D += PP[i]->delta_pl_strain/PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T);
+					omp_unset_lock(&PP[i]->my_lock);
+					//cout << "PP[i]->dam_D: "<<PP[i]->dam_D<<endl;
           //dam_D[k][p] += ;
         }
 				dam_D[k][p] = (PP[0]->dam_D + PP[1]->dam_D) /2.0;
@@ -113,6 +121,11 @@ inline void Domain::CalcDamage(){
     // //}//nonlock sum -> only way coded
   }//for pair p
   } //proc k
+	
+	for (size_t i=0; i< solid_part_count ; i++)	//Like in Domain::Move
+		if (Particles[i]->dam_D==1.0)
+			cout << "DAMAGE 1!"<<endl;
+	
 }
 
 }; //SPH

@@ -461,4 +461,6 @@
 				 - Added dmage param input reading
 				 - Corrected a problem with velocity initial conditions
 				 - Fixed crash in Johnson Cook damage calc
-				 
+				 - Prevented sigma asterisk for damage be NAN at sigma_eq = 0
+				 - Added damage count
+				 - Added damage output

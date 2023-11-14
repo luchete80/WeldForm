@@ -111,6 +111,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
 		float * q_friction  = new float [Particles.Size()];
     float * c_shearabs  = new float [Particles.Size()];
     float * ps_en  = new float [Particles.Size()];
+		
+		float * Damage = new float [Particles.Size()];
     
 	double P1,P2,P3;
 
@@ -202,7 +204,8 @@ inline void Domain::WriteXDMF (char const * FileKey)
         
         eff_str_rate [i] = float(Particles[i]->eff_strain_rate);
 
-
+				if (model_damage)
+					Damage [i] = float(Particles[i]->dam_D);
 				
 	UserOutput(Particles[i],P1,P2,P3);
         Prop1	[i    ] = float(P1);
@@ -278,6 +281,12 @@ inline void Domain::WriteXDMF (char const * FileKey)
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Disvec);
 	dsname.Printf("Contact Force");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ContForce);	
+		
+		if (model_damage){
+    // dsname.Printf("Damage");
+    // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Damage);			
+			
+		}
 
 	// dsname.Printf("Tg Dir");
     // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,TgDir);	
@@ -319,6 +328,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
   delete [] q_friction;
   delete [] c_shearabs;
   delete [] ps_en;
+	delete [] Damage;
 	
    //Closing the file
     H5Fflush(file_id,H5F_SCOPE_GLOBAL);
@@ -467,6 +477,13 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "        " << fn.CStr() <<":/ps_en \n";
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n"; 
+		if (model_damage){
+    // oss << "     <Attribute Name=\"damage\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+    // oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+    // oss << "        " << fn.CStr() <<":/damage \n";
+    // oss << "       </DataItem>\n";
+    // oss << "     </Attribute>\n"; 			
+		}
   // oss << "     <Attribute Name=\"Tg Dir\" AttributeType=\"Vector\" Center=\"Node\">\n";
     // oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";
     // oss << "        " << fn.CStr() <<":/Tg Dir \n";
