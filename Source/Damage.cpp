@@ -16,6 +16,15 @@ inline void Domain::CalcDamage(){
   
 	double sig_as;
 	
+	//USED IN JOHNSON COOK DAMAGE
+	#pragma omp parallel for schedule(static) num_threads(Nproc)
+	#ifdef __GNUC__
+	for (size_t i=0; i< solid_part_count ; i++)	//Like in Domain::Move
+	#else
+	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	#endif	
+		Particles[i]->CalculateEquivalentStress();
+				
 	#pragma omp parallel for schedule (static) private (PP, sig_as) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -84,19 +93,14 @@ inline void Domain::CalcDamage(){
     }//Evolution (D!= 0.0)
     else     if (PP[0]->mat->damage->getDamageCriterion() == "JohnsonCook")    {
 
-			#pragma omp parallel for schedule(static) num_threads(Nproc)
-			#ifdef __GNUC__
-			for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
-			#else
-			for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
-			#endif	
-				PP[i]->CalculateEquivalentStress();
 				
       //FIRST WE IMPLEMENT JOHNSON COOK FAILURE AS ISLAM 2017
       if (dam_D[k][p] <1.0){ //OR dam_df0[][] == 0.0
         for (int i=0;i<2 ;i++){
 					//IN CASE OF NO DAMAGE INCLUDED; IT IS NOT CALCULATED
 					sig_as = 1.0/3.0* (PP[i]->Sigma(0,0)+PP[i]->Sigma(1,1)+PP[i]->Sigma(2,2))/PP[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
+					cout << "PP[i]->dam_D " <<PP[i]->dam_D <<endl;
+					cout << "Fr strain "<<PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T)<<endl;
 					PP[i]->dam_D += PP[i]->delta_pl_strain/PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T);
           //dam_D[k][p] += ;
         }

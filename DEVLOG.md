@@ -460,3 +460,5 @@
          - Corrected fracture strain and add incremental plastic strain to particle damage
 				 - Added dmage param input reading
 				 - Corrected a problem with velocity initial conditions
+				 - Fixed crash in Johnson Cook damage calc
+				 
