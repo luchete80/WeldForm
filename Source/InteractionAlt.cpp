@@ -13,7 +13,7 @@ inline void Domain::CalcAccel() {
   Particle *P1, *P2;
   double dam_f = 1.0; //if not damage
 	
-  #pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+  #pragma omp parallel for schedule (static) private (P1,P2,dam_f) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
@@ -190,10 +190,10 @@ inline void Domain::CalcAccel() {
 		// Locking the particle 1 for updating the properties
 		omp_set_lock(&P1->my_lock);
 			if (!gradKernelCorr){
-				P1->a					+= mj * temp;
+				P1->a					+= dam_f*mj * temp;
 				//P1->dDensity	+= mj * (di/dj) * temp1;
 			} else{
-				P1->a					+= mj * temp_c[0];
+				P1->a					+= dam_f *mj * temp_c[0];
 				//P1->dDensity	+= mj * (di/dj) * temp1_c[0];
 			}
 
@@ -202,9 +202,9 @@ inline void Domain::CalcAccel() {
 		// Locking the particle 2 for updating the properties
 		omp_set_lock(&P2->my_lock);
 			if (!gradKernelCorr){
-				P2->a					-= mi * temp;				
+				P2->a					-= dam_f * mi * temp;				
 			}else {
-				P2->a					-= mi * temp_c[1];
+				P2->a					-= dam_f * mi * temp_c[1];
 			}
 		omp_unset_lock(&P2->my_lock);
     //#endif
@@ -462,7 +462,7 @@ inline void Domain::RateTensorsReduction(){
 inline void Domain::CalcDensInc() {
 	double dam_f = 1.0; //if not damage
   Particle *P1, *P2;
-	#pragma omp parallel for schedule (static) private (P1,P2) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private (P1,P2,dam_f) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else

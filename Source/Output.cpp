@@ -275,6 +275,12 @@ inline void Domain::WriteXDMF (char const * FileKey)
 
     dsname.Printf("ps_en");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ps_en);
+
+		if (model_damage){
+			dsname.Printf("Damage");
+			H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Damage);			
+			
+		}
     
     dims[0] = 3*Particles.Size();
 	dsname.Printf("Displacement");
@@ -282,11 +288,7 @@ inline void Domain::WriteXDMF (char const * FileKey)
 	dsname.Printf("Contact Force");
     H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,ContForce);	
 		
-		if (model_damage){
-    // dsname.Printf("Damage");
-    // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,Damage);			
-			
-		}
+
 
 	// dsname.Printf("Tg Dir");
     // H5LTmake_dataset_float(file_id,dsname.CStr(),1,dims,TgDir);	
@@ -478,11 +480,11 @@ inline void Domain::WriteXDMF (char const * FileKey)
     oss << "       </DataItem>\n";
     oss << "     </Attribute>\n"; 
 		if (model_damage){
-    // oss << "     <Attribute Name=\"damage\" AttributeType=\"Scalar\" Center=\"Node\">\n";
-    // oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
-    // oss << "        " << fn.CStr() <<":/damage \n";
-    // oss << "       </DataItem>\n";
-    // oss << "     </Attribute>\n"; 			
+			oss << "     <Attribute Name=\"Damage\" AttributeType=\"Scalar\" Center=\"Node\">\n";
+			oss << "       <DataItem Dimensions=\"" << Particles.Size() << "\" NumberType=\"Float\" Precision=\"10\"  Format=\"HDF\">\n";
+			oss << "        " << fn.CStr() <<":/Damage \n";
+			oss << "       </DataItem>\n";
+			oss << "     </Attribute>\n"; 			
 		}
   // oss << "     <Attribute Name=\"Tg Dir\" AttributeType=\"Vector\" Center=\"Node\">\n";
     // oss << "       <DataItem Dimensions=\"" << Particles.Size() << " 3\" NumberType=\"Float\" Precision=\"10\" Format=\"HDF\">\n";

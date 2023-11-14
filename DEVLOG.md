@@ -464,3 +464,6 @@
 				 - Prevented sigma asterisk for damage be NAN at sigma_eq = 0
 				 - Added damage count
 				 - Added damage output
+				 - Corrected Johnson Cook damage expression
+				 - Calculate fracture strain and stresses per particle and not per pair
+				 - Corrected Acceleration expression

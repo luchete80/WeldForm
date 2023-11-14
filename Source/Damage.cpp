@@ -20,12 +20,23 @@ inline void Domain::CalcDamage(){
 	//USED IN JOHNSON COOK DAMAGE
 	#pragma omp parallel for schedule(static) num_threads(Nproc)
 	#ifdef __GNUC__
-	for (size_t i=0; i< solid_part_count ; i++)	//Like in Domain::Move
+	for (size_t i=0; i< solid_part_count ; i++)	{ //Like in Domain::Move
 	#else
-	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+	for (int i=0; i<solid_part_count; i++) {//Like in Domain::Move
 	#endif	
-		Particles[i]->CalculateEquivalentStress();
-				
+		if (Particles[i]->delta_pl_strain>0.0) {
+			Particles[i]->CalculateEquivalentStress(); //Set Particles[i]->Sigma_eq
+			if (Particles[i]->Sigma_eq>1.0e-3) {
+				sig_as = 1.0/3.0* (Particles[i]->Sigma(0,0)+Particles[i]->Sigma(1,1)+Particles[i]->Sigma(2,2))/Particles[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
+				// Particles[i]->eps_f = Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, sig_as, PP[i]->T);
+				Particles[i]->dam_D += Particles[i]->delta_pl_strain/Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, sig_as, Particles[i]->T);
+				// if (Particles[i]->dam_D > 0.0 && Particles[i]->pl_strain ==0.0)
+					// cout <<"dam " <<Particles[i]->dam_D<<", Pl Strain: "<<Particles[i]->pl_strain<<endl;
+				if (Particles[i]->dam_D > 1.0) Particles[i]->dam_D = 1.0;
+			}
+		}//if incremental pl_strain
+	}
+	
 	#pragma omp parallel for schedule (static) private (PP, sig_as, i) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
@@ -97,21 +108,21 @@ inline void Domain::CalcDamage(){
 				
       //FIRST WE IMPLEMENT JOHNSON COOK FAILURE AS ISLAM 2017
       if (dam_D[k][p] <1.0){ //OR dam_df0[][] == 0.0
-        for (i=0;i<2 ;i++){
-					//IN CASE OF NO DAMAGE INCLUDED; IT IS NOT CALCULATED
-					// cout << "sig_00"<<PP[i]->Sigma(0,0)<<endl;
-					if (PP[i]->Sigma_eq>1.0e-3)
-						sig_as = 1.0/3.0* (PP[i]->Sigma(0,0)+PP[i]->Sigma(1,1)+PP[i]->Sigma(2,2))/PP[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
-					else
-						sig_as = 0.0;
-					// cout << "Fr strain "<<PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T)<<endl;
-					// cout << "str_rate, sig_as, ppi "<< PP[i]->eff_strain_rate<<", " <<sig_as<< ", "<<PP[i]->T<<endl;
-					omp_set_lock(&PP[i]->my_lock);
-					PP[i]->dam_D += PP[i]->delta_pl_strain/PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T);
-					omp_unset_lock(&PP[i]->my_lock);
-					//cout << "PP[i]->dam_D: "<<PP[i]->dam_D<<endl;
-          //dam_D[k][p] += ;
-        }
+        // for (i=0;i<2 ;i++){
+					// //IN CASE OF NO DAMAGE INCLUDED; IT IS NOT CALCULATED
+					// // cout << "sig_00"<<PP[i]->Sigma(0,0)<<endl;
+					// if (PP[i]->Sigma_eq>1.0e-3) {
+						// sig_as = 1.0/3.0* (PP[i]->Sigma(0,0)+PP[i]->Sigma(1,1)+PP[i]->Sigma(2,2))/PP[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
+						// // cout << "Fr strain "<<PP[i]->mat->damage->CalcFractureStrain(PP[i]->eff_strain_rate, sig_as, PP[i]->T)<<endl;
+						// // cout << "str_rate, sig_as, ppi "<< PP[i]->eff_strain_rate<<", " <<sig_as<< ", "<<PP[i]->T<<endl;
+						// // omp_set_lock(&PP[i]->my_lock);
+						// // PP[i]->dam_D += PP[i]->delta_pl_strain/PP[i]->eps_f;
+						// // if (PP[i]->dam_D > 1.0) PP[i]->dam_D = 1.0;
+						// // omp_unset_lock(&PP[i]->my_lock);
+					// }
+					// //cout << "PP[i]->dam_D: "<<PP[i]->dam_D<<endl;
+          // //dam_D[k][p] += ;
+        // }
 				dam_D[k][p] = (PP[0]->dam_D + PP[1]->dam_D) /2.0;
       } else {
 				dam_D[k][p] = 1.0;
@@ -122,9 +133,9 @@ inline void Domain::CalcDamage(){
   }//for pair p
   } //proc k
 	
-	for (size_t i=0; i< solid_part_count ; i++)	//Like in Domain::Move
-		if (Particles[i]->dam_D==1.0)
-			cout << "DAMAGE 1!"<<endl;
+	// for (size_t i=0; i< solid_part_count ; i++)	//Like in Domain::Move
+		// if (Particles[i]->dam_D==1.0)
+			// cout << "DAMAGE 1!"<<endl;
 	
 }
 

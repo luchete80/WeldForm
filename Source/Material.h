@@ -56,7 +56,7 @@ public DamageModel {
   }
 	std::string getDamageCriterion() {return string("JohnsonCook");} 
 	double CalcFractureStrain(const double &str_rate, const double &sig_as,const double &T) { //sig_as is stress triaxiality
-    return ( (m_D1 + pow(m_D2, m_D3*sig_as)) * (pow (1.0 + (str_rate/m_eps0), m_D4)) ); //Islam 2017 eq. 35, 
+    return ( (m_D1 + m_D2 *exp(m_D3*sig_as)) * pow (1.0 + (str_rate/m_eps0), m_D4) * (1.0 + m_D5 * T)); //Islam 2017 eq. 35, 
   }
 	virtual ~JohnsonCookDamage(){}
 };
