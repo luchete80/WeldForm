@@ -467,3 +467,5 @@
 				 - Corrected Johnson Cook damage expression
 				 - Calculate fracture strain and stresses per particle and not per pair
 				 - Corrected Acceleration expression
+-------------------------------------------------------------
+20231115 - Solved Johnson Cook strain hardening factor
