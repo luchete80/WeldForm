@@ -31,7 +31,10 @@ inline void Domain::CalcDamage(){
 				//cout << "sig_as"<<sig_as<<", "<<"pressure "<< Particles[i]->Pressure<<endl;
 				//cout << "sig_as press "<<-Particles[i]->Pressure/Particles[i]->Sigma_eq<<endl<<endl;
 				// Particles[i]->eps_f = Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, sig_as, PP[i]->T);
-				Particles[i]->dam_D += Particles[i]->delta_pl_strain/Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, 
+				//cout << "total strain rate: "<<Particles[i]->eff_strain_rate <<", pl strain rate "<<Particles[i]->delta_pl_strain/deltat<<endl;
+				Particles[i]->dam_D += Particles[i]->delta_pl_strain/Particles[i]->mat->damage->CalcFractureStrain(
+																																																					//Particles[i]->eff_strain_rate, 
+																																																					Particles[i]->delta_pl_strain/deltat,
 																																																					-Particles[i]->Pressure/Particles[i]->Sigma_eq, 
 																																																					Particles[i]->T);
 				// if (Particles[i]->dam_D > 0.0 && Particles[i]->pl_strain ==0.0)
