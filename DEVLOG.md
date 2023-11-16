@@ -469,3 +469,5 @@
 				 - Corrected Acceleration expression
 -------------------------------------------------------------
 20231115 - Solved Johnson Cook strain hardening factor
+-------------------------------------------------------------
+20231116 - Fixed Johnson Cook fracture strain expression

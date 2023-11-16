@@ -25,10 +25,10 @@ inline double JohnsonCook::CalcTangentModulus(const double &plstrain, const doub
   //double sy = (A+B*pow(strain, n))*(1.0 + C * log (strain_rate/ eps_0) ) * (1.0 - pow(T_h,m));
   double Et =0.;
 
-  if (plstrain > 0.)
+  // if (plstrain > 0.)
     Et = n * B * pow(plstrain,n-1.)*(1.0 + C*log(strain_rate/ eps_0)) * (1.0-pow (T_h,m));
-  else 
-    Et = Elastic().E()*0.1; //ARBITRARY! TODO: CHECK MATHEMATICALLY
+  // else 
+    // Et = Elastic().E()*0.1; //ARBITRARY! TODO: CHECK MATHEMATICALLY
   return Et;
 }	
 //Case with plastic plateau 
