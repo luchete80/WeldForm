@@ -1,0 +1,85 @@
+{
+"Configuration":
+{
+  "Nproc": 12,
+	"particleRadius": 0.0005, 
+	"hFactor": 1.2,
+  "cflMethod": 1,
+  "cflFactor": 0.7,
+  "autoTS": [true,false,false],
+  "simTime": 0.01,
+  "outTime": 1.0e-4,
+  "artifViscAlpha": 2.5,
+  "artifViscBeta": 2.5,
+  "solver": "Mech-LeapFrog"
+}
+,
+"Materials":[ 
+{
+	"id": "Solid",
+	"type": "JohnsonCook",
+  "const": [90.0e6, 272.0e6,0.31,0.025,0.0,1.0,1000.0],
+	"density0": 8960000.0, 
+	"youngsModulus": 124.0E9, 
+	"thermalCond": 120.0,
+  "thermalHeatCap": 0.875,
+	"poissonsRatio": 0.34
+}],
+
+"DomainBlocks": 
+[{
+	"type": "Cylinder",
+	"zoneId": 1,
+	"denseMode": 0,
+	"start": [ 0.0, 0.0, 0.0],
+	"dim": [0.0152, 0.0, 0.030],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1]
+}],
+
+"DomainZones": [
+{
+	"id": 1,
+	"start":[-1.0,-1.0, 0.0],
+	"end": 	[ 1.0, 1.0, 0.001]
+},
+{
+	"id": 2,
+	"denseMode": 0,
+	"start":[-1.0,-1.0, 0.0285],
+	"end": 	[ 1.0, 1.0, 1.0]
+}
+],
+
+"Amplitudes": [
+{
+	"id": 		1,
+	"valueType": 1,
+	"time": 	[ 0.0, 0.0, 0.0],
+	"value": 	[ 0.0, 0.0, 0.0]
+}
+],
+"BoundaryConditions": [
+{
+	"zoneId": 	1,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, 0.0],
+	"free": 		true
+},
+{
+	"ZoneId": 		2,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, 10.0]
+},
+{
+	"zoneId": 	3,
+	"type": 	0,
+	"valueType": 1,
+	"amplitudeFactor": -1.0,
+	"amplitudeId": 1,
+	"components":[],
+	"free": false
+}
+]
+
+}

@@ -163,7 +163,7 @@ int main(int argc, char **argv) try
 		dom.Particles[4081]->print_history = true;
 		//dom.Particles[2421]->print_history = true;
 		//dom.Particles[6777]->ID = 1;
-			dom.gradKernelCorr = true;
+			dom.gradKernelCorr = false;
       
     	for (size_t a=0; a<dom.Particles.Size(); a++)
     	{
@@ -203,6 +203,7 @@ int main(int argc, char **argv) try
       dom.auto_ts=false; 
     	//dom.Solve(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/0.0001,"test06",999);
       //dom.SolveDiffUpdateKickDrift(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
+      //dom.SolveDiffUpdateLeapFrog(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
       dom.SolveDiffUpdateFraser(/*tf*/0.0105,/*dt*/timestep,/*dtOut*/1.e-4 ,"test06",1000);
         return 0;
 }

@@ -90,7 +90,7 @@ SET(EXES
   # Twisting
 	#traction_app
 	#Traction_Hollomon
-	#Traction_JC
+	Traction_JC
 	#Thermal_Expansion_2
 	#4-DamBreak3D
 	#Plate-Yield

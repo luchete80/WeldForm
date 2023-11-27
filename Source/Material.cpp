@@ -4,6 +4,15 @@
 //sy = [A + B(epl^n)] [1 + C ln(e_dot pl/e_dot 0) (1 - pow)]
 
 inline double JohnsonCook::CalcYieldStress(const double &strain, const double &strain_rate, const double &temp)	{
+  // OLD////////////////////////
+	// double T_h = (temp - T_t) / (T_m - T_t);
+	// double sr = strain_rate;
+	// if (strain_rate == 0.0)
+		// sr = 1.e-5;
+	
+	// double sy = (A+B*pow(strain, n))*(1.0 + C * log (sr/ eps_0) ) * (1.0 - pow(T_h,m));  
+  
+  // NEW /////////////////////
 	double T_h = (temp - T_t) / (T_m - T_t);
 	double sr = strain_rate;
   double f = 1.0;
@@ -25,10 +34,10 @@ inline double JohnsonCook::CalcTangentModulus(const double &plstrain, const doub
   //double sy = (A+B*pow(strain, n))*(1.0 + C * log (strain_rate/ eps_0) ) * (1.0 - pow(T_h,m));
   double Et =0.;
 
-  // if (plstrain > 0.)
+   if (plstrain > 0.)
     Et = n * B * pow(plstrain,n-1.)*(1.0 + C*log(strain_rate/ eps_0)) * (1.0-pow (T_h,m));
-  // else 
-    // Et = Elastic().E()*0.1; //ARBITRARY! TODO: CHECK MATHEMATICALLY
+   else 
+     Et = Elastic().E()*0.1; //ARBITRARY! TODO: CHECK MATHEMATICALLY
   return Et;
 }	
 //Case with plastic plateau 
