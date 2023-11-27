@@ -71,7 +71,7 @@
 	"free": 		true
 },
 {
-	"ZoneId": 		10,
+	"zoneId": 		10,
 	"valuetype": 	"Constant",
 	"value": 		[ 0.0, 0.0, -1.0]
 }
