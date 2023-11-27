@@ -107,13 +107,13 @@ int main(){
 ///// MATERIAL CONSTANTS EXAMPLE FROM
 ///// Zhang_2017 (Aluminium)
   double A,B,C,n_,m,T_m,T_t,eps_0;
-  // A = 175.e6; B = 380.0e6; C = 0.0015;
-  // m = 1.0;  n_ = 0.34; eps_0 = 1.0;
-  // T_m = 502.; T_t = 0.; //775-273 = 502
+  A = 175.e6; B = 380.0e6; C = 0.0015;
+  m = 1.0;  n_ = 0.34; eps_0 = 1.0;
+  T_m = 502.; T_t = 0.; //775-273 = 502
 
-  A = 276.e6; B = 255.0e6; C = 0.0015;
-  m = 1.0;  n_ = 0.3; eps_0 = 1.0;
-  T_m = 582.; T_t = 0.;
+//  A = 276.e6; B = 255.0e6; C = 0.0015;
+//  m = 1.0;  n_ = 0.3; eps_0 = 1.0;
+//  T_m = 582.; T_t = 0.;
   
 	// 𝐴
 // 𝐽𝐶 276.0 MPa
@@ -181,12 +181,12 @@ int main(){
 	for (size_t a=0; a<dom.Particles.Size(); a++)
 	{
     //IF JOHNSON COOK
-    // dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
-    // dom.Particles[a]->mat = &mat;
-    // dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.0);    
+    dom.Particles[a]-> Material_model = JOHNSON_COOK/*HOLLOMON*/;
+    dom.Particles[a]->mat = &mat;
+    dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.0);    
     //--ELSE IF BILINEAR
-    dom.Particles[a]->Ep 			= Ep;//HARDENING
- 		dom.Particles[a]->Sigmay	= Fy;
+    //dom.Particles[a]->Ep 			= Ep;//HARDENING
+ 	//dom.Particles[a]->Sigmay	= Fy;
     /////-----------------------------------
     
 		dom.Particles[a]->G		= G;
@@ -260,7 +260,7 @@ int main(){
   
   //IF THERMAL CONTACT
   if (thermal_contact){
-    dom.cont_heat_cond  = true;
+    dom.cont_heat_cond  = false;
     dom.contact_hc      = 1000.; 
   }
   //dom.auto_ts_cont = true;
