@@ -9,8 +9,8 @@
   "autoTS": [true,false,false],
   "simTime": 0.01,
   "outTime": 1.0e-4,
-  "artifViscAlpha": 2.5,
-  "artifViscBeta": 2.5,
+  "artifViscAlpha": 2.0,
+  "artifViscBeta": 1.0,
   "solver": "Mech-LeapFrog"
 }
 ,
@@ -18,7 +18,7 @@
 {
 	"id": "Solid",
 	"type": "JohnsonCook",
-  "const": [90.0e6, 272.0e6,0.31,0.025,0.0,1.0,1000.0],
+  "const": [90.0e6, 272.0e6,0.31,0.025,1.0e-3,1.0,1000.0],
 	"density0": 8960000.0, 
 	"youngsModulus": 124.0E9, 
 	"thermalCond": 120.0,
@@ -69,7 +69,7 @@
 {
 	"ZoneId": 		2,
 	"valuetype": 	"Constant",
-	"value": 		[ 0.0, 0.0, 10.0]
+	"value": 		[ 0.0, 0.0, 1.0]
 },
 {
 	"zoneId": 	3,
