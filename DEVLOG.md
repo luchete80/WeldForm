@@ -470,4 +470,7 @@
 -------------------------------------------------------------
 20231115 - Solved Johnson Cook strain hardening factor
 -------------------------------------------------------------
-20231116 - Fixed Johnson Cook fracture strain expression
+20231126 - Fixed Johnson Cook fracture strain expression
+-------------------------------------------------------------
+20231128 - Fixed some examples. Added traction example. 
+         - FIXED NB SEARCH WHEN DAMAGE MODEL

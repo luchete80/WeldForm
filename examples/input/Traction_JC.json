@@ -5,13 +5,14 @@
 	"particleRadius": 0.0005, 
 	"hFactor": 1.2,
   "cflMethod": 1,
-  "cflFactor": 0.7,
-  "autoTS": [false	,false,false],
+  "cflFactor": 0.4,
+  "autoTS": [false,false,false],
   "simTime": 0.1,
-  "outTime": 1.0e-4,
+  "outTime": 1.0e-3,
   "artifViscAlpha": 2.0,
   "artifViscBeta": 1.0,
-  "solver": "Mech-Thermal"
+  "kernelGradCorr":false,
+	"solver": "Mech-Thermal"
 }
 ,
 "Materials":[ 
@@ -82,5 +83,10 @@
 	"free": false
 }
 ]
-
+,
+"InitialConditions": [
+{
+	"Temp": 20.0
+}
+]
 }

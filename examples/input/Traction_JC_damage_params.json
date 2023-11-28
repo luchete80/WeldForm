@@ -1,0 +1,7 @@
+"Materials":[ 
+{
+		....
+	"damageModel": "JohnsonCook",
+  "damageParams": [0.54, 4.89,-3.03,0.014,1.12],
+	...
+}
