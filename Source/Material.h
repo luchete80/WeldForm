@@ -19,7 +19,7 @@ public:
   double Gf; //Fracture Energ
 	double sigma_max;
 	double delta_max;  // being calculated for example delta_max = 2GF/(sigmamax) 
-
+  Material_ *mat; //ONLY TO OBTAIN EPS_0, NOT USED
   
   DamageModel(){};
   DamageModel(const double &smax_, const double &Gf_)
@@ -48,24 +48,16 @@ class JohnsonCookDamage:
 public DamageModel {
   double m_D1,m_D2,m_D3,m_D4,m_D5; 
   double m_eps0;  //REFERENCE STRAIN RATE, SAME AS JOHNSON COOK COUNTERPART, REDUNDANT
-  JohnsonCook *mat; //ONLY TO OBTAIN EPS_0, NOT USED
+
 	public:
   JohnsonCookDamage(const double &D1, const double &D2, const double &D3, const double &D4, const double &D5, const double &m_eps0_)
 	:m_D1(D1),m_D2(D2),m_D3(D3),m_D4(D4),m_D5(D5), m_eps0(m_eps0_){
     m_dam_crit_str = "JohnsonCook";
   }
+	inline double CalcFractureStrain(const double &str_rate, const double &sig_as,const double &T) ;
 	std::string getDamageCriterion() {return string("JohnsonCook");} 
-	inline double CalcFractureStrain(const double &str_rate, const double &sig_as,const double &T) { //sig_as is stress triaxiality
-    //return ( (m_D1 + m_D2 *exp(m_D3*sig_as)) * pow (1.0 + (str_rate/m_eps0), m_D4) * (1.0 + m_D5 * T)); //Islam 2017 eq. 35, 
-		double f_sr = 1.0;
-		double f_triax = m_D1;
-		if (str_rate > m_eps0) f_sr = 1.0 + log(str_rate/m_eps0)* m_D4;
-		if (sig_as<1.5) f_triax = m_D1 + m_D2 *exp(m_D3*sig_as); //Pressure positive
-		double ef = f_triax * f_sr * (1.0 + m_D5 * T);
-		// if (ef <1.0 )ef = 1.0;
-		//cout << "ef " << ef<<endl;
-		return ef; //ABAQUS
-  }
+	// ATTENTION! HERE T IS ABSOLUTE TEMP
+
 	virtual ~JohnsonCookDamage(){}
 };
 
@@ -83,11 +75,17 @@ class Elastic_{
 
 class Material_{
 	
+	friend DamageModel;
 	protected:
 	Elastic_ elastic_m;
 
 	double E_m, nu;	//TODO, move to elastic class
+	double T_t,T_m;	//transition and melting temps
+	
 	public:
+
+
+	
 	DamageModel *damage;
 	Material_(){}
 	Material_(const Elastic_ el):elastic_m(el){}
@@ -97,6 +95,8 @@ class Material_{
 	virtual inline double CalcYieldStress(){return 0.0;}
 	virtual inline double CalcYieldStress(const double &strain){return 0.0;};
 	virtual inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp){return 0.0;}
+	double & getT_t(){return T_t;}
+	double & getT_m(){return T_m;}
   virtual double &getRefStrainRate() {}//only for JC
 	const Elastic_& Elastic()const{return elastic_m;}
   //~Material_();
@@ -112,7 +112,6 @@ class _Plastic{
 //TODO: derive johnson cook as plastic material flow
 class JohnsonCook:
 public Material_{
-	double T_t,T_m;	//transition and melting temps
 	double A, B, C;
 	double n, m;
 	double eps_0; //ONLY FOR JC DAMAGE , CORRECT THIS
@@ -126,8 +125,11 @@ public Material_{
               const double &c, const double &eps_0_,
               const double &m_, const double &T_m_, const double &T_t_):
 	Material_(el),A(a),B(b),C(c),
-  m(m_),n(n_),eps_0(eps_0_),T_m(T_m_),T_t(T_t_)
-  {}
+  m(m_),n(n_),eps_0(eps_0_)
+  {
+		T_m=T_m_;
+		T_t=T_t_;
+	}
 	inline double CalcYieldStress(){return 0.0;}	
 	inline double CalcYieldStress(const double &plstrain){
      double Et =0.;

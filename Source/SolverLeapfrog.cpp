@@ -178,7 +178,6 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
           //CheckParticlePairs(0);
           //#endif
           SaveNeighbourData();
-          cout << "nb search, ts_nb_inc"<< ts_nb_inc<< "ts_i, "<<ts_i<<endl;
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
           if (contact) {
             clock_beg = clock();

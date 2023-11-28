@@ -474,3 +474,4 @@
 -------------------------------------------------------------
 20231128 - Fixed some examples. Added traction example. 
          - FIXED NB SEARCH WHEN DAMAGE MODEL
+				 - Fixed Homologous temp fracture strain calculation

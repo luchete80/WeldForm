@@ -70,3 +70,21 @@ inline double Hollomon::CalcTangentModulus(const double &strain) {
 	//cout << "ET: "<<Et<<endl;
 	return Et;
 }
+
+
+
+inline double JohnsonCookDamage::CalcFractureStrain(const double &str_rate, const double &sig_as,const double &T) { //sig_as is stress triaxiality
+	//return ( (m_D1 + m_D2 *exp(m_D3*sig_as)) * pow (1.0 + (str_rate/m_eps0), m_D4) * (1.0 + m_D5 * T)); //Islam 2017 eq. 35, 
+	double T_h = (T - mat->getT_t()) / (mat->getT_m() - mat->getT_t());
+	//cout << "T_t, T_m "<< mat->getT_t() << ", "<<mat->getT_m()<<endl;
+	double f_sr = 1.0;
+	double f_triax = m_D1;
+	if (str_rate > m_eps0) f_sr = 1.0 + log(str_rate/m_eps0)* m_D4;
+	if (sig_as<1.5) f_triax = m_D1 + m_D2 *exp(m_D3*sig_as); //Pressure positive
+	double ef = f_triax * f_sr * (1.0 + m_D5 * T_h);
+	// cout << "sig_as" << sig_as<<endl;
+	// if (ef <1.0 )ef = 1.0;
+	//cout << "ef " << ef<<endl;
+	if (ef>10.0) ef = 10.0;
+	return ef; //ABAQUS
+}

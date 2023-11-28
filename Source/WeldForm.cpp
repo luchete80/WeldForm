@@ -228,6 +228,7 @@ int main(int argc, char **argv) try {
 			dom.model_damage = true;
 			dom.nonlock_sum = false;
 		} else if      (damage_mod == "JohnsonCook"){
+			
 			double smax, Gf;
       std::vector <double> D(5);
 			readArray(material[0]["damageParams"], 		D);
@@ -238,6 +239,8 @@ int main(int argc, char **argv) try {
 			dom.model_damage = true;
 			dom.nonlock_sum = false;
 		}
+		
+		damage->mat = mat;
 			
     // THERMAL PROPERTIES
 

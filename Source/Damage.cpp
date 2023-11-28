@@ -29,7 +29,7 @@ inline void Domain::CalcDamage(){
 			Particles[i]->CalculateEquivalentStress(); //Set Particles[i]->Sigma_eq
 			if (Particles[i]->Sigma_eq>1.0e-3) {
 				//sig_as = 1.0/3.0* (Particles[i]->Sigma(0,0)+Particles[i]->Sigma(1,1)+Particles[i]->Sigma(2,2))/Particles[i]->Sigma_eq; //Stress triaxiality sig_m / sig_eff
-				//cout << "sig_as"<<sig_as<<", "<<"pressure "<< Particles[i]->Pressure<<endl;
+				//cout << "sig_as"<<sig_as<<", "<<"pressure "<< Particles[i]->Pressure<<", sig eq"<<Particles[i]->Pressure/Particles[i]->Sigma_eq<<endl;
 				//cout << "sig_as press "<<-Particles[i]->Pressure/Particles[i]->Sigma_eq<<endl<<endl;
 				// Particles[i]->eps_f = Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, sig_as, PP[i]->T);
 				//cout << "total strain rate: "<<Particles[i]->eff_strain_rate <<", pl strain rate "<<Particles[i]->delta_pl_strain/deltat<<endl;
