@@ -63,7 +63,7 @@ public DamageModel {
 		if (sig_as<1.5) f_triax = m_D1 + m_D2 *exp(m_D3*sig_as); //Pressure positive
 		double ef = f_triax * f_sr * (1.0 + m_D5 * T);
 		// if (ef <1.0 )ef = 1.0;
-		//cout << "ef " << ef<<endl;
+		cout << "ef " << ef<<endl;
 		return ef; //ABAQUS
   }
 	virtual ~JohnsonCookDamage(){}

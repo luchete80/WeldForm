@@ -18,7 +18,8 @@ inline void Domain::CalcDamage(){
 	double sig_as;
 	
 	//USED IN JOHNSON COOK DAMAGE
-	#pragma omp parallel for schedule(static) private(sig_as) num_threads(Nproc)
+	double T = 0.0;
+	#pragma omp parallel for schedule(static) private(sig_as, T) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t i=0; i< solid_part_count ; i++)	{ //Like in Domain::Move
 	#else
@@ -32,13 +33,14 @@ inline void Domain::CalcDamage(){
 				//cout << "sig_as press "<<-Particles[i]->Pressure/Particles[i]->Sigma_eq<<endl<<endl;
 				// Particles[i]->eps_f = Particles[i]->mat->damage->CalcFractureStrain(Particles[i]->eff_strain_rate, sig_as, PP[i]->T);
 				//cout << "total strain rate: "<<Particles[i]->eff_strain_rate <<", pl strain rate "<<Particles[i]->delta_pl_strain/deltat<<endl;
+				if (thermal_solver) T = Particles[i]->T;
 				Particles[i]->dam_D += Particles[i]->delta_pl_strain/Particles[i]->mat->damage->CalcFractureStrain(
 																																																					//Particles[i]->eff_strain_rate, 
 																																																					Particles[i]->delta_pl_strain/deltat,
 																																																					-Particles[i]->Pressure/Particles[i]->Sigma_eq, 
-																																																					Particles[i]->T);
+																																																					T);
 				// if (Particles[i]->dam_D > 0.0 && Particles[i]->pl_strain ==0.0)
-					// cout <<"dam " <<Particles[i]->dam_D<<", Pl Strain: "<<Particles[i]->pl_strain<<endl;
+			cout <<"dam " <<Particles[i]->dam_D<<", Pl Strain: "<<Particles[i]->pl_strain<<endl;
 				if (Particles[i]->dam_D > 1.0) Particles[i]->dam_D = 1.0;
 			}
 		}//if incremental pl_strain
