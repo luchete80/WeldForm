@@ -19,7 +19,7 @@ inline void Domain::CalcDamage(){
 	
 	//USED IN JOHNSON COOK DAMAGE
 	double T = 0.0;
-	#pragma omp parallel for schedule(static) private(sig_as, T) num_threads(Nproc)
+	#pragma omp parallel for schedule(static) private( T) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t i=0; i< solid_part_count ; i++)	{ //Like in Domain::Move
 	#else
