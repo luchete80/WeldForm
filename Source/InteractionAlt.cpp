@@ -11,7 +11,7 @@ namespace SPH{
   
 inline void Domain::CalcAccel() {
   Particle *P1, *P2;
-  double dam_f = 1.0; //if not damage
+  double dam_f; //if not damage
 	
   #pragma omp parallel for schedule (static) private (P1,P2,dam_f) num_threads(Nproc)
 	#ifdef __GNUC__
@@ -34,7 +34,7 @@ inline void Domain::CalcAccel() {
     }
     double h	= (P1->h+P2->h)/2;
     Vec3_t xij	= P1->x - P2->x;
-
+    dam_f = 1.0;
     //Periodic_X_Correction(xij, h, P1, P2);
 
     double rij	= norm(xij);
@@ -57,7 +57,7 @@ inline void Domain::CalcAccel() {
     }
 		
     if (dam_f > 0.0) {
-
+      if (dam_f > 1.0 ) dam_f = 1.0;
 		Vec3_t vij	= P1->v - P2->v;
 		double GK	= GradKernel(Dimension, KernelType, rij/h, h);
 		double K	= Kernel(Dimension, KernelType, rij/h, h);
@@ -460,7 +460,7 @@ inline void Domain::RateTensorsReduction(){
 
 // TODO: USED CALCULATED KERNELKS
 inline void Domain::CalcDensInc() {
-	double dam_f = 1.0; //if not damage
+	double dam_f;
   Particle *P1, *P2;
 	#pragma omp parallel for schedule (static) private (P1,P2,dam_f) num_threads(Nproc)
 	#ifdef __GNUC__
@@ -480,7 +480,7 @@ inline void Domain::CalcDensInc() {
       P2 = Particles[std::max(SMPairs[k][p].first, SMPairs[k][p].second)];
       //#endif
       }
-      
+      dam_f = 1.0;
       double h	= (P1->h+P2->h)/2;
       Vec3_t xij	= P1->x - P2->x;
 
@@ -537,8 +537,9 @@ inline void Domain::CalcDensInc() {
       if (model_damage) {
         if (dam_D[k][p] > 0.0 ) dam_f = 1.0 - dam_D[k][p];
         // if (dam_D[k][p]     
-      }
+      } 
       if (dam_f > 0.0){
+        if (dam_f>1.0) dam_f = 1.0;
       if (nonlock_sum)
         pair_densinc[first_pair_perproc[k] + p] = temp1;
       //#else

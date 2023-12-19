@@ -455,7 +455,6 @@
          - Added initial velocity to input
 -------------------------------------------------------------
 20231004 - Added ROTATION VELOCITY TO INPUT
--------------------------------------------------------------
 20231106 - Added Johnson Cook Damage Model.
          - Corrected fracture strain and add incremental plastic strain to particle damage
 				 - Added dmage param input reading
@@ -467,11 +466,12 @@
 				 - Corrected Johnson Cook damage expression
 				 - Calculate fracture strain and stresses per particle and not per pair
 				 - Corrected Acceleration expression
--------------------------------------------------------------
 20231115 - Solved Johnson Cook strain hardening factor
--------------------------------------------------------------
 20231126 - Fixed Johnson Cook fracture strain expression
--------------------------------------------------------------
 20231128 - Fixed some examples. Added traction example. 
          - FIXED NB SEARCH WHEN DAMAGE MODEL
 				 - Fixed Homologous temp fracture strain calculation
+-------------------------------------------------------------
+20231219 - FIXED NON DAMAGE Accel Calculation. (Damage param dam_f was set outside loop)
+         - Added Compression with damage (seeing that Mass Scaling gives wrong results)
+         - Added damage to metal cut (and remove mass scaling)

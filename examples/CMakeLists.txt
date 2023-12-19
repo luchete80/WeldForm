@@ -18,7 +18,7 @@ SET(EXES
   #test_new_sym
   #Cantilever
   # examples/Compression
-	Compression
+	# Compression
   #Compression_AVisc
   #Compression_1010
   #Compression_half_ghost_vel
