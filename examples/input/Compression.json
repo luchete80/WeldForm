@@ -5,7 +5,7 @@
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.7,
-  "autoTS": [true,false,false],
+  "autoTS": [false,false,false],
   "kernelGradCorr": true,  
   "simTime": 0.01,
   "outTime": 1.0e-4,

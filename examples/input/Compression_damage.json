@@ -1,0 +1,77 @@
+{
+"Configuration":
+{
+	"particleRadius": 0.0075, 
+	"hFactor": 1.2,
+  "cflMethod": 1,
+  "cflFactor": 0.7,
+  "autoTS": [false,false,false],
+  "kernelGradCorr": true,  
+  "simTime": 0.01,
+  "outTime": 1.0e-4,
+  "solver": "Mech-LeapFrog"
+}
+,
+"Materials":[ 
+{
+	"id": "Solid",
+	"type": "JohnsonCook",
+  "const": [90.0e6, 292.0e6,0.31,0.025,1.0e-3,1.0,1000.0],
+	"damageModel": "JohnsonCook",
+  "damageParams": [0.54, 4.89,-3.03,0.014,1.12],
+	"density0": 896000.0, 
+	"youngsModulus": 124.0E9, 
+	"thermalCond": 120.0,
+  "thermalHeatCap": 875.0,
+	"poissonsRatio": 0.34
+}],
+
+"DomainBlocks": 
+[{
+	"type": "Cylinder",
+	"zoneId": 0,
+	"denseMode": 0,
+	"start": [ 0.0, 0.0, -0.028],
+	"dim": [0.3, 0.0, 0.616],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1]
+}],
+
+"DomainZones": [
+{
+	"id": 2,
+	"start":[-1.0,-1.0, -0.03],
+	"end": 	[ 1.0, 1.0, -0.0200]
+},
+{
+	"id": 3,
+	"start":[-1.0,-1.0, 0.57],
+	"end": 	[ 1.0, 1.0, 1.0000]
+}
+],
+
+"Amplitudes": [
+{
+	"id": 		1,
+	"valueType": 1,
+	"time": 	[ 0.0, 5.0e-3, 1.0],
+	"value": 	[ 0.0, 1.0, 1.0]
+}
+],
+"BoundaryConditions": [
+{
+	"zoneId": 	2,
+	"valueType": 0,
+	"value": 		[ 0.0, 0.0, 0.0],
+	"free": 		true
+},
+{
+	"zoneId": 	3,
+	"valueType": 	1,
+  "amplitudeId" : 1,
+  "amplitudeFactor": 1.0,
+	"value": 		[ 0.0, 0.0, -10.0]
+}
+]
+
+}
