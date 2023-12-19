@@ -15,10 +15,10 @@ public:
 class CSVPointsReader{
 public:
   CSVPointsReader (const char *);
-  Point* getPoint(const int &i){return points[i];} 
+  Point* getPoint(const int &i){return m_points[i];} 
 
 protected:
-  std::vector <Point*> points;
+  std::vector <Point*> m_points;
   int m_line_count;
   std::vector <std::string> m_line;  
 };
