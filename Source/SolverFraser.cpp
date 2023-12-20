@@ -20,7 +20,7 @@ namespace SPH {
 
 inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
-
+  ostringstream oss_out;
 
 	size_t idx_out = 1;
 	double tout = Time;
@@ -381,11 +381,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 		//if (Time>=tout || std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - last_output_time).count() > 60.0){
     //cout << "elapsed "<<(double)((clock() - last_output_time) / CLOCKS_PER_SEC)<<endl;
     if (Time>=tout || (double)((clock() - last_output_time) / CLOCKS_PER_SEC) > 60.0) {
-      //cout << "ELAPSED "<<std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - last_output_time).count()<<endl;
-      //elapsed_output = std::chrono::steady_clock::now() - last_output_time;
-      //last_output_time = std::chrono::steady_clock::now();
-      last_output_time = clock(); 
-      if (Time>=tout ){
+      last_output_time = clock();  
+      if (Time>=tout ){      
         if (TheFileKey!=NULL) {
           String fn;
           fn.Printf    ("%s_%04d", TheFileKey, idx_out);
@@ -400,41 +397,36 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       
 			total_time = std::chrono::steady_clock::now() - start_whole;		
 			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
-      float step_per_sec = steps/total_time.count();
-      float rem_steps = (tf - Time)/deltat;
-      cout << "Step Count: "<<steps<<", Estimated remaining solve time: "<<(rem_steps/step_per_sec)/3600.0<<" hours "<<endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
-      std::cout << std::setprecision(2);
-      cout << "Calculation Times\nAccel: "<<acc_time_spent_perc*100<<"%,  "<< "Density: "<<dens_time_spent/total_time.count()*100<<"%,  ";
-      cout << "Stress: "  <<stress_time_spent/total_time.count()*100<<"%,  Thermal "<<thermal_time_spent/total_time.count()*100<<"% "<<endl;
-      cout << "Energy: "  <<energy_time_spent/total_time.count()*100<<"%,  ";
-      cout << "Contact: " <<contact_time_spent/total_time.count()*100<<"%,  ";
-      cout << "Nb: "      <<nb_time_spent/total_time.count()*100<<"%,  ";
-      cout << "Update: " <<mov_time_spent/total_time.count()*100<<"%,  ";
-      cout << "Initial calcs: "<<ini_time_spent/total_time.count()*100<<"%,  ";
-      //cout << "Elapsed since last output: "<< elapsed_output.count() <<endl;
-      cout << endl<<"Elapsed since last output: "<< (clock() - last_output_time) / CLOCKS_PER_SEC<<endl;
-      cout <<endl;
+      oss_out.clear();
+      oss_out << std::setprecision(2);
+      oss_out << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
+      oss_out << "Density: "<<dens_time_spent/total_time.count()<<"%,  ";
+      oss_out << "Stress: "  <<stress_time_spent/total_time.count()<<"%,  "<<endl;
+      oss_out << "Energy: "  <<energy_time_spent/total_time.count()<<"%,  ";
+      oss_out << "Contact: " <<contact_time_spent/total_time.count()<<"%,  ";
+      oss_out << "Nb: "      <<nb_time_spent/total_time.count()<<"%,  ";
+      oss_out << "Update: " <<mov_time_spent/total_time.count()<<"%,  ";
+      oss_out <<endl;
       
-			std::cout << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;
-			std::cout << "Current Time Step = " <<deltat<<std::endl;
-			cout << "Max plastic strain: " <<max<< "in particle" << imax << endl;
+			oss_out << "Output No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+			oss_out << "Current Time Step = " <<deltat<<std::endl;
+			oss_out << "Max plastic strain: " <<max<< "in particle" << imax << endl;
       if (max > 0.)
-        cout<<"Plastic Work "<<plastic_work<<endl;
-      cout.precision(6);
-			cout << "Max Displacements (No Cont Surf): "<<max_disp<<endl;
+        oss_out<<"Plastic Work "<<plastic_work<<endl;
+      oss_out.precision(6);
+			oss_out << "Max Displacements (No Cont Surf): "<<max_disp<<endl;
       if (contact) {
-        cout<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
-        cout<<"Contact Friction Work "<<contact_friction_work<<endl;
-        cout<<"External Forces Work "<< ext_forces_work<<endl;
+        oss_out<<"Contact Force Sum "<<contact_force_sum<<", Reaction Sum "<< contact_reaction_sum<<endl;
+        oss_out<<"Contact Friction Work "<<contact_friction_work<<endl;
+        oss_out<<"External Forces Work "<< ext_forces_work<<endl;
         if (cont_heat_cond)
-          cout << "Total contact heat flux" << accum_cont_heat_cond <<endl;
+          oss_out << "Total contact heat flux" << accum_cont_heat_cond <<endl;
       }
-
-      cout << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
+      oss_out << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
       if (thermal_solver)
-        std::cout << "Max, Min, Avg temps: "<< m_maxT << ", " << m_minT << ", " << (m_maxT+m_minT)/2. <<std::endl;      
-      
+        oss_out << "Max, Min, Avg temps: "<< m_maxT << ", " << m_minT << ", " << (m_maxT+m_minT)/2. <<std::endl;    
+
       ofprop <<getTime() << ", "<<m_scalar_prop<<endl;
 			
       for (int p=0;p<Particles.Size();p++){
@@ -443,10 +435,26 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
           Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
           contact_force_sum << endl;
 			}
+			if (model_damage){
+				double max_dam = 0.;
+				int dam_count =0;
+				for (int p=0;p<Particles.Size();p++){
+					if (Particles[p]->dam_D>max_dam) 
+						max_dam = Particles[p]->dam_D;
+					if (Particles[p]->dam_D==1.0) 
+						dam_count++;
+				}
+			cout << "Max damage is "<<max_dam<<", full damage count: "<<dam_count<<endl;
+			}
+      
+      oss_out << "-----------------------------------------------------------------------------"<<endl;
+      cout << oss_out.str();
+      out_file << oss_out.str();
+      
 		}
-    if (auto_ts)      CheckMinTSVel();
-    if (auto_ts_acc)  CheckMinTSAccel();
-    if (auto_ts || auto_ts_acc)  AdaptiveTimeStep();
+    // if (auto_ts)      CheckMinTSVel();
+    // if (auto_ts_acc)  CheckMinTSAccel();
+    // if (auto_ts || auto_ts_acc)  AdaptiveTimeStep();
     
 	
 	}
