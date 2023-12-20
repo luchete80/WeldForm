@@ -9,7 +9,7 @@
   "autoTS": [false,false,false],
   "kernelGradCorr": true,
   "simTime": 1.0e-1,
-  "outTime": 1.0e-6,
+  "outTime": 1.0e-5,
   "artifViscAlpha": 1.2,
   "artifViscBeta": 0.05,
   "tensileInstability": 0.3,

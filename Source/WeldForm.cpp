@@ -160,21 +160,26 @@ int main(int argc, char **argv) try {
     size_t pos = 0;
     size_t test = findLastOccurrence(inputFileName, '\\');
     if (test != string::npos) pos = test;
-    cout << "pos of json "<<inputFileName.find(".json")<<endl;
+    //cout << "pos of json "<<inputFileName.find(".json")<<endl;
     string out_name = inputFileName.substr(pos+1, inputFileName.find(".json") - pos ) + "out";
-    cout << "Out file: "<< out_name << endl;
+    //cout << "Out file: "<< out_name << endl;
     dom.out_file.open(out_name.c_str(), std::ofstream::out | std::ofstream::app);
 		dom.Dimension	= 3;
 		
 		string kernel;
     double ts;
     
-    cout << "-----------------------------------------------"<<endl;
-    cout << "------------------ WELDFORM -------------------"<<endl;
-    cout << "----------------- v. 0.4.2.2 ------------------"<<endl;
-    cout << "------------------ 20231220 -------------------"<<endl;
-    cout << "-- b0dbb04f0fae34b0af22458da210614c891e4963 ---"<<endl;
-    cout << "-----------------------------------------------"<<endl<<endl<<endl;
+    ostringstream oss_out;
+    
+    oss_out << "-----------------------------------------------"<<endl;
+    oss_out << "------------------ WELDFORM -------------------"<<endl;
+    oss_out << "----------------- v. 0.4.2.2 ------------------"<<endl;
+    oss_out << "------------------ 20231220 -------------------"<<endl;
+    oss_out << "-- b0dbb04f0fae34b0af22458da210614c891e4963 ---"<<endl;
+    oss_out << "-----------------------------------------------"<<endl<<endl<<endl;
+    
+    cout << oss_out.str();
+    dom.out_file << oss_out.str();
     
     cout << "Reading Configuration parameters..."<<endl; 
     
