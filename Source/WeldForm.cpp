@@ -173,7 +173,7 @@ int main(int argc, char **argv) try {
     cout << "------------------ WELDFORM -------------------"<<endl;
     cout << "----------------- v. 0.4.2.2 ------------------"<<endl;
     cout << "------------------ 20231220 -------------------"<<endl;
-    cout << "-- 7013b149272f3009b396e19c28f9c87410ffe241 ---"<<endl;
+    cout << "-- b0dbb04f0fae34b0af22458da210614c891e4963 ---"<<endl;
     cout << "-----------------------------------------------"<<endl<<endl<<endl;
     
     cout << "Reading Configuration parameters..."<<endl; 
