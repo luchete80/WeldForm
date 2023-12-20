@@ -161,9 +161,7 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
 		}
-		} else {
-      CalculateSurface(1);
-    }
+		} 
 		
 		if (model_damage && !isfirst) ts_i = 1; //NEVER SEARCH NBs
 		
@@ -192,6 +190,11 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
 			}
 		
     } //( max > MIN_PS_FOR_NBSEARCH || isfirst ){	//TO MODIFY: CHANGE
+    
+    //after if first
+    if (model_damage) {
+      CalculateSurface(1);
+    }
 
 		// //NEW, gradient correction
 			if (isfirst) {
@@ -384,9 +387,7 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
       oss_out << "Int Energy: " << int_energy_sum << ", Kin Energy: " << kin_energy_sum<<endl;
       if (thermal_solver)
         oss_out << "Max, Min, Avg temps: "<< m_maxT << ", " << m_minT << ", " << (m_maxT+m_minT)/2. <<std::endl;    
-      cout << oss_out.str();
-      out_file << oss_out.str();
-      
+
       ofprop <<getTime() << ", "<<m_scalar_prop<<endl;
 			
       for (int p=0;p<Particles.Size();p++){
@@ -406,7 +407,11 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
 				}
 			cout << "Max damage is "<<max_dam<<", full damage count: "<<dam_count<<endl;
 			}
-
+      
+      oss_out << "-----------------------------------------------------------------------------"<<endl;
+      cout << oss_out.str();
+      out_file << oss_out.str();
+      
 		}
     // if (auto_ts)      CheckMinTSVel();
     // if (auto_ts_acc)  CheckMinTSAccel();
