@@ -475,3 +475,5 @@
 20231219 - FIXED NON DAMAGE Accel Calculation. (Damage param dam_f was set outside loop)
          - Added Compression with damage (seeing that Mass Scaling gives wrong results)
          - Added damage to metal cut (and remove mass scaling)
+         - Recalculate free surface on contact problems
+         - Added out file with output and date build

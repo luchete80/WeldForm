@@ -1,7 +1,7 @@
 {
 "Configuration":
 {
-  "Nproc": 12,
+  "Nproc": 16,
 	"particleRadius": 0.01e-3, 
 	"hFactor": 1.2,
   "cflMethod": 1,
@@ -9,7 +9,7 @@
   "autoTS": [true,false,false],
   "kernelGradCorr": true,
   "simTime": 1.0e-1,
-  "outTime": 1.0e-5,
+  "outTime": 1.0e-6,
   "artifViscAlpha": 1.2,
   "artifViscBeta": 2.5,
   "tensileInstability": 0.3,

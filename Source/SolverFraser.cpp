@@ -171,7 +171,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 			if (contact) ContactNbUpdate(this);
 			isyielding  = true ;
 		}
-		}
+		} else {
+      CalculateSurface(1);
+    }
     
     ini_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 

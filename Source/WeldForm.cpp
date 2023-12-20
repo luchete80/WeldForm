@@ -118,7 +118,7 @@ int main(int argc, char **argv) try {
 		std::ifstream i(argv[1]);
 		json j;
 		i >> j;
-		
+
 		nlohmann::json config 		= j["Configuration"];
 		nlohmann::json material 	= j["Materials"];
 		nlohmann::json domblock 	= j["DomainBlocks"];
@@ -131,7 +131,8 @@ int main(int argc, char **argv) try {
 
 		
 		SPH::Domain	dom;
-		
+		dom.filename = inputFileName;
+    dom.out_file.open(inputFileName.c_str(), std::ios::out);
 		dom.Dimension	= 3;
 		
 		string kernel;

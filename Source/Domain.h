@@ -43,6 +43,8 @@
 #include "Mesh.h"
 #include "Plane.h"
 
+#include <fstream>
+
 //#define NONLOCK_SUM 
 #define MAX_NB_PER_PART 100
 
@@ -472,6 +474,8 @@ public:
   int AssignZone(Vec3_t &start, Vec3_t &end, int &id);
 	
   std::vector <SPH::amplitude> amps; ////maybe move to domain
+  string filename;
+  std::ofstream out_file;
   
   private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
