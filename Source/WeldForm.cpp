@@ -161,9 +161,9 @@ int main(int argc, char **argv) try {
     size_t test = findLastOccurrence(inputFileName, '\\');
     if (test != string::npos) pos = test;
     cout << "pos of json "<<inputFileName.find(".json")<<endl;
-    string out_name = inputFileName.substr(pos, inputFileName.find(".json") - pos + 1) + ".out";
+    string out_name = inputFileName.substr(pos+1, inputFileName.find(".json") - pos ) + "out";
     cout << "Out file: "<< out_name << endl;
-    dom.out_file.open(out_name.c_str(), std::ios::out);
+    dom.out_file.open(out_name.c_str(), std::ofstream::out | std::ofstream::app);
 		dom.Dimension	= 3;
 		
 		string kernel;
