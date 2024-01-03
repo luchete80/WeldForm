@@ -3,6 +3,7 @@
 #include <iostream>
 #include "InteractionAlt.cpp"
 #include "SolverKickDrift.cpp"
+#include "SolverLeapfrog.cpp"
 #include "SolverFraser.cpp"
 
 #define TAU		0.005
