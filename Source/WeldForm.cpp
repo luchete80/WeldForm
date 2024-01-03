@@ -323,15 +323,21 @@ int main(int argc, char **argv) try {
     double tensins = 0.3;
     int nb_upd_freq = 5;
     bool kernel_grad_corr = false;
+    int gradType = 0;
     readValue(config["artifViscAlpha"],alpha);
     readValue(config["artifViscBeta"],beta);
     readValue(config["contAlgorithm"],cont_alg);
     readValue(config["kernelGradCorr"],kernel_grad_corr);
+    readValue(config["stressGradType"],gradType);
     readValue(config["smoothlenUpdate"],h_upd);
     readValue(config["nbsearchFreq"],nb_upd_freq);
     dom.auto_ts = auto_ts[0];
     dom.auto_ts_acc = auto_ts[1];
     dom.auto_ts_cont = auto_ts[2];
+    
+    Gradient_Type gt = gradType;
+    dom.Gradient_Approach_Set(gradType);
+    //dom.GradientType = gradType;
 		
     readValue(config["tensileInstability"],tensins);
     if (h_upd) //default is false...

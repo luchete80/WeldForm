@@ -157,9 +157,19 @@ inline void Domain::CalcAccel() {
 		} else {
 				//Should be replaced  dot( xij , GK*xij ) by dot( xij , v )
 				//Left in vector form and multiply after??
-				for (int i=0;i<2;i++){
-					Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
-				}
+        if (GradientType == 0){
+          for (int i=0;i<2;i++){
+            Mult( vc[i] , ( 1.0/(di*di)*Sigmai + 1.0/(dj*dj)*Sigmaj + PIij + TIij ) , temp_c[i]);
+          }
+        } else if (GradientType == 1) {
+          for (int i=0;i<2;i++){
+            Mult( vc[i] , ( 1.0/(di*dj)*(Sigmai + Sigmaj)           + PIij + TIij ) , temp_c[i]);
+            } 
+          } else if (GradientType == 2) {
+          for (int i=0;i<2;i++){
+            Mult( vc[i] , ( 1.0/(di*dj)*(Sigmai - Sigmaj)           + PIij + TIij ) , temp_c[i]);
+          }          
+        }
 		}//Grad Corr
     
 
