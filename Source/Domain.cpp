@@ -1779,7 +1779,7 @@ inline void Domain::CalcGradCorrMatrix () {
 	Mat3_t m,mt[2];
 	
 	//cout << "Applying grad corr"<<endl;
-	//#pragma omp parallel for schedule (static) private (m,mt) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
+	#pragma omp parallel for schedule (static) private (m,mt) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( size_t k = 0; k < Nproc ; k++) {
     double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 		Particle *P1,*P2;
@@ -1804,9 +1804,10 @@ inline void Domain::CalcGradCorrMatrix () {
 			//cout << "mt"<<mt[0]<<endl;
 			//omp_set_lock(&P1->my_lock);
 			//SIGN IS NEGATIVE (IF POSITIVE, GRADIENT SIGN IS OPPOSITE)
-			
+			omp_set_lock(&dom_lock);
 			temp[SMPairs[k][a].first]  = temp[SMPairs[k][a].first]  - mt[0];  
 			temp[SMPairs[k][a].second] = temp[SMPairs[k][a].second] - mt[1];
+      omp_unset_lock(&dom_lock);
 		}
 	}//Nproc
 	//cout << "Fixed Pairs"<<endl;
@@ -1844,28 +1845,34 @@ inline void Domain::CalcGradCorrMatrix () {
 	int max_id = Particles.Size();
 	if (contact)
 		max_id = first_fem_particle_idx[0];
-	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE		
+	#pragma omp parallel for schedule (static) private (m) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE		
 	for (int i=0; i<max_id; i++){
 		// cout << "part "<<i<<endl;
 		//cout << "x: "<<Particles[i]->x<<endl;
 		// cout << "nb: "<<Particles[i]->Nb<<endl;
 		// if (!Particles[i]->IsFree) cout << "Fixed"<<endl;
 		//cout << "temp "<<temp[i]<<endl;
-		if (Dimension == 2)
+		if (Dimension == 2){
+      omp_set_lock(&dom_lock);
 			temp[i](2,2) = 1;
-		/** Inverse.*/
+      omp_unset_lock(&dom_lock);
+    }
+    /** Inverse.*/
 		//inline void Inv (Mat3_t const & M, Mat3_t & Mi, double Tol=1.0e-10)}	
 		if (Particles[i]->IsFree){
 			if (!InvLog(temp[i],m)) {//TODO: CHANGE THIS
         m = I;
         nulldetcount++;
       }
-
+      omp_set_lock(&Particles[i]->my_lock);
 			Particles[i] ->gradCorrM = m;
+      omp_unset_lock(&Particles[i]->my_lock);
 			//cout << "Corr Matrix: " << m <<endl;
 		} else {
+      omp_set_lock(&Particles[i]->my_lock);
 			Particles[i] ->gradCorrM = I;
-		}
+      omp_unset_lock(&Particles[i]->my_lock);
+    }
 	}
   if (nulldetcount>0) cout << nulldetcount << " particles with correction matrix determinant."<<endl;	
 }
