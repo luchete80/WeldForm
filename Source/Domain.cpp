@@ -1774,14 +1774,14 @@ void Domain::CalcIntEnergyEqn(){
 
 //New, for Bonet gradient correction
 inline void Domain::CalcGradCorrMatrix () {
-	double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 	
 	std::vector < Mat3_t> temp(Particles.Size());
 	Mat3_t m,mt[2];
 	
 	//cout << "Applying grad corr"<<endl;
-	//#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
+	//#pragma omp parallel for schedule (static) private (m,mt) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( size_t k = 0; k < Nproc ; k++) {
+    double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 		Particle *P1,*P2;
 		Vec3_t xij;
 		double h,GK;
@@ -1819,6 +1819,7 @@ inline void Domain::CalcGradCorrMatrix () {
 		//cout << "FSMPairs[k].Size()"<<FSMPairs[k].Size()<<endl;
 		for (size_t a=0; a<FSMPairs[k].Size();a++) {//Same Material Pairs, Similar to Domain::LastComputeAcceleration ()
 			//cout << "a: " << a << "p1: " << SMPairs[k][a].first << ", p2: "<< SMPairs[k][a].second<<endl;
+      double di=0.0,dj=0.0,mi=0.0,mj=0.0;
 			P1	= Particles[FSMPairs[k][a].first];
 			P2	= Particles[FSMPairs[k][a].second];
 			xij	= P1->x - P2->x;
