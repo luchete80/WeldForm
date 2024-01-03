@@ -175,7 +175,7 @@ int main(int argc, char **argv) try {
     cout << "------------------ 20231220 -------------------"<<endl;
     cout << "-- b0dbb04f0fae34b0af22458da210614c891e4963 ---"<<endl;
     cout << "-----------------------------------------------"<<endl<<endl<<endl;
-    
+     
     cout << "Reading Configuration parameters..."<<endl; 
     
     int np = 4;
