@@ -1839,12 +1839,11 @@ inline void Domain::CalcGradCorrMatrix () {
 		}
 	}//Nproc
 	//cout << "Inverting"<<endl;
-	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 	//cout << "Inverting"<<endl;
 	int max_id = Particles.Size();
 	if (contact)
 		max_id = first_fem_particle_idx[0];
-		
+	//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE		
 	for (int i=0; i<max_id; i++){
 		// cout << "part "<<i<<endl;
 		//cout << "x: "<<Particles[i]->x<<endl;
