@@ -6,12 +6,12 @@
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.6,
-  "autoTS": [false,false,false],
-  "kernelGradCorr": true,
+  "autoTS": [true,false,false],
+  "kernelGradCorr": false,
   "simTime": 1.0e-1,
-  "outTime": 1.0e-5,
-  "artifViscAlpha": 1.2,
-  "artifViscBeta": 2.5,
+  "outTime": 1.0e-6,
+  "artifViscAlpha": 1.5,
+  "artifViscBeta": 1.5,
   "tensileInstability": 0.3,
   "solver": "Mech-Thermal-LeapFrog"
 }
@@ -20,12 +20,10 @@
 {
 	"id": "Solid",
 	"type": "JohnsonCook",
-  "const": [110.0e6,150.0e6,0.36,0.014,1.0,1.0,645.0,0.0],
-	"damageModel":"JohnsonCook",
-	"damageParams":[0.13,0.13,-1.5,0.011,0.0],
+  "const": [90.0e6, 292.0e6,0.31,0.025,1.0e-3,1.0,1000.0],
   "thermalCond": 120.0,
-  "thermalHeatCap": 899.0,
-	"density0": 2700.0, 
+  "thermalHeatCap": 89.90,
+	"density0": 27000.0, 
 	"youngsModulus": 70.0e9, 
 	"poissonsRatio": 0.3
 }],
@@ -35,7 +33,7 @@
 	"type": "Box",
 	"id": 0,
 	"denseMode": 0,
-	"start": [ -3.00110e-3, -0.85e-3, 0.0],
+	"start": [ -3.001008e-3, -0.85e-3, 0.0],
 	"dim": [3.0e-3, 1.0e-3,0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
@@ -51,9 +49,9 @@
 }],
 "Contact":[ 
 {
-  "fricCoeffStatic": 0.1,
-  "fricCoeffDynamic": 0.1,
-  "penaltyFactor": 0.5,
+  "fricCoeffStatic": 0.0,
+  "fricCoeffDynamic": 0.0,
+  "penaltyFactor": 0.6,
   "heatConductance": false,
   "heatCondCoeff": 0.01
   
@@ -94,10 +92,10 @@
 },
 {
 	"zoneId": 		10,
-	"valueType": 	0,
+	"valueType": 	1,
   "amplitudeId" : 1,
   "amplitudeFactor": 1.0,
-	"value": 		[ -0.30, 0.0, 0.0]
+	"value": 		[ -0.10, 0.0, 0.0]
 }
 ],
 "InitialConditions": [
