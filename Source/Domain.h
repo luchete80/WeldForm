@@ -389,9 +389,7 @@ public:
     Array<Array<std::pair<size_t,size_t> > >	FSMPairs;
     
     ////// IF DAMAGE!!
-    Array<Array<double>>                      dam_D;            //DAMAGE FACTOR!!(processor, pair)
-    Array<Array<bool>>                        dam_pair;         //DAMAGED PAIR !!(processor, pair), USED TO CALC SURFACE
-    
+    Array<Array<double>>                      dam_D;            //DAMAGE FACTOR!(processor, pair)
     ////// THERE ARE TWO INITIAL DISTANCES, CRACK
     Array<Array<double>>                      dam_r0;          //Initial distance BETWEEN PARTICLES; IF UNIFORM THIS ARRAY IS NOT ALLOCATED
     Array<Array<double>>                      dam_rf0;         //Initial failure distance
@@ -425,7 +423,6 @@ public:
 
     Array<std::pair<size_t,size_t> >		Initial;
     Array<double>                       dam_initial;  //if damage
-    Array<bool>                         dam_pair_initial;  //if damage
     
     Mat3_t I;
     String					OutputName[3];

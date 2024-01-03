@@ -121,7 +121,6 @@ inline void Domain::CellInitiate () {
       
       if (model_damage){
         dam_D.Push(dam_initial);
-        dam_pair.Push(dam_pair_initial);
         dam_rf0.Push(dam_initial); //IF NOT UNIFORM MESH
       }
       //New integration/sum
@@ -398,7 +397,6 @@ inline void Domain::AllocateNbPair(const int &temp1, const int &temp2, const int
 					SMPairs[T].Push(std::make_pair(temp1, temp2));
 					if (model_damage){
 						dam_D[T].Push(0.0);
-            dam_pair[T].Push(false);
 						dam_rf0[T].Push(0.0);
 					}
 				}
@@ -481,7 +479,6 @@ inline void Domain::ClearNbData(){
 		ContPairs[i].Clear();//New
 		if (model_damage){
 			dam_D[i].Clear();
-      dam_pair[i].Clear();
 			dam_rf0[i].Clear();
 		}
 	}
