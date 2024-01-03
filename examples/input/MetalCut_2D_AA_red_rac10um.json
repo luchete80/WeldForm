@@ -1,17 +1,17 @@
 {
 "Configuration":
 {
-  "Nproc": 12,
+  "Nproc": 16,
 	"particleRadius": 0.01e-3, 
 	"hFactor": 1.2,
   "cflMethod": 1,
-  "cflFactor": 0.6,
+  "cflFactor": 0.5,
   "autoTS": [true,false,false],
-  "kernelGradCorr": false,
+  "kernelGradCorr": true,
   "simTime": 1.0e-1,
-  "outTime": 1.0e-6,
-  "artifViscAlpha": 2.5,
-  "artifViscBeta": 2.5,
+  "outTime": 1.0e-4,
+  "artifViscAlpha": 1.0,
+  "artifViscBeta": 0.06,
   "tensileInstability": 0.3,
   "solver": "Mech-Thermal-LeapFrog"
 }
@@ -20,12 +20,13 @@
 {
 	"id": "Solid",
 	"type": "JohnsonCook",
-  "const": [90.0e6, 292.0e6,0.31,0.025,1.0e-3,1.0,1000.0],
+  "const": [300.0e6, 0.0,0.11,0.0,1.0e-3,1.0,1000.0],
   "thermalCond": 120.0,
-  "thermalHeatCap": 89.90,
-	"density0": 27000.0, 
+  "thermalHeatCap": 0.8990,
+	"density0": 2700000.0, 
 	"youngsModulus": 70.0e9, 
-	"poissonsRatio": 0.3
+	"poissonsRatio": 0.3,
+  	"yieldStress0": 300.0E6  
 }],
 
 "DomainBlocks": 
