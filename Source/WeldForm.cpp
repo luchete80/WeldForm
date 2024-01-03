@@ -224,6 +224,7 @@ int main(int argc, char **argv) try {
 		// MATERIAL //
 		//////////////
 		double rho,E,nu,K,G,Cs,Fy;
+    Fy = -1.0;
     double Et, Ep;  //Hardening (only for bilinear and multilear)
     std::vector<double> c;
     c.resize(10);
@@ -616,9 +617,12 @@ int main(int argc, char **argv) try {
 			dom.Particles[a]->mat             = mat; //NOW MATERIAL IS GIVEN FOR EVERY MATERIAL MODEL (SINCE DAMAGE USES IT)
 			if (mattype == "Hollomon" || mattype == "JohnsonCook"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
        dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,0.0);    
+      } else {
+        if (Fy>0.0)
+          dom.Particles[a]->Sigmay		      = Fy;
+        else
+          throw new Fatal("Invalid Initial Yield Stress.");
       }
-      dom.Particles[a]->Sigmay		      = Fy;
-            
       dom.Particles[a]->Fail			= 1;
       dom.Particles[a]->Alpha			= alpha;
       dom.Particles[a]->Beta			= beta;

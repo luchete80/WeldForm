@@ -25,8 +25,7 @@
   "thermalHeatCap": 0.8990,
 	"density0": 2700000.0, 
 	"youngsModulus": 70.0e9, 
-	"poissonsRatio": 0.3,
-  	"yieldStress0": 300.0E6  
+	"poissonsRatio": 0.3  
 }],
 
 "DomainBlocks": 
