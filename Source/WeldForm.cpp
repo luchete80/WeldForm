@@ -175,7 +175,7 @@ int main(int argc, char **argv) try {
     oss_out << "------------------ WELDFORM -------------------"<<endl;
     oss_out << "----------------- v. 0.4.2.2 ------------------"<<endl;
     oss_out << "------------------ 20231220 -------------------"<<endl;
-    oss_out << "-- 19f17a8f8bf583a4cdc0d6ac526e4aacf7622098 ---"<<endl;
+    oss_out << "-- ca71f65a523c14658fc5c9caad779e37bc517d4e ---"<<endl;
     oss_out << "-----------------------------------------------"<<endl<<endl<<endl;
     
     cout << oss_out.str();
