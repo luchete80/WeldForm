@@ -477,3 +477,5 @@
          - Added damage to metal cut (and remove mass scaling)
          - Recalculate free surface on contact problems
          - Added out file with output and date build
+-------------------------------------------------------------
+20240103 - Added Flag of damaged links, and decreased Nb count in order to proper surface calculation.

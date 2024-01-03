@@ -160,22 +160,27 @@ int main(int argc, char **argv) try {
     size_t pos = 0;
     size_t test = findLastOccurrence(inputFileName, '\\');
     if (test != string::npos) pos = test;
-    cout << "pos of json "<<inputFileName.find(".json")<<endl;
+    //cout << "pos of json "<<inputFileName.find(".json")<<endl;
     string out_name = inputFileName.substr(pos+1, inputFileName.find(".json") - pos ) + "out";
-    cout << "Out file: "<< out_name << endl;
+    //cout << "Out file: "<< out_name << endl;
     dom.out_file.open(out_name.c_str(), std::ofstream::out | std::ofstream::app);
 		dom.Dimension	= 3;
 		
 		string kernel;
     double ts;
     
-    cout << "-----------------------------------------------"<<endl;
-    cout << "------------------ WELDFORM -------------------"<<endl;
-    cout << "----------------- v. 0.4.2.2 ------------------"<<endl;
-    cout << "------------------ 20231220 -------------------"<<endl;
-    cout << "-- b0dbb04f0fae34b0af22458da210614c891e4963 ---"<<endl;
-    cout << "-----------------------------------------------"<<endl<<endl<<endl;
-     
+    ostringstream oss_out;
+    
+    oss_out << "-----------------------------------------------"<<endl;
+    oss_out << "------------------ WELDFORM -------------------"<<endl;
+    oss_out << "----------------- v. 0.4.2.2 ------------------"<<endl;
+    oss_out << "------------------ 20231220 -------------------"<<endl;
+    oss_out << "-- 19f17a8f8bf583a4cdc0d6ac526e4aacf7622098 ---"<<endl;
+    oss_out << "-----------------------------------------------"<<endl<<endl<<endl;
+    
+    cout << oss_out.str();
+    dom.out_file << oss_out.str();
+    
     cout << "Reading Configuration parameters..."<<endl; 
     
     int np = 4;
@@ -219,6 +224,7 @@ int main(int argc, char **argv) try {
 		// MATERIAL //
 		//////////////
 		double rho,E,nu,K,G,Cs,Fy;
+    Fy = -1.0;
     double Et, Ep;  //Hardening (only for bilinear and multilear)
     std::vector<double> c;
     c.resize(10);
@@ -611,9 +617,12 @@ int main(int argc, char **argv) try {
 			dom.Particles[a]->mat             = mat; //NOW MATERIAL IS GIVEN FOR EVERY MATERIAL MODEL (SINCE DAMAGE USES IT)
 			if (mattype == "Hollomon" || mattype == "JohnsonCook"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
        dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,0.0);    
+      } else {
+        if (Fy>0.0)
+          dom.Particles[a]->Sigmay		      = Fy;
+        else
+          throw new Fatal("Invalid Initial Yield Stress.");
       }
-      dom.Particles[a]->Sigmay		      = Fy;
-            
       dom.Particles[a]->Fail			= 1;
       dom.Particles[a]->Alpha			= alpha;
       dom.Particles[a]->Beta			= beta;

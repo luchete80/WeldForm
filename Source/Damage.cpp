@@ -135,6 +135,10 @@ inline void Domain::CalcDamage(){
 				dam_D[k][p] = (PP[0]->dam_D + PP[1]->dam_D) /2.0;
       } else {
 				dam_D[k][p] = 1.0;
+        if (!dam_pair[k][p]){
+          dam_pair[k][p] = true;
+          //PP[0]->Nb --;PP[1]->Nb --;
+        }
 			}
 			
     }//Johnson Cook damage  
