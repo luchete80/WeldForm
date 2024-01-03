@@ -480,3 +480,4 @@
 -------------------------------------------------------------
 20240103 - Added Flag of damaged links, and decreased Nb count in order to proper surface calculation.
          - ADDED DIFERENT GRADTYPE STRESSES 
+         - FIXED PARALLELIZATION OF Kernel Gradient Correction
