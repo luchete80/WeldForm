@@ -6,8 +6,9 @@
   "cflMethod": 1,
   "cflFactor": 0.4,
   "autoTS": [false,false,false],
+  "kernelGradCorr": true,  
   "simTime": 0.01,
-  "outTime": 1.0e-5
+  "outTime": 1.0e-4
 }
 ,
 "Materials":[ 
@@ -43,7 +44,15 @@
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
 }],
-
+"Contact":[ 
+{
+  "fricCoeffStatic": 0.2,
+  "fricCoeffDynamic": 0.2,
+  "penaltyFactor": 0.6,
+  "heatConductance": false,
+  "heatCondCoeff": 0.01
+  
+}],
 "DomainZones": [
 {
 	"id": 2,
