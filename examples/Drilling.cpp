@@ -6,6 +6,7 @@
 #include "SolverFraser.cpp"
 #include "Geometry.cpp" //CylinderUniformLength
 
+bool pilot = true;
 bool bottom_contact = false;
 
 #define RHOFAV		1000.0 
@@ -191,7 +192,10 @@ int main(int argc, char **argv) try
   for (size_t i=0; i<dom.Particles.Size(); i++) {
     double r = sqrt(pow(dom.Particles[i]->x(0), 2.0) + pow(dom.Particles[i]->x(1),2.0));
     if (r < 0.00375){
-
+      if (pilot){
+        if (r < 0.001)
+          dom.Particles[i]->ID = 2;
+      }
       if (dom.Particles[i]->x(2) < Z_TIP - r*tan(angle)){
         dom.Particles[i]->ID = 2;
       }
@@ -261,9 +265,9 @@ int main(int argc, char **argv) try
 
       dom.Particles[a]->Sigmay	= mat.CalcYieldStress(0.0,0.0,0.);    
 			
-      dom.Particles[a]->Alpha		= 1.5;
-			dom.Particles[a]->Beta		= 0.6;
-			dom.Particles[a]->TI		= 0.4;
+      dom.Particles[a]->Alpha		= 1.0;
+			dom.Particles[a]->Beta		= 0.06;
+			dom.Particles[a]->TI		= 0.3;
 			dom.Particles[a]->TIInitDist	= dx;
       
       dom.Particles[a]->k_T			  =	121.*VFAC;  //[W/(m.K)]
