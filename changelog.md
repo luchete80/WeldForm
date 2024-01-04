@@ -8,6 +8,12 @@
    - First the one from Islam 2017
 ### Solver
  - Fixed a crash introduced with initial velocity (vector not dimensioned).
+
+## [0.4.2.3] - 20240104 - Hot Fixes
+
+### Solver 
+ - Fixed Initial Yield Stess (bug with Johnson Cook Solver)  
+ - Parallelized Kernel Gradient Correction
  
 ## [0.4.2.1] - 20230822 - Hot Fixes
 
