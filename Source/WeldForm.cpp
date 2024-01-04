@@ -577,11 +577,9 @@ int main(int argc, char **argv) try {
     int ics_count = 0;
 		for (auto& ic : ics){
 			double temp;
-      
-			if (solver == "Mech-Thermal" || solver == "Mech-Thermal-Fraser" || solver == "Mech-Thermal-Leapfrog"){
-				readValue(ic["Temp"], IniTemp);
-				cout << "Initial Temp: "<<IniTemp<<endl;
-			}
+      readValue(ic["Temp"], IniTemp);
+      cout << "Initial Temp: "<<IniTemp<<endl;
+
       cout << "Initial condition "<<ics_count<<endl;
 			std::vector<double> value(3);
 			value[0]=value[1]=value[2]=0.0;
@@ -642,8 +640,8 @@ int main(int argc, char **argv) try {
       // THERMAL PROPS
       dom.Particles[a]->k_T = k_T;
       dom.Particles[a]->cp_T = cp_T;
-	  
-	  dom.Particles[a]->T = IniTemp;
+      if (dom.thermal_solver)
+        dom.Particles[a]->T = IniTemp;
     }
     
     cout << "Reduction Type is: ";
