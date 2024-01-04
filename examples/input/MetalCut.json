@@ -5,12 +5,12 @@
 	"particleRadius": 0.10, 
 	"hFactor": 1.2,
   "cflMethod": 1,
-  "cflFactor": 0.7,
-  "autoTS": [false,false,false],
+  "cflFactor": 0.6,
+  "autoTS": [true,false,false],
   "simTime": 2.0,
-  "outTime": 1.0e-2,
+  "outTime": 1.0e-3,
   "artifViscAlpha": 1.0,
-  "artifViscBeta": 2.0,
+  "artifViscBeta": 0.06,
   "solver": "Mech-Thermal"
 }
 ,
@@ -18,7 +18,7 @@
 {
 	"id": "Solid",
 	"type": "JohnsonCook",
-  "const": [0.601, 0.0134,0.234,1.0,1480.0,20.0,1.0],
+  "const": [0.301, 0.0134,0.234,1.0,1480.0,20.0,1.0],
   "thermalCond": 4.7e-5,
   "thermalHeatCap": 642.0,
 	"density0": 7.81E-6, 

@@ -754,9 +754,9 @@ inline void Domain::CalcContactForces2(){
 							if (dt_fext > 0)
 								this -> min_force_ts = min_force_ts_;
 						}
-						// omp_set_lock(&Particles[P1]->my_lock);
-						// Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
-						// omp_unset_lock(&Particles[P1]->my_lock);
+						omp_set_lock(&Particles[P1]->my_lock);
+						Particles[P1] -> a += Particles[P1] -> contforce / Particles[P1] -> Mass; 
+						omp_unset_lock(&Particles[P1]->my_lock);
 						//cout << "contforce "<<Particles[P1] -> contforce<<endl;
             
             // TANGENTIAL BEHAVIOUR
@@ -779,13 +779,13 @@ inline void Domain::CalcContactForces2(){
             if (friction_sta > 0.) { 
                 // //delta_tg = -vr * (deltat - deltat_cont) - ( delta * Particles[P2]->normal);  //THIS IS OPPOSITE TO DIRECTION
                 
-                if (P1 == 11312){
-                  //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
-                cout << "delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
-                cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
-                cout << "tgforce " <<norm(tgforce) << ", mu N "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
-                cout << "norm atg * mass : "<<norm(atg) * Particles[P1]->Mass<<endl;
-                }
+                // if (P1 == 11312){
+                  // //CONTROL, particle 12415x -0.0075, y 0.1275, z 0.604
+                // cout << "delta tg 2 "<<delta_tg<<", delta "<<delta<<endl;
+                // cout << "normal du "<<dot(Particles[P1]->x_prev + vr, Particles[P2]->normal)*Particles[P2]->normal<<endl;
+                // cout << "tgforce " <<norm(tgforce) << ", mu N "<<friction_sta * norm(Particles[P1] -> contforce)<<endl;
+                // cout << "norm atg * mass : "<<norm(atg) * Particles[P1]->Mass<<endl;
+                // }
                 
                 if (norm(ref_tg) < friction_sta * norm(Particles[P1] -> contforce) ){
                   omp_set_lock(&Particles[P1]->my_lock);
