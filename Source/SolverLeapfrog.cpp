@@ -219,7 +219,11 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
     GeneralAfter(*this); //Fix free accel
     
     clock_beg = clock(); 
-    if (contact) CalcContactForcesWang();
+    //if (contact) CalcContactForcesWang();
+    if (contact) {
+      if      (contact_alg==Wang) CalcContactForcesWang();
+      else if (contact_alg==Seo ) CalcContactForces2();
+    }
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
     

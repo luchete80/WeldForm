@@ -438,7 +438,7 @@ int main(int argc, char **argv) try {
 		
 		if (contact){
 			Vec3_t dim;
-			
+      
 			readVector(rigbodies[0]["start"], 	start);       
 			readVector(rigbodies[0]["dim"], 	dim); 
 			bool flipnormals = false;
@@ -502,6 +502,16 @@ int main(int argc, char **argv) try {
       readValue(contact_[0]["heatCondCoeff"], 	  heat_cond[0]);
       
       readValue(contact_[0]["penaltyFactor"], 	penaltyfac); 
+
+			// readValue(rigbodies[0]["contAlgorithm"],cont_alg);
+      if (cont_alg == "Seo") {
+        cout << "Contact Algorithm set to SEO"<<endl;
+        dom.contact_alg = Seo;
+      } else {
+        cout << "Contact Algorithm set to WANG"<<endl;
+      }
+      
+      //cout << "Contact Algortihm: "<< cont_alg.c_str() <<end;
       
       bool heat_cond_ = false;
       if (readValue(contact_[0]["heatConductance"], 	heat_cond_)){

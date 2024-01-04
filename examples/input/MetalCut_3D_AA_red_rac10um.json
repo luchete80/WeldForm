@@ -6,12 +6,13 @@
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.5,
-  "autoTS": [false,false,false],
-  "kernelGradCorr": false,
+  "autoTS": [true,false,false],
+  "kernelGradCorr": true,
   "simTime": 1.0e-1,
-  "outTime": 1.0e-6,
+  "outTime": 1.0e-5,
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.06,
+  "contAlgorithm": "Seo",
   "tensileInstability": 0.3,
   "solver": "Mech-Thermal-LeapFrog"
 }
@@ -33,7 +34,7 @@
 	"type": "Box",
 	"id": 0,
 	"denseMode": 0,
-	"start": [ -3.0250008e-3, -0.85e-3, 0.0],
+	"start": [ -3.00008e-3, -0.85e-3, 0.0],
 	"dim": [3.0e-3, 1.0e-3,1.0e-4],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
@@ -45,7 +46,7 @@
 	"fileName": "her_1mm_rac_10um_3d.nas",
   "scaleFactor": 1.0,
 	"zoneId": 10,
-  "flipNormals": true
+  "flipNormals": false
 }],
 "Contact":[ 
 {
