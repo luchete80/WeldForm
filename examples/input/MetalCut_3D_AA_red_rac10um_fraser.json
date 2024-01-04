@@ -1,0 +1,107 @@
+{
+"Configuration":
+{
+  "Nproc": 16,
+	"particleRadius": 0.01e-3, 
+	"hFactor": 1.2,
+  "cflMethod": 1,
+  "cflFactor": 0.5,
+  "autoTS": [false,false,false],
+  "kernelGradCorr": true,
+  "simTime": 1.0e-1,
+  "outTime": 1.0e-6,
+  "artifViscAlpha": 1.0,
+  "artifViscBeta": 0.06,
+  "tensileInstability": 0.3,
+  "solver": "Mech-Thermal-Fraser"
+}
+,
+"Materials":[ 
+{
+	"id": "Solid",
+	"type": "JohnsonCook",
+  "const": [300.0e6, 0.0,0.11,0.0,1.0e-3,1.0,1000.0],
+  "thermalCond": 120.0,
+  "thermalHeatCap": 0.8990,
+	"density0": 2700000.0, 
+	"youngsModulus": 70.0e9, 
+	"poissonsRatio": 0.3  
+}],
+
+"DomainBlocks": 
+[{
+	"type": "Box",
+	"id": 0,
+	"denseMode": 0,
+	"start": [ -3.0064000e-3, -0.85e-3, 0.0],
+	"dim": [3.0e-3, 1.0e-3,1.0e-4],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1]
+}],
+
+"RigidBodies": 
+[{
+	"type": "File",
+	"fileName": "her_1mm_rac_10um_3d.nas",
+  "scaleFactor": 1.0,
+	"zoneId": 10,
+  "flipNormals": false
+}],
+"Contact":[ 
+{
+  "fricCoeffStatic": 0.0,
+  "fricCoeffDynamic": 0.0,
+  "penaltyFactor": 0.6,
+  "heatConductance": false,
+  "heatCondCoeff": 0.01
+  
+}],
+"DomainZones": [
+{
+	"id": 2,
+	"start":[-20.0,-10.0, -10.0],
+	"end": 	[ 0.0, -0.8e-3, 10.0e-3]
+},
+{
+	"id": 3,
+	"start":[-20.0,-10.0, -10.0],
+	"end": 	[ -2.95e-3, 10.0, 10.0]
+}
+],
+
+"Amplitudes": [
+{
+	"id": 		1,
+	"valueType": 1,
+	"time": 	[ 0.0, 1.0e-3, 1.0],
+	"value": 	[ 0.0, 1.0, 1.0]
+}
+],
+"BoundaryConditions": [
+{
+	"zoneId": 	2,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, 0.0],
+	"free": 		true
+},
+{
+	"zoneId": 	3,
+	"valuetype": 	"Constant",
+	"value": 		[ 0.0, 0.0, 0.0],
+	"free": 		true
+},
+{
+	"zoneId": 		10,
+	"valueType": 	1,
+  "amplitudeId" : 1,
+  "amplitudeFactor": 1.0,
+	"value": 		[ -0.30, 0.0, 0.0]
+}
+],
+"InitialConditions": [
+{
+	"Temp": 20.0
+}
+]
+
+}
