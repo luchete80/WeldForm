@@ -23,8 +23,8 @@
 	"type": "JohnsonCook",
   "const": [300.0e6, 0.0,0.11,0.0,1.0e-3,1.0,1000.0],
   "thermalCond": 120.0,
-  "thermalHeatCap": 0.8990,
-	"density0": 2700000.0, 
+  "thermalHeatCap": 8.990,
+	"density0": 270000.0, 
 	"youngsModulus": 70.0e9, 
 	"poissonsRatio": 0.3  
 }],
@@ -74,7 +74,7 @@
 {
 	"id": 		1,
 	"valueType": 1,
-	"time": 	[ 0.0, 1.0e-4, 1.0],
+	"time": 	[ 0.0, 1.0e-3, 1.0],
 	"value": 	[ 0.0, 1.0, 1.0]
 }
 ],
