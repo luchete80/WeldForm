@@ -7,7 +7,7 @@
   "cflMethod": 1,
   "cflFactor": 0.5,
   "autoTS": [true,false,false],
-  "kernelGradCorr": false,
+  "kernelGradCorr": true,
   "simTime": 1.0e-1,
   "outTime": 1.0e-5,
   "artifViscAlpha": 1.0,

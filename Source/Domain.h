@@ -61,7 +61,7 @@ enum Damage_Model { None=0, Rankine=1 };
 enum Function_Type { Constant=0, Linear=1, Multilinear=2};
 
 enum Friction_Type{Fr_Sta=0,Fr_Dyn,Fr_StaDyn,Fr_Bound};
-enum Contact_Alg{Fraser=0, Wang, Seo, Zhan};
+enum Contact_Alg{Fraser=0, Wang, Seo, Zhan, LSDyna};
 
 namespace SPH {
   
@@ -257,6 +257,7 @@ public:
   void GenerateSPHMesh(const int &tag, NastranVolReader &nr,double Density, double hfac);
 	
   inline void CalcContactForces();
+  inline void CalcContactForcesLS();
   inline void CalcContactForcesAnalytic();
   inline void CalcContactForces2(); //Position criteria, SEO Contact detection
   inline void CalcContactForcesWang();

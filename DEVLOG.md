@@ -483,3 +483,7 @@
          - FIXED PARALLELIZATION OF Kernel Gradient Correction
 20240104 - Fixed Initial Temperature 
          - IMPORTANT REGARDING TO CONTACT: FRICTION IS NOT WORKING WITH LEAPFROG
+20240105 - Added LS-DYNA contact algorithm, Leapfrog tg problem is not duw to current algorithm
+           but also due to leapfrog order
+         - Acceleration is not updated now inside ContForce Functions
+-------------------------------------------------------------

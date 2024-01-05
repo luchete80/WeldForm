@@ -5,7 +5,7 @@
 	"particleRadius": 0.01e-3, 
 	"hFactor": 1.2,
   "cflMethod": 1,
-  "cflFactor": 0.5,
+  "cflFactor": 0.2,
   "autoTS": [false,false,false],
   "kernelGradCorr": false,
   "simTime": 1.0e-1,

@@ -18,6 +18,7 @@
     // // // 7. CalcRateTensors();  //With v and xn+1
     // // // 8. Particles[i]->CalcStressStrain(deltat); //Uses density  
 
+#include "Contact_LS.cpp"
 
 namespace SPH {
 inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
@@ -214,22 +215,28 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
 		clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
-    //CalcAccelPP();
-    //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
-    //#ifdef NONLOCK_SUM
+
     if (nonlock_sum)AccelReduction();
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     GeneralAfter(*this); //Fix free accel
-    
+
+
+    /////// TODO:MOVE TO THE END
     clock_beg = clock(); 
     //if (contact) CalcContactForcesWang();
     if (contact) {
-      if      (contact_alg==Wang) CalcContactForcesWang();
-      else if (contact_alg==Seo ) CalcContactForces2();
+      if      (contact_alg==Wang)     CalcContactForcesWang();
+      else if (contact_alg==Seo )     CalcContactForces2();
+      else if (contact_alg==LSDyna )  CalcContactForcesLS();
     }
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+    
     //if (contact) CalcContactForces2();
+    
+    //// ALREADY IN CONTACT_ALG
+    for (int i=0; i<Particles.Size(); i++)
+      Particles[i]->a += Particles[i]->contforce ;
     
     if (isfirst) {
       for (int i=0; i<Particles.Size(); i++)
@@ -312,8 +319,6 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
     
 		steps++;
     if (ct == 30) ct = 0; else ct++;
-    
-
 
 		Time += deltat;
     clock_beg = clock();    

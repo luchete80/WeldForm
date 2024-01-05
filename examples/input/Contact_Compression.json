@@ -9,6 +9,7 @@
   "kernelGradCorr": false,  
   "simTime": 0.01,
   "outTime": 1.0e-4,
+  "contAlgorithm": "Seo",
   "solver": "Mech-LeapFrog"
 }
 ,
@@ -47,8 +48,8 @@
 }],
 "Contact":[ 
 {
-  "fricCoeffStatic": 0.2,
-  "fricCoeffDynamic": 0.2,
+  "fricCoeffStatic": 0.4,
+  "fricCoeffDynamic": 0.4,
   "penaltyFactor": 0.6,
   "heatConductance": false,
   "heatCondCoeff": 0.01

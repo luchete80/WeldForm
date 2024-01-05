@@ -507,7 +507,9 @@ int main(int argc, char **argv) try {
       if (cont_alg == "Seo") {
         cout << "Contact Algorithm set to SEO"<<endl;
         dom.contact_alg = Seo;
-      } else {
+      } else if (cont_alg == "LSDyna") {
+        dom.contact_alg = LSDyna;
+      }else {
         cout << "Contact Algorithm set to WANG"<<endl;
       }
       
