@@ -9,7 +9,7 @@
   "autoTS": [false,false,false],
   "kernelGradCorr": true,
   "simTime": 1.0e-1,
-  "outTime": 1.0e-6,
+  "outTime": 1.0e-5,
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.06,
   "tensileInstability": 0.3,
@@ -73,7 +73,7 @@
 {
 	"id": 		1,
 	"valueType": 1,
-	"time": 	[ 0.0, 1.0e-3, 1.0],
+	"time": 	[ 0.0, 1.0e-4, 1.0],
 	"value": 	[ 0.0, 1.0, 1.0]
 }
 ],
@@ -95,7 +95,7 @@
 	"valueType": 	1,
   "amplitudeId" : 1,
   "amplitudeFactor": 1.0,
-	"value": 		[ -0.30, 0.0, 0.0]
+	"value": 		[ -1.0, 0.0, 0.0]
 }
 ],
 "InitialConditions": [
