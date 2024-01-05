@@ -9,7 +9,7 @@
   "autoTS": [true,false,false],
   "kernelGradCorr": true,
   "simTime": 1.0e-1,
-  "outTime": 1.0e-6,
+  "outTime": 1.0e-5,
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.06,
   "tensileInstability": 0.3,
@@ -33,7 +33,7 @@
 	"type": "Box",
 	"id": 0,
 	"denseMode": 0,
-	"start": [ -2.0250008e-3, -0.35e-3, 0.0],
+	"start": [ -2.00640008e-3, -0.35e-3, 0.0],
 	"dim": [2.0e-3, 5.0e-4,1.0e-4],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
