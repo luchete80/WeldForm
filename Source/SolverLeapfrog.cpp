@@ -181,6 +181,10 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
           //#endif
           SaveNeighbourData();
           nb_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+
+          if (gradKernelCorr){
+            CalcGradCorrMatrix();	}
+            
           if (contact) {
             clock_beg = clock();
             ContactNbUpdate(this);

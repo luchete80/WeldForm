@@ -6,14 +6,14 @@
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.5,
-  "autoTS": [true,false,false],
+  "autoTS": [false,false,false],
   "kernelGradCorr": true,
   "simTime": 1.0e-1,
-  "outTime": 1.0e-6,
+  "outTime": 1.0e-5,
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.06,
   "tensileInstability": 0.3,
-  "solver": "Mech-Thermal-LeapFrog"
+  "solver": "Mech-Thermal-Fraser"
 }
 ,
 "Materials":[ 
@@ -22,8 +22,8 @@
 	"type": "JohnsonCook",
   "const": [300.0e6, 0.0,0.11,0.0,1.0e-3,1.0,1000.0],
   "thermalCond": 120.0,
-  "thermalHeatCap": 8.990,
-	"density0": 270000.0, 
+  "thermalHeatCap": 0.8990,
+	"density0": 2700000.0, 
 	"youngsModulus": 70.0e9, 
 	"poissonsRatio": 0.3  
 }],
@@ -33,7 +33,7 @@
 	"type": "Box",
 	"id": 0,
 	"denseMode": 0,
-	"start": [ -2.0250008e-3, -0.35e-3, 0.0],
+	"start": [ -2.0064000e-3, -0.35e-3, 0.0],
 	"dim": [2.0e-3, 5.0e-4,1.0e-4],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
@@ -49,8 +49,8 @@
 }],
 "Contact":[ 
 {
-  "fricCoeffStatic": 0.0,
-  "fricCoeffDynamic": 0.0,
+  "fricCoeffStatic": 0.2,
+  "fricCoeffDynamic": 0.2,
   "penaltyFactor": 0.6,
   "heatConductance": false,
   "heatCondCoeff": 0.01
