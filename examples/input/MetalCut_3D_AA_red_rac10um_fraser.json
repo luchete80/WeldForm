@@ -7,7 +7,7 @@
   "cflMethod": 1,
   "cflFactor": 0.5,
   "autoTS": [false,false,false],
-  "kernelGradCorr": true,
+  "kernelGradCorr": false,
   "simTime": 1.0e-1,
   "outTime": 1.0e-5,
   "artifViscAlpha": 1.0,
@@ -95,7 +95,7 @@
 	"valueType": 	1,
   "amplitudeId" : 1,
   "amplitudeFactor": 1.0,
-	"value": 		[ -1.0, 0.0, 0.0]
+	"value": 		[ -0.3, 0.0, 0.0]
 }
 ],
 "InitialConditions": [
