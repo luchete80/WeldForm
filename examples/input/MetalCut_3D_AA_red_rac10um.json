@@ -34,8 +34,8 @@
 	"type": "Box",
 	"id": 0,
 	"denseMode": 0,
-	"start": [ -3.00008e-3, -0.85e-3, 0.0],
-	"dim": [3.0e-3, 1.0e-3,1.0e-4],
+	"start": [ -2.00008e-3, -0.35e-3, 0.0],
+	"dim": [2.0e-3, 5.0e-4,1.0e-4],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
 }],
@@ -74,7 +74,7 @@
 {
 	"id": 		1,
 	"valueType": 1,
-	"time": 	[ 0.0, 1.0e-3, 1.0],
+	"time": 	[ 0.0, 1.0e-4, 1.0],
 	"value": 	[ 0.0, 1.0, 1.0]
 }
 ],
@@ -96,7 +96,7 @@
 	"valueType": 	1,
   "amplitudeId" : 1,
   "amplitudeFactor": 1.0,
-	"value": 		[ -0.30, 0.0, 0.0]
+	"value": 		[ -1.00, 0.0, 0.0]
 }
 ],
 "InitialConditions": [
