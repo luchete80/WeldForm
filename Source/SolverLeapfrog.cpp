@@ -234,9 +234,10 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
     
     //if (contact) CalcContactForces2();
     
-    //// ALREADY IN CONTACT_ALG
-    for (int i=0; i<Particles.Size(); i++)
-      Particles[i]->a += Particles[i]->contforce ;
+    // // ALREADY IN CONTACT_ALG
+    // if (!isfirst)  /// IF NOT THIS; IT CRASHES
+    // for (int i=0; i<Particles.Size(); i++)
+      // Particles[i]->a += Particles[i]->contforce / Particles[i] -> Mass;
     
     if (isfirst) {
       for (int i=0; i<Particles.Size(); i++)
