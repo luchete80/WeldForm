@@ -289,9 +289,10 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();
 
-    #pragma omp parallel for schedule (static) num_threads(Nproc)
-    for (int i=0; i<Particles.Size(); i++)
-      Particles[i]->a += Particles[i]->contforce /*+ Particles[i]->tgforce*/;
+    // if (contact && !isfirst)
+    // #pragma omp parallel for schedule (static) num_threads(Nproc)
+    // for (int i=0; i<Particles.Size(); i++)
+      // Particles[i]->a += Particles[i]->contforce /*+ Particles[i]->tgforce*/;
     
     //14. Add contact
     // if (contact ){
