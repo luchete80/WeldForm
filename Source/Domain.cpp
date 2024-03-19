@@ -1383,8 +1383,8 @@ void Domain::CalculateSurface(const int &id){
 	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
 		totmass += Particles[i]->Mass;
 		
-	totmass /= Particles.Size();
-  
+	totmass /= Particles.Size();;
+
 	int maxid;
 	if (contact)
 		maxid = first_fem_particle_idx[0];
@@ -1393,7 +1393,7 @@ void Domain::CalculateSurface(const int &id){
 
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 		Particles[i] -> normal = 0.;
-		Particles[i] -> ID = Particles [i] -> ID_orig;
+		//Particles[i] -> ID = Particles [i] -> ID_orig;
 	}
 
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
@@ -1412,8 +1412,13 @@ void Domain::CalculateSurface(const int &id){
 			mi = P1->Mass;
 			mj = P2->Mass;	
 			//Eqn 3-112 Fraser Thesis
-			P1->normal += mj * xij; 
-			P2->normal -= mi * xij;					
+      omp_set_lock(&P1->my_lock);
+        P1->normal += mj * xij; 
+      omp_unset_lock(&P1->my_lock);
+      // Locking the particle 2 for updating the properties
+      omp_set_lock(&P2->my_lock);
+        P2->normal -= mi * xij;			
+      omp_unset_lock(&P2->my_lock);      
 		} //Nproc //Pairs
 
 	}//Nproc

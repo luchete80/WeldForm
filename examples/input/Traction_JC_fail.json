@@ -8,9 +8,9 @@
   "cflFactor": 0.7,
   "autoTS": [true,false,false],
   "simTime": 0.01,
-  "outTime": 1.0e-5,
-  "artifViscAlpha": 2.5,
-  "artifViscBeta": 2.5,
+  "outTime": 1.0e-4,
+  "artifViscAlpha": 1.2,
+  "artifViscBeta": 0.6,
   "solver": "Mech-LeapFrog"
 }
 ,
@@ -25,7 +25,8 @@
 	"youngsModulus": 124.0E9, 
 	"thermalCond": 120.0,
   "thermalHeatCap": 0.875,
-	"poissonsRatio": 0.34
+	"poissonsRatio": 0.34,
+	"yieldStress0": 300.0E6
 }],
 
 "DomainBlocks": 
@@ -41,12 +42,12 @@
 
 "DomainZones": [
 {
-	"id": 1,
+	"id": 2,
 	"start":[-1.0,-1.0, 0.0],
 	"end": 	[ 1.0, 1.0, 0.001]
 },
 {
-	"id": 2,
+	"id": 3,
 	"denseMode": 0,
 	"start":[-1.0,-1.0, 0.0285],
 	"end": 	[ 1.0, 1.0, 1.0]
@@ -63,24 +64,15 @@
 ],
 "BoundaryConditions": [
 {
-	"zoneId": 	1,
-	"valuetype": 	"Constant",
+	"zoneId": 	2,
+	"valuetype": 	0,
 	"value": 		[ 0.0, 0.0, 0.0],
 	"free": 		true
 },
 {
-	"ZoneId": 		2,
-	"valuetype": 	"Constant",
+	"zoneId": 		3,
+	"valuetype": 	0,
 	"value": 		[ 0.0, 0.0, 10.0]
-},
-{
-	"zoneId": 	3,
-	"type": 	0,
-	"valueType": 1,
-	"amplitudeFactor": -1.0,
-	"amplitudeId": 1,
-	"components":[],
-	"free": false
 }
 ]
 

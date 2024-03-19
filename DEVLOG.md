@@ -488,3 +488,4 @@
          - Acceleration is not updated now inside ContForce Functions
 -------------------------------------------------------------
 20240319 - Fixed bug in damage: calcsurface were wrong. 
+           Solved BC zones (ID_orig is wrong)
