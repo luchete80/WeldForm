@@ -1,7 +1,7 @@
 {
 "Configuration":
 {
-  "Nproc": 1,
+  "Nproc": 8,
 	"particleRadius": 0.0005, 
 	"hFactor": 1.2,
   "cflMethod": 1,

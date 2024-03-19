@@ -1396,7 +1396,7 @@ void Domain::CalculateSurface(const int &id){
 		//Particles[i] -> ID = Particles [i] -> ID_orig;
 	}
 
-	#pragma omp parallel for schedule (static) num_threads(Nproc)
+	#pragma omp parallel for schedule (static) private(P1,P2,mi,mj,xij) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
 	#else
