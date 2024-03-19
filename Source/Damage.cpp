@@ -39,8 +39,8 @@ inline void Domain::CalcDamage(){
 																																																					Particles[i]->delta_pl_strain/deltat,
 																																																					-Particles[i]->Pressure/Particles[i]->Sigma_eq, 
 																																																					T);
-				// if (Particles[i]->dam_D > 0.0 && Particles[i]->pl_strain ==0.0)
-				//cout <<"dam " <<Particles[i]->dam_D<<", Pl Strain: "<<Particles[i]->pl_strain<<endl;
+				if (Particles[i]->dam_D > 0.0 && Particles[i]->pl_strain ==0.0)
+				cout <<"dam " <<Particles[i]->dam_D<<", Pl Strain: "<<Particles[i]->pl_strain<<endl;
 				if (Particles[i]->dam_D > 1.0) Particles[i]->dam_D = 1.0;
 			}
 		}//if incremental pl_strain
