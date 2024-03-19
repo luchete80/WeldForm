@@ -487,3 +487,4 @@
            but also due to leapfrog order
          - Acceleration is not updated now inside ContForce Functions
 -------------------------------------------------------------
+20240319 - Fixed bug in damage: calcsurface were wrong. 

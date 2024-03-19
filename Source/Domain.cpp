@@ -1383,21 +1383,19 @@ void Domain::CalculateSurface(const int &id){
 	for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
 		totmass += Particles[i]->Mass;
 		
-	totmass /= Particles.Size();;
-	//cout << "Totmass" <<	totmass <<endl;
-	
+	totmass /= Particles.Size();
+  
 	int maxid;
 	if (contact)
 		maxid = first_fem_particle_idx[0];
 	else 
-		first_fem_particle_idx[0] = Particles.Size();
-	
+		maxid = Particles.Size();
 
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 		Particles[i] -> normal = 0.;
 		Particles[i] -> ID = Particles [i] -> ID_orig;
 	}
-	
+
 	#pragma omp parallel for schedule (static) num_threads(Nproc)
 	#ifdef __GNUC__
 	for (size_t k=0; k<Nproc;k++) 
