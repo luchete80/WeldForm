@@ -18,7 +18,7 @@
 {
 	"id": "Solid",
 	"type": "JohnsonCook",
-  "const": [90.0e6, 272.0e6,0.31,0.025,0.0,1.0,1000.0],
+  "const": [90.0e6, 272.0e6,0.31,0.025,1.0,1.0,1000.0],
 	"damageModel": "JohnsonCook",
   "damageParams": [0.54, 4.89,-3.03,0.014,1.12],
 	"density0": 8960000.0, 
