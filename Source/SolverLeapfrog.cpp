@@ -208,10 +208,9 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
 				
 			}		
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
-		cout << "comp accel"<<endl;
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
-    
+
 		clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
