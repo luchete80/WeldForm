@@ -2693,11 +2693,13 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
             // calc = false;
           // if (Particles[i]->ID==3 && Particles[i]->a < 1.0e-3 )
             // calc = false;
-        // printf("Part %d, ax, ay \n", i, a[i].x,a[i].y);
-        // printf("alpha %.6e , beta %.6e \n", alpha, beta_a);
+        printf("Part %d, ax, ay \n", i,  Particles[i]->a[0], Particles[i]->a[1]);
+        printf("alpha %.6e , beta %.6e \n", alpha, beta_a);
         double mod = abs_a * cos(beta_a - alpha); // projection at AXISYMM plane
         Particles[i]->a[0] = mod * cos(alpha);
         Particles[i]->a[1] = mod * sin(alpha);
+
+        printf("Corr Part %d, ax, ay \n", i,  Particles[i]->a[0], Particles[i]->a[1]);
         //printf( "corrected acc axy %.6e %.6e\n",a[i].x ,a[i].y);
       } //MODULE THINGS, // x< h/2 && beta_ is coherent
       else {  

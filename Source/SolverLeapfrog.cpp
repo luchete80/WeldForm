@@ -215,6 +215,9 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
 
+    if (dom_bid_type == AxiSymm_3D)
+      ApplyAxiSymmBC();
+
     if (nonlock_sum)AccelReduction();
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
