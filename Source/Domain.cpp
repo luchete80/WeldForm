@@ -2680,10 +2680,12 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
   for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
   #endif
   {
-    //if (Particles[i]->ID==2 || Particles[i]->ID == 3){
-      if (Particles[i]->x[0] > Particles[i]->h/2  && Particles[i]->a[0] > 1.0e-2) { //NOT AT CENTER, AND beta making sense
        double abs_a = sqrt(   Particles[i]->a[0]*Particles[i]->a[0] +
                               Particles[i]->a[1]*Particles[i]->a[1]);
+    //if (Particles[i]->ID==2 || Particles[i]->ID == 3){
+    if (abs_a>1.0e-3){
+      if (Particles[i]->x[0] > Particles[i]->h/2  && Particles[i]->a[0] > 1.0e-2) { //NOT AT CENTER, AND beta making sense
+
         double alpha    = atan(Particles[i]->x[1]/Particles[i]->x[0]); //TODO: SAVE IT AT THE BEGINING
         double beta_a   = atan(Particles[i]->a[1]/Particles[i]->a[0]);
         bool calc = true;
@@ -2698,7 +2700,9 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
         double mod = abs_a * cos(beta_a - alpha); // projection at AXISYMM plane
         Particles[i]->a[0] = mod * cos(alpha);
         Particles[i]->a[1] = mod * sin(alpha);
-
+        if (abs (Particles[i]->a[0] ) > 1.e3 && abs (Particles[i]->a[1] ) > 1.e3)
+          cout << "ERROR, LARGE ACC"<<endl;
+          
         printf("Corr Part %d, ax %.6e, ay %.6e\n", i,  Particles[i]->a[0], Particles[i]->a[1]);
         //printf( "corrected acc axy %.6e %.6e\n",a[i].x ,a[i].y);
       } //MODULE THINGS, // x< h/2 && beta_ is coherent
@@ -2706,7 +2710,7 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
          Particles[i]->a[1] = 0.0;
       }
     //}   //ID 2 OR 3    
-
+    }
     //if (Particles[i]->ID == 4 ){
     if ( Particles[i]->x[0] <   Particles[i]->h/2 ){
        Particles[i]->a[0] =  Particles[i]->a[1] = 0.0;
