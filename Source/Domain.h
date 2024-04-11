@@ -48,7 +48,7 @@
 //#define NONLOCK_SUM 
 #define MAX_NB_PER_PART 100
 
-enum domain_bid_type {PlaneStress=0, PlaneStrain=1, AxiSymmetric =2};
+enum domain_bid_type {PlaneStress=0, PlaneStrain=1, AxiSymmetric =2, AxiSymm_3D =2};
 
 //C++ Enum used for easiness of coding in the input files
 enum Kernels_Type { Qubic_Spline=0, Quintic=1, Quintic_Spline=2 ,Hyperbolic_Spline=3};
