@@ -2546,5 +2546,129 @@ inline void Domain::UpdateFrictionCoeff(){
   // }    
 }
 
+void Domain::AddCylUniformLength(int tag, double Rxy, double Lz, 
+																				double r, double Density, double h, double ang, int rows) {
+	//Util::Stopwatch stopwatch;
+	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
+
+	int PrePS = Particles.Size();
+	double xp,yp;
+	int i,j;
+	double qin = 0.03;
+	srand(100);
+	
+	double Lx, Ly;
+	
+  std::pair <int,Vec3_t> opp_sym; //Position & ID of particles
+
+	//yp=pos;
+	int numypart,numxpart;
+	int xinc,yinc;
+	
+	int id_part=0;
+	int ghost_rows = 2;
+	
+	double z0;
+	//if (symlength) 	z0 = r;
+	//else						
+    z0 = /*-Lz/2. + */ r; //CHECK: -Lz/2. - r or -Lz/2.?
+	
+  int radcount = Rxy / (2. * r ); //center particle is at (r,r,r)
+  cout << "Radial Particle count " <<radcount<<endl;
+  
+	int part_per_row=0;
+  std::vector <int> symm_x;
+  std::vector <int> symm_y;
+  int x_ghost_per_row = 0;
+  //Cal
+  int tgcount;
+  
+  std::vector <int> bc_1, bc_2; //IF apply to only boundary
+
+  cout << "Tg Particle count " <<tgcount<<endl;
+  cout << "Slice Angle: "<< ang<<endl; 
+  
+  int part_count =  0;
+  
+  if (Dimension==3) {
+    	//Cubic packing
+		double zp;
+		int k=0;
+		zp = z0;
+		//Calculate row count for non ghost particles
+		while (zp <= (z0 + Lz -r)){
+			k++; zp += 2.0 * r;			
+		}
+		//cout << "Particle Row count: "<< k << endl;
+		int last_nonghostrow = k;
+		k = 0;zp = z0;
+    cout << "Length particle count "<<last_nonghostrow+1<<endl;
+    
+
+    //First increment is in radius
+		while (zp <= ( z0 + Lz - r)) {
+      int rcount = 0; //Used only for ghost count
+      for (double ri = 0. ; ri < Rxy; ri += 2.*r){
+        //cout << "ri "<<ri<<endl;
+        
+        double dalpha;
+        if (ri == 0.) {tgcount =1; dalpha = 0.;}
+        else {
+
+          tgcount = (ceil)((ang * ri )/(2. * r));  
+          dalpha = ang / (tgcount);         
+
+        }
+        for (int alphai = 0; alphai < tgcount; alphai++ ){
+          int id = tag;
+            if (ang < 2.0*M_PI){
+              if (alphai<rows){
+                id = 2;
+                bc_1.push_back(id);
+              } else if (alphai>tgcount - 1 - rows){
+                id = 3;
+                bc_1.push_back(id);
+              }
+            }
+            
+          xp =  /*r +*/ ri * cos (alphai*dalpha);
+          yp =  /*r +*/ ri * sin (alphai*dalpha);
+          if ((abs (xp) < r/10) && (abs (yp) < r/10)){
+            id = 4;
+          }
+          //cout << "XY "<<xp << ", " << yp <<endl;
+          Particles.Push(new Particle(id,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));            
+        
+          part_count++;
+        }
+        rcount++;
+      } //alpha
+			k++;
+			zp += 2.0 * r;
+		}
+
+		double Vol = M_PI * Rxy * Rxy * Lz;		
+		//double Mass = Vol * Density / (Particles.Size()-PrePS);
+		double Mass = Vol * Density /Particles.Size();
+		
+		cout << "Total Particle count: " << Particles.Size() <<endl;
+		cout << "Particle mass: " << Mass <<endl;
+    
+    solid_part_count = Particles.Size();
+
+		#pragma omp parallel for num_threads(Nproc)
+		#ifdef __GNUC__
+		for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+		#else
+		for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+		#endif
+		{
+			Particles[i]->Mass = Mass;
+		}
+
+	}//Dim 3
+
+	R = r;									
+}
 
 }; // namespace SPH

@@ -9,7 +9,8 @@
   "outTime": 1.0e-5,
   "autoTS": [true,true],
   "artifViscAlpha": 2.5,
-  "artifViscBeta": 2.5
+  "artifViscBeta": 2.5,
+  "solver": "Mech-Fraser"
 }
 ,
 "Materials":[ 

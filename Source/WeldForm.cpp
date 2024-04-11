@@ -350,6 +350,7 @@ int main(int argc, char **argv) try {
 		string domtype = "Box";
     int matID;
     string gridCS = "Cartesian";
+    double slice_ang = 2.0000001 * M_PI;
     bool sym[] = {false,false,false};
 		readValue(domblock[0]["id"], 	id);
 		readVector(domblock[0]["start"], 	start);
@@ -357,6 +358,7 @@ int main(int argc, char **argv) try {
 		cout << "Reading Domain type" << endl; readValue(domblock[0]["type"], 	domtype); //0: Box
     cout << "Reading Domain mat id" << endl;  readValue(domblock[0]["matID"], 	matID); //0: Box
     cout << "Grid Coordinate System" << endl;  readValue(domblock[0]["gridCoordSys"], 	gridCS); //0: Box
+    cout << "Slice Angle " << endl;  readValue(domblock[0]["sliceAngle"], 	slice_ang); //0: Box
     readBoolVector(domblock[0]["sym"], 	sym); //0: Box
     
     for (int i=0;i<3;i++){ //TODO: Increment by Start Vector
@@ -395,7 +397,11 @@ int main(int argc, char **argv) try {
         if ( gridCS == "Cartesian")
           dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym[2]); 
         else if (gridCS == "Cylindrical")
-          dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h);
+          if (slice_ang==2.0 * M_PI){
+            dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h);
+          } else {
+            dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h, M_PI/8.0 , 1);
+          }
           
       }
     }

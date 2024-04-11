@@ -284,7 +284,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     if (contact) {
       if      (contact_alg==Wang)     CalcContactForcesWang();
       else if (contact_alg==Seo )     CalcContactForces2();
-      else if (contact_alg==LSDyna )  CalcContactForcesLS();
+     // else if (contact_alg==LSDyna )  CalcContactForcesLS();
     }
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     //if (contact) CalcContactForces2();

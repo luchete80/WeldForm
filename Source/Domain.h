@@ -121,14 +121,17 @@ public:
 
 	void AddCylinderLength(int tag, Vec3_t const & V, double Rxy, double Lz, 
 									double r, double Density, double h, bool Fixed, bool ghost = false);
+
+  void AddCylUniformLength(int tag, double Rxy, double Lz, 
+																				double r, double Density, double h, double ang = 2 * M_PI, int rows=1);
                                         
 	//Cylinder Slice 
 	void AddXYSymCylinderLength(int tag, double Rxy, double Lz, 
 								double r, double Density, double h, bool Fixed, bool symlength = false);
   void AddCylSliceLength(int tag, double alpha, double Rxy, double Lz, 
 																				double r, double Density, double h);
-  void AddCylUniformLength    (int tag, double Rxy, double Lz, 
-																				double r, double Density, double h);                                  
+  // void AddCylUniformLength    (int tag, double Rxy, double Lz, 
+																				// double r, double Density, double h);                                  
 	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,
 											double Lz_neckmin,double Lz_necktot,double Rxy_center,
 											double r, double Density, double h, bool Fixed);
