@@ -2671,4 +2671,30 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
 	R = r;									
 }
 
+void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or only to BCs. If Not all (!=-1), 
+
+  #pragma omp parallel for num_threads(Nproc)
+  #ifdef __GNUC__
+  for (size_t i=0; i<Particles.Size(); i++)	//Like in Domain::Move
+  #else
+  for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
+  #endif
+  {
+    //if ID==2 
+    if (Particles[i]->ID==2 || Particles[i]->ID == 3){
+      double alpha = atan(Particles[i]->x[1]/Particles[i]->x[1]); //TODO: SAVE IT AT THE BEGINING
+      double beta_a  = atan(Particles[i]->a[1]/Particles[i]->a[0]);
+      // printf("Part %d, ax, ay \n", i, a[i].x,a[i].y);
+      // printf("alpha %.6e , beta %.6e \n", alpha, beta_a);
+      double mod = cos(beta_a - alpha);
+      // a[i].x = mod * cos(alpha);
+      // a[i].y = mod * sin(alpha);
+      //printf( "corrected acc axy %.6e %.6e\n",a[i].x ,a[i].y);
+    } else if (Particles[i]->ID == 4){
+      //a[i].x = a[i].y = 0.0;
+    }
+  }
+}
+
+
 }; // namespace SPH

@@ -164,6 +164,8 @@ public:
 		
 		void SaveNeighbourData();
 		void SaveContNeighbourData();
+    
+    void ApplyAxiSymmBC(int bc_1 = -1, int bc_2 = -1); //Apply to all particles or only to BCs. If Not all (!=-1), 
 		
     void StartAcceleration					(Vec3_t const & a = Vec3_t(0.0,0.0,0.0));	//Add a fixed acceleration such as the Gravity
     void PrimaryComputeAcceleration	();									//Compute the solid boundary properties
