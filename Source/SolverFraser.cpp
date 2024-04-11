@@ -265,6 +265,10 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     clock_beg = clock();
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
+    
+    if (dom_bid_type == AxiSymm_3D)
+      ApplyAxiSymmBC();
+    
     //CalcAccelPP();
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
     //#ifdef NONLOCK_SUM
