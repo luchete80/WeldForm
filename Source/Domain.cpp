@@ -2682,7 +2682,7 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
   {
        double abs_a = sqrt(   Particles[i]->a[0]*Particles[i]->a[0] +
                               Particles[i]->a[1]*Particles[i]->a[1]);
-    //if (Particles[i]->ID==2 || Particles[i]->ID == 3){
+    if (Particles[i]->ID==2 || Particles[i]->ID == 3){
     if (abs_a>1.0e-3){
       if (Particles[i]->x[0] > Particles[i]->h/2  && Particles[i]->a[0] > 1.0e-2) { //NOT AT CENTER, AND beta making sense
 
@@ -2707,7 +2707,7 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
       else {  
          Particles[i]->a[1] = 0.0;
       }
-    //}   //ID 2 OR 3    
+    }   //ID 2 OR 3    
     }
     //if (Particles[i]->ID == 4 ){
     if ( Particles[i]->x[0] <   Particles[i]->h/2 ){
