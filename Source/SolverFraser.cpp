@@ -266,8 +266,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //cout << "Particle 0 accel " << Particles[0]->a<<endl;
     CalcAccel(); //Nor density or neither strain rates
     
-    if (dom_bid_type == AxiSymm_3D)
-      ApplyAxiSymmBC();
+
+    // if (dom_bid_type == AxiSymm_3D)
+      // ApplyAxiSymmBC();
     
     //CalcAccelPP();
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
@@ -280,6 +281,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
         Particles[i]->a[0] -= Particles[i]->Sigma(2,2); //WANG Eqn. 40
       }    
     }
+    
     //#endif
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     
@@ -310,7 +312,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     Vec3_t du;    
     GeneralAfter(*this);//Reinforce BC vel   
     //CorrectVelAcc();
+    //cout << "moving ghost "<<endl;
     MoveGhost(); 
+    //cout << " ghost doe "<<endl;    
    #pragma omp parallel for schedule (static) private(du) num_threads(Nproc)
     for (int i=0; i<Particles.Size(); i++){
       Particles[i]->x_prev = Particles[i]->x;
@@ -330,6 +334,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     for (int i=0; i<Particles.Size(); i++){
       Particles[i]->v += Particles[i]->a * deltat;
     }
+
     //CorrectVelAcc();
     MoveGhost();   
 

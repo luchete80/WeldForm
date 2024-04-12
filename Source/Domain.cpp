@@ -858,7 +858,7 @@ void Domain::AddFixedMassScaling(const double &factor){
 void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz, 
 																				double r, double Density, double h, bool Fixed, bool symlength) {
 	//Util::Stopwatch stopwatch;
-	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
+	std::cout << "\n--------------Generating particles by CylinderBoxLength with XY SYMM AND GHOST part defined length of particles-----------" << std::endl;
 
 	size_t PrePS = Particles.Size();
 	double xp,yp;
@@ -1116,11 +1116,11 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 
 inline void Domain::MoveGhost(){
   //cout << "GhostPairs size "<<GhostPairs.Size()<<endl;
-  
+  //cout << "particles size "<<Particles.Size()<<endl;
 	for (int gp=0; gp<GhostPairs.Size(); gp++){
 		int  i = GhostPairs[gp].first;
 		int gi = GhostPairs[gp].second;
-		
+		//cout << "i part "<<i << "gi "<<gi << endl;
     //ASSUMING SYMMETRY
 		//See normal direction, if it is vertical
     // tg axis is the same speed
@@ -1129,12 +1129,13 @@ inline void Domain::MoveGhost(){
     double vtg[2], vn;
     double atg[2], an;
     
-    Plane *p = Particles[gi]->plane_ghost;
+    // Plane *p = Particles[gi]->plane_ghost;
     
-    vn = dot (p->normal,Particles[i]-> v);
-    for (int k=0;k<2;k++) vtg[k] = dot (p->tg[k],Particles[i]-> v);
-    an = dot (p->normal,Particles[i]-> a);
-    for (int k=0;k<2;k++) atg[k] = dot (p->tg[k],Particles[i]-> a);
+    // vn = dot (p->normal,Particles[i]-> v);
+    // for (int k=0;k<2;k++) vtg[k] = dot (p->tg[k],Particles[i]-> v);
+    // an = dot (p->normal,Particles[i]-> a);
+    // for (int k=0;k<2;k++) atg[k] = dot (p->tg[k],Particles[i]-> a);
+    
     
     if (Particles[gi]->ghost_type == Symmetric){
       // if (norm (Particles[i]-> v) > 1.0e-3){
@@ -1143,11 +1144,12 @@ inline void Domain::MoveGhost(){
         // cout << "vtg1, vtg2 " <<vtg[0]<<", "<<vtg[1]<<endl;
         // cout << "vi vgi "<<Particles[i]-> v <<", " <<Particles[gi]-> v <<endl;
       // }
-      Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
-      Particles[gi]-> v -= vn * p->normal;
       
-      Particles[gi]-> a = atg[0]*p->tg[0] + atg[1]*p->tg[1];
-      Particles[gi]-> a -= an * p->normal;
+      // Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
+      // Particles[gi]-> v -= vn * p->normal;
+      
+      // Particles[gi]-> a = atg[0]*p->tg[0] + atg[1]*p->tg[1];
+      // Particles[gi]-> a -= an * p->normal;
       
 
       
@@ -1159,7 +1161,7 @@ inline void Domain::MoveGhost(){
       Particles[gi]-> v  = Particles[i]-> v;
       Particles[gi]-> va = Particles[i]-> va;
       Particles[gi]-> vb = Particles[i]-> vb;
-      
+      //cout << "ghost part " << gi << endl;
       Particles[gi]-> v[axis]  = - Particles[i]-> v[axis];
       //NEW
       // Particles[gi]-> v[axis]  = Particles[i]-> v[axis] = 0.;
