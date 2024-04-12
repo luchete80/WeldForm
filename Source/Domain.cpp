@@ -2547,7 +2547,7 @@ inline void Domain::UpdateFrictionCoeff(){
 }
 
 void Domain::AddCylUniformLength(int tag, double Rxy, double Lz, 
-																				double r, double Density, double h, double ang, int rows) {
+																				double r, double Density, double h, double ang, int rows, double r_i) {
 	//Util::Stopwatch stopwatch;
 	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
 
@@ -2608,7 +2608,7 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
     //First increment is in radius
 		while (zp <= ( z0 + Lz - r)) {
       int rcount = 0; //Used only for ghost count
-      for (double ri = 0. ; ri < Rxy; ri += 2.*r){
+      for (double ri = r_i ; ri < Rxy; ri += 2.*r){
         //cout << "ri "<<ri<<endl;
         
         double dalpha;
@@ -2700,8 +2700,6 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
         double mod = abs_a * cos(beta_a - alpha); // projection at AXISYMM plane
         Particles[i]->a[0] = mod * cos(alpha);
         Particles[i]->a[1] = mod * sin(alpha);
-        if (abs (Particles[i]->a[0] ) > 1.e3 && abs (Particles[i]->a[1] ) > 1.e3)
-          cout << "ERROR, LARGE ACC"<<endl;
           
         printf("Corr Part %d, ax %.6e, ay %.6e\n", i,  Particles[i]->a[0], Particles[i]->a[1]);
         //printf( "corrected acc axy %.6e %.6e\n",a[i].x ,a[i].y);
@@ -2716,7 +2714,8 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
        Particles[i]->a[0] =  Particles[i]->a[1] = 0.0;
        Particles[i]->v[0] =  Particles[i]->v[1] = 0.0;
     } 
-    
+        if (abs (Particles[i]->a[0] ) > 1.e3 && abs (Particles[i]->a[1] ) > 1.e3)
+          cout << "ERROR, LARGE ACC"<<endl;    
   }//FOR PART
 
   

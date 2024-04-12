@@ -400,7 +400,7 @@ int main(int argc, char **argv) try {
           if (slice_ang==2.0 * M_PI){
             dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h);
           } else {
-            dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h, M_PI/16.0 , 1); 
+            dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h, M_PI/16.0 , 1, L[0]/4.0); 
             dom.dom_bid_type = AxiSymm_3D;
 
           }
