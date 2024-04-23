@@ -9,7 +9,7 @@
   "kernelGradCorr": false,  
   "simTime": 0.01,
   "outTime": 1.0e-6,
-  "solver": "Mech-LeapFrog"
+  "solver": "Mech-Fraser"
 }
 ,
 "Materials":[ 
