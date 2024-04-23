@@ -1178,6 +1178,7 @@ inline void Domain::MoveGhost(){
       // // // Several parameters
       Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
       Particles[gi]-> Strain  =     Particles[i]-> Strain;
+      Particles[gi]-> ShearStress  =     Particles[i]-> ShearStress;
       Particles[gi]-> StrainRate  =     Particles[i]-> StrainRate;
       Particles[gi]-> RotationRate  =     Particles[i]-> RotationRate;
       Particles[gi]-> Density  =     Particles[i]-> Density;

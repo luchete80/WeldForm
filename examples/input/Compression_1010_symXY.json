@@ -1,8 +1,8 @@
 {
 "Configuration":
 {
-  "Nproc": 4,
-	"particleRadius": 0.001, 
+  "Nproc": 8,
+	"particleRadius": 0.0008, 
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.4,
