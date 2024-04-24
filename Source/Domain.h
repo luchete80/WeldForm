@@ -123,7 +123,7 @@ public:
 									double r, double Density, double h, bool Fixed, bool ghost = false);
 
   void AddCylUniformLength(int tag, double Rxy, double Lz, 
-																				double r, double Density, double h, double ang = 2 * M_PI, int rows=1, double r_i = 0.0);
+																				double r, double Density, double h, double ang = 2 * M_PI, int rows=1, double r_i = 0.0, bool ghost = true);
                                         
 	//Cylinder Slice 
 	void AddXYSymCylinderLength(int tag, double Rxy, double Lz, 

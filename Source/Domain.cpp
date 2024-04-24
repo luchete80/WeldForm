@@ -873,8 +873,13 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 	//PARTCILES ARE NOT ALIGNED WITH AXIS; BUT SYMMETRIC ON EACH QUADRANT
 	//MIN CONFIG IS 4 PARTICLES; ALWAYS NUM PARTICLES IS PAIR
 	numpartxy = calcHalfPartCount(r, Rxy, 1);
-	
-
+  
+  //Ghost Things
+  std::vector <int> symm_x;
+  std::vector <int> symm_y;	
+	int ghost_rows = 3;
+  
+  
 	//yp=pos;
 	int numypart,numxpart;
 	int xinc,yinc;
@@ -2551,7 +2556,7 @@ inline void Domain::UpdateFrictionCoeff(){
 }
 
 void Domain::AddCylUniformLength(int tag, double Rxy, double Lz, 
-																				double r, double Density, double h, double ang, int rows, double r_i) {
+																				double r, double Density, double h, double ang, int rows, double r_i, bool ghost = true) {
 	//Util::Stopwatch stopwatch;
 	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
 
