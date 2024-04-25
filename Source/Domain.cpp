@@ -2630,7 +2630,7 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
         if (ri == 0.) {tgcount =1; dalpha = 0.;}
         else {
 
-          tgcount = (floor)((ang * ri )/(2. * r));  
+          tgcount = (ceil)((ang * ri )/(2. * r));  
           dalpha = ang / (tgcount);         
 
         }
