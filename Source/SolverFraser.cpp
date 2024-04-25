@@ -311,7 +311,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //BEFORE
     Vec3_t du;    
     GeneralAfter(*this);//Reinforce BC vel   
-    //CorrectVelAcc();
+    //CorrectVelAcc(); //CYLINDRICAL SLICE, MOVED TO MOVEGHOST
     //cout << "moving ghost "<<endl;
     MoveGhost(); 
     //cout << " ghost doe "<<endl;    
@@ -335,7 +335,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       Particles[i]->v += Particles[i]->a * deltat;
     }
 
-    //CorrectVelAcc();
+    //CorrectVelAcc(); //CYLINDRICAL SLICE, MOVED TO MOVEGHOST
     MoveGhost();   
 
     GeneralAfter(*this);//Reinforce BC vel   

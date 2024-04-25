@@ -32,7 +32,9 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   # using Clang
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 MESSAGE("Using GNU compiler")
+include_directories("$ENV{PKG}/blitz/include")
 include_directories("$ENV{PKG}/blitz-0.9/include")
+link_directories("$ENV{PKG}/blitz/lib")
 link_directories("$ENV{PKG}/blitz-0.9/lib")
   # using GCC
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")

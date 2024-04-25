@@ -492,3 +492,5 @@
            Fixed parallel calc surface (for damage)
 -------------------------------------------------------------
 20240411 - Added 3D Slice Cylinder with AxiSymm - BCs
+20240425 - Restored Slice with Ghost (not workin yet)
+         - Fixed Velocity BCs ON SLICE AT PI/2!!
