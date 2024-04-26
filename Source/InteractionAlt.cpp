@@ -242,7 +242,7 @@ inline void Domain::AccelReduction(){
     }
     if (dom_bid_type == AxiSymmetric){
       //ADD HOOP ACCEL AND MULT BY 2PI
-      //#pragma omp parallel for schedule (static) num_threads(Nproc)
+      #pragma omp parallel for schedule (static) num_threads(Nproc)
       for (int i=0; i<solid_part_count;i++){
         //Particles[i]->a *= 2.0 * M_PI; //PREVIOUSLY
         Particles[i]->a[0] -= 2.0 * M_PI * Particles[i]->Sigma(2,2); //WANG Eqn. 40
