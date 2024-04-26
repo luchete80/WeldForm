@@ -385,6 +385,9 @@ int main(int argc, char **argv) try {
       cout << "Adding Box ..."<<endl;      
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 			cout << "Solid Part count "<<dom.solid_part_count<<endl;
+      if ( gridCS == "AxiSymmetric") {
+        dom.dom_bid_type = AxiSymmetric;
+      }
 		}
 		else if (domtype == "Cylinder"){
       cout << "Adding Cylinder";      

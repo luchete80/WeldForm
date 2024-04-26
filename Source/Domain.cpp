@@ -2564,7 +2564,7 @@ inline void Domain::UpdateFrictionCoeff(){
 ////// IF GHOST == FALSE, BC IDS ARE CREATED AND BOUNDARY
 
 void Domain::AddCylUniformLength(int tag, double Rxy, double Lz, 
-																				double r, double Density, double h, double ang, int rows, double r_i, bool ghost = true) {
+																				double r, double Density, double h, double ang, int rows, double r_i, bool ghost) {
 	//Util::Stopwatch stopwatch;
 	std::cout << "\n--------------Generating particles by CylinderBoxLength with defined length of particles-----------" << std::endl;
 
@@ -2639,7 +2639,7 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
         }
         for (int alphai = 0; alphai < tgcount; alphai++ ){
           int id = tag;
-<<<<<<< HEAD
+
             
           xp =  /*r +*/ ri * cos (alphai*dalpha);
           yp =  /*r +*/ ri * sin (alphai*dalpha);
@@ -2650,39 +2650,21 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
               id = 2;
               bc_1.push_back(id);
               Particles[part_count]->is_boundary = true;
+              Particles[part_count]->correct_vel_acc = true;              
 
             } else if (alphai>tgcount - 1 - rows){
               id = 3;
               bc_1.push_back(id);
               Particles[part_count]->is_boundary = true;
+              Particles[part_count]->correct_vel_acc = true;
             }
           }        
           if ((abs (xp) < r/10) && (abs (yp) < r/10)){
             id = 4;
             Particles[part_count]->is_boundary = true;
+            Particles[part_count]->correct_vel_acc = true;
           }
-=======
-            if (ang < 2.0*M_PI){
-              if (!ghost){
-                if (alphai<rows){
-                  id = 2;
-                  bc_1.push_back(id);
-                } else if (alphai>tgcount - 1 - rows){
-                  id = 3;
-                  bc_1.push_back(id);
-                }
-              } 
-            }
-            
-          xp =  /*r +*/ ri * cos (alphai*dalpha);
-          yp =  /*r +*/ ri * sin (alphai*dalpha);
-          if (!ghost && (abs (xp) < r/10) && (abs (yp) < r/10)){
-            id = 4;
-          }
-          //cout << "XY "<<xp << ", " << yp <<endl;
-          Particles.Push(new Particle(id,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));            
 
->>>>>>> d5d133683d50f5f1996e138f462156093958324b
           part_count++;
         }//ALPHA for 
         rcount++;
