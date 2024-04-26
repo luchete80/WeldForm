@@ -72,7 +72,6 @@ void AllFlowCon(Vec3_t & position, Vec3_t & Vel, double & Den, Boundary & bdry)
 	Vel = bdry.allv;
 	Den = bdry.allDensity;
 }
-
 // Constructor
 inline Domain::Domain ()
 {
@@ -1207,6 +1206,9 @@ inline void Domain::MoveGhost(){
 
 	}
 }
+
+////////////////////////////////////////////////////////////////
+//////////// CASE OF NOT GHOST PART (RANDLES) //////////////////
 
 inline void Domain::CorrectVelAcc(){  //For axil symm particles
  	#pragma omp parallel for schedule(static) num_threads(Nproc)
@@ -2581,6 +2583,7 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
 	//if (symlength) 	z0 = r;
 	//else						
     z0 = /*-Lz/2. + */ r; //CHECK: -Lz/2. - r or -Lz/2.?
+  std::vector<BoundaryZone> boundaries;
 	
   int radcount = Rxy / (2. * r ); //center particle is at (r,r,r)
   cout << "Radial Particle count " <<radcount<<endl;
@@ -2630,24 +2633,27 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
         }
         for (int alphai = 0; alphai < tgcount; alphai++ ){
           int id = tag;
-            if (ang < 2.0*M_PI){
-              if (alphai<rows){
-                id = 2;
-                bc_1.push_back(id);
-              } else if (alphai>tgcount - 1 - rows){
-                id = 3;
-                bc_1.push_back(id);
-              }
-            }
             
           xp =  /*r +*/ ri * cos (alphai*dalpha);
           yp =  /*r +*/ ri * sin (alphai*dalpha);
-          if ((abs (xp) < r/10) && (abs (yp) < r/10)){
-            id = 4;
-          }
           //cout << "XY "<<xp << ", " << yp <<endl;
           Particles.Push(new Particle(id,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));            
-        
+          if (ang < 2.0*M_PI){
+            if (alphai<rows){
+              id = 2;
+              bc_1.push_back(id);
+              Particles[part_count]->is_boundary = true;
+
+            } else if (alphai>tgcount - 1 - rows){
+              id = 3;
+              bc_1.push_back(id);
+              Particles[part_count]->is_boundary = true;
+            }
+          }        
+          if ((abs (xp) < r/10) && (abs (yp) < r/10)){
+            id = 4;
+            Particles[part_count]->is_boundary = true;
+          }
           part_count++;
         }
         rcount++;

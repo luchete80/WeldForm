@@ -20,6 +20,9 @@
 
 #ifndef SPH_BOUNDARY_CONDITION_H
 #define SPH_BOUNDARY_CONDITION_H
+#include "matvec.h"
+
+class Particle;
 
 namespace SPH {
 
@@ -51,6 +54,15 @@ namespace SPH {
 
     Boundary();
   };
+
+  // TO APPLY RANDLES & LIBERSY CORR
+  struct BoundaryZone {
+    std::vector <Particle*> p; //part_ID
+    int ID;
+    Vec3_t normal;
+  };
+
+
 }; // namespace SPH
 
 #include "Boundary_Condition.cpp"

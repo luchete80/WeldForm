@@ -151,6 +151,8 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
   ps_energy = 0.;
   dam_D = 0.0;
   
+  is_boundary = false; 
+  
 }
 
 inline void Particle::Move(double dt, Vec3_t Domainsize, Vec3_t domainmax, Vec3_t domainmin, size_t Scheme, Mat3_t I)

@@ -358,6 +358,7 @@ public:
     Contact_Alg   contact_alg;
     
    std::vector <boundaryCondition> bConds;  //NEW, For BCond
+   std::vector <BoundaryZone> boundary; //FOR RANDLES & LIBERSKY
 	
 	// BONET KERNEL CORRECTION
 	bool 					gradKernelCorr;	

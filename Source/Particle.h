@@ -90,6 +90,7 @@ namespace SPH {
     //Boundary corrections
     bool correct_vel_acc;
     bool is_fixed;
+    bool is_boundary; // TO APPLY RANDLES & LIBERSKY COND
     
     double ps_energy; //PER UNIT VOLUME
 
