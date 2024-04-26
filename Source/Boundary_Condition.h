@@ -57,6 +57,8 @@ namespace SPH {
 
   // TO APPLY RANDLES & LIBERSY CORR
   struct BoundaryZone {
+    public: 
+    BoundaryZone(){}
     std::vector <Particle*> p; //part_ID
     int ID;
     Vec3_t normal;

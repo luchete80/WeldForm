@@ -494,3 +494,6 @@
 20240411 - Added 3D Slice Cylinder with AxiSymm - BCs
 20240425 - Restored Slice with Ghost (not workin yet)
          - Fixed Velocity BCs ON SLICE AT PI/2!!
+20240426 - Added Axisymmetric (2D) input reading
+         - FOUND ERROR ON AXISYMMETRIC acceleration (InteractionAlt, ACCELERATION[2] CHANGED to 1 !)
+         ---> Z IS CHANGED TO Y AND HOOP IS Z AS IN PLANE STRAIN

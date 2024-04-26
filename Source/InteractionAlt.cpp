@@ -76,19 +76,19 @@ inline void Domain::CalcAccel() {
       double MUij = h*dot(vij,xij)/(rij*rij+0.01*h*h);					///<(2.75) Li, Liu Book
       double Cij;
       double Ci,Cj;
-    if (dom_bid_type == AxiSymmetric){
-      di/=(2.0*M_PI*P1->x(0));
-      dj/=(2.0*M_PI*P2->x(0));
-    }
+    // if (dom_bid_type == AxiSymmetric){ //CALCULATED DENSITY
+      // di/=(2.0*M_PI*P1->x(0));
+      // dj/=(2.0*M_PI*P2->x(0));
+    // }
       if (!P1->IsFree) Ci = SoundSpeed(P2->PresEq, P2->Cs, di, P2->RefDensity); else Ci = SoundSpeed(P1->PresEq, P1->Cs, di, P1->RefDensity);
       if (!P2->IsFree) Cj = SoundSpeed(P1->PresEq, P1->Cs, dj, P1->RefDensity); else Cj = SoundSpeed(P2->PresEq, P2->Cs, dj, P2->RefDensity);
       Cij = 0.5*(Ci+Cj);
 
       //Mod density for artif visc calc
-      if (dom_bid_type == AxiSymmetric){
-        di*=(2.0*M_PI*P1->x(0));
-        dj*=(2.0*M_PI*P2->x(0));
-      }      
+      // if (dom_bid_type == AxiSymmetric){
+        // di*=(2.0*M_PI*P1->x(0));
+        // dj*=(2.0*M_PI*P2->x(0));
+      // }      
       if (dot(vij,xij)<0) PIij = (Alpha*Cij*MUij+Beta*MUij*MUij)/(0.5*(di+dj)) * I;		///<(2.74) Li, Liu Book
     }
     //m_forces_artifvisc_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
@@ -147,11 +147,12 @@ inline void Domain::CalcAccel() {
           // di = P1->etaDens;
           // dj = P2->etaDens;
           temp[0] = (Sigmai(0,0)*P1->x(0)*1./(di*di) + Sigmaj(0,0) *P2->x(0)* 1./(dj*dj)) *wij(0) + 
-                    (Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(1);  ////dvr/dt 2PI can go in the reduction
+                    (Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(1)* 2.0 * M_PI;  ////dvr/dt 2PI can go in the reduction
 
           temp[1] = (Sigmai(0,1)*P1->x(0)*1./(di*di) + Sigmaj(0,1) *P2->x(0)* 1./(dj*dj)) *wij(0) + 
-                    (Sigmai(1,1)*P1->x(0)*1./(di*di) + Sigmaj(1,1) *P2->x(0)* 1./(dj*dj)) *wij(1);  ////dvr/dt 2PI can go in the reduction
-                    
+                    (Sigmai(1,1)*P1->x(0)*1./(di*di) + Sigmaj(1,1) *P2->x(0)* 1./(dj*dj)) *wij(1)*2.0 * M_PI;  ////dvr/dt 2PI can go in the reduction
+          
+          
         //}
       }//axisymm
 		} else {
@@ -173,7 +174,7 @@ inline void Domain::CalcAccel() {
 		}//Grad Corr
     
 
-		if (Dimension == 2) temp(2) = 0.0;
+		if (Dimension == 2 && dom_bid_type != AxiSymmetric) temp(2) = 0.0; //PLANE STRAIN
 		
 		if (!gradKernelCorr){
 			temp1 = dot( vij , GK*xij );
@@ -242,8 +243,9 @@ inline void Domain::AccelReduction(){
       //ADD HOOP ACCEL AND MULT BY 2PI
       #pragma omp parallel for schedule (static) num_threads(Nproc)
       for (int i=0; i<solid_part_count;i++){
-        Particles[i]->a *= 2.0 * M_PI;
+        //Particles[i]->a *= 2.0 * M_PI; //PREVIOUSLY
         Particles[i]->a[0] -= Particles[i]->Sigma(2,2); //WANG Eqn. 40
+        Particles[i]->a[2] = - Particles[i]->Sigma(2,2)/Particles[i]->Density; //DIRECT HOOP EQN 44
       }
     }
   } else {
@@ -333,9 +335,9 @@ inline void Domain::CalcRateTensors() {
     StrainRate(1,0) = StrainRate(0,1);
     StrainRate(1,1) = 2.0*vab(1)*xij(1);
     StrainRate(1,2) = vab(1)*xij(2)+vab(2)*xij(1);
-    if (dom_bid_type == AxiSymmetric){
-      StrainRate(0,2) = StrainRate(1,2) = 0.;
-    }
+    // if (dom_bid_type == AxiSymmetric){
+      // StrainRate(0,2) = StrainRate(1,2) = 0.;
+    // }
     StrainRate(2,0) = StrainRate(0,2);
     StrainRate(2,1) = StrainRate(1,2);
     StrainRate(2,2) = 2.0*vab(2)*xij(2);
@@ -454,7 +456,7 @@ inline void Domain::RateTensorsReduction(){
     } 
   }
 
-  if (dom_bid_type == AxiSymmetric){
+  if (dom_bid_type == AxiSymmetric){ //WANG 2015 EQN 17, DIRECT HOOP
     #pragma omp parallel for schedule (static) num_threads(Nproc)
     for (int i=0; i<solid_part_count;i++){
       double psi;

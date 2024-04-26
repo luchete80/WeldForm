@@ -29,6 +29,7 @@
 #define DELTA_PL_STRAIN 1.e-3
 #include <set>
 
+
 //https://stackoverflow.com/questions/19240540/dynamically-allocating-array-explain/19240932#19240932
 template <typename T>
 void Initiate (T ***mat,int row){
@@ -2600,6 +2601,8 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
   int x_ghost_per_row = 0;
   //Cal
   int tgcount;
+  boundary.push_back(new BoundaryZone);
+  boundary.push_back(new BoundaryZone);
   
   std::vector <int> bc_1, bc_2; //IF apply to only boundary
 
@@ -2650,13 +2653,15 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
               id = 2;
               bc_1.push_back(id);
               Particles[part_count]->is_boundary = true;
-              Particles[part_count]->correct_vel_acc = true;              
+              Particles[part_count]->correct_vel_acc = true;   
+              boundary[0]->p.push_back(Particles[part_count]);
 
             } else if (alphai>tgcount - 1 - rows){
               id = 3;
               bc_1.push_back(id);
               Particles[part_count]->is_boundary = true;
               Particles[part_count]->correct_vel_acc = true;
+              boundary[1]->p.push_back(Particles[part_count]);
             }
           }        
           if ((abs (xp) < r/10) && (abs (yp) < r/10)){
