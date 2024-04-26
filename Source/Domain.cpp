@@ -502,12 +502,11 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 					xp = V(0);
 					while (xp <= (V(0)+Lx-r))
 					{
-            if (dom_bid_type == AxiSymmetric){
-              cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
-              Density = 2.0*M_PI*rho_0*x;
-            }
 						x = V(0) + (2*i+(j%2)+1)*r;
 						y = V(1) + (sqrt(3.0)*j+1)*r;
+            if (dom_bid_type == AxiSymmetric){
+              Density = 2.0*M_PI*rho_0*x;
+            }
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
 							else    Particles.Push(new Particle(tag,Vec3_t(x,y,0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
 						i++;
@@ -528,12 +527,12 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 					yp = V(1);
 					while (yp <= (V(1)+Ly-r))
 					{
-            if (dom_bid_type == AxiSymmetric){
-              cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
-              Density = 2.0*M_PI*rho_0*x;
-            }
+
 						x = V(0) + (sqrt(3.0)*i+1)*r;
 						y = V(1) + (2*j+(i%2)+1)*r;
+            if (dom_bid_type == AxiSymmetric){
+              Density = 2.0*M_PI*rho_0*x;
+            }
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
 							else    Particles.Push(new Particle(tag,Vec3_t(x,y,0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
 						j++;
@@ -556,12 +555,11 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 				xp = V(0);
 				while (xp <= (V(0)+Lx-r))
 				{
-            if (dom_bid_type == AxiSymmetric){
-              cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
-              Density = 2.0*M_PI*rho_0*x;
-            }
 					x = V(0) + (2*i+1)*r;
 					y = V(1) + (2*j+1)*r;
+            if (dom_bid_type == AxiSymmetric){
+              Density = 2.0*M_PI*rho_0*x;
+            }
 					if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
 						else    Particles.Push(new Particle(tag,Vec3_t(x,y,0.0),Vec3_t(0,0,0),2.0*r*2.0*r*Density,Density,h,Fixed));
 					i++;

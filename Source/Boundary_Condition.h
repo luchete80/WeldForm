@@ -21,7 +21,7 @@
 #ifndef SPH_BOUNDARY_CONDITION_H
 #define SPH_BOUNDARY_CONDITION_H
 #include "matvec.h"
-
+#include <vector>
 class Particle;
 
 namespace SPH {
