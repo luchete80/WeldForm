@@ -354,6 +354,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 
     double qin = 0.03;
     srand(100);
+    double rho_0 = Density; /////AXISYMM
 		
 		//For new SOA accessing
 		std::vector <Vec3_t> x_sta;
@@ -374,6 +375,7 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 					xp = V(0);
 					while (xp <= (V(0)+Lx-r))
 					{
+
 						if ((k%2!=0) && (j%2!=0)) x = V(0) + (2*i+(j%2)+(k%2)-1)*r; else x = V(0) + (2*i+(j%2)+(k%2)+1)*r;
 						y = V(1) + (sqrt(3.0)*(j+(1.0/3.0)*(k%2))+1)*r;
 						z = V(2) + ((2*sqrt(6.0)/3)*k+1)*r;
@@ -500,6 +502,10 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 					xp = V(0);
 					while (xp <= (V(0)+Lx-r))
 					{
+            if (dom_bid_type == AxiSymmetric){
+              cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
+              Density = 2.0*M_PI*rho_0*x;
+            }
 						x = V(0) + (2*i+(j%2)+1)*r;
 						y = V(1) + (sqrt(3.0)*j+1)*r;
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
@@ -522,6 +528,10 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 					yp = V(1);
 					while (yp <= (V(1)+Ly-r))
 					{
+            if (dom_bid_type == AxiSymmetric){
+              cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
+              Density = 2.0*M_PI*rho_0*x;
+            }
 						x = V(0) + (sqrt(3.0)*i+1)*r;
 						y = V(1) + (2*j+(i%2)+1)*r;
 						if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
@@ -546,6 +556,10 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
 				xp = V(0);
 				while (xp <= (V(0)+Lx-r))
 				{
+            if (dom_bid_type == AxiSymmetric){
+              cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAA"<<endl;
+              Density = 2.0*M_PI*rho_0*x;
+            }
 					x = V(0) + (2*i+1)*r;
 					y = V(1) + (2*j+1)*r;
 					if (random) Particles.Push(new Particle(tag,Vec3_t((x + qin*r*double(rand())/RAND_MAX),(y+ qin*r*double(rand())/RAND_MAX),0.0),Vec3_t(0,0,0),(sqrt(3.0)*r*r)*Density,Density,h,Fixed));
@@ -568,8 +582,9 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
   if (dom_bid_type == AxiSymmetric){
     for (int i=0; i<solid_part_count;i++){
       //Particles[i]->Density *=2.0*M_PI*Particles[i]->x(0);
-			//Particles[i]->Mass    = Particles[i]->Density * (2.0*r)*(2.0*r);
-      Particles[i]->Mass =2.0*M_PI*Particles[i]->x(0)* Particles[i]->Density*(2.0*r)*(2.0*r);
+			Particles[i]->Mass    = Particles[i]->Density * (2.0*r)*(2.0*r); //// IF USING ONLY AXISYMM DENSITY (eta = 2PIr rho)
+      
+      //Particles[i]->Mass =2.0*M_PI*Particles[i]->x(0)* Particles[i]->Density*(2.0*r)*(2.0*r);
     }
   }
         
