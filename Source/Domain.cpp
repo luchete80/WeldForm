@@ -577,15 +577,18 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
     
     solid_part_count = Particles.Size(); //FOR NEW REDUCTION
     
+  double totmass = 0.0;
   if (dom_bid_type == AxiSymmetric){
     for (int i=0; i<solid_part_count;i++){
       //Particles[i]->Density *=2.0*M_PI*Particles[i]->x(0);
 			Particles[i]->Mass    = Particles[i]->Density * (2.0*r)*(2.0*r); //// IF USING ONLY AXISYMM DENSITY (eta = 2PIr rho)
-      
+      totmass +=Particles[i]->Mass;
       //Particles[i]->Mass =2.0*M_PI*Particles[i]->x(0)* Particles[i]->Density*(2.0*r)*(2.0*r);
     }
   }
-        
+  cout << "Tot Mass: "<<totmass<<endl;
+
+  
 	R = r;
 }
 

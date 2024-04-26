@@ -245,8 +245,8 @@ inline void Domain::AccelReduction(){
       #pragma omp parallel for schedule (static) num_threads(Nproc)
       for (int i=0; i<solid_part_count;i++){
         //Particles[i]->a *= 2.0 * M_PI; //PREVIOUSLY
-        Particles[i]->a[0] -= Particles[i]->Sigma(2,2); //WANG Eqn. 40
-        Particles[i]->a[2] = - Particles[i]->Sigma(2,2)/Particles[i]->Density; //DIRECT HOOP EQN 44
+        Particles[i]->a[0] -= 2.0 * M_PI * Particles[i]->Sigma(2,2); //WANG Eqn. 40
+        Particles[i]->a[2] = - 2.0*M_PI*Particles[i]->Sigma(2,2)/Particles[i]->Density; //DIRECT HOOP EQN 44
       }
     }
   } else {
@@ -466,6 +466,8 @@ inline void Domain::RateTensorsReduction(){
         if (Particles[i]->x(0) > 0.0) psi =  0.01 * Particles[i]->h;
         else                          psi = -0.01 * Particles[i]->h;
         Particles[i]->StrainRate(2,2) = Particles[i]->v(0)/(psi + Particles[i]->x(0)); //DIRECT HOOP STRAIN RATE, Wang 2015
+        Particles[i]->StrainRate(0,2) = 0.0; Particles[i]->StrainRate(2,0) = 0.0;
+         Particles[i]->RotationRate(0,2) = 0.0; Particles[i]->RotationRate(2,0) = 0.0;
       //}    
     }
   }
@@ -567,15 +569,7 @@ inline void Domain::CalcDensInc() {
           P1->dDensity	+= dam_f *mj * (di/dj) * temp1_c[0];
         }		
       omp_unset_lock(&P1->my_lock);
-      } else{ //HERE DENSITY IS NOT STANDARD DENSITY BUT : 2*PI*r*rho WANG EQN 56
-        omp_set_lock(&P1->my_lock);
-          if (!gradKernelCorr){
-            P1->dDensity	+= dam_f * mj * temp1;
-          } else{
-            P1->dDensity	+= dam_f * mj * temp1_c[0];
-          }		
-        omp_unset_lock(&P1->my_lock);        
-      }
+
       // Locking the particle 2 for updating the properties
       omp_set_lock(&P2->my_lock);
         if (!gradKernelCorr){
@@ -584,6 +578,25 @@ inline void Domain::CalcDensInc() {
           P2->dDensity	+= dam_f * mi * (dj/di) * temp1_c[1];
         }
       omp_unset_lock(&P2->my_lock);
+      
+      } else{ //HERE DENSITY IS NOT STANDARD DENSITY BUT : 2*PI*r*rho WANG EQN 56
+      ///// AISYMM NOW WORKING WITH STD REDUCTION (THIS)
+        omp_set_lock(&P1->my_lock);
+          if (!gradKernelCorr){
+            P1->dDensity	+= dam_f * mj * temp1;
+          } else{
+            P1->dDensity	+= dam_f * mj * temp1_c[0];
+          }		
+        omp_unset_lock(&P1->my_lock);        
+
+          if (!gradKernelCorr){
+            P2->dDensity	+= dam_f * mi * temp1;
+          } else{
+            P2->dDensity	+= dam_f * mi * temp1_c[1];
+          }		
+        omp_unset_lock(&P1->my_lock); 
+      }
+
       //#endif
       }//nonlock_sum
       } //if dam_f > 0.0
