@@ -175,7 +175,7 @@ inline void Domain::CalcAccel() {
 		}//Grad Corr
     
 
-		if (Dimension == 2 && dom_bid_type != AxiSymmetric) temp(2) = 0.0; //PLANE STRAIN
+		if (Dimension == 2 /*&& dom_bid_type != AxiSymmetric*/) temp(2) = 0.0; //PLANE STRAIN
 		
 		if (!gradKernelCorr){
 			temp1 = dot( vij , GK*xij );
@@ -246,7 +246,7 @@ inline void Domain::AccelReduction(){
       for (int i=0; i<solid_part_count;i++){
         Particles[i]->a *= 2.0 * M_PI; //PREVIOUSLY
         Particles[i]->a[0] -= 2.0 * M_PI * Particles[i]->Sigma(2,2); //WANG Eqn. 40
-        Particles[i]->a[2] = - 2.0*M_PI*Particles[i]->Sigma(2,2)/Particles[i]->Density; //DIRECT HOOP EQN 44
+        //Particles[i]->a[2] = - 2.0*M_PI*Particles[i]->Sigma(2,2)/Particles[i]->Density; //DIRECT HOOP EQN 44
       }
     }
   } else {
