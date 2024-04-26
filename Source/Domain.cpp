@@ -884,15 +884,12 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
 	int xinc,yinc;
 	
 	int id_part=0;
-	int ghost_rows = 3;
 	
 	double z0;
 	if (symlength) 	z0 = r;
 	else						z0 = -Lz/2. + r; //CHECK: -Lz/2. - r or -Lz/2.?
 	
 	int part_per_row=0;
-  std::vector <int> symm_x;
-  std::vector <int> symm_y;
   int x_ghost_per_row = 0;
   if (Dimension==3) {
     	//Cubic packing
@@ -995,8 +992,9 @@ void Domain::AddXYSymCylinderLength(int tag, double Rxy, double Lz,
           GhostPairs.Push(std::make_pair(symm_y[sym_y_count],id_part  ));
           GhostPairs.Push(std::make_pair(symm_x[sym_x_count],id_part+1));
           
-          Particles[id_part  ]-> ghost_type = Mirror_XYZ;
-          
+          Particles[id_part  ]-> ghost_type = Mirror_XYZ; 
+          Particles[id_part+1]-> ghost_type = Mirror_XYZ;
+                    
           Particles[id_part  ]->ghost_plane_axis = 1;
           Particles[id_part+1]->ghost_plane_axis = 0;
           Particles[id_part  ]->is_ghost = true;
@@ -1132,16 +1130,17 @@ inline void Domain::MoveGhost(){
     
     double vtg[2], vn;
     double atg[2], an;
-    
-    // Plane *p = Particles[gi]->plane_ghost;
-    
-    // vn = dot (p->normal,Particles[i]-> v);
-    // for (int k=0;k<2;k++) vtg[k] = dot (p->tg[k],Particles[i]-> v);
-    // an = dot (p->normal,Particles[i]-> a);
-    // for (int k=0;k<2;k++) atg[k] = dot (p->tg[k],Particles[i]-> a);
+   
     
     
     if (Particles[gi]->ghost_type == Symmetric){
+      Plane *p = Particles[gi]->plane_ghost;
+      
+      vn = dot (p->normal,Particles[i]-> v);
+      for (int k=0;k<2;k++) vtg[k] = dot (p->tg[k],Particles[i]-> v);
+      an = dot (p->normal,Particles[i]-> a);
+      for (int k=0;k<2;k++) atg[k] = dot (p->tg[k],Particles[i]-> a);
+      
       // if (norm (Particles[i]-> v) > 1.0e-3){
         // cout << "normal "<<p->normal<<endl;
         // cout << "tg 1, tg2 "<<p->tg[0]<<", " <<p->tg[1]<<", " <<endl;
@@ -1149,15 +1148,21 @@ inline void Domain::MoveGhost(){
         // cout << "vi vgi "<<Particles[i]-> v <<", " <<Particles[gi]-> v <<endl;
       // }
       
-      // Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
-      // Particles[gi]-> v -= vn * p->normal;
+      Particles[gi]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
+      Particles[gi]-> v -= vn * p->normal;
       
-      // Particles[gi]-> a = atg[0]*p->tg[0] + atg[1]*p->tg[1];
-      // Particles[gi]-> a -= an * p->normal;
+      Particles[gi]-> a = atg[0]*p->tg[0] + atg[1]*p->tg[1];
+      Particles[gi]-> a -= an * p->normal;
+      
+      // // // Several parameters
+      Particles[gi]-> Sigma    =     Particles[i]-> Sigma;
+      Particles[gi]-> Strain  =     Particles[i]-> Strain;
+      Particles[gi]-> ShearStress  =     Particles[i]-> ShearStress;
+      Particles[gi]-> StrainRate  =     Particles[i]-> StrainRate;
+      Particles[gi]-> RotationRate  =     Particles[i]-> RotationRate;
+      Particles[gi]-> Density  =     Particles[i]-> Density;
       
 
-      
-      //cout << "vi vgi "<<Particles[i]-> v <<", " <<Particles[gi]-> v <<endl;
     }
     else if (Particles[gi]->ghost_type == Mirror_XYZ){//
       int axis = Particles[gi]-> ghost_plane_axis;
@@ -1229,10 +1234,10 @@ inline void Domain::CorrectVelAcc(){  //For axil symm particles
         for (int k=0;k<2;k++) atg[k] = dot (p->tg[k],Particles[i]-> a);        
 
         Particles[i]-> v = vtg[0]*p->tg[0]+vtg[1]*p->tg[1];
-        //Particles[i]-> v -= vn * p->normal;
+        Particles[i]-> v -= vn * p->normal;
         
         Particles[i]-> a = atg[0]*p->tg[0] + atg[1]*p->tg[1];
-        //Particles[i]-> a -= an * p->normal;
+        Particles[i]-> a -= an * p->normal;
         
       }
       
@@ -2556,6 +2561,7 @@ inline void Domain::UpdateFrictionCoeff(){
     // friction_m * Particles[i]->T + friction_b;
   // }    
 }
+////// IF GHOST == FALSE, BC IDS ARE CREATED AND BOUNDARY
 
 void Domain::AddCylUniformLength(int tag, double Rxy, double Lz, 
 																				double r, double Density, double h, double ang, int rows, double r_i, bool ghost = true) {
@@ -2633,6 +2639,7 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
         }
         for (int alphai = 0; alphai < tgcount; alphai++ ){
           int id = tag;
+<<<<<<< HEAD
             
           xp =  /*r +*/ ri * cos (alphai*dalpha);
           yp =  /*r +*/ ri * sin (alphai*dalpha);
@@ -2654,8 +2661,30 @@ void Domain::AddCylUniformLength(int tag, double Rxy, double Lz,
             id = 4;
             Particles[part_count]->is_boundary = true;
           }
+=======
+            if (ang < 2.0*M_PI){
+              if (!ghost){
+                if (alphai<rows){
+                  id = 2;
+                  bc_1.push_back(id);
+                } else if (alphai>tgcount - 1 - rows){
+                  id = 3;
+                  bc_1.push_back(id);
+                }
+              } 
+            }
+            
+          xp =  /*r +*/ ri * cos (alphai*dalpha);
+          yp =  /*r +*/ ri * sin (alphai*dalpha);
+          if (!ghost && (abs (xp) < r/10) && (abs (yp) < r/10)){
+            id = 4;
+          }
+          //cout << "XY "<<xp << ", " << yp <<endl;
+          Particles.Push(new Particle(id,Vec3_t(xp,yp,zp),Vec3_t(0,0,0),0.0,Density,h,false));            
+
+>>>>>>> d5d133683d50f5f1996e138f462156093958324b
           part_count++;
-        }
+        }//ALPHA for 
         rcount++;
       } //alpha
 			k++;

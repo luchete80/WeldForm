@@ -128,8 +128,8 @@ public:
 	//Cylinder Slice 
 	void AddXYSymCylinderLength(int tag, double Rxy, double Lz, 
 								double r, double Density, double h, bool Fixed, bool symlength = false);
-  void AddCylSliceLength(int tag, double alpha, double Rxy, double Lz, 
-																				double r, double Density, double h);
+  void AddCylSliceLength(int tag, double Rxy, double Lz, 
+																				double r, double Density, double h, double alpha);
   // void AddCylUniformLength    (int tag, double Rxy, double Lz, 
 																				// double r, double Density, double h);                                  
 	void AddTractionProbeLength(int tag, Vec3_t const & V, double Rxy, double Lz_side,

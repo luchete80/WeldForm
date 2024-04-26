@@ -396,7 +396,7 @@ int main(int argc, char **argv) try {
         cout << "..."<<endl;
         if ( gridCS == "Cartesian")
           dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym[2]); 
-        else if (gridCS == "Cylindrical")
+        else if (gridCS == "Cylindrical"){
           if (slice_ang==2.0 * M_PI){
             dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h);
           } else {
@@ -404,7 +404,16 @@ int main(int argc, char **argv) try {
             dom.dom_bid_type = AxiSymm_3D;
 
           }
-          
+        } else if (gridCS == "CylRadial"){
+          if (slice_ang==2.0 * M_PI){
+            //dom.AddCylSliceLength(0, L[0]/2.,L[2], r, rho, h);
+            cout << "ERROR. RADIAL CYL SHOULD BE LESS THAN 2PI"<<endl;
+          } else {
+            dom.AddCylSliceLength(0, L[0]/2.,L[2], r, rho, h, slice_ang /*, 1, L[0]/4.0*/); 
+            dom.dom_bid_type = AxiSymm_3D;
+
+          }          
+        }
       }
     }
 
