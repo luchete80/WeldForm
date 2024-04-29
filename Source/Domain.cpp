@@ -580,6 +580,8 @@ inline void Domain::AddBoxLength(int tag, Vec3_t const & V, double Lx, double Ly
   double totmass = 0.0;
   if (dom_bid_type == AxiSymmetric){
     for (int i=0; i<solid_part_count;i++){
+      Particles[i]->is_axisymm = true; //For EOS calc
+      Particles[i]->RefDensity = rho_0; //Since EOS is made from real density
       //Particles[i]->Density *=2.0*M_PI*Particles[i]->x(0);
 			Particles[i]->Mass    = Particles[i]->Density * (2.0*r)*(2.0*r); //// IF USING ONLY AXISYMM DENSITY (eta = 2PIr rho)
       totmass +=Particles[i]->Mass;

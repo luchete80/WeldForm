@@ -8,7 +8,7 @@
   "autoTS": [false,false,false],
   "kernelGradCorr": false,  
   "simTime": 0.01,
-  "outTime": 1.0e-6,
+  "outTime": 1.0e-4,
   "solver": "Mech-Fraser"
 }
 ,
@@ -29,7 +29,7 @@
   "gridCoordSys": "AxiSymmetric",
 	"zoneId": 0,
 	"denseMode": 0,
-	"start": [ 0.1, 0.0, -0.028],
+	"start": [ 0.0, 0.0, -0.028],
 	"dim": [0.2, 0.616, 0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]

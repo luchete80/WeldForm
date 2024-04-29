@@ -152,6 +152,7 @@ inline Particle::Particle(int Tag, Vec3_t const & x0, Vec3_t const & v0, double 
   dam_D = 0.0;
   
   is_boundary = false; 
+  is_axisymm = false;
   
 }
 
@@ -957,7 +958,11 @@ inline void Particle::CalcThermalExpStrainRate(){
 
 // Not a particular integration scheme, only adding +dt
 inline void Particle::CalcStressStrain(double dt) {
-	Pressure = EOS(PresEq, Cs, P0,Density, RefDensity);
+  double rho = Density;
+  if (is_axisymm){ //CALCULATED DENSITY
+    rho/=(2.0*x(0));
+  }  
+	Pressure = EOS(PresEq, Cs, P0,rho, RefDensity);
 
 	// Jaumann rate terms
 	Mat3_t RotationRateT, Stress,SRT,RS;

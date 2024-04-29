@@ -258,7 +258,7 @@ namespace SPH {
     //Implicit Solver
     inline void AddBMat(const Vec3_t &);
 		
-		
+		bool is_axisymm;  //FOR EOS CALC, should alter density
 
 	};
 }; // namespace SPH
