@@ -240,7 +240,11 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     for (int i=0; i<Particles.Size(); i++){
       //Particles[i]->UpdateDensity_Leapfrog(deltat);
       Particles[i]->Density += deltat*Particles[i]->dDensity;
-    }    
+    } 
+    if (dom_bid_type == AxiSymmetric){
+      for (int i=0; i<Particles.Size(); i++)
+        Particles[i]->Density_real = Particles[i]->Density/(2.0*M_PI*Particles[i]->x(0)); 
+    }
     dens_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
 

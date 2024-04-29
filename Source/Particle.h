@@ -94,7 +94,7 @@ namespace SPH {
     
     double ps_energy; //PER UNIT VOLUME
 
-		double	Density;	///< Density of the particle n+1
+		double	Density, Density_real;	///< Density of the particle n+1, Density_real is the real density used in Axisymm calcs
 		double 	Densitya;	///< Density of the particle n+1/2 (Leapfrog)
 		double 	Densityb;	///< Density of the particle n-1 (Modified Verlet)
 		double 	dDensity;	///< Rate of density change in time based on state equations n

@@ -1514,6 +1514,9 @@ inline void Domain::StartAcceleration (Vec3_t const & a) {
 	for (int i=0; i<Particles.Size(); i++)//Like in Domain::Move
 	#endif
 	{
+      double rho2 = Particles[i]->Density*Particles[i]->Density;
+      if (dom_bid_type == AxiSymmetric)
+        rho2 /= pow(2.0*M_PI*Particles[i]->x(0),2.0);
 	    if (Particles[i]->IsFree){
 			// Tensile Instability for all soil and solid particles
 			if (Particles[i]->TI > 0.0)
@@ -1532,8 +1535,8 @@ inline void Domain::StartAcceleration (Vec3_t const & a) {
 					S = sin(teta);
 					Sigmaxx = C*C*Particles[i]->Sigma(0,0) + 2.0*C*S*Particles[i]->Sigma(0,1) + S*S*Particles[i]->Sigma(1,1);
 					Sigmayy = S*S*Particles[i]->Sigma(0,0) - 2.0*C*S*Particles[i]->Sigma(0,1) + C*C*Particles[i]->Sigma(1,1);
-					if (Sigmaxx>0) Sigmaxx = -Particles[i]->TI * Sigmaxx/(Particles[i]->Density*Particles[i]->Density); else Sigmaxx = 0.0;
-					if (Sigmayy>0) Sigmayy = -Particles[i]->TI * Sigmayy/(Particles[i]->Density*Particles[i]->Density); else Sigmayy = 0.0;
+					if (Sigmaxx>0) Sigmaxx = -Particles[i]->TI * Sigmaxx/(rho2); else Sigmaxx = 0.0;
+					if (Sigmayy>0) Sigmayy = -Particles[i]->TI * Sigmayy/(rho2); else Sigmayy = 0.0;
 					Particles[i]->TIR(0,0) = C*C*Sigmaxx + S*S*Sigmayy;
 					Particles[i]->TIR(1,1) = S*S*Sigmaxx + C*C*Sigmayy;
 					Particles[i]->TIR(0,1) = Particles[i]->TIR(1,0) = S*C*(Sigmaxx-Sigmayy);
@@ -1541,7 +1544,7 @@ inline void Domain::StartAcceleration (Vec3_t const & a) {
 				else
 				{
 					Mat3_t Vec,Val,VecT,temp;
-					double pc_ti_inv_d2=Particles[i]->TI/(Particles[i]->Density*Particles[i]->Density);//Precompute some values
+					double pc_ti_inv_d2=Particles[i]->TI/(rho2);//Precompute some values
 					Rotation(Particles[i]->Sigma,Vec,VecT,Val);
 					//Before
 					// if (Val(0,0)>0) Val(0,0) = -Particles[i]->TI * Val(0,0)/(Particles[i]->Density*Particles[i]->Density); else Val(0,0) = 0.0;
@@ -1594,10 +1597,14 @@ inline void Domain::PrimaryComputeAcceleration () {
 		size_t P1,P2;
 		Vec3_t xij;
 		double h,K;
+
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		for (size_t a=0; a<FSMPairs[k].Size();a++) {
 			P1	= FSMPairs[k][a].first;
 			P2	= FSMPairs[k][a].second;
+      double d1, d2; 
+      d1 = Particles[P1]->Density;
+      d2 = Particles[P2]->Density;
 			xij	= Particles[P1]->x-Particles[P2]->x;
 			h	= (Particles[P1]->h+Particles[P2]->h)/2.0;
 

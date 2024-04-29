@@ -960,7 +960,7 @@ inline void Particle::CalcThermalExpStrainRate(){
 inline void Particle::CalcStressStrain(double dt) {
   double rho = Density;
   if (is_axisymm){ //CALCULATED DENSITY
-    rho/=(2.0*x(0));
+    rho/=(2.0*x(0)*M_PI);
   }  
 	Pressure = EOS(PresEq, Cs, P0,rho, RefDensity);
 
