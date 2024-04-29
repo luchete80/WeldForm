@@ -245,7 +245,7 @@ inline void Domain::AccelReduction(){
       #pragma omp parallel for schedule (static) num_threads(Nproc)
       for (int i=0; i<solid_part_count;i++){
         Particles[i]->a *= 2.0 * M_PI; //PREVIOUSLY
-        Particles[i]->a[0] -= 2.0 * M_PI * Particles[i]->Sigma(2,2); //WANG Eqn. 40
+        Particles[i]->a[0] -= 2.0 * M_PI * Particles[i]->Sigma(2,2) / Particles[i]->Density; //WANG Eqn. 40
         //Particles[i]->a[2] = - 2.0*M_PI*Particles[i]->Sigma(2,2)/Particles[i]->Density; //DIRECT HOOP EQN 44
       }
     }
