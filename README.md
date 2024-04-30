@@ -10,9 +10,13 @@ GPU Version is under development [here](https://github.com/luchete80/WeldFormGPU
 
 Has been adapted to work on both Linux and Windows system (both on MinGW and MSVC compilers).
 
+![alt text](https://github.com/luchete80/WeldForm/blob/master/compression_axil.png)
+
+![alt text](https://github.com/luchete80/WeldForm/blob/master/compression.png)
+
 ![alt text](https://github.com/luchete80/WeldForm/blob/master/met_form.png)
 
-![alt text](https://github.com/luchete80/WeldForm/blob/master/compression.PNG)
+
 
 Is hevaily based on: 
 
