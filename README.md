@@ -12,7 +12,7 @@ Has been adapted to work on both Linux and Windows system (both on MinGW and MSV
 
 ![alt text](https://github.com/luchete80/WeldForm/blob/master/compression_axil.png)
 
-![alt text](https://github.com/luchete80/WeldForm/blob/master/compression.png)
+![alt text](https://github.com/luchete80/WeldForm/blob/master/compression.PNG)
 
 ![alt text](https://github.com/luchete80/WeldForm/blob/master/met_form.png)
 
