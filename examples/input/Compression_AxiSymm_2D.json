@@ -9,7 +9,7 @@
   "kernelGradCorr": false,  
   "simTime": 0.01,
   "artifViscAlpha": 1.0,
-  "artifViscBeta": 1.0,
+  "artifViscBeta": 0.0,
   "outTime": 1.0e-4,
   "solver": "Mech-Fraser"
 }

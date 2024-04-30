@@ -90,6 +90,7 @@ inline void Domain::CalcAccel() {
         dj*=(2.0*M_PI*P2->x(0));
       }      
       if (dot(vij,xij)<0) PIij = (Alpha*Cij*MUij+Beta*MUij*MUij)/(0.5*(di+dj)) * I;		///<(2.74) Li, Liu Book
+      //cout << "PIij"<<PIij<<endl;
     }
     //m_forces_artifvisc_time += (double)(clock() - m_clock_begin) / CLOCKS_PER_SEC;
     
@@ -149,11 +150,12 @@ inline void Domain::CalcAccel() {
           // dj = P2->etaDens;
           Vec3_t av;
           Mult (wij, PIij,av);
+          //  cout << "AVISC TERM "<<av<<endl;
           temp[0] = (Sigmai(0,0)*P1->x(0)/(di*di) + Sigmaj(0,0) *P2->x(0)/(dj*dj)) *wij(0) + 
-                    (Sigmai(0,1)*P1->x(0)/(di*di) + Sigmaj(0,1) *P2->x(0)/(dj*dj)) *wij(1) +av[0];  ////dvr/dt 2PI can go in the reduction
+                    (Sigmai(0,1)*P1->x(0)/(di*di) + Sigmaj(0,1) *P2->x(0)/(dj*dj)) *wij(1) +PIij;  ////dvr/dt 2PI can go in the reduction
 
           temp[1] = (Sigmai(0,1)*P1->x(0)/(di*di) + Sigmaj(0,1) *P2->x(0)/(dj*dj)) *wij(0) + 
-                    (Sigmai(1,1)*P1->x(0)/(di*di) + Sigmaj(1,1) *P2->x(0)/(dj*dj)) *wij(1) +av[1];  ////dvr/dt 2PI can go in the reduction
+                    (Sigmai(1,1)*P1->x(0)/(di*di) + Sigmaj(1,1) *P2->x(0)/(dj*dj)) *wij(1) ;  ////dvr/dt 2PI can go in the reduction
           
           
         //}
