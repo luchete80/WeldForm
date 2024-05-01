@@ -1909,12 +1909,12 @@ inline void Domain::CalcGradCorrMatrix () {
         m = I;
         nulldetcount++;
       }
-      if (i==0) {
-        cout << "Not inverted "<<endl<<PrintMatrix(temp[i])<<endl;
-        cout << PrintMatrix(m);
-        cout << "Position "<<endl;
-        cout << PrintVector(Particles[i]->x);
-      }
+      // if (i==0) {
+        // cout << "Not inverted "<<endl<<PrintMatrix(temp[i])<<endl;
+        // cout << PrintMatrix(m);
+        // cout << "Position "<<endl;
+        // cout << PrintVector(Particles[i]->x);
+      // }
       omp_set_lock(&Particles[i]->my_lock);
 			Particles[i] ->gradCorrM = m;
       omp_unset_lock(&Particles[i]->my_lock);
