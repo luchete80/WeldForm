@@ -1,6 +1,9 @@
 # Changelog
 
-## [0.4.3] - TBR
+## [0.4.2.4] - 20240430 - 2854a85d434ed55ef4ebe6d3fcde67baf72001e6
+ - Added Axisymmetry working OK (do not put left box at zero, remains corrections at axis).
+ - Reading some LS-Dyna Inputs.
+ - Penging AxiSymm contact validation
 
 ### Input File 
  - Added Angular Velocity reading
