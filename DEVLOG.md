@@ -497,3 +497,5 @@
 20240426 - Added Axisymmetric (2D) input reading
          - FOUND ERROR ON AXISYMMETRIC acceleration (InteractionAlt, ACCELERATION[2] CHANGED to 1 !)
          ---> Z IS CHANGED TO Y AND HOOP IS Z AS IN PLANE STRAIN
+
+20240502 - Added Line To Input reader

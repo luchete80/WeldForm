@@ -493,6 +493,10 @@ int main(int argc, char **argv) try {
         // TODO: CHECK IF MESH IS NOT DEFINED
         mesh.push_back(new TriMesh);
         mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);
+      } else if (rigbody_type == "Line"){
+        mesh.push_back(new TriMesh);
+        mesh[0]->dimension = 2;
+        mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);        
       } else if (rigbody_type == "File"){
         string filename = "";
         readValue(rigbodies[0]["fileName"], 	filename); 
