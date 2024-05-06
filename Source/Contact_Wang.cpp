@@ -252,8 +252,13 @@ inline void Domain::CalcContactForcesWang(){
                //else           
                ref_tg = tgforce;
                //TODO: CHANGE DIMENSION !!!!!!
-               double dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119
-                 
+               double dS;
+               if (Dimension==3)
+                dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119
+               else {
+                 if (dom_bid_type == !AxiSymmetric)
+                    dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.25); //Fraser 3-119
+               } 
                
                 
                if (norm(ref_tg) < fr_sta * norm(Particles[P1] -> contforce) ){ //STATIC; NO SLIP
