@@ -278,7 +278,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //cout << "part 2000 acc "<<Particles[2000]->a<<endl;
     //#ifdef NONLOCK_SUM
     if (nonlock_sum) AccelReduction();
-    else {
+    else {  
+      cout << "ERROR. Locking Reduction not allowed for Axisymm 2D"<<endl;
       if (dom_bid_type == AxiSymmetric)
       for (int i=0; i<solid_part_count;i++){
         Particles[i]->a *= 2.0 * M_PI;

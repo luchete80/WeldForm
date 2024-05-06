@@ -8,7 +8,7 @@
   "cflFactor": 0.7,
   "autoTS": [false,false,false],
   "kernelGradCorr": false,  
-  "simTime": 0.01,
+  "simTime": 1.0e-2,
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.0,
   "outTime": 1.0e-4,
@@ -30,7 +30,7 @@
 [{
 	"type": "Line",
 	"zoneId": 10,
-	"start": [0.0, 0.61848, 0.0],
+	"start": [0.0, 0.6184999, 0.0],
   "partSide": 40,
 	"dim":   [0.2, 0.0, 0.0],
 	"translation": [1.0, 0.0, 0.0],
@@ -83,9 +83,9 @@
 },
 {
 	"zoneId": 	10,
-	"valueType": 	1,
+	"valueType": 	0,
   "amplitudeId" : 1,
-	"value": 		[ 0.0, -1.0, 0.0],
+	"value": 		[ 0.0, -10.0, 0.0],
 	"free": 		true
 }
 ]

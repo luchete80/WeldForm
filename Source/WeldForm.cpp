@@ -496,7 +496,8 @@ int main(int argc, char **argv) try {
       } else if (rigbody_type == "Line"){
         mesh.push_back(new TriMesh);
         mesh[0]->dimension = 2;
-        mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);        
+        //if (dim(0)>0.0 && dim(0)>1.0) cout << "ERROR. 
+        mesh[0]->AxisPlaneMesh(1, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
       } else if (rigbody_type == "File"){
         string filename = "";
         readValue(rigbodies[0]["fileName"], 	filename); 

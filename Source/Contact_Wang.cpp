@@ -198,6 +198,7 @@ inline void Domain::CalcContactForcesWang(){
             
             // if (P1 ==11062) {
             // cout << "Particle "<<P1 << ", contforce "<<Particles[P1] ->contforce<<endl;
+            // cout << "Particle P2 normal "<<Particles[P2]->normal<<endl; 
             // cout << "x_pred "<<x_pred<<endl;
             // cout << "x: "<<Particles[P1]->x <<endl;
             // cout << "dist: "<<dist <<endl;
