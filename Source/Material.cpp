@@ -91,7 +91,7 @@ inline double JohnsonCookDamage::CalcFractureStrain(const double &str_rate, cons
 
 ///////////////////////////////////////////////////
 //sy = [A + B(epl^n)] [1 + C ln(e_dot pl/e_dot 0) (1 - pow)]
-
+////////////// TEMPERATURE SHOULD BE IN CELSIUS
 
 inline double GMT::CalcYieldStress(const double &strain, const double &strain_rate, const double &temp)	{
   // OLD////////////////////////
@@ -123,4 +123,35 @@ inline double GMT::CalcYieldStress(const double &strain, const double &strain_ra
   sy = C1 * exp(C2*T)*pow(e,n1*T+n2) * exp((I1*T+I2)/e)*pow(er,m1*T+m2);
 	
 	return sy;
+}	
+
+inline double GMT::CalcTangentModulus(const double &plstrain, const double &strain_rate, const double &temp)	{
+	double sy, T_h;
+  
+	double e,er,T, sy;
+  e = plstrain; er = strain_rate; T = temp;
+  if      (plstrain < e_min) e = e_min;
+  else if (plstrain > e_max) e = e_max;
+
+  if      (strain_rate < er_min) er = er_min;
+  else if (strain_rate > er_max) er = er_max;
+
+  if      (temp < er_min) T = T_min;
+  else if (temp > er_max) T = T_max;
+  
+  //double sy = (A+B*pow(strain, n))*(1.0 + C * log (strain_rate/ eps_0) ) * (1.0 - pow(T_h,m));
+  double Et =0.;
+
+	Et = C1*exp(C2*T)*pow(er,m1*T+m2)* //constant part
+       pow(e,T*n1+n2-2.0)*(-I1*T-I2+e*(n1*T+n2))*exp((I1*T+I2)/e);
+
+  // if (strain_rate > eps_0)
+		// f = (1.0 + C * log(strain_rate/eps_0));
+   // if (plstrain > 0.)
+    // Et = n * B * pow(plstrain,n-1.) * f * (1.0-pow (T_h,m));
+   // else 
+     // //Et = Elastic().E()*0.1; //ARBITRARY! TODO: CHECK MATHEMATICALLY
+		// Et = Elastic().E();
+	 
+  return Et;
 }	
