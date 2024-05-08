@@ -9,6 +9,7 @@
   "kernelGradCorr": false,  
   "simTime": 0.01,
   "outTime": 1.0e-4,
+  "contAlgorithm": "Wang",
   "solver": "Mech-Fraser"
 }
 ,

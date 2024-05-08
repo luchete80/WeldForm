@@ -88,3 +88,39 @@ inline double JohnsonCookDamage::CalcFractureStrain(const double &str_rate, cons
 	if (ef>10.0) ef = 10.0;
 	return ef; //ABAQUS
 }
+
+///////////////////////////////////////////////////
+//sy = [A + B(epl^n)] [1 + C ln(e_dot pl/e_dot 0) (1 - pow)]
+
+
+inline double GMT::CalcYieldStress(const double &strain, const double &strain_rate, const double &temp)	{
+  // OLD////////////////////////
+	// double T_h = (temp - T_t) / (T_m - T_t);
+	// double sr = strain_rate;
+	// if (strain_rate == 0.0)
+		// sr = 1.e-5;
+    
+	// double sy = (A+B*pow(strain, n))*(1.0 + C * log (sr/ eps_0) ) * (1.0 - pow(T_h,m));  
+  
+  // NEW /////////////////////
+	double T_h = (temp - T_t) / (T_m - T_t);
+	double sr = strain_rate;
+  double f = 1.0;
+	// if (strain_rate > eps_0)
+		// f = (1.0 + C * log(strain_rate/eps_0));
+	
+	double e,er,T, sy;
+  e = strain; er = strain_rate; T = temp;
+  if      (strain < e_min) e = e_min;
+  else if (strain > e_max) e = e_max;
+
+  if      (strain_rate < er_min) er = er_min;
+  else if (strain_rate > er_max) er = er_max;
+
+  if      (temp < er_min) T = T_min;
+  else if (temp > er_max) T = T_max;
+  
+  sy = C1 * exp(C2*T)*pow(e,n1*T+n2) * exp((I1*T+I2)/e)*pow(er,m1*T+m2);
+	
+	return sy;
+}	
