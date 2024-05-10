@@ -265,7 +265,7 @@ inline void Domain::CalcContactForcesWang(){
                   omp_set_lock(&Particles[P1]->my_lock);
                     //if (P1 == 12415) cout << "ares (a - tgforce): "<<Particles[P1] -> a - tgforce<<endl;
                     Particles[P1] -> contforce -= tgforce / Particles[P1]->Mass;
-                    //Particles[P1] -> a -= tgforce / Particles[P1]->Mass;   
+                    Particles[P1] -> a -= tgforce / Particles[P1]->Mass;   
                     // Particles[P1]->q_fric_work  = dot(tgforce,vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)       
                     // Particles[P1]->friction_hfl = dot(tgforce,vr) / dS2; //J/(m3.s)                    
                   omp_unset_lock(&Particles[P1]->my_lock);
@@ -273,7 +273,7 @@ inline void Domain::CalcContactForcesWang(){
                   tgforce_dyn = fr_dyn * norm(Particles[P1] -> contforce) * tgforce/norm(tgforce);
                   omp_set_lock(&Particles[P1]->my_lock);
                     Particles[P1] -> contforce -= tgforce_dyn;
-                    //Particles[P1] -> a -= tgforce_dyn / Particles[P1]->Mass;
+                    Particles[P1] -> a -= tgforce_dyn / Particles[P1]->Mass;
                   omp_unset_lock(&Particles[P1]->my_lock);
 
                   if (thermal_solver){
