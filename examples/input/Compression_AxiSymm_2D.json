@@ -32,7 +32,7 @@
   "gridCoordSys": "AxiSymmetric",
 	"zoneId": 0,
 	"denseMode": 0,
-	"start": [ 0.01, 0.0, -0.028],
+	"start": [ 0.0025, 0.0, -0.028],
 	"dim": [0.15, 0.616, 0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
