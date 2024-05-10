@@ -126,7 +126,7 @@ inline double GMT::CalcYieldStress(const double &strain, const double &strain_ra
 }	
 
 inline double GMT::CalcTangentModulus(const double &plstrain, const double &strain_rate, const double &temp)	{
-	double sy, T_h;
+	double T_h;
   
 	double e,er,T, sy;
   e = plstrain; er = strain_rate; T = temp;
