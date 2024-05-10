@@ -12,7 +12,7 @@
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.0,
   "outTime": 1.0e-4,
-  "solver": "Mech-LeapFrog"
+  "solver": "Mech-Thermal-LeapFrog"
 }
 ,
 "Materials":[ 
@@ -23,7 +23,9 @@
 	"density0": 2700.0,   
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.3,
-	"yieldStress0": 300.0E6
+	"yieldStress0": 300.0E6,
+	"thermalCond": 150.0,
+	"thermalHeatCap": 960.0
 }],
 
 "RigidBodies": 
@@ -38,8 +40,8 @@
 }],
 "Contact":[ 
 {
-  "fricCoeffStatic": 0.2,
-  "fricCoeffDynamic": 0.2,
+  "fricCoeffStatic": 0.4,
+  "fricCoeffDynamic": 0.4,
   "penaltyFactor": 0.6,
   "heatConductance": false,
   "heatCondCoeff": 0.01
@@ -87,6 +89,11 @@
   "amplitudeId" : 1,
 	"value": 		[ 0.0, -10.0, 0.0],
 	"free": 		true
+}
+],
+"InitialConditions": [
+{
+	"Temp": 20.0
 }
 ]
 
