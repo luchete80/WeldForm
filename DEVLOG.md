@@ -500,3 +500,4 @@
 -------------------------------------------------------------
 20240502 - Added Line To Input reader
 20240513 - Added reading than one contact surfaces
+         - Changing normal calcs of planes

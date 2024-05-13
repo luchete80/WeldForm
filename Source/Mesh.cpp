@@ -182,11 +182,16 @@ inline void TriMesh::AxisPlaneMesh(const int &axis, bool positaxisorent, const V
 	///////////////////////////////////////////
 	//// MESH GENERATION END
 	cout << "Creating normals"<<endl;
-	for (int e = 0; e < element.Size(); e++){ 
-		double f=-1.;
-		if (positaxisorent) f= 1.;
-		element[e] -> normal (axis) = f;
-	}
+  CalcNormals();
+  if (positaxisorent){
+    for (int e = 0; e < element.Size(); e++)
+      element[e] -> normal= -element[e] -> normal;
+  }  
+	// for (int e = 0; e < element.Size(); e++){ 
+		// double f=-1.;
+		// if (positaxisorent) f= 1.;
+		// element[e] -> normal (axis) = f;
+	// }
 
   cout << "Created Mesh with "<< node.size()<< " nodes. "<<endl;
   if (node.size() == 0)

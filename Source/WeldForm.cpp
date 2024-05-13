@@ -494,12 +494,12 @@ int main(int argc, char **argv) try {
         if (rigbody_type == "Plane"){
           // TODO: CHECK IF MESH IS NOT DEFINED
           mesh.push_back(new TriMesh); 
-          mesh[mesh_count]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);
+          mesh[mesh_count]->AxisPlaneMesh(2, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);
         } else if (rigbody_type == "Line"){
           mesh.push_back(new TriMesh);
           mesh[mesh_count]->dimension = 2;
           //if (dim(0)>0.0 && dim(0)>1.0) cout << "ERROR. 
-          mesh[mesh_count]->AxisPlaneMesh(1, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
+          mesh[mesh_count]->AxisPlaneMesh(1, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
         } else if (rigbody_type == "File"){
           string filename = "";
           readValue(rigbodies[rb]["fileName"], 	filename); 
