@@ -30,11 +30,23 @@
 [{
 	"type": "Line",
 	"zoneId": 10,
-	"start": [0.0, 0.6184999, 0.0],
+	"start": [0.0, 0.6185, 0.0],
   "partSide": 40,
 	"dim":   [0.2, 0.0, 0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
+}],
+
+"RigidBodies": 
+[{
+	"type": "Line",
+	"zoneId": 11,
+	"start": [0.0, -0.003, 0.0],
+  "partSide": 40,
+	"dim":   [0.2, 0.0, 0.0],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1],
+  "flipNormals": true
 }],
 "Contact":[ 
 {
@@ -58,14 +70,6 @@
 	"scale": [1, 1, 1]
 }],
 
-"DomainZones": [
-{
-	"id": 5,
-	"start":[-1.0, 0.0,0.0],
-	"end": 	[ 1.0, 0.02000,0.0]
-}
-],
-
 "Amplitudes": [
 {
 	"id": 		1,
@@ -76,7 +80,7 @@
 ],
 "BoundaryConditions": [
 {
-	"zoneId": 	5,
+	"zoneId": 	11,
 	"valueType": 0,
 	"value": 		[ 0.0, 0.0, 0.0],
 	"free": 		true

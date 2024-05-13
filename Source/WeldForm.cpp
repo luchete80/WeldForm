@@ -452,112 +452,119 @@ int main(int argc, char **argv) try {
     
     //////////////////////////////////////////////////////////
     ////////////////// RIGID BODIES //////////////////////////
-    string rigbody_type;
-    bool contact = false;
-    if (readValue(rigbodies[0]["type"],rigbody_type))
-      contact = true;
-		
-		if (contact){
-			Vec3_t dim;
+    std::vector<TriMesh *> mesh;
+    int mesh_count = 0;
+    for (int rb = 0; rb < rigbodies.size();rb++){
+      string rigbody_type;
+      bool contact = false;
+      if (readValue(rigbodies[rb]["type"],rigbody_type))
+        contact = true;
       
-			readVector(rigbodies[0]["start"], 	start);       
-			readVector(rigbodies[0]["dim"], 	dim); 
-			bool flipnormals = false;
-			readValue(rigbodies[0]["flipNormals"],flipnormals);
-			
-			double heatcap = 1.;
-			readValue(rigbodies[0]["thermalHeatCap"],heatcap);
-			cout << "Reading Contact surface "<<endl;
-			//TODO: WRitE TO PArTiclES
-			if (rigbody_type == "File"){
-				// string filename = "";
-				// readValue(rigbodies[0]["fileName"], 	filename); 
-				// cout << "Reading Mesh input file..." << endl;
-				// SPH::NastranReader reader("Tool.nas", flipnormals);
-			}
-			else {
-				if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
-					throw new Fatal("ERROR: Contact Plane Surface should have one null dimension");
-			}
-			std::vector<TriMesh *> mesh;
-			
-			cout << "Set contact to ";
+      if (contact){
+        Vec3_t dim;
+        
+        readVector(rigbodies[rb]["start"], 	start);       
+        readVector(rigbodies[rb]["dim"], 	dim); 
+        bool flipnormals = false;
+        readValue(rigbodies[rb]["flipNormals"],flipnormals);
+        
+        double heatcap = 1.;
+        readValue(rigbodies[rb]["thermalHeatCap"],heatcap);
+        cout << "Reading Contact surface "<<endl;
+        //TODO: WRitE TO PArTiclES
+        if (rigbody_type == "File"){
+          // string filename = "";
+          // readValue(rigbodies[0]["fileName"], 	filename); 
+          // cout << "Reading Mesh input file..." << endl;
+          // SPH::NastranReader reader("Tool.nas", flipnormals);
+        }
+        else {
+          if (dim (0)!=0. && dim(1) != 0. && dim(2) !=0. && rigbody_type == "Plane")
+            throw new Fatal("ERROR: Contact Plane Surface should have one null dimension");
+        }
+        
+        cout << "Set contact to ";
 
-      cout << "true."<<endl;
-      dom.contact = true;
-      cout << "Reading contact mesh..."<<endl;
-      //TODO: CHANGE TO EVERY DIRECTION
-      int dens = 10;
-      readValue(rigbodies[0]["partSide"],dens);
-      if (rigbody_type == "Plane"){
-        // TODO: CHECK IF MESH IS NOT DEFINED
-        mesh.push_back(new TriMesh);
-        mesh[0]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);
-      } else if (rigbody_type == "Line"){
-        mesh.push_back(new TriMesh);
-        mesh[0]->dimension = 2;
-        //if (dim(0)>0.0 && dim(0)>1.0) cout << "ERROR. 
-        mesh[0]->AxisPlaneMesh(1, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
-      } else if (rigbody_type == "File"){
-        string filename = "";
-        readValue(rigbodies[0]["fileName"], 	filename); 
-        cout << "Reading Mesh input file " << filename <<endl;
-        SPH::NastranReader reader(filename.c_str());
-          mesh.push_back (new SPH::TriMesh(reader,flipnormals ));
-      }
+        cout << "true."<<endl;
+        dom.contact = true;
+        cout << "Reading contact mesh..."<<endl;
+        //TODO: CHANGE TO EVERY DIRECTION
+        int dens = 10;
+        readValue(rigbodies[rb]["partSide"],dens);
+        if (rigbody_type == "Plane"){
+          // TODO: CHECK IF MESH IS NOT DEFINED
+          mesh.push_back(new TriMesh); 
+          mesh[mesh_count]->AxisPlaneMesh(2, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), start(2)),dens);
+        } else if (rigbody_type == "Line"){
+          mesh.push_back(new TriMesh);
+          mesh[mesh_count]->dimension = 2;
+          //if (dim(0)>0.0 && dim(0)>1.0) cout << "ERROR. 
+          mesh[mesh_count]->AxisPlaneMesh(1, false, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
+        } else if (rigbody_type == "File"){
+          string filename = "";
+          readValue(rigbodies[rb]["fileName"], 	filename); 
+          cout << "Reading Mesh input file " << filename <<endl;
+          SPH::NastranReader reader(filename.c_str());
+            mesh.push_back (new SPH::TriMesh(reader,flipnormals ));
+        }
 
-      double scalefactor = 1.0d;
-      readValue(rigbodies[0]["scaleFactor"],scalefactor);
-      if (scalefactor != 1.0){
-        cout << "Scaling mesh..."<<endl;
-        mesh[0]->Scale(scalefactor);
-      }
-      cout << "Creating Spheres.."<<endl;
-      //mesh.v = Vec3_t(0.,0.,);
-      mesh[0]->CalcSpheres(); //DONE ONCE
-      double hfac = 1.1;	//Used only for Neighbour search radius cutoff
-      cout << "Adding mesh particles ...";
-      int id;
-      readValue(rigbodies[0]["zoneId"],id);
-      dom.AddTrimeshParticles(mesh[0], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
+        double scalefactor = 1.0d;
+        readValue(rigbodies[rb]["scaleFactor"],scalefactor);
+        if (scalefactor != 1.0){
+          cout << "Scaling mesh..."<<endl;
+          mesh[mesh_count]->Scale(scalefactor);
+        }
+        cout << "Creating Spheres.."<<endl;
+        //mesh.v = Vec3_t(0.,0.,);
+        mesh[mesh_count]->CalcSpheres(); //DONE ONCE
+        double hfac = 1.1;	//Used only for Neighbour search radius cutoff
+        cout << "Adding mesh particles ...";
+        int id;
+        readValue(rigbodies[rb]["zoneId"],id);
+        dom.AddTrimeshParticles(mesh[mesh_count], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 
-      double penaltyfac = 0.5;
-      std::vector<double> fric_sta(1), fric_dyn(1), heat_cond(1);
-      readValue(contact_[0]["fricCoeffStatic"], 	fric_sta[0]); 
-      readValue(contact_[0]["fricCoeffDynamic"], 	fric_dyn[0]); 
-      readValue(contact_[0]["heatCondCoeff"], 	  heat_cond[0]);
-      
-      readValue(contact_[0]["penaltyFactor"], 	penaltyfac); 
+        double penaltyfac = 0.5;
+        std::vector<double> fric_sta(1), fric_dyn(1), heat_cond(1);
+        readValue(contact_[0]["fricCoeffStatic"], 	fric_sta[0]); 
+        readValue(contact_[0]["fricCoeffDynamic"], 	fric_dyn[0]); 
+        readValue(contact_[0]["heatCondCoeff"], 	  heat_cond[0]);
+        
+        readValue(contact_[0]["penaltyFactor"], 	penaltyfac); 
+        
+        mesh_count ++;
 
-			// readValue(rigbodies[0]["contAlgorithm"],cont_alg);
-      if (cont_alg == "Seo") {
-        cout << "Contact Algorithm set to SEO"<<endl;
-        dom.contact_alg = Seo;
-      } else if (cont_alg == "LSDyna") {
-        dom.contact_alg = LSDyna;
-      }else {
-        cout << "Contact Algorithm set to WANG"<<endl;
-      }
-      
-      //cout << "Contact Algortihm: "<< cont_alg.c_str() <<end;
-      
-      bool heat_cond_ = false;
-      if (readValue(contact_[0]["heatConductance"], 	heat_cond_)){
-        dom.cont_heat_cond = true;
-        dom.contact_hc = heat_cond[0];
-      }
+        // readValue(rigbodies[0]["contAlgorithm"],cont_alg);
+        if (cont_alg == "Seo") {
+          cout << "Contact Algorithm set to SEO"<<endl;
+          dom.contact_alg = Seo;
+        } else if (cont_alg == "LSDyna") {
+          dom.contact_alg = LSDyna;
+        }else {
+          cout << "Contact Algorithm set to WANG"<<endl;
+        }
+        
+        //cout << "Contact Algortihm: "<< cont_alg.c_str() <<end;
+        
+        bool heat_cond_ = false;
+        if (readValue(contact_[0]["heatConductance"], 	heat_cond_)){
+          dom.cont_heat_cond = true;
+          dom.contact_hc = heat_cond[0];
+        }
+        
+
+        dom.friction_dyn = fric_dyn[0];
+        dom.friction_sta = fric_sta[0];
+        cout << "Contact Friction Coefficients, Static: "<<dom.friction_sta<<", Dynamic: "<< dom.friction_sta<<endl;
+        
+        dom.PFAC = penaltyfac;
+        dom.DFAC = 0.0;
+        cout << "Contact Penalty Factor: "<<dom.PFAC<<", Damping Factor: " << dom.DFAC<<endl;      
+      } 
+      else 
+        cout << "false. "<<endl;      
+      } //Rigid bodies
       
 
-      dom.friction_dyn = fric_dyn[0];
-      dom.friction_sta = fric_sta[0];
-      cout << "Contact Friction Coefficients, Static: "<<dom.friction_sta<<", Dynamic: "<< dom.friction_sta<<endl;
-      
-      dom.PFAC = penaltyfac;
-      dom.DFAC = 0.0;
-      cout << "Contact Penalty Factor: "<<dom.PFAC<<", Damping Factor: " << dom.DFAC<<endl;      
-		} 
-    else 
-      cout << "false. "<<endl;
     
 		
 		
