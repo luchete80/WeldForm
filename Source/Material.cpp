@@ -111,16 +111,14 @@ inline double GMT::CalcYieldStress(const double &strain, const double &strain_ra
 	
 	double e,er,T, sy;
   e = strain; er = strain_rate; T = temp;
-  if      (strain < e_min) e = e_min;
-  else if (strain > e_max) e = e_max;
+  if      (e < e_min) e = e_min;
+  else if (e > e_max) e = e_max;
+
+  if      (er < er_min) er = er_min;
+  else if (er > er_max) er = er_max;
   
-  er = strain_rate;
-  if      (strain_rate < er_min) er = er_min;
-  else if (strain_rate > er_max) er = er_max;
-  
-  T = temp;
-  if      (temp < T_min) T = T_min;
-  else if (temp > T_max) T = T_max;
+  if      (T < T_min) T = T_min;
+  else if (T > T_max) T = T_max;
   
   sy = C1 * exp(C2*T)*pow(e,n1*T+n2) * exp((I1*T+I2)/e)*pow(er,m1*T+m2);
 	
