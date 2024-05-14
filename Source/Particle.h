@@ -30,9 +30,11 @@
 #define TH_BC_CONVECTION	1
 #define TH_BC_CONDUCTION	2
 
-#define BILINEAR				0
+//TODO: PASS TO MATERIAL CLASS
+#define BILINEAR				     0
 #define HOLLOMON				1 //POWER LAW
 #define JOHNSON_COOK		2
+#define _GMT_	                           3
 
 #include "Matrix.h"  /////ONLY FOR IMPLICIT SOLVER
 

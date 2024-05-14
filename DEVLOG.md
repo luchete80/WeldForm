@@ -501,3 +501,6 @@
 20240502 - Added Line To Input reader
 20240513 - Added reading than one contact surfaces
          - Changing normal calcs of planes
+20240514 - Added GMT material to inpt
+         - Begining to add hot compression example with GMT mat
+         - Corrected yield stress calc with correct Initial Temp

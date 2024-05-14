@@ -228,6 +228,11 @@ int main(int argc, char **argv) try {
     double Et, Ep;  //Hardening (only for bilinear and multilear)
     std::vector<double> c;
     c.resize(10);
+    std::vector<double> e_range (2,0.0);
+    std::vector<double> er_range(2,0.0);
+    std::vector<double> T_range (2,0.0);
+    e_range[1]=er_range[1]=T_range[1]=1.0e10;
+    
     string mattype = "Bilinear";
     cout << "Reading Material.."<<endl;
     cout << "Type.."<< endl; readValue(material[0]["type"], 		mattype);
@@ -236,6 +241,10 @@ int main(int argc, char **argv) try {
     readValue(material[0]["poissonsRatio"], 	nu);
     readValue(material[0]["yieldStress0"], 	Fy);
     readArray(material[0]["const"], 		c);
+    readArray(material[0]["strRange"],  e_range );
+    readArray(material[0]["strdotRange"], er_range);
+    readArray(material[0]["tempRange"],   T_range );
+    
     Material_ *mat; //SINCE DAMAGE MATERIAL, MATERIAL ALWAYS HAS TO BE ASSIGNED
     Elastic_ el(E,nu);
     cout << "Mat type  "<<mattype<<endl;
@@ -253,7 +262,20 @@ int main(int argc, char **argv) try {
                                //A ,B,,n, c,eps_0,m,T_m, T_transition
       mat = new JohnsonCook(el,c[0],c[1],c[2],c[3],c[4], c[5],c[6],c[7]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	 //FIRST IS n_ than m
       cout << "Material Constants, A: "<<c[0]<<", B: "<<c[1]<<", n: "<<c[2]<<"C: "<<c[3]<<", eps_0: "<<c[4]<<"m: "<<c[5]<<", T_m: "<<c[6]<<", T_t: "<<c[7]<<endl;
-    } else                              throw new Fatal("Invalid material type.");
+    } else if (mattype == "GMT") {
+      //Order of input is: n1,n2  c1,c2, m1,m2, I1, I2
+      mat = new GMT(el,c[0],c[1],c[2],c[3],c[4], c[5],c[6],c[7],
+                       e_range [0],e_range [1],
+                       er_range[0],er_range[1],
+                       T_range [0],T_range [1]); //First is hardening // A,B,C,m,n_,eps_0,T_m, T_t);	 //FIRST IS n_ than m
+      cout << "GMT Material Constants: "<<endl<<
+                                  "n1: "<<c[0]<<", n2: "<<c[1]<<endl<<
+                                  "c1: "<<c[2]<<", c2: "<<c[3]<<endl<<
+                                  "m1: "<<c[4]<<", m2: "<<c[5]<<endl<<
+                                  "I1: "<<c[6]<<", I2: "<<c[7]<<endl;
+    }    
+    
+    else                              throw new Fatal("Invalid material type.");
     
 		string damage_mod="";
 		readValue(material[0]["damageModel"],damage_mod);
@@ -663,15 +685,9 @@ int main(int argc, char **argv) try {
       if      ( mattype == "Bilinear" )     dom.Particles[a]->Ep 			= Ep;//HARDENING 
       else if ( mattype == "Hollomon" )     dom.Particles[a]->Material_model  = HOLLOMON;
       else if ( mattype == "JohnsonCook" )  dom.Particles[a]->Material_model  = JOHNSON_COOK;
+      else if ( mattype == "GMT" )          dom.Particles[a]->Material_model  = _GMT_;
 			dom.Particles[a]->mat             = mat; //NOW MATERIAL IS GIVEN FOR EVERY MATERIAL MODEL (SINCE DAMAGE USES IT)
-			if (mattype == "Hollomon" || mattype == "JohnsonCook"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
-       dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,0.0);    
-      } else {
-        if (Fy>0.0)
-          dom.Particles[a]->Sigmay		      = Fy;
-        else
-          throw new Fatal("Invalid Initial Yield Stress.");
-      }
+
       dom.Particles[a]->Fail			= 1;
       dom.Particles[a]->Alpha			= alpha;
       dom.Particles[a]->Beta			= beta;
@@ -687,6 +703,17 @@ int main(int argc, char **argv) try {
       dom.Particles[a]->cp_T = cp_T;
       if (dom.thermal_solver)
         dom.Particles[a]->T = IniTemp;
+
+
+			if (mattype == "Hollomon" || mattype == "JohnsonCook" || mattype == "GMT"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
+       dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,dom.Particles[a]->T);    
+      } else {
+        if (Fy>0.0)
+          dom.Particles[a]->Sigmay		      = Fy;
+        else
+          throw new Fatal("Invalid Initial Yield Stress.");
+      }
+
     }
     
     cout << "Reduction Type is: ";

@@ -121,7 +121,12 @@ inline double GMT::CalcYieldStress(const double &strain, const double &strain_ra
   else if (T > T_max) T = T_max;
   
   sy = C1 * exp(C2*T)*pow(e,n1*T+n2) * exp((I1*T+I2)/e)*pow(er,m1*T+m2);
-	
+  // cout << "n1 n2 C1 c2 m1 m2 I1 i2" << n1 << ", "<<n2 << ", "
+                                    // << C1 << ", "<<C2 << ", "
+                                    // << m1 << ", "<<m2 << ", "
+                                    // << I1 << ", "<<I2 << ", "<<endl;
+  // cout << "e, er, T " << e <<", "<<er<<", "<<T<<endl; 
+	// cout << "sy "<< sy<<endl;
 	return sy;
 }	
 
