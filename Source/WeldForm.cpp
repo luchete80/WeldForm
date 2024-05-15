@@ -543,6 +543,7 @@ int main(int argc, char **argv) try {
         cout << "Adding mesh particles ...";
         int id;
         readValue(rigbodies[rb]["zoneId"],id);
+        cout << "Id: "<<id <<endl;
         dom.AddTrimeshParticles(mesh[mesh_count], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
 
         double penaltyfac = 0.5;

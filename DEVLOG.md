@@ -504,3 +504,4 @@
 20240514 - Added GMT material to inpt
          - Begining to add hot compression example with GMT mat
          - Corrected yield stress calc with correct Initial Temp
+20240515 - FIXED Two surfaces contact example input

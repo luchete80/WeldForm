@@ -35,19 +35,18 @@
 	"dim":   [0.2, 0.0, 0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
-}],
-
-"RigidBodies": 
-[{
+},
+{
 	"type": "Line",
 	"zoneId": 11,
-	"start": [0.0, -0.003, 0.0],
+	"start": [0.0, -0.0065, 0.0],
   "partSide": 40,
 	"dim":   [0.2, 0.0, 0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1],
   "flipNormals": true
 }],
+
 "Contact":[ 
 {
   "fricCoeffStatic": 0.4,
