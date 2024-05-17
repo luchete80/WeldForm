@@ -18,10 +18,10 @@ TriMesh::TriMesh(NastranReader &nr, bool flipnormals){
   dimension = nr.dim;
   //Insert nodes
   for (int n=0;n<nr.node_count;n++){
-    if (!flipnormals)
+    //if (!flipnormals)
       node.Push(new Vec3_t(nr.node[3*n],nr.node[3*n+1],nr.node[3*n+2]));
-    else 
-      node.Push(new Vec3_t(nr.node[3*n+1],nr.node[3*n],nr.node[3*n+2]));
+    // else 
+      // node.Push(new Vec3_t(nr.node[3*n+1],nr.node[3*n],nr.node[3*n+2]));
     
 		node_v.Push(new Vec3_t(0.,0.,0.));
   }
@@ -29,7 +29,10 @@ TriMesh::TriMesh(NastranReader &nr, bool flipnormals){
   //cout << "Normals"<<endl;
   cout << "Writing elements..."<<endl;
   for (int e=0;e<nr.elem_count;e++){
-    element.Push(new Element(nr.elcon[3*e],nr.elcon[3*e+1],nr.elcon[3*e+2]));		  
+    double cz = nr.elcon[3*e+2];
+    if (dimension == 2) cz = 0;
+    if (!flipnormals)   element.Push(new Element(nr.elcon[3*e],nr.elcon[3*e+1],cz));		  
+    else                element.Push(new Element(nr.elcon[3*e+1],nr.elcon[3*e],cz));		        
     Vec3_t v;
 		if (dimension ==3) v = ( *node[nr.elcon[3*e]] + *node[nr.elcon[3*e+1]] + *node[nr.elcon[3*e+2]] ) / 3. ;
     else               v = ( *node[nr.elcon[3*e]] + *node[nr.elcon[3*e+1]])  / 2. ;

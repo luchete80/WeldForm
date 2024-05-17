@@ -505,3 +505,4 @@
          - Begining to add hot compression example with GMT mat
          - Corrected yield stress calc with correct Initial Temp
 20240515 - FIXED Two surfaces contact example input
+20240517 - FIXED FLIP NORMALS ON NASTRAN FILE (WAS INVERTING X AND Y COORDINATES INSTEAD OF CONNECTIVITY)

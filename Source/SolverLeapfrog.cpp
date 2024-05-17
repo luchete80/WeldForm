@@ -43,13 +43,17 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
   double last_output_time;
   double prev_deltat;
   
+  cout << "Initial Checks"<<endl;
 	InitialChecks();
+   cout << "Cell  Inits"<<endl;
 	CellInitiate();
+   cout << "List  Inits"<<endl;
 	ListGenerate();
+  cout << "Ok. "<<endl;
 	PrintInput(TheFileKey);
 	TimestepCheck();
 	WholeVelocity();
-	
+	cout << "Ok. "<<endl;
   ofstream ofprop("Prop.csv", std::ios::out);
 	//Initial model output
 	if (TheFileKey!=NULL) {
@@ -77,7 +81,7 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
 		for (int i=0; i<Particles.Size(); i++)
 			Particles [i] -> ID_orig = Particles [i] -> ID;
 	}
-
+  cout << "Calculate Surface" <<endl;
   double dS;
 	if (contact) { //Calculate particle Stiffness
 		for (int i=0; i<Particles.Size(); i++){
