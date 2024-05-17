@@ -40,7 +40,12 @@ inline void Domain::CellInitiate () {
 	if (DomMin(0)<BLPF(0)) BLPF(0) = DomMin(0);
 	if (DomMin(1)<BLPF(1)) BLPF(1) = DomMin(1);
 	if (DomMin(2)<BLPF(2)) BLPF(2) = DomMin(2);
-
+  
+  cout << "Dom Min : "<<DomMin(0)<<", " <<DomMin(1)<<", "<<DomMin(2)<<endl;
+  cout << "Dom Max : "<<DomMax(0)<<", " <<DomMax(1)<<", "<<DomMax(2)<<endl;
+  
+  cout << "TRPR : "   <<TRPR(0)<<", " <<TRPR(1)<<", "<<TRPR(2)<<endl;
+  cout << "BLPF : "   <<BLPF(0)<<", " <<BLPF(1)<<", "<<BLPF(2)<<endl;
 
 	//Because of Hexagonal close packing in x direction domain is modified
 	if (!BC.Periodic[0]) {TRPR(0) += hmax/2;	BLPF(0) -= hmax/2;}else{TRPR(0) += R; BLPF(0) -= R;}
@@ -100,6 +105,7 @@ inline void Domain::CellInitiate () {
     if (BC.Periodic[2]) DomSize[2] = (TRPR(2)-BLPF(2));
 
     // Initiate Head of Chain array for Linked-List
+    if (CellNo[0] ==0) cout << "ERROR Generating HOC "<<endl;
     HOC = new int**[(int) CellNo[0]];
     for(int i =0; i<CellNo[0]; i++){
        HOC[i] = new int*[CellNo[1]];
@@ -162,8 +168,8 @@ inline void Domain::ListGenerate ()
                     // if ((Particles[a]->x(1) - TRPR(1)) <= hmax) j=CellNo[1]-1;
                             // else std::cout<<"Leaving j>=CellNo"<<std::endl;
             // }
-
 			temp = HOC[i][j][0];
+
 			HOC[i][j][0] = a;
 			Particles[a]->LL = temp;
 			Particles[a]->CC[0] = i;

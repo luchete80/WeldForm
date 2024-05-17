@@ -506,3 +506,6 @@
          - Corrected yield stress calc with correct Initial Temp
 20240515 - FIXED Two surfaces contact example input
 20240517 - FIXED FLIP NORMALS ON NASTRAN FILE (WAS INVERTING X AND Y COORDINATES INSTEAD OF CONNECTIVITY)
+         - Added error if CellNo[0] = 0 So there is not seg fault.
+         - FOUND error on Scientific notation NASTRAN reader. 
+         

@@ -109,7 +109,7 @@ void NastranReader::read( char* fName){
       l++;
     }
 		file.close();
-    
+     
     cout << node_count <<" nodes and "<<elem_count<< " elements found."<<endl;
 
 		// Strip all the inline or block comments (C++ style) from the rawData
@@ -171,6 +171,7 @@ void NastranReader::read( char* fName){
 			else if (d > max[i])
 				max[i] = d;
 		}
+    //cout <<endl;
 		l++;
   }
 	
