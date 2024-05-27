@@ -12,12 +12,12 @@
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.0,
   "outTime": 1.0e-4,
-  "solver": "Mech-Thermal-LeapFrog"
+  "solver": "Mech-Thermal"
 }
 ,
 "Materials":[ 
 {
-	"id": "Solid",
+	"id": "Solid",  
 	"type": "Bilinear",
   "const": [0.0],
 	"density0": 2700.0,   
@@ -85,7 +85,7 @@
 },
 {
 	"zoneId": 	10,
-	"valueType": 	1,
+	"valueType": 	0,
   "amplitudeId" : 1,
 	"value": 		[ 0.0, -1.0, 0.0],
 	"free": 		true

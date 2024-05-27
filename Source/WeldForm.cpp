@@ -568,7 +568,8 @@ int main(int argc, char **argv) try {
         //cout << "Contact Algortihm: "<< cont_alg.c_str() <<end;
         
         bool heat_cond_ = false;
-        if (readValue(contact_[0]["heatConductance"], 	heat_cond_)){
+        readValue(contact_[0]["heatConductance"], 	heat_cond_);
+        if (heat_cond_) {
           dom.cont_heat_cond = true;
           dom.contact_hc = heat_cond[0];
         }
@@ -580,7 +581,8 @@ int main(int argc, char **argv) try {
         
         dom.PFAC = penaltyfac;
         dom.DFAC = 0.0;
-        cout << "Contact Penalty Factor: "<<dom.PFAC<<", Damping Factor: " << dom.DFAC<<endl;      
+        cout << "Contact Penalty Factor: "<<dom.PFAC<<", Damping Factor: " << dom.DFAC<<endl; 
+        cout << "Contact heat conduction set to " << dom.cont_heat_cond << endl;
       } 
       else 
         cout << "false. "<<endl;      

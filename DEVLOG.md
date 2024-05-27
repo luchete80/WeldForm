@@ -508,4 +508,5 @@
 20240517 - FIXED FLIP NORMALS ON NASTRAN FILE (WAS INVERTING X AND Y COORDINATES INSTEAD OF CONNECTIVITY)
          - Added error if CellNo[0] = 0 So there is not seg fault.
          - FOUND error on Scientific notation NASTRAN reader. 
-         
+20240527 - Added state of contact conduction at the begin of the solution.  
+         - Fixed contact conduction reading 
