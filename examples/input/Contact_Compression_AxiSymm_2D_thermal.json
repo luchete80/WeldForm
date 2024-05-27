@@ -85,9 +85,9 @@
 },
 {
 	"zoneId": 	10,
-	"valueType": 	0,
+	"valueType": 	1,
   "amplitudeId" : 1,
-	"value": 		[ 0.0, -10.0, 0.0],
+	"value": 		[ 0.0, -1.0, 0.0],
 	"free": 		true
 }
 ],
