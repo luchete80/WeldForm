@@ -382,7 +382,6 @@ int main(int argc, char **argv) try {
     cout << "Grid Coordinate System" << endl;  readValue(domblock[0]["gridCoordSys"], 	gridCS); //0: Box
     cout << "Slice Angle " << endl;  readValue(domblock[0]["sliceAngle"], 	slice_ang); //0: Box
     readBoolVector(domblock[0]["sym"], 	sym); //0: Box
-    printf("Domain Dimension: %.10e\n",L[1]);
     for (int i=0;i<3;i++){ //TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
 			dom.DomMin(0) = -L[i];
