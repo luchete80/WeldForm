@@ -281,7 +281,6 @@ inline void Domain::CalcContactForcesWang(){
                   omp_unset_lock(&Particles[P1]->my_lock);
 
                   if (cont_heat_fric){
-                    cout << "FRICTION "<<endl;
                     //atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;                      
                     omp_set_lock(&Particles[P1]->my_lock);
                     abs_fv = abs(dot(tgforce_dyn,vr));
