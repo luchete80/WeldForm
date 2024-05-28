@@ -158,6 +158,9 @@ inline Domain::Domain ()
   nonlock_sum = true;
   cont_heat_gen   = false;
   cont_heat_cond  = false;
+  cont_heat_fric = false;
+  pl_heating = false;
+  
   accum_cont_heat_cond = 0.;
   
   dom_bid_type = PlaneStress;

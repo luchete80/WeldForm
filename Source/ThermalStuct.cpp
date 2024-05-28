@@ -12,28 +12,30 @@ inline void Domain::CalcThermalExpStrainRate(){
 }
 
 inline void Domain::CalcPlasticWorkHeat(const double &dt){
-  double f;
-  double plw, pl_sum = 0.;
-	#pragma omp parallel for schedule (static) num_threads(Nproc) private (f)
-	for (int p=0;p<Particles.Size();p++){
-    if (p < solid_part_count){
-      f = Particles[p]->Mass / Particles[p]->Density; //Vol
-      Particles[p]->CalcPlasticWorkHeat(dt);	//Add Thermal expansion Strain Rate Term
+  if (pl_heating){
+    double f;
+    double plw, pl_sum = 0.;
+    #pragma omp parallel for schedule (static) num_threads(Nproc) private (f)
+    for (int p=0;p<Particles.Size();p++){
+      if (p < solid_part_count){
+        f = Particles[p]->Mass / Particles[p]->Density; //Vol
+        Particles[p]->CalcPlasticWorkHeat(dt);	//Add Thermal expansion Strain Rate Term
+        
       
-    
-      // plw = f * Particles[p]->q_plheat;
-      // //#pragma omp atomic
-      // omp_set_lock(&dom_lock);            
-        // pl_sum += plw;     
-      // omp_unset_lock(&dom_lock);	
+        // plw = f * Particles[p]->q_plheat;
+        // //#pragma omp atomic
+        // omp_set_lock(&dom_lock);            
+          // pl_sum += plw;     
+        // omp_unset_lock(&dom_lock);	
+      }
     }
-	}
-  //Serialized
-  for (int p=0;p<solid_part_count;p++)
-      pl_sum += Particles[p]->Mass / Particles[p]->Density *Particles[p]->q_plheat;
-    
-  plastic_work += pl_sum * dt;  
-	//cout << "Max plastic heat gen: "<<max<<endl;
+    //Serialized
+    for (int p=0;p<solid_part_count;p++)
+        pl_sum += Particles[p]->Mass / Particles[p]->Density *Particles[p]->q_plheat;
+      
+    plastic_work += pl_sum * dt;  
+    //cout << "Max plastic heat gen: "<<max<<endl;
+  }
 }
 
 inline void Domain::ThermalStructSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {

@@ -510,3 +510,9 @@
          - FOUND error on Scientific notation NASTRAN reader. 
 20240527 - Added state of contact conduction at the begin of the solution.  
          - Fixed contact conduction reading 
+20240528 - Added feature of assign initial diff conditions for different Zone IDs
+         - Fixed contact BC with amplitude function (there was readng zero value)
+         - Added amplitude factor to be 1.0 by default (it was zero)
+         - Fixed contact conduction and friction heat for Axisymmetric
+         - Added optional plastic work heat
+         

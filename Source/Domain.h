@@ -329,6 +329,8 @@ public:
 	
 		bool cont_heat_gen;     //Contact heat generation
     bool cont_heat_cond;    //Contact Heat conduction
+    bool cont_heat_fric;    //Contact heat friction
+    bool pl_heating;    //Contact heat friction
     
     double contact_hc;      //Conductance coeff
     

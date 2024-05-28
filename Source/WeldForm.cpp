@@ -89,7 +89,7 @@ void UserAcc(SPH::Domain & domi)
   if (domi.contact){
     for (int bc=0;bc<domi.bConds.size();bc++){
       for (int m=0;m<domi.trimesh.size();m++){
-        if (domi.trimesh[m]->id == domi.bConds[bc].zoneId)
+        if (domi.trimesh[m]->id == domi.bConds[bc].zoneId){
           if (domi.bConds[bc].valueType == 0) { ///constant
             domi.trimesh[m]->SetVel(domi.bConds[bc].value);
             domi.trimesh[m]->SetRotAxisVel(domi.bConds[bc].value_ang);
@@ -99,12 +99,15 @@ void UserAcc(SPH::Domain & domi)
               if(domi.amps[i].id == domi.bConds[bc].ampId){
                 double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
                 Vec3_t vec = val * domi.bConds[bc].value;
-                //cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
+                // cout << "Time, vec, ampfactor"<<domi.getTime()<< ", "<<vec<<", amp "<<domi.bConds[bc].ampFactor<<endl;
+                // cout << "bc val "<<domi.bConds[bc].value<<endl;
+                // cout << "amp val " <<domi.amps[i].getValAtTime(domi.getTime())<<endl;
                 domi.trimesh[m]->SetVel(vec);
               }
  				// readValue(bc["amplitudeId"], 		bcon.ampId);
 				// readValue(bc["amplitudeFactor"], 	bcon.ampFactor);           
           }
+        }//zoneID
       }//mesh
     }//bcs
     
@@ -234,6 +237,7 @@ int main(int argc, char **argv) try {
     e_range[1]=er_range[1]=T_range[1]=1.0e10;
     
     string mattype = "Bilinear";
+    bool plastic_heat = false;
     cout << "Reading Material.."<<endl;
     cout << "Type.."<< endl; readValue(material[0]["type"], 		mattype);
     cout << "Density.."<< endl; readValue(material[0]["density0"], 		rho);
@@ -244,6 +248,9 @@ int main(int argc, char **argv) try {
     readArray(material[0]["strRange"],  e_range );
     readArray(material[0]["strdotRange"], er_range);
     readArray(material[0]["tempRange"],   T_range );
+    readValue(material[0]["plasticHeat"], plastic_heat);
+    
+    dom.pl_heating = plastic_heat;
     
     Material_ *mat; //SINCE DAMAGE MATERIAL, MATERIAL ALWAYS HAS TO BE ASSIGNED
     Elastic_ el(E,nu);
@@ -568,10 +575,16 @@ int main(int argc, char **argv) try {
         //cout << "Contact Algortihm: "<< cont_alg.c_str() <<end;
         
         bool heat_cond_ = false;
+        bool heat_fric_ = false;
         readValue(contact_[0]["heatConductance"], 	heat_cond_);
+        readValue(contact_[0]["heatFriction"], 	heat_fric_);
         if (heat_cond_) {
           dom.cont_heat_cond = true;
           dom.contact_hc = heat_cond[0];
+        }
+
+        if (heat_fric_) {
+          dom.cont_heat_fric = true;
         }
         
 
@@ -616,7 +629,7 @@ int main(int argc, char **argv) try {
 			// MaterialData* data = new MaterialData();
 			int zoneid,valuetype,var,ampid;
 
-			double ampfactor;
+			double ampfactor = 1.0;
 			bool free=true;
 			SPH::boundaryCondition bcon;
       bcon.type = 0;        //DEFAULT: VELOCITY
@@ -633,7 +646,8 @@ int main(int argc, char **argv) try {
       } else 
         if ( bcon.valueType == 1){ //Amplitude
 				readValue(bc["amplitudeId"], 		bcon.ampId);
-				readValue(bc["amplitudeFactor"], 	bcon.ampFactor);
+				readValue(bc["amplitudeFactor"], 	ampfactor); //DEFAULT NOW IS ZERO
+        bcon.ampFactor = ampfactor;
 			}
 				
 			readValue(bc["free"], 	bcon.free);
@@ -646,7 +660,9 @@ int main(int argc, char **argv) try {
     int ics_count = 0;
 		for (auto& ic : ics){
 			double temp;
+      int id;
       readValue(ic["Temp"], IniTemp);
+      readValue(ic["id"], id);
       cout << "Initial Temp: "<<IniTemp<<endl;
 
       cout << "Initial condition "<<ics_count<<endl;
@@ -660,15 +676,27 @@ int main(int argc, char **argv) try {
       cout << "zone id "<<zoneid<<endl;
 			if (dom.Particles.Size()>0)
       if (zoneid == -1){
-        for (size_t a=0; a<dom.solid_part_count; a++){
+        for (size_t a=0; a < dom.solid_part_count; a++){
           dom.Particles[a]->a		= 0.0;
           dom.Particles[a]->v		= Vec3_t(value[0],value[1],value[2]);  
+          if (dom.thermal_solver)
+            dom.Particles[a]->T = IniTemp;
           count ++;
         }
-      }
-        cout << "Initial condition set for "<<count<<" particles."<<endl;
-        ics_count++;
-		}
+      } else  {
+            
+          for (size_t a=0; a < dom.Particles.Size(); a++){
+            if (dom.Particles[a]->ID == zoneid){
+              if (dom.thermal_solver)
+                dom.Particles[a]->T = IniTemp;
+              count ++;
+            }
+          }
+        }
+      
+      cout << "Initial condition set wih ID " << id << "applied to "<<count<<" particles."<<endl;
+      ics_count++;
+		}//ICS
     
     //Add fixed particles, these have priority
     
@@ -703,9 +731,6 @@ int main(int argc, char **argv) try {
       // THERMAL PROPS
       dom.Particles[a]->k_T = k_T;
       dom.Particles[a]->cp_T = cp_T;
-      if (dom.thermal_solver)
-        dom.Particles[a]->T = IniTemp;
-
 
 			if (mattype == "Hollomon" || mattype == "JohnsonCook" || mattype == "GMT"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
        dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,dom.Particles[a]->T);    

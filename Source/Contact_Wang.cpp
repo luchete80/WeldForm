@@ -239,6 +239,18 @@ inline void Domain::CalcContactForcesWang(){
             fr_dyn = friction_dyn;
             if (friction_function == Linear)
               fr_sta = fr_dyn = friction_m * Particles[P1] ->T + friction_b;
+
+             double dens = Particles[P1]->Density;
+             if (Dimension==3)
+              dS2 = pow(Particles[P1]->Mass/dens,2.0/3.0); //Fraser 3-119
+             else {
+               if (dom_bid_type == !AxiSymmetric){
+                  dens /= 2.0*M_PI* Particles[P1]->x[0]; //USED AFTER FOR FRICTION AND CONDUCTION (CALLED CONV)
+                  dS2 = Particles[P1]->Mass/dens ; //Fraser 3-119
+               } else{
+                  dS2 = Particles[P1]->Mass/dens; //PLANE STRAIN
+               }
+             } 
             
             if (fr_sta > 0.) { 
  
@@ -252,14 +264,6 @@ inline void Domain::CalcContactForcesWang(){
                //else           
                ref_tg = tgforce;
                //TODO: CHANGE DIMENSION !!!!!!
-               double dS;
-               if (Dimension==3)
-                dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.33333); //Fraser 3-119
-               else {
-                 if (dom_bid_type == !AxiSymmetric)
-                    dS = pow(Particles[P1]->Mass/Particles[P1]->Density,0.25); //Fraser 3-119
-               } 
-               
                 
                if (norm(ref_tg) < fr_sta * norm(Particles[P1] -> contforce) ){ //STATIC; NO SLIP
                   omp_set_lock(&Particles[P1]->my_lock);
@@ -276,13 +280,12 @@ inline void Domain::CalcContactForcesWang(){
                     Particles[P1] -> a -= tgforce_dyn / Particles[P1]->Mass;
                   omp_unset_lock(&Particles[P1]->my_lock);
 
-                  if (thermal_solver){
-                    if (Dimension==3) dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.666666666);  
-                    else              dS2 = pow(Particles[P1]->Mass/Particles[P1]->Density,0.5);  ////TODO: SELECT AXI-SYMM VS PL STRAIN
+                  if (cont_heat_fric){
+                    cout << "FRICTION "<<endl;
                     //atg = Particles[P1] -> a - dot (Particles[P1] -> a,Particles[P2]->normal)*Particles[P2]->normal;                      
                     omp_set_lock(&Particles[P1]->my_lock);
                     abs_fv = abs(dot(tgforce_dyn,vr));
-                    Particles[P1]->q_fric_work  =  abs_fv * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
+                    Particles[P1]->q_fric_work  =  abs_fv * dens / Particles[P1]->Mass; //J/(m3.s)
                     Particles[P1]->cshearabs = norm(tgforce_dyn) / dS2;
                     Particles[P1]->friction_hfl = abs_fv / dS2; //J/(m3.s)
                     // Particles[P1]->q_fric_work  = Particles[P1]->Mass * dot(atg, vr) * Particles[P1]->Density / Particles[P1]->Mass; //J/(m3.s)
@@ -290,16 +293,6 @@ inline void Domain::CalcContactForcesWang(){
                     omp_unset_lock(&Particles[P1]->my_lock);
                     //cout<< "fric work" <<Particles[P1]->q_fric_work<<endl;
                     
-                    if (cont_heat_cond){//Contact thermal Conductance
-                      //Fraser Eq 3.121
-                      omp_set_lock(&Particles[P1]->my_lock);
-                      Particles[P1]->q_cont_conv = Particles[i]->Density * contact_hc * dS2 * (Particles[P2]->T - Particles[P1]->T) / Particles[P1]->Mass;
-                      omp_unset_lock(&Particles[P1]->my_lock);
-                      
-                      omp_set_lock(&dom_lock);                             
-                      tot_cont_heat_cond[m] += contact_hc * dS2 * (Particles[P1]->T - Particles[P2]->T);
-                      omp_unset_lock(&dom_lock);	
-                    }
                   }
                   // //if (P1 == 12415) cout << "SURPASSED, applying  " << friction_sta * norm(imp_force)* tgforce/norm(tgforce) <<endl;
                 }         
@@ -316,6 +309,17 @@ inline void Domain::CalcContactForcesWang(){
               ext_forces_work_step += dot(Particles[P1] -> contforce,Particles[P2]->v);
             omp_unset_lock(&dom_lock);	
 
+            if (cont_heat_cond){//Contact thermal Conductance
+              //Fraser Eq 3.121
+              omp_set_lock(&Particles[P1]->my_lock);
+                Particles[P1]->q_cont_conv = dens * contact_hc * dS2 * (Particles[P2]->T - Particles[P1]->T) / Particles[P1]->Mass; //J/[m3.s]
+              omp_unset_lock(&Particles[P1]->my_lock);
+              
+              // omp_set_lock(&dom_lock);                             
+                // tot_cont_heat_cond[m] += contact_hc * dS2 * (Particles[P1]->T - Particles[P2]->T);
+              // omp_unset_lock(&dom_lock);	
+            }
+
             
 					}// if inside
         } //If distance is less than h
@@ -330,18 +334,9 @@ inline void Domain::CalcContactForcesWang(){
 	int cont_force_count = 0;
 	
   ext_forces_work += ext_forces_work_step * deltat;
-	//if (max_contact_force > 0.){
-    //cout << "particles surpassed max fr force"<<max_reached_part<< ", below force: " <<sta_frict_particles<<endl;
-		//cout << "Min Contact Force"<< min_contact_force<<"Max Contact Force: "<< max_contact_force << "Time: " << Time << ", Pairs"<<inside_pairs<<endl;
-		//cout << " Min tstep size: " << min_force_ts << ", current time step: " << deltat <<endl;
-		//TEMP
-		// if (min_force_ts> 0)
-			// deltat = min_force_ts;
-	//}
-	//Correct time step!
-//	std::min(deltat,dt_fext)
-  for (int m=0;m<meshcount;m++) 
-    accum_cont_heat_cond +=tot_cont_heat_cond[m] * deltat;
+
+  // for (int m=0;m<meshcount;m++) 
+    // accum_cont_heat_cond +=tot_cont_heat_cond[m] * deltat;
 }
 
 

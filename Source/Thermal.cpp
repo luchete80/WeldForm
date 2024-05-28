@@ -122,7 +122,7 @@ inline void Domain::CalcTempInc () {
 	int imax;
   
   double f;
-  double frw, fr_temp = 0.;
+  double frw, fr_temp = 0., cond_temp = 0.0;
   double plw, pl_sum = 0.;
   
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	private (f)//LUCIANO//LIKE IN DOMAIN->MOVE
@@ -142,7 +142,9 @@ inline void Domain::CalcTempInc () {
     // Particles[i]->dTdt += plw;
     
 		if (contact){
+      if (cont_heat_fric) {
         frw = f * Particles[i]->q_fric_work; //[ºC m^3/J] x J/[s m3] = ºC/s
+    
         //omp_set_lock(&dom_lock); 
         // #pragma omp atomic
         // fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density; //TODO: CHECK  -- J/[s m3] x m3
@@ -151,21 +153,34 @@ inline void Domain::CalcTempInc () {
         omp_set_lock(&Particles[i]->my_lock);
         Particles[i]->dTdt += frw; //[J/(kg.s)] / [J/(kg.K)]]
         omp_unset_lock(&Particles[i]->my_lock);
-      
+      }
     }
 		if (Particles[i]->dTdt > max){
 			max= Particles[i]->dTdt;
 			imax=i;
 		}
 	}
-  if (contact)
-    for (int i=0; i < solid_part_count; i++)
-      fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density;
   
+  
+  if (contact){
+
+    //REAL VOLUME IN AXISYMM is 2PI*r
+    for (int i=0; i < solid_part_count; i++){
+      float d = Particles[i]->Density;
+      if (dom_bid_type == AxiSymmetric) //CALCULATED DENSITY
+        d/=(2.0*M_PI*Particles[i]->x(0));
+        
+      fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / d;
+    if (cont_heat_cond)
+      cond_temp += Particles[i]->q_cont_conv * Particles[i]->Mass / d;
+    }
+  }
   for (int i=solid_part_count; i<Particles.Size(); i++){
     Particles[i]->dTdt = 0.;
   }
   contact_friction_work += fr_temp * deltat;
+  accum_cont_heat_cond  += cond_temp * deltat;
+  
   //plastic_work += pl_sum * deltat;
   
 	//cout << "Max dTdt: " << max <<"in particle: " << imax<<endl;
@@ -282,7 +297,7 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 				max= Particles[i]->q_conv;
 				imax=i;
 			}
-			//cout << "Particle  "<<Particles[i]->Mass<<endl;
+			//cout << "Particle  conv"<<Particles[i]->q_conv<<endl;
 		}
 	}		
 	//cout << "Max Convection: " << max <<"in particle " << imax <<endl;
