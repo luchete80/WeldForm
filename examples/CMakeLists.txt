@@ -100,6 +100,7 @@ SET(EXES
 	#Plate-Yield_CNS_Hard
 	#Plate-Yield_CNS_v2
 	#Plate-Yield_3d_al
+  SolidCyl_Heat_3D
 	#Plate-Yield_3d_al_CNS
   #SolidBlock_Heat_T
 	#slice_test

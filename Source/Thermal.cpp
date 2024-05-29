@@ -134,7 +134,7 @@ inline void Domain::CalcTempInc () {
   for (int i=0; i < solid_part_count; i++){
 	//for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
-    float d = Particles[i]->Density;
+    double d = Particles[i]->Density;
     if (dom_bid_type == AxiSymmetric) //CALCULATED DENSITY
       d/=(2.0*M_PI*Particles[i]->x(0));
 
@@ -171,7 +171,7 @@ inline void Domain::CalcTempInc () {
 
     //REAL VOLUME IN AXISYMM is 2PI*r
     for (int i=0; i < solid_part_count; i++){
-      float d = Particles[i]->Density;
+      double d = Particles[i]->Density;
       if (dom_bid_type == AxiSymmetric) //CALCULATED DENSITY
         d/=(2.0*M_PI*Particles[i]->x(0));
         
