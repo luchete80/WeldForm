@@ -515,4 +515,6 @@
          - Added amplitude factor to be 1.0 by default (it was zero)
          - Fixed contact conduction and friction heat for Axisymmetric
          - Added optional plastic work heat
-         
+20240529 - Fixed dS calculation on Wang contact (logical was wrong and also the expression)
+         - sy calculation was made only once for GMT.
+          

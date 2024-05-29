@@ -125,8 +125,8 @@ inline double GMT::CalcYieldStress(const double &strain, const double &strain_ra
                                     // << C1 << ", "<<C2 << ", "
                                     // << m1 << ", "<<m2 << ", "
                                     // << I1 << ", "<<I2 << ", "<<endl;
-  // cout << "e, er, T " << e <<", "<<er<<", "<<T<<endl; 
-	// cout << "sy "<< sy<<endl;
+  // // cout << "e, er, T " << e <<", "<<er<<", "<<T<<endl; 
+	// cout << "sy GMT"<< sy<<", e, er, T" << e << ", " <<er << ", " <<T<<endl;
 	return sy;
 }	
 

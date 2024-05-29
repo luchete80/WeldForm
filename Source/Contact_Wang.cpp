@@ -244,9 +244,14 @@ inline void Domain::CalcContactForcesWang(){
              if (Dimension==3)
               dS2 = pow(Particles[P1]->Mass/dens,2.0/3.0); //Fraser 3-119
              else {
-               if (dom_bid_type == !AxiSymmetric){
-                  dens /= 2.0*M_PI* Particles[P1]->x[0]; //USED AFTER FOR FRICTION AND CONDUCTION (CALLED CONV)
-                  dS2 = Particles[P1]->Mass/dens ; //Fraser 3-119
+               if (dom_bid_type == AxiSymmetric){
+                 // m= 2.0*pi*r *(s)*(s) , dens(ax) = 2. pi * r rho --> m/rho = 
+                 //BEFORE CONVERTING rho!!
+                  dS2 = sqrt(Particles[P1]->Mass/dens)*2.0*M_PI*Particles[P1]->x[0]; 
+                  //cout << "dS "<<sqrt(Particles[P1]->Mass/dens)<<endl;
+                  dens /= 2.0*M_PI* Particles[P1]->x[0]; //USED AFTER FOR FRICTION AND CONDUCTION (CALLED CONV)1
+                  
+
                } else{
                   dS2 = Particles[P1]->Mass/dens; //PLANE STRAIN
                }

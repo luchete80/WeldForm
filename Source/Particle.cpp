@@ -995,7 +995,9 @@ inline void Particle::CalcStressStrain(double dt) {
 		ShearStress	= std::min((Sigmay/sig_trial),1.0)*ShearStress;
     
     if      (Material_model == HOLLOMON )       Sigmay = mat->CalcYieldStress(pl_strain); 
-		else if  (Material_model == JOHNSON_COOK )  Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
+    //TODO: MAKE THIS FOR ALL MATERIAL CASES
+		else if  (Material_model == JOHNSON_COOK || Material_model == _GMT_)  
+      Sigmay = mat->CalcYieldStress(pl_strain,eff_strain_rate,T);
       // if (Material_model == BILINEAR ){
         // //Sigmay = Fy0 + pl_strain*Et
       // } else if (Material_model == HOLLOMON ){
@@ -1007,7 +1009,7 @@ inline void Particle::CalcStressStrain(double dt) {
 				Et = mat->CalcTangentModulus(pl_strain); //Fraser 3.54
 				Et_m = Et;
 			}
-			else if (Material_model == JOHNSON_COOK ){// //TODO: > BILINEAR				
+			else if (Material_model == JOHNSON_COOK || Material_model == _GMT_){// //TODO: > BILINEAR				
 				Et = mat->CalcTangentModulus(pl_strain, eff_strain_rate, T); //Fraser 3.54
 			} else if (Material_model > BILINEAR ) {//Else Ep = 0
         //cout << "Calculating Ep"<<endl;
