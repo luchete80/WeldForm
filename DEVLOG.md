@@ -517,4 +517,4 @@
          - Added optional plastic work heat
 20240529 - Fixed dS calculation on Wang contact (logical was wrong and also the expression)
          - sy calculation was made only once for GMT.
-          
+         - Fixed dTdt equation fo axisymm

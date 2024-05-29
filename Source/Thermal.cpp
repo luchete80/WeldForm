@@ -76,6 +76,11 @@ inline void Domain::CalcTempInc () {
 			
 			di = P1->Density; mi = P1->Mass;
 			dj = P2->Density; mj = P2->Mass;
+
+      if (dom_bid_type == AxiSymmetric){ //CALCULATED DENSITY
+        di/=(2.0*M_PI*P1->x(0));
+        dj/=(2.0*M_PI*P2->x(0));
+      }
 			
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			//LUCIANO: TODO EXCLUDE THIS PRODUCT
