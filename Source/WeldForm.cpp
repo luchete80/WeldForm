@@ -66,7 +66,7 @@ void UserAcc(SPH::Domain & domi)
 	{
 		for (int bc=0;bc<domi.bConds.size();bc++){
 			if (domi.Particles[i]->ID == domi.bConds[bc].zoneId ) {
-				if (domi.bConds[bc].type == 0 ){ //VELOCITY
+				if (domi.bConds[bc].type == Velocity_BC ){ //VELOCITY
 					if (domi.bConds[bc].valueType == 0) {
             domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
             domi.Particles[i]->v		= domi.bConds[bc].value;          
@@ -80,7 +80,12 @@ void UserAcc(SPH::Domain & domi)
               }//if if match
             }//for amps
           } //VALUE TYPE == AMPLITUDE 
-				}//TYPE == VELOCITY
+				}//  == VELOCITY
+        else if (domi.bConds[bc].type == Temperature_BC){
+          
+        } else if (domi.bConds[bc].type == Convection_BC){
+          
+        }
         
 			}//ZoneID 			
 		}//BC
@@ -206,7 +211,7 @@ int main(int argc, char **argv) try {
     string solver = "Mech";
     readValue(config["solver"],solver);
     
-    if (solver=="Mech-Thermal" || solver=="Mech-Thermal-KickDrift" || solver=="Mech-Thermal-Fraser" || solver=="Mech-Thermal-LeapFrog")
+    if (solver=="Thermal" ||solver=="Mech-Thermal" || solver=="Mech-Thermal-KickDrift" || solver=="Mech-Thermal-Fraser" || solver=="Mech-Thermal-LeapFrog")
       dom.thermal_solver = true;
 		
 		readValue(config["integrationMethod"], dom.Scheme); //0:Verlet, 1:LeapFrog, 2: Modified Verlet
@@ -636,6 +641,7 @@ int main(int argc, char **argv) try {
       bcon.valueType = 0;   //DEFAULT: CONSTANT
       bcon.value_ang = 0.0;
 			readValue(bc["zoneId"], 	bcon.zoneId);
+			readValue(bc["type"], 	bcon.type);
       //type 0 means velocity vc
 			readValue(bc["valueType"], 	bcon.valueType);
       readVector(bc["value"], 	      bcon.value);      //Or value linear
@@ -649,6 +655,24 @@ int main(int argc, char **argv) try {
 				readValue(bc["amplitudeFactor"], 	ampfactor); //DEFAULT NOW IS ZERO
         bcon.ampFactor = ampfactor;
 			}
+      
+      if (bcon.type == Velocity_BC){//Constant
+        // readVector(bc["value"], 	      bcon.value);      //Or value linear
+        // readVector(bc["valueAng"], 	    bcon.value_ang);  //Or Angular value
+      }else if (bcon.type == Convection_BC){
+        int count =0;
+        double cv_coeff, T_inf;
+        readValue(bc["convCoeff"],  bcon.cv_coeff);
+        readValue(bc["infTemp"],    bcon.T_inf);
+        
+        for (size_t a=0; a<dom.Particles.Size(); a++){
+          dom.Particles[a]->Thermal_BC	= TH_BC_CONVECTION;
+          dom.Particles[a]->T_inf       = bcon.T_inf;
+          dom.Particles[a]->h_conv      = bcon.cv_coeff;
+          count ++;
+        }
+        cout << count << " particles have been set with conv coeff: "<<bcon.cv_coeff << "and Tinf "<<bcon.T_inf<<endl;
+      }
 				
 			readValue(bc["free"], 	bcon.free);
 			dom.bConds.push_back(bcon);
@@ -672,29 +696,36 @@ int main(int argc, char **argv) try {
       
       int zoneid = -1; //if NO ZONE ID IS ALL SOLID PARTICLES
       readValue(ic["zoneId"], 		zoneid);
-      int count = 0;
+      int count = 0, tcount = 0;
       cout << "zone id "<<zoneid<<endl;
 			if (dom.Particles.Size()>0)
       if (zoneid == -1){
+        cout << "solid part count "<<dom.solid_part_count<<endl;
+          cout << "Thermal solver is : "<<dom.thermal_solver<<endl;
         for (size_t a=0; a < dom.solid_part_count; a++){
           dom.Particles[a]->a		= 0.0;
           dom.Particles[a]->v		= Vec3_t(value[0],value[1],value[2]);  
-          if (dom.thermal_solver)
+
+          if (dom.thermal_solver){
             dom.Particles[a]->T = IniTemp;
+            tcount ++;
+          }
           count ++;
         }
       } else  {
             
           for (size_t a=0; a < dom.Particles.Size(); a++){
             if (dom.Particles[a]->ID == zoneid){
-              if (dom.thermal_solver)
+              if (dom.thermal_solver){
                 dom.Particles[a]->T = IniTemp;
-              count ++;
+                count ++;
+              }
             }
           }
         }
       
       cout << "Initial condition set wih ID " << id << "applied to "<<count<<" particles."<<endl;
+      cout << "TEMP Initial condition set wih ID " << id << "applied to "<<tcount<<" particles."<<endl;
       ics_count++;
 		}//ICS
     

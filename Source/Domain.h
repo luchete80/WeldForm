@@ -91,15 +91,22 @@ namespace SPH {
 class NastranVolReader;
 
 
+enum BC_TYPE {Velocity_BC=0, Force_BC, Temperature_BC, Convection_BC};
+
+//HOW ABOUT Scalar value?? 
+//Convert to template
 struct boundaryCondition {
 	int 	zoneId;
-	int 	type;	// ENUM TYPE Velocity, Force, Temperature
+	BC_TYPE 	type;	// ENUM TYPE Velocity, Force, Temperature
 	bool 	free;	//is necessary??
+  bool  is_type[4];  ////ACCORDING TO BC_TYPE {Velocity_BC=0, Force_BC, Temperature_BC, Convection_BC};
 	int 	valueType;		//0: Constant, 1 amplitude table
 	Vec3_t value;       //If constant
   Vec3_t value_ang;       //Angular value
 	int 	ampId;			//if valuetype == 1
 	double 	ampFactor;		//if valuetype == 1
+  double cv_coeff;
+  double T_inf;
 };
 
 class Domain

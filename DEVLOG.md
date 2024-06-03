@@ -519,3 +519,6 @@
          - sy calculation was made only once for GMT.
          - Fixed dTdt equation fo axisymm
          - Fixed CSV output (missing comma between CFZ and pressure)
+-----------------------------------------------------------------
+20240603 - Added BC Convection reading from json input file.
+         - Fixed input in thermal case
