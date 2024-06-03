@@ -7,10 +7,10 @@
   "cflMethod": 1,
   "cflFactor": 0.7,
   "kernelGradCorr": false,  
-  "simTime": 1.0,
+  "simTime": 10.0,
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.0,
-  "outTime": 10.0e-1,
+  "outTime": 1.0e-1,
   "solver": "Thermal"
 }
 ,
