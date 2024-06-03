@@ -105,7 +105,11 @@ inline void Domain::CalcTempInc () {
 					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v  )/ (norm(xij)*norm(xij));
 				}				
 			} else {
+        //Fraser eqn 
 				m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
+        
+        //Axisymmetric smoothed particle hydrodynamics with self-gravity
+        //D. Garcı́a-Senz et Al, eqn. 35
 				mc[0]=mc[1]=m;
 			}
 			//omp_set_lock(&P1->my_lock);
@@ -277,8 +281,41 @@ inline void Domain::CalcTempIncSOA () {
 	
 }
 
+
+// inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
+
+	// //Fraser Eq 3-121 
+	// double max=0.;
+	// int imax;
+	// #pragma omp parallel for schedule (static) num_threads(Nproc)
+	
+	// #ifdef __GNUC__
+	// for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
+	// #else
+	// for (int i=0; i<Particles.Size(); i++){//Like in Domain::Move
+	// #endif
+    // double dS2;
+	
+		// if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
+			// dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
+			// //cout << "dS2" <<dS2<<endl;
+			// //cout << Particles[i]->Density<<endl;
+			// //Fraser Eq 3.121
+			// Particles[i]->q_conv = Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+			
+			// if (Particles[i]->q_conv>max){
+				// max= Particles[i]->q_conv;
+				// imax=i;
+			// }
+			// //cout << "Particle  conv"<<Particles[i]->q_conv<<endl;
+		// }
+	// }		
+	// //cout << "Max Convection: " << max <<"in particle " << imax <<endl;
+	// //cout << "Applied convection to "<< i << " Particles"<<endl;
+// }
+
 inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
-	double dS2;
+	
 	//Fraser Eq 3-121 
 	double max=0.;
 	int imax;
@@ -290,13 +327,33 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 	for (int i=0; i<Particles.Size(); i++){//Like in Domain::Move
 	#endif
 
-	
+   double dS2;
+   double dens = Particles[i]->Density;
+   if (Dimension==3)
+    dS2 = pow(Particles[i]->Mass/dens,2.0/3.0); //Fraser 3-119
+   else {
+     if (dom_bid_type == AxiSymmetric){
+       // m= 2.0*pi*r *(s)*(s) , dens(ax) = 2. pi * r rho --> m/rho = 
+       //BEFORE CONVERTING rho!!
+        dS2 = sqrt(Particles[i]->Mass/dens)*2.0*M_PI*Particles[i]->x[0]; //Before alter
+        //cout << "dS "<<sqrt(Particles[P1]->Mass/dens)<<endl;
+        dens /= 2.0*M_PI* Particles[i]->x[0]; //USED AFTER FOR FRICTION AND CONDUCTION (CALLED CONV)1
+        
+
+     } else{
+        dS2 = Particles[i]->Mass/dens; //PLANE STRAIN
+     }
+   }       
 		if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
-			dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
+
 			//cout << "dS2" <<dS2<<endl;
 			//cout << Particles[i]->Density<<endl;
 			//Fraser Eq 3.121
-			Particles[i]->q_conv = Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+			//// ORIGINAL [W/m3]
+      //Particles[i]->q_conv = Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+      
+      //IN AXISYMM CASE: real vol is rho_orig/Mass
+      Particles[i]->q_conv = dens * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
 			
 			if (Particles[i]->q_conv>max){
 				max= Particles[i]->q_conv;

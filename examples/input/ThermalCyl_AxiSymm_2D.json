@@ -23,7 +23,7 @@
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.3,
 	"yieldStress0": 300.0E6,
-	"thermalCond": 1.6600,
+	"thermalCond": 1.6,
 	"thermalHeatCap": 5.6
 }],
 
