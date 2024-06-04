@@ -55,6 +55,8 @@ inline void Domain::CalcTempInc () {
 	
 	std::vector < double> temp(Particles.Size());
 	
+  std::vector < double> axiterm(Particles.Size());
+  
 	#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( int k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
@@ -77,14 +79,14 @@ inline void Domain::CalcTempInc () {
 			di = P1->Density; mi = P1->Mass;
 			dj = P2->Density; mj = P2->Mass;
 
-      if (dom_bid_type == AxiSymmetric){ //CALCULATED DENSITY
-        di/=(2.0*M_PI*P1->x(0));
-        dj/=(2.0*M_PI*P2->x(0));
-      }
+      // if (dom_bid_type == AxiSymmetric){ //CALCULATED DENSITY
+        // di/=(2.0*M_PI*P1->x(0));
+        // dj/=(2.0*M_PI*P2->x(0));
+      // }
 			
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			//LUCIANO: TODO EXCLUDE THIS PRODUCT
-			double m, mc[2];
+			double m, mc[2], ma, max[2];
 			if (gradKernelCorr){
 				Mat3_t GKc[2];
 				GKc[0] = P1->gradCorrM;
@@ -106,15 +108,33 @@ inline void Domain::CalcTempInc () {
 				}				
 			} else {
         //Fraser eqn 
-				m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
-        
+				if (dom_bid_type != AxiSymmetric){
+          m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
+        }
         //Axisymmetric smoothed particle hydrodynamics with self-gravity
         //D. Garcı́a-Senz et Al, eqn. 35
+        //Or phD thesis AxisSPH, Antonio Relaño Castillo
+        // Since after this step, conduction is affected by 1/(rho_i * Cp_i), we took the Castillo style
+        //// THIS ASSUMES CONSTANT k!
+        else {
+          Vec3_t d = GK*xij;
+          double f = mj/dj *( P1->k_T + P2->k_T) * ( P1->T - P2->T);
+          m  = f * dot( xij , d )/ (norm(xij)*norm(xij));
+          ma = -f * d[0];
+          max[0]=max[1]= ma;
+        }
+        
+        
 				mc[0]=mc[1]=m;
-			}
+			}//!gradkernel
 			//omp_set_lock(&P1->my_lock);
 			temp [SMPairs[k][a].first]  += mc[0];
 			temp [SMPairs[k][a].second] -= mc[1];
+      
+      if (dom_bid_type == AxiSymmetric){
+        axiterm[SMPairs[k][a].first ] +=max[0];
+        axiterm[SMPairs[k][a].second] -=max[1];
+      }
 		}
 	}//Nproc
 	//Another test
@@ -145,6 +165,9 @@ inline void Domain::CalcTempInc () {
       
 		f = 1./(d * Particles[i]->cp_T ); //[ºC m^3/J]
     Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat * pl_work_heat_frac + Particles[i]->q_cont_conv);	
+    
+    if (dom_bid_type == AxiSymmetric)
+      Particles[i]->dTdt += f * 1.0/Particles[i]->x(0) * axiterm[i];
     
     plw = f * Particles[i]->q_plheat;
     pl_sum += plw;
