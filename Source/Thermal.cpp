@@ -110,17 +110,16 @@ inline void Domain::CalcTempInc () {
         //Fraser eqn 
 				if (dom_bid_type != AxiSymmetric){
           m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
-        }
-        //Axisymmetric smoothed particle hydrodynamics with self-gravity
-        //D. Garcı́a-Senz et Al, eqn. 35
-        //Or phD thesis AxisSPH, Antonio Relaño Castillo
-        // Since after this step, conduction is affected by 1/(rho_i * Cp_i), we took the Castillo style
-        //// THIS ASSUMES CONSTANT k!
-        else {
+        } else {
+          //Axisymmetric smoothed particle hydrodynamics with self-gravity
+          //D. Garcı́a-Senz et Al, eqn. 35
+          //Or phD thesis AxisSPH, Antonio Relaño Castillo
+          // Since after this step, conduction is affected by 1/(rho_i * Cp_i), we took the Castillo style
+          //// THIS ASSUMES CONSTANT k!
           Vec3_t d = GK*xij;
           double f = mj/dj *( P1->k_T + P2->k_T) * ( P1->T - P2->T);
           m  = f * dot( xij , d )/ (norm(xij)*norm(xij));
-          ma = -f * d[0];
+          ma = -f * d[0]; //Castillo Eqn 2.113 / 2.115
           max[0]=max[1]= ma;
         }
         

@@ -666,10 +666,12 @@ int main(int argc, char **argv) try {
         readValue(bc["infTemp"],    bcon.T_inf);
         
         for (size_t a=0; a<dom.Particles.Size(); a++){
-          dom.Particles[a]->Thermal_BC	= TH_BC_CONVECTION;
-          dom.Particles[a]->T_inf       = bcon.T_inf;
-          dom.Particles[a]->h_conv      = bcon.cv_coeff;
-          count ++;
+          if (dom.Particles[a]->ID == bcon.zoneId) {
+            dom.Particles[a]->Thermal_BC	= TH_BC_CONVECTION;
+            dom.Particles[a]->T_inf       = bcon.T_inf;
+            dom.Particles[a]->h_conv      = bcon.cv_coeff;
+            count ++;
+          }
         }
         cout << count << " particles have been set with conv coeff: "<<bcon.cv_coeff << "and Tinf "<<bcon.T_inf<<endl;
       }

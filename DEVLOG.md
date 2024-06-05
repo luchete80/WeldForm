@@ -522,4 +522,5 @@
 -----------------------------------------------------------------
 20240603 - Added BC Convection reading from json input file.
          - Fixed input in thermal case
-20240604 - Added axisymmetric conduction
+20240604 - Added axisymmetric conduction (accordfing to castillo and García-Senz)
+20240605 - FIXED reading BC conection (was appliyng to entire domain)

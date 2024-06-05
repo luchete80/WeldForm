@@ -69,19 +69,19 @@
 {
 	"zoneId": 	5,
   "type": 3,
-  "convCoeff": 500.0,
+  "convCoeff": 50.0,
   "infTemp": 22
 },
 {
 	"zoneId": 	6,
   "type": 3,
-  "convCoeff": 500.0,
+  "convCoeff": 50.0,
   "infTemp": 22
 },
 {
 	"zoneId": 	7,
   "type": 3,
-  "convCoeff": 500.0,
+  "convCoeff": 50.0,
   "infTemp": 22
 }
 ],
