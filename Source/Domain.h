@@ -107,6 +107,7 @@ struct boundaryCondition {
 	double 	ampFactor;		//if valuetype == 1
   double cv_coeff;
   double T_inf;
+  double T;
 };
 
 class Domain

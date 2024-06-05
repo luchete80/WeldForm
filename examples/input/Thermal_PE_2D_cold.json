@@ -30,7 +30,6 @@
 "DomainBlocks": 
 [{
 	"type": "Box",
-  "gridCoordSys": "AxiSymmetric",
 	"zoneId": 0,
 	"denseMode": 0,
 	"start": [ 0.001, 0.0, 0.0],
@@ -67,22 +66,20 @@
 ],
 "BoundaryConditions": [
 {
+  "type" : 2,
 	"zoneId": 	5,
-  "type": 3,
-  "convCoeff": 500.0,
-  "infTemp": 22
+  "Temp": 22
 },
 {
+  "type": 2,
 	"zoneId": 	6,
-  "type": 3,
-  "convCoeff": 500.0,
-  "infTemp": 22
+
+  "Temp": 22
 },
 {
+  "type": 2,
 	"zoneId": 	7,
-  "type": 3,
-  "convCoeff": 500.0,
-  "infTemp": 22
+  "Temp": 22
 }
 ],
 "InitialConditions": [

@@ -82,7 +82,7 @@ void UserAcc(SPH::Domain & domi)
           } //VALUE TYPE == AMPLITUDE 
 				}//  == VELOCITY
         else if (domi.bConds[bc].type == Temperature_BC){
-          
+          domi.Particles[i]->T = domi.bConds[bc].T;
         } else if (domi.bConds[bc].type == Convection_BC){
           
         }
@@ -674,7 +674,19 @@ int main(int argc, char **argv) try {
           }
         }
         cout << count << " particles have been set with conv coeff: "<<bcon.cv_coeff << "and Tinf "<<bcon.T_inf<<endl;
+      } else if (bcon.type == Temperature_BC){
+        int count =0;
+        readValue(bc["Temp"],    bcon.T);
+        //And also applied at every step
+        for (size_t a=0; a<dom.Particles.Size(); a++){
+          if (dom.Particles[a]->ID == bcon.zoneId) {
+            dom.Particles[a]->T	= bcon.T;
+            count ++;
+          }
+        }
+        cout << count << " particles have been set with conv coeff: "<<bcon.cv_coeff << "and Tinf "<<bcon.T_inf<<endl;
       }
+				
 				
 			readValue(bc["free"], 	bcon.free);
 			dom.bConds.push_back(bcon);

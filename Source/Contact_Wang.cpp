@@ -253,7 +253,7 @@ inline void Domain::CalcContactForcesWang(){
                   
 
                } else{
-                  dS2 = Particles[P1]->Mass/dens; //PLANE STRAIN
+                  dS2 = pow(Particles[i]->Mass/dens,1.0/3.0); //PLANE STRAIN
                }
              } 
             

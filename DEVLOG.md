@@ -524,3 +524,4 @@
          - Fixed input in thermal case
 20240604 - Added axisymmetric conduction (accordfing to castillo and García-Senz)
 20240605 - FIXED reading BC conection (was appliyng to entire domain)
+         - FIXED convection fo plane strain (dS were wrong).

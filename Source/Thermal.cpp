@@ -363,7 +363,7 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
         
 
      } else{
-        dS2 = Particles[i]->Mass/dens; //PLANE STRAIN
+        dS2 = pow(Particles[i]->Mass/dens,1.0/3.0); //PLANE STRAIN
      }
    }       
 		if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
