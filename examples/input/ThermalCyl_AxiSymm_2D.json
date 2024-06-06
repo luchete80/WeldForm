@@ -4,8 +4,8 @@
   "Nproc":8,
 	"particleRadius": 0.0025, 
 	"hFactor": 1.2,
-  "cflMethod": 1,
-  "cflFactor": 0.7,
+  "cflMethod": 0,
+  "timeStepSize": 0.0002,
   "kernelGradCorr": false,  
   "simTime": 10.0,
   "artifViscAlpha": 1.0,
@@ -19,12 +19,12 @@
 	"id": "Solid",
 	"type": "Bilinear",
   "const": [0.0],
-	"density0": 841000.0, 
+	"density0": 8410.0, 
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.3,
 	"yieldStress0": 300.0E6,
-	"thermalCond": 1.6,
-	"thermalHeatCap": 5.6
+	"thermalCond": 160.0,
+	"thermalHeatCap": 560.0
 }],
 
 "DomainBlocks": 

@@ -80,7 +80,7 @@ int main(int argc, char **argv) try
         dom.DomMin(0) = -H;
 
      	dom.AddBoxLength(1 ,Vec3_t (0.,0.,0.), H ,H,H , dx/2.0 ,rho, h, 1 , 0 , false, false );
-     	
+     	dom.ts_nb_inc = 5;		
 // dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
 							// H , H ,  H , 
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );

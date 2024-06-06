@@ -358,7 +358,7 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
        // m= 2.0*pi*r *(s)*(s) , dens(ax) = 2. pi * r rho --> m/rho = 
        //BEFORE CONVERTING rho!!
         dS2 = sqrt(Particles[i]->Mass/dens)*2.0*M_PI*Particles[i]->x[0]; //Before alter
-        //cout << "dS "<<sqrt(Particles[P1]->Mass/dens)<<endl;
+        //cout << "dS "<<sqrt(Particles[i]->Mass/dens)<<endl;
         dens /= 2.0*M_PI* Particles[i]->x[0]; //USED AFTER FOR FRICTION AND CONDUCTION (CALLED CONV)1
         
 

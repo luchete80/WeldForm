@@ -525,3 +525,4 @@
 20240604 - Added axisymmetric conduction (accordfing to castillo and García-Senz)
 20240605 - FIXED reading BC conection (was appliyng to entire domain)
          - FIXED convection fo plane strain (dS were wrong).
+20240606 - Added 3D cylinder convection example 

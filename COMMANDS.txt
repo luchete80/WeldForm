@@ -4,8 +4,8 @@ set SPH=D:/Luciano/Numerico/WeldForm
 set PKG=D:/Luciano/Numerico/Libs
 
 LINUX
-export PKG=/media/luciano/Datos/Luciano/Numerico/Libs-Linux
-export SPH=/media/luciano/Datos/Luciano/Numerico/WeldForm
+export PKG=$HOME/Numerico/Libs
+export SPH=$HOME/Numerico/WeldForm
 
 echo PATH=$PATH:/media/luciano/Datos/Luciano/Numerico/WeldForm
 
