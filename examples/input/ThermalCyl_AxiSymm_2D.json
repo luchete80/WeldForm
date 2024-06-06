@@ -19,12 +19,12 @@
 	"id": "Solid",
 	"type": "Bilinear",
   "const": [0.0],
-	"density0": 8410.0, 
+	"density0": 841000.0, 
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.3,
 	"yieldStress0": 300.0E6,
 	"thermalCond": 160.0,
-	"thermalHeatCap": 560.0
+	"thermalHeatCap": 5.60
 }],
 
 "DomainBlocks": 
