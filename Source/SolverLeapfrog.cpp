@@ -232,7 +232,7 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
     clock_beg = clock(); 
     //if (contact) CalcContactForcesWang();
     if (contact) {
-      if      (contact_alg==Fraser)   CalcContactForcesFraser();
+      if      (contact_alg==Fraser)   CalcContactForces();
       if      (contact_alg==Wang)     CalcContactForcesWang();
       else if (contact_alg==Seo )     CalcContactForces2();
       else if (contact_alg==LSDyna )  CalcContactForcesLS();

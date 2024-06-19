@@ -335,7 +335,7 @@ int main(int argc, char **argv) try {
 		int cflMethod;
     double output_time;
     double sim_time;
-    string cont_alg = "Fraser";
+    string cont_alg = "Wang";
     bool auto_ts[] = {true, false, false}; //IN SOME METAL CUTS HAS BEEN FOUND THAT ONLY VELOCITY CRITERIA DIVERGES.
 		readValue(config["cflMethod"], cflMethod);
 
@@ -568,15 +568,18 @@ int main(int argc, char **argv) try {
         mesh_count ++;
 
         // readValue(rigbodies[0]["contAlgorithm"],cont_alg);
+        cout << "Contact Algorithm set to ";
         if (cont_alg == "Seo") {
-          cout << "Contact Algorithm set to SEO"<<endl;
+          cout << "SEO"<<endl;
           dom.contact_alg = Seo;
         } else if (cont_alg == "LSDyna") {
           dom.contact_alg = LSDyna;
-        } else if (cont_alg == "Fraser") {
-          dom.contact_alg = Fraser;
+          cout << "LS_Dyna"<<endl;
+        } else if (cont_alg == "Fraser") { /////FRASER NOT WORKING
+          // dom.contact_alg = Fraser;
+          cout << "Wang. ATTENTION: Fraser  algorithm does not working"<<endl;
         }else {
-          cout << "Contact Algorithm set to WANG"<<endl;
+          cout << "Wang"<<endl;
         }
         
         //cout << "Contact Algortihm: "<< cont_alg.c_str() <<end;

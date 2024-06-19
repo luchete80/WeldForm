@@ -526,3 +526,4 @@
 20240605 - FIXED reading BC conection (was appliyng to entire domain)
          - FIXED convection fo plane strain (dS were wrong).
 20240606 - Added 3D cylinder convection example 
+20240618 - Added Fraser Contact Algorithm to input (not working with LeapFrog)
