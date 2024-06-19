@@ -293,6 +293,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
     if (contact) {
+      if      (contact_alg==Fraser)   CalcContactForcesFraser();
       if      (contact_alg==Wang)     CalcContactForcesWang();
       else if (contact_alg==Seo )     CalcContactForces2();
      // else if (contact_alg==LSDyna )  CalcContactForcesLS();

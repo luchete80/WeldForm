@@ -573,6 +573,8 @@ int main(int argc, char **argv) try {
           dom.contact_alg = Seo;
         } else if (cont_alg == "LSDyna") {
           dom.contact_alg = LSDyna;
+        } else if (cont_alg == "Fraser") {
+          dom.contact_alg = Fraser;
         }else {
           cout << "Contact Algorithm set to WANG"<<endl;
         }
