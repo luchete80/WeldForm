@@ -527,3 +527,6 @@
          - FIXED convection fo plane strain (dS were wrong).
 20240606 - Added 3D cylinder convection example 
 20240618 - Added Fraser Contact Algorithm to input (not working with LeapFrog)
+-----------------------------------------------------------------
+20240705 - Fixed Tangent modulus calc on GMT material
+         - Fixed Vertical line on input (still remains inclined line)

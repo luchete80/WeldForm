@@ -532,7 +532,12 @@ int main(int argc, char **argv) try {
           mesh.push_back(new TriMesh);
           mesh[mesh_count]->dimension = 2;
           //if (dim(0)>0.0 && dim(0)>1.0) cout << "ERROR. 
-          mesh[mesh_count]->AxisPlaneMesh(1, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
+          if (dim(0)>0.0)
+            mesh[mesh_count]->AxisPlaneMesh(1, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
+          else if (dim(1)>0.0)
+            mesh[mesh_count]->AxisPlaneMesh(0, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens); 
+          else 
+            cout << "ERROR. Line has null dimension."<<endl;
         } else if (rigbody_type == "File"){
           string filename = "";
           readValue(rigbodies[rb]["fileName"], 	filename); 

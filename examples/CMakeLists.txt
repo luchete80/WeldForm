@@ -80,7 +80,7 @@ SET(EXES
   #FSW_nastran
 	#Elastic
 	#Heat_2D
-  Heat_Cyl_3D
+  #Heat_Cyl_3D
 	#Impact_Campos
 	#Impact_Contact
 	#Impact_Zhang2017
