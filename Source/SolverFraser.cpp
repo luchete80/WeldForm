@@ -420,9 +420,10 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       }
       
 			total_time = std::chrono::steady_clock::now() - start_whole;		
-			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
+      oss_out.str("");
+			oss_out << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
-      oss_out.clear();
+
       oss_out << std::setprecision(2);
       oss_out << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
       oss_out << "Density: "<<dens_time_spent/total_time.count()<<"%,  ";
