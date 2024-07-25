@@ -425,6 +425,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       double acc_time_spent_perc = acc_time_spent/total_time.count();
 
       oss_out << std::setprecision(2);
+      oss_out << "step number: "<<steps <<endl;
       oss_out << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
       oss_out << "Density: "<<dens_time_spent/total_time.count()<<"%,  ";
       oss_out << "Stress: "  <<stress_time_spent/total_time.count()<<"%,  "<<endl;

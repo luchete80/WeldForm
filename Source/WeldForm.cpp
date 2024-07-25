@@ -169,9 +169,9 @@ int main(int argc, char **argv) try {
     size_t test = findLastOccurrence(inputFileName, '\\');
     if (test != string::npos) pos = test;
     //cout << "pos of json "<<inputFileName.find(".json")<<endl;
-    string out_name = inputFileName.substr(pos+1, inputFileName.find(".json") - pos ) + "out";
+    string out_name = inputFileName.substr(pos, inputFileName.find(".json") - pos +1) + "out";
     //cout << "Out file: "<< out_name << endl;
-    dom.out_file.open(out_name.c_str(), std::ofstream::out | std::ofstream::app);
+    dom.out_file.open(out_name.c_str()/*, std::ofstream::out | std::ofstream::app*/);
 		dom.Dimension	= 3;
 		
 		string kernel;
@@ -538,6 +538,7 @@ int main(int argc, char **argv) try {
             mesh[mesh_count]->AxisPlaneMesh(0, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens); 
           else 
             cout << "ERROR. Line has null dimension."<<endl;
+          cout << "Rigid Body start pos: "<<start(0)+dim(0)<<", "<<start(1)+dim(1)<<endl;
         } else if (rigbody_type == "File"){
           string filename = "";
           readValue(rigbodies[rb]["fileName"], 	filename); 
@@ -824,9 +825,10 @@ int main(int argc, char **argv) try {
 		// dom.BC.InOutFlow = 0;
 
     	//dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.00005,"test06",999);
+    dom.out_file.close();   
 	}	//Argc > 0
   else {cout << "No input file found. Please specify input file."<<endl;}
-	
+
     return 0;
 }
 
