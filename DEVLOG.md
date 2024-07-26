@@ -530,3 +530,6 @@
 -----------------------------------------------------------------
 20240705 - Fixed Tangent modulus calc on GMT material
          - Fixed Vertical line on input (still remains inclined line)
+20240725 - Fixed Log Format (was repeated each time step)
+         - FOUND AN ERROR ON PARALLEL EXTRUSION. Differences between runs.
+20240726 - Fixed Surface ID calc (reset each step from spourious calc).

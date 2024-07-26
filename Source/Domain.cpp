@@ -1431,7 +1431,7 @@ void Domain::CalculateSurface(const int &id){
 
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 		Particles[i] -> normal = 0.;
-		//Particles[i] -> ID = Particles [i] -> ID_orig;
+		Particles[i] -> ID = Particles [i] -> ID_orig;
 	}
 
 	#pragma omp parallel for schedule (static) private(P1,P2,mi,mj,xij) num_threads(Nproc)
@@ -1474,8 +1474,10 @@ void Domain::CalculateSurface(const int &id){
 		Particles[i]->normal *= 1./totmass;
 		
 		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= max_nb) {//3-114 Fraser {
-			if (!Particles[i]->not_write_surf_ID)
-      Particles[i]->ID = id;
+			if (!Particles[i]->not_write_surf_ID){
+        Particles[i]->ID = id;
+        //cout << "part " <<i<<", Nb "<< Particles[i]->Nb<<", surf_part"<<endl;
+      }
 			surf_part++;
 		}
 	}
