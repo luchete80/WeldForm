@@ -806,15 +806,15 @@ int main(int argc, char **argv) try {
       cout << "Locking "<<endl; 
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech-Fraser" || solver=="Mech-Thermal-Fraser")
-      dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1e6);
     if (solver=="Mech" || solver=="Mech-Thermal" || solver=="Mech-LeapFrog" || solver=="Mech-Thermal-LeapFrog")
-      dom.SolveDiffUpdateLeapFrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      dom.SolveDiffUpdateLeapFrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1e6);
     else if (solver=="Mech-KickDrift" || solver=="Mech-Thermal-KickDrift"){
-      dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1e6);
       cout << "Solver-KickDrift is deprecated"<<endl;
     }
     else if (solver=="Thermal")
-      dom.ThermalSolve(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      dom.ThermalSolve(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1e6);
     else 
       throw new Fatal("Invalid solver.");
 		} else {

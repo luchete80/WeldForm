@@ -533,3 +533,5 @@
 20240725 - Fixed Log Format (was repeated each time step)
          - FOUND AN ERROR ON PARALLEL EXTRUSION. Differences between runs.
 20240726 - Fixed Surface ID calc (reset each step from spourious calc).
+------------------------------------------------------------------
+20240801 - Fixed max outs video (extended from 1e3 to 1e6)
