@@ -319,9 +319,15 @@ int main(int argc, char **argv) try {
     // THERMAL PROPERTIES
 
     double k_T, cp_T, th_ex;
+    th_ex = 0.0;
     readValue(material[0]["thermalCond"], 	  k_T);
     readValue(material[0]["thermalHeatCap"], 	cp_T);    
     readValue(material[0]["thermalExp"], 	  th_ex); //Expansion
+    
+    cout << "Thermal Parameters: "<<endl;
+    cout << "Expansion: "<<th_ex<<endl;
+    cout << "HeatCap:" <<cp_T<<endl;
+    cout << "thermalCond"<<k_T<<endl;
     
     cout << "Done. "<<endl;
        
