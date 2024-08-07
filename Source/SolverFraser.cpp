@@ -99,8 +99,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   //of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
   of << "Time, "<<endl;
   for (int cf=0;cf<m_contact_force.size();cf++){
+    int sid = contact_surf_id[cf];
     if (cf>0) of <<", ";
-      of << "cf"<<cf<<"x, "<<" cf"<<cf<<"y, "<<" cf"<<cf<<"z";
+      of << "cf"<<sid<<"x, "<<" cf"<<sid<<"y, "<<" cf"<<sid<<"z";
   }
   of <<endl;
   bool check_nb_every_time = false;
@@ -469,8 +470,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       of <<Time<<", ";
       for (int cf=0;cf<m_contact_force.size();cf++){
         if (cf>0)of <<", ";
-        int sid = contact_surf_id[cf];
-        of << m_contact_force[sid](0)<<", "<<m_contact_force[sid](1)<<", "<<m_contact_force[sid](2);
+        of << m_contact_force[cf](0)<<", "<<m_contact_force[cf](1)<<", "<<m_contact_force[cf](2);
       }
       of <<endl;
 			if (model_damage){
