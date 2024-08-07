@@ -96,8 +96,13 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
         
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
-  of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
-  
+  //of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
+  of << "Time, "<<endl;
+  for (int cf=0;cf<m_contact_force.size();cf++){
+    if (cf>0) of <<", ";
+      of << "cf"<<cf<<"x, "<<" cf"<<cf<<"y, "<<" cf"<<cf<<"z";
+  }
+  of <<endl;
   bool check_nb_every_time = false;
 
   cout << "Main Loop"<<endl;
@@ -455,12 +460,19 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
       ofprop <<getTime() << ", "<<m_scalar_prop<<endl;
 			
-      for (int p=0;p<Particles.Size();p++){
-				if (Particles[p]->print_history)
-          of << Particles[p]->Displacement << ", "<<Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< 
-          Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
-          contact_force_sum << endl;
-			}
+      // for (int p=0;p<Particles.Size();p++){
+				// if (Particles[p]->print_history)
+          // of << Particles[p]->Displacement << ", "<<Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< 
+          // Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
+          // contact_force_sum << endl;
+			// }
+      of <<Time<<", ";
+      for (int cf=0;cf<m_contact_force.size();cf++){
+        if (cf>0)of <<", ";
+        int sid = contact_surf_id[cf];
+        of << m_contact_force[sid](0)<<", "<<m_contact_force[sid](1)<<", "<<m_contact_force[sid](2);
+      }
+      of <<endl;
 			if (model_damage){
 				double max_dam = 0.;
 				int dam_count =0;

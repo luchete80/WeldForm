@@ -306,6 +306,7 @@ inline void Domain::CalcContactForcesWang(){
             
             omp_set_lock(&dom_lock);            
               contact_force_sum += norm(Particles[P1] ->contforce);
+              m_contact_force[m]+=Particles[P1] ->contforce;
               //contact_force_sum_v += Particles[P1] ->contforce;
               contact_reaction_sum += dot (Particles[P1] -> a,Particles[P2]->normal)* Particles[P1]->Mass;
               //ext_forces_work_step += dot (Particles[P1] -> contforce,//Particles[P2]->v);

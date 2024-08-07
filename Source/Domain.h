@@ -299,6 +299,7 @@ public:
   
   //Profiler things
   double m_contact_forces_time;
+  std::vector <Vec3_t> m_contact_force; //per surface
   double m_clock_begin;
   double m_forces_artifvisc_time;
   double m_forces_momentum_time;

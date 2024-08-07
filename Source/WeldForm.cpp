@@ -562,7 +562,7 @@ int main(int argc, char **argv) try {
         readValue(rigbodies[rb]["zoneId"],id);
         cout << "Id: "<<id <<endl;
         dom.AddTrimeshParticles(mesh[mesh_count], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-
+        dom.m_contact_force.push_back(Vec3_t(0.0,0.0,0.0));
         double penaltyfac = 0.5;
         std::vector<double> fric_sta(1), fric_dyn(1), heat_cond(1);
         readValue(contact_[0]["fricCoeffStatic"], 	fric_sta[0]); 
