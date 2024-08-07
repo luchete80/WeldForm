@@ -318,9 +318,10 @@ int main(int argc, char **argv) try {
 			
     // THERMAL PROPERTIES
 
-    double k_T, cp_T;
+    double k_T, cp_T, th_ex;
     readValue(material[0]["thermalCond"], 	  k_T);
     readValue(material[0]["thermalHeatCap"], 	cp_T);    
+    readValue(material[0]["thermalExp"], 	  th_ex); //Expansion
     
     cout << "Done. "<<endl;
        
@@ -787,6 +788,7 @@ int main(int argc, char **argv) try {
       // THERMAL PROPS
       dom.Particles[a]->k_T = k_T;
       dom.Particles[a]->cp_T = cp_T;
+      dom.Particles[a]->th_exp = th_ex;
 
 			if (mattype == "Hollomon" || mattype == "JohnsonCook" || mattype == "GMT"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
        dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,dom.Particles[a]->T);    
