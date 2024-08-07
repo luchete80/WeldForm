@@ -97,7 +97,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
   //of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
-  of << "Time, "<<endl;
+  of << "Time, ";
   for (int cf=0;cf<m_contact_force.size();cf++){
     int sid = contact_surf_id[cf];
     if (cf>0) of <<", ";
