@@ -37,6 +37,8 @@ inline void Domain::CalcContactForcesWang(){
 		inside_time=inside_geom=0;
     Particles[i] -> q_cont_conv = 0.;
     Particles[i] -> friction_hfl = 0.;
+    for (int m=0;m<meshcount;m++)
+      m_contact_force[m]=0.0;
   }
 
   for (int m=0;m<meshcount;m++) tot_cont_heat_cond[m] = 0.;
@@ -88,6 +90,7 @@ inline void Domain::CalcContactForcesWang(){
   Vec3_t ref_tg;
   double dS2;
 
+    
 	#pragma omp parallel for schedule (static) private(P1,P2,end,vr,dist, delta_tg, delta_,delta, abs_fv, x_pred, imp_force, fr_sta, fr_dyn, ref_tg, vr_pred, du, m, inside,i,j,crit,dt_fext,kij,omega,psi_cont,e,tgforce,tgforce_dyn,tgvr,norm_tgvr,tgdir,atg, dS2) num_threads(Nproc)
   //tgforce
 	#ifdef __GNUC__
