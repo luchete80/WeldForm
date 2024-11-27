@@ -1,0 +1,3 @@
+[submodule "External/LSDynaReader"]
+	path = External/LSDynaReader
+	url = git@github.com:luchete80/LSDynaReader.git
