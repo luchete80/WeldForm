@@ -2793,19 +2793,23 @@ void Domain::ReadFromLSdyna(const char *fName){
   solid_part_count = reader.m_elem_count_type[_SPH_];
   cout << "Particles readed: "<< reader.m_elem_count_type[_SPH_]<<endl;
   //SetDimension(particle_count);
-/*
-  isdim_reserved = true;
-  x_h =  new double3 [particle_count];
-  m_h =  new double [particle_count];
+
   
   for (int i=0;i<reader.m_elem.size();i++) {
     if (reader.m_elem[i].m_type == _SPH_){
       LS_Dyna::ls_node n = reader.getElemNode(i,0);
       //cout << "Node XYZ"<< n.m_x[0]<< ", "<<n.m_x[1]<< ", "<<n.m_x[2]<< ", "<<endl;
-      x_h[i] = make_double3(double(n.m_x[0]), double(n.m_x[1]), double(n.m_x[2]));
-      m_h[i] = reader.m_elem[i].mass;
+      //x_h[i] = make_double3(double(n.m_x[0]), double(n.m_x[1]), double(n.m_x[2]));
+      //m_h[i] = reader.m_elem[i].mass;
+      //Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);
+      double h =1.0;
+      double rho = 1.0;
+      double m_0 =1.0;
+      Particles.Push(new Particle(0,Vec3_t(n.m_x[0],n.m_x[1],n.m_x[2]),Vec3_t(0,0,0),m_0,rho,h));
+      
     }
   }
+  /*
   cout << "Reading "<<reader.m_set_nod.size()<< " sets."<<endl;
   if (reader.m_set_nod.size()>0) {
     realloc_ID = true;
@@ -2827,9 +2831,10 @@ void Domain::ReadFromLSdyna(const char *fName){
       }
     }
   }
+  */
   //delete ID_h;
 
-  */
+  
   cout << "Done. "<<endl;
 }
   

@@ -12,7 +12,7 @@
   "artifViscAlpha": 2.0,
   "artifViscBeta": 1.0,
   "kernelGradCorr":false,
-	"solver": "Mech-Thermal"
+	"solver": "Mech-Fraser"
 }
 ,
 "Materials":[ 

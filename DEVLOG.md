@@ -539,3 +539,5 @@
          - Added thermal expansion to input
 ---------------------------------------------------------------------
 20241127 - Adding lsdyna Domain reader
+         - FIXED CRASH dueto buggy damage reading
+         

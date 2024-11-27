@@ -289,6 +289,7 @@ int main(int argc, char **argv) try {
     
     else                              throw new Fatal("Invalid material type.");
     
+    
 		string damage_mod="";
 		readValue(material[0]["damageModel"],damage_mod);
 		DamageModel *damage;
@@ -313,8 +314,11 @@ int main(int argc, char **argv) try {
 			dom.model_damage = true;
 			dom.nonlock_sum = false;
 		}
-		
-		damage->mat = mat;
+    if (damage_mod==""){
+      cout << "NO DAMAGE MODEL SET."<<endl;
+    } else if(damage_mod=="Rankine" || damage_mod=="JohnsonCook"){
+      damage->mat = mat;
+    }
 			
     // THERMAL PROPERTIES
 
@@ -425,6 +429,7 @@ int main(int argc, char **argv) try {
       cout << "Adding Box ..."<<endl;  
       if ( gridCS == "AxiSymmetric") {
         dom.dom_bid_type = AxiSymmetric;
+        cout << "PROBLEM TYPE: 2D AXISYMMETRIC"<<endl;
       }
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 			cout << "Solid Part count "<<dom.solid_part_count<<endl;
@@ -438,8 +443,11 @@ int main(int argc, char **argv) try {
       }
       else {
         cout << "..."<<endl;
-        if ( gridCS == "Cartesian")
+        if ( gridCS == "Cartesian"){
+          cout << "PROBLEM TYPE: 3D"<<endl;
+          cout << "DIM: "<<dom.Dimension<<endl;
           dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym[2]); 
+        }
         else if (gridCS == "Cylindrical"){
           if (slice_ang==2.0 * M_PI){
             dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h);

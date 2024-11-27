@@ -16,7 +16,7 @@
 {
 	"id": "Solid",
 	"type": "Bilinear",
-  "const": [0.0],
+  "const": [0.0,0.0],
 	"density0": 2700.0, 
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.3,

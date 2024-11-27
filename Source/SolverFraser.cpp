@@ -285,12 +285,14 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //#ifdef NONLOCK_SUM
     if (nonlock_sum) AccelReduction();
     else {  
-      cout << "ERROR. Locking Reduction not allowed for Axisymm 2D"<<endl;
-      if (dom_bid_type == AxiSymmetric)
+      if (dom_bid_type == AxiSymmetric){
       for (int i=0; i<solid_part_count;i++){
         Particles[i]->a *= 2.0 * M_PI;
         Particles[i]->a[0] -= Particles[i]->Sigma(2,2); //WANG Eqn. 40
-      }    
+      }
+
+      cout << "ERROR. Locking Reduction not allowed for Axisymm 2D"<<endl;      
+      }
     }
     
     //#endif
