@@ -537,3 +537,5 @@
 20240801 - Fixed max outs video (extended from 1e3 to 1e6)
 20240807 - Added Contact Force to History
          - Added thermal expansion to input
+---------------------------------------------------------------------
+20241127 - Adding lsdyna Domain reader

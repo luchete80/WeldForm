@@ -459,6 +459,28 @@ int main(int argc, char **argv) try {
           }          
         }
       }
+    } else if (domtype == "File") {
+        string filename = "";
+        readValue(domblock[0]["fileName"], 	filename); 
+        cout << "Reading Particles Input file " << filename <<endl;  
+        dom.ReadFromLSdyna(filename.c_str());
+        
+        double tot_mass = 0.;
+        //for (int p=0;p<dom.particle_count;p++){
+          double x,y,z;
+          //x =dom_d->x_h[p].x;
+          //y =dom_d->x_h[p].y;
+          //z = dom_d->x_h[p].z;
+          //dom.Particles.push_back(new SPH::Particle(0,Vector(x,y,z),Vector(0,0,0),0.0,rho,h,false));
+          //dom.Particles[p]->Mass = dom_d->m_h[p];
+         
+          //if (dom_d->realloc_ID)dom.Particles[p]->ID = dom_d->ID_h[p];
+          //tot_mass+=dom_d->m_h[p];
+        //}
+        //delete dom_d->x_h,dom_d->m_h;
+        //printf( "Total Mass Readed from LS-Dyna: %fn", tot_mass);      
+      
+      
     }
 
         cout <<"t  			= "<<timestep<<endl;

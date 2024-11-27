@@ -498,6 +498,8 @@ public:
   string filename;
   std::ofstream out_file;
   
+  void ReadFromLSdyna(const char * fName);
+  
   private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
 		void Periodic_X_Correction	(Vec3_t & x, double const & h, Particle * P1, Particle * P2);		//Corrects xij for the periodic boundary condition
