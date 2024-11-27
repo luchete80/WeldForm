@@ -244,6 +244,74 @@ public Material_{
 	// inline double CalcYieldStress(const double &strain);	
 // };
 
+#include <vector>
+///TABLE MATERIAL
+ // LIKE AMPLITUDE
+  struct table {
+	int id;
+	std::vector <double> x; ///set??
+	//std::vector <T> value;
+  //T getValAtTime(const double &t){
+  std::vector <double> value;
+  double getValAtTime(const double &t){
+    double ret;
+    //assumed ordered
+    int i=x.size()-1;
+    bool end = false;
+    while (!end){
+      i--;
+      if (i==0 || t > x[i]) end =true;
+    }
+    ret =  value[i]+ (value[i+1] - value[i])/(x[i+1] - x[i])*(t-x[i]);
+    return ret;
+    
+  }
+	//std::map;
+};
+
+struct sy_at_T_sr{
+  
+  table sy_vs_e; //CONSTANT T AND eps
+  double T, er; 
+  
+};
+/*
+class TabMat:
+public Material_{
+  
+  std::vector <sy_at_T_sr> s_vs_e;
+  
+	
+	public:
+	TabMat(){}
+	//You provide the values of A, B, n, m, 
+	//θmelt, and  θ_transition
+	//as part of the metal plasticity material definition.
+	GMT(const Elastic_ &el):
+	Material_(el)
+  {
+    e_min =e_min_; e_max =e_max_;
+    er_min=er_min_;er_max=er_max_;
+    T_min =T_min_; T_max =T_max_;
+		// T_m=T_m_;
+		// T_t=T_t_;
+	}
+	inline double CalcYieldStress(){return 0.0;}	
+	inline double CalcYieldStress(const double &plstrain){
+     // double Et =0.;
+
+    // if (plstrain > 0.)
+      // Et = n * B * pow(plstrain,n-1.);
+    // else 
+      // Et = Elastic().E()*0.1; //ARBITRARY! TODO: CHECK MATHEMATICALLY
+    // return Et;
+  } //TODO: SEE IF INCLUDE	
+	inline double CalcYieldStress(const double &strain, const double &strain_rate, const double &temp);	
+	inline double CalcTangentModulus(const double &strain, const double &strain_rate, const double &temp);
+  double &getRefStrainRate(){return eps_0;}//only for JC
+  //~JohnsonCook(){}
+};
+*/
 #include "Material.cpp"
 
 #endif
