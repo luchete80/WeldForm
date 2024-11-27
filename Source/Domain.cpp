@@ -29,6 +29,7 @@
 #define DELTA_PL_STRAIN 1.e-3
 #include <set>
 
+#include "LSDynaReader/src/lsdynaReader.h"
 
 //https://stackoverflow.com/questions/19240540/dynamically-allocating-array-explain/19240932#19240932
 template <typename T>
@@ -2782,6 +2783,7 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
   
 }
 
+using namespace LS_Dyna;
 
 void Domain::ReadFromLSdyna(const char *fName){
   
