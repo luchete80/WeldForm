@@ -96,8 +96,14 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
         
 	//Print history
 	std::ofstream of("History.csv", std::ios::out);
-  of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
-  
+  //of << "Displacement, pl_strain, eff_strain_rate, sigma_eq, sigmay, contforcesum"<<endl;
+  of << "Time, ";
+  for (int cf=0;cf<m_contact_force.size();cf++){
+    int sid = contact_surf_id[cf];
+    if (cf>0) of <<", ";
+      of << "cf"<<sid<<"x, "<<" cf"<<sid<<"y, "<<" cf"<<sid<<"z";
+  }
+  of <<endl;
   bool check_nb_every_time = false;
 
   cout << "Main Loop"<<endl;
@@ -279,12 +285,14 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //#ifdef NONLOCK_SUM
     if (nonlock_sum) AccelReduction();
     else {  
-      cout << "ERROR. Locking Reduction not allowed for Axisymm 2D"<<endl;
-      if (dom_bid_type == AxiSymmetric)
+      if (dom_bid_type == AxiSymmetric){
       for (int i=0; i<solid_part_count;i++){
         Particles[i]->a *= 2.0 * M_PI;
         Particles[i]->a[0] -= Particles[i]->Sigma(2,2); //WANG Eqn. 40
-      }    
+      }
+
+      cout << "ERROR. Locking Reduction not allowed for Axisymm 2D"<<endl;      
+      }
     }
     
     //#endif
@@ -293,6 +301,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     ///// 8. CONTACT FORCES
     clock_beg = clock(); 
     if (contact) {
+      if      (contact_alg==Fraser)   CalcContactForces();
       if      (contact_alg==Wang)     CalcContactForcesWang();
       else if (contact_alg==Seo )     CalcContactForces2();
      // else if (contact_alg==LSDyna )  CalcContactForcesLS();
@@ -419,10 +428,12 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
       }
       
 			total_time = std::chrono::steady_clock::now() - start_whole;		
-			std::cout << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
+      oss_out.str("");
+			oss_out << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
-      oss_out.clear();
+
       oss_out << std::setprecision(2);
+      oss_out << "step number: "<<steps <<endl;
       oss_out << "Calculation Times\nAccel: "<<acc_time_spent_perc<<"%,  ";
       oss_out << "Density: "<<dens_time_spent/total_time.count()<<"%,  ";
       oss_out << "Stress: "  <<stress_time_spent/total_time.count()<<"%,  "<<endl;
@@ -452,12 +463,18 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
       ofprop <<getTime() << ", "<<m_scalar_prop<<endl;
 			
-      for (int p=0;p<Particles.Size();p++){
-				if (Particles[p]->print_history)
-          of << Particles[p]->Displacement << ", "<<Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< 
-          Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
-          contact_force_sum << endl;
-			}
+      // for (int p=0;p<Particles.Size();p++){
+				// if (Particles[p]->print_history)
+          // of << Particles[p]->Displacement << ", "<<Particles[p]->pl_strain<<", "<<Particles[p]->eff_strain_rate<<", "<< 
+          // Particles[p]->Sigma_eq<<", "  <<  Particles[p]->Sigmay << ", " <<
+          // contact_force_sum << endl;
+			// }
+      of <<Time<<", ";
+      for (int cf=0;cf<m_contact_force.size();cf++){
+        if (cf>0)of <<", ";
+        of << m_contact_force[cf](0)<<", "<<m_contact_force[cf](1)<<", "<<m_contact_force[cf](2);
+      }
+      of <<endl;
 			if (model_damage){
 				double max_dam = 0.;
 				int dam_count =0;

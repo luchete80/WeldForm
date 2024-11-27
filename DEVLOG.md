@@ -508,4 +508,36 @@
 20240517 - FIXED FLIP NORMALS ON NASTRAN FILE (WAS INVERTING X AND Y COORDINATES INSTEAD OF CONNECTIVITY)
          - Added error if CellNo[0] = 0 So there is not seg fault.
          - FOUND error on Scientific notation NASTRAN reader. 
+20240527 - Added state of contact conduction at the begin of the solution.  
+         - Fixed contact conduction reading 
+20240528 - Added feature of assign initial diff conditions for different Zone IDs
+         - Fixed contact BC with amplitude function (there was readng zero value)
+         - Added amplitude factor to be 1.0 by default (it was zero)
+         - Fixed contact conduction and friction heat for Axisymmetric
+         - Added optional plastic work heat
+20240529 - Fixed dS calculation on Wang contact (logical was wrong and also the expression)
+         - sy calculation was made only once for GMT.
+         - Fixed dTdt equation fo axisymm
+         - Fixed CSV output (missing comma between CFZ and pressure)
+-----------------------------------------------------------------
+20240603 - Added BC Convection reading from json input file.
+         - Fixed input in thermal case
+20240604 - Added axisymmetric conduction (accordfing to castillo and García-Senz)
+20240605 - FIXED reading BC conection (was appliyng to entire domain)
+         - FIXED convection fo plane strain (dS were wrong).
+20240606 - Added 3D cylinder convection example 
+20240618 - Added Fraser Contact Algorithm to input (not working with LeapFrog)
+-----------------------------------------------------------------
+20240705 - Fixed Tangent modulus calc on GMT material
+         - Fixed Vertical line on input (still remains inclined line)
+20240725 - Fixed Log Format (was repeated each time step)
+         - FOUND AN ERROR ON PARALLEL EXTRUSION. Differences between runs.
+20240726 - Fixed Surface ID calc (reset each step from spourious calc).
+------------------------------------------------------------------
+20240801 - Fixed max outs video (extended from 1e3 to 1e6)
+20240807 - Added Contact Force to History
+         - Added thermal expansion to input
+---------------------------------------------------------------------
+20241127 - Adding lsdyna Domain reader
+         - FIXED CRASH dueto buggy damage reading
          

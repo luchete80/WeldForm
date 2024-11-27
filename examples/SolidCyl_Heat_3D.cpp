@@ -57,14 +57,16 @@ int main(int argc, char **argv) try
     	dom.Scheme	= 1;
 //     	dom.XSPH	= 0.5; //Very important
 
-        double dx,h,rho,K,G,Cs,Fy;
+        double dx,h,rho,K,G,Cs,Fy,R;
     	double H,L,n;
 
     	H	= 1.;
+      L = 0.616;
+      R = 0.15;
     	n	= 20.;
 
     	rho	= 1000.0;
-    	dx	= H / n;
+    	dx	= 0.005;
     	h	= dx*1.2; //Very important
         Cs	= sqrt(K/rho);
 
@@ -79,8 +81,10 @@ int main(int argc, char **argv) try
         dom.DomMax(0) = H;
         dom.DomMin(0) = -H;
 
-     	dom.AddBoxLength(1 ,Vec3_t (0.,0.,0.), H ,H,H , dx/2.0 ,rho, h, 1 , 0 , false, false );
-     	dom.ts_nb_inc = 5;		
+      dom.AddCylinderLength(1, Vec3_t (0.,0.,0.), R, L, dx/2, rho, h, false, false); 
+     	
+      //dom.AddBoxLength(1 ,Vec3_t (0.,0.,0.), H ,H,H , dx/2.0 ,rho, h, 1 , 0 , false, false );
+     	
 // dom.AddBoxLength(1 ,Vec3_t ( -H/2.0, -H/2.0 , -H/2.0 ), 
 							// H , H ,  H , 
 							// dx/2.0 ,rho, h, 1 , 0 , false, false );

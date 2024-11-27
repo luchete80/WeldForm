@@ -17,7 +17,7 @@
 ,
 "Materials":[ 
 {
-	"id": "Solid",  
+	"id": "Solid",
 	"type": "Bilinear",
   "const": [0.0],
 	"density0": 2700.0,   
@@ -25,26 +25,39 @@
 	"poissonsRatio": 0.3,
 	"yieldStress0": 300.0E6,
 	"thermalCond": 150.0,
-	"thermalHeatCap": 960.0
+	"thermalHeatCap": 960.0,
+  "plasticHeat" : false
 }],
 
 "RigidBodies": 
 [{
 	"type": "Line",
 	"zoneId": 10,
-	"start": [0.0, 0.6184999, 0.0],
+	"start": [0.0, 0.6185, 0.0],
   "partSide": 40,
 	"dim":   [0.2, 0.0, 0.0],
 	"translation": [1.0, 0.0, 0.0],
 	"scale": [1, 1, 1]
+},
+{
+	"type": "Line",
+	"zoneId": 11,
+	"start": [0.0, -0.0065, 0.0],
+  "partSide": 40,
+	"dim":   [0.2, 0.0, 0.0],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1],
+  "flipNormals": true
 }],
+
 "Contact":[ 
 {
-  "fricCoeffStatic": 0.4,
-  "fricCoeffDynamic": 0.4,
+  "fricCoeffStatic": 1.0,
+  "fricCoeffDynamic": 1.0,
   "penaltyFactor": 0.6,
   "heatConductance": true,
-  "heatCondCoeff": 100.0
+  "heatFriction": false,
+  "heatCondCoeff": 300
   
 }],
 
@@ -60,14 +73,6 @@
 	"scale": [1, 1, 1]
 }],
 
-"DomainZones": [
-{
-	"id": 5,
-	"start":[-1.0, 0.0,0.0],
-	"end": 	[ 1.0, 0.02000,0.0]
-}
-],
-
 "Amplitudes": [
 {
 	"id": 		1,
@@ -78,27 +83,31 @@
 ],
 "BoundaryConditions": [
 {
-	"zoneId": 	5,
+	"zoneId": 	11,
 	"valueType": 0,
 	"value": 		[ 0.0, 0.0, 0.0],
 	"free": 		true
 },
 {
 	"zoneId": 	10,
-	"valueType": 	1,
+	"valueType": 	0,
   "amplitudeId" : 1,
-	"value": 		[ 0.0, -1.0, 0.0],
+	"value": 		[ 0.0, -10.0, 0.0],
 	"free": 		true
 }
 ],
 "InitialConditions": [
 {
-  "zoneId" : 10,
-	"Temp": 200.0
-},
-{
   "zoneId" :0,
 	"Temp": 20.0
+},
+{
+  "zoneId" :10,
+	"Temp": 300.0
+},
+{
+  "zoneId" :11,
+	"Temp": 300.0
 }
 ]
 

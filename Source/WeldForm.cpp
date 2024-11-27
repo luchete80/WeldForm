@@ -66,7 +66,7 @@ void UserAcc(SPH::Domain & domi)
 	{
 		for (int bc=0;bc<domi.bConds.size();bc++){
 			if (domi.Particles[i]->ID == domi.bConds[bc].zoneId ) {
-				if (domi.bConds[bc].type == 0 ){ //VELOCITY
+				if (domi.bConds[bc].type == Velocity_BC ){ //VELOCITY
 					if (domi.bConds[bc].valueType == 0) {
             domi.Particles[i]->a		= Vec3_t(0.0,0.0,0.0);
             domi.Particles[i]->v		= domi.bConds[bc].value;          
@@ -80,7 +80,12 @@ void UserAcc(SPH::Domain & domi)
               }//if if match
             }//for amps
           } //VALUE TYPE == AMPLITUDE 
-				}//TYPE == VELOCITY
+				}//  == VELOCITY
+        else if (domi.bConds[bc].type == Temperature_BC){
+          domi.Particles[i]->T = domi.bConds[bc].T;
+        } else if (domi.bConds[bc].type == Convection_BC){
+          
+        }
         
 			}//ZoneID 			
 		}//BC
@@ -89,7 +94,7 @@ void UserAcc(SPH::Domain & domi)
   if (domi.contact){
     for (int bc=0;bc<domi.bConds.size();bc++){
       for (int m=0;m<domi.trimesh.size();m++){
-        if (domi.trimesh[m]->id == domi.bConds[bc].zoneId)
+        if (domi.trimesh[m]->id == domi.bConds[bc].zoneId){
           if (domi.bConds[bc].valueType == 0) { ///constant
             domi.trimesh[m]->SetVel(domi.bConds[bc].value);
             domi.trimesh[m]->SetRotAxisVel(domi.bConds[bc].value_ang);
@@ -99,12 +104,15 @@ void UserAcc(SPH::Domain & domi)
               if(domi.amps[i].id == domi.bConds[bc].ampId){
                 double val = domi.bConds[bc].ampFactor * domi.amps[i].getValAtTime(domi.getTime());
                 Vec3_t vec = val * domi.bConds[bc].value;
-                //cout << "Time, vec"<<domi.getTime()<< ", "<<vec<<endl;
+                // cout << "Time, vec, ampfactor"<<domi.getTime()<< ", "<<vec<<", amp "<<domi.bConds[bc].ampFactor<<endl;
+                // cout << "bc val "<<domi.bConds[bc].value<<endl;
+                // cout << "amp val " <<domi.amps[i].getValAtTime(domi.getTime())<<endl;
                 domi.trimesh[m]->SetVel(vec);
               }
  				// readValue(bc["amplitudeId"], 		bcon.ampId);
 				// readValue(bc["amplitudeFactor"], 	bcon.ampFactor);           
           }
+        }//zoneID
       }//mesh
     }//bcs
     
@@ -161,9 +169,9 @@ int main(int argc, char **argv) try {
     size_t test = findLastOccurrence(inputFileName, '\\');
     if (test != string::npos) pos = test;
     //cout << "pos of json "<<inputFileName.find(".json")<<endl;
-    string out_name = inputFileName.substr(pos+1, inputFileName.find(".json") - pos ) + "out";
+    string out_name = inputFileName.substr(pos, inputFileName.find(".json") - pos +1) + "out";
     //cout << "Out file: "<< out_name << endl;
-    dom.out_file.open(out_name.c_str(), std::ofstream::out | std::ofstream::app);
+    dom.out_file.open(out_name.c_str()/*, std::ofstream::out | std::ofstream::app*/);
 		dom.Dimension	= 3;
 		
 		string kernel;
@@ -203,7 +211,7 @@ int main(int argc, char **argv) try {
     string solver = "Mech";
     readValue(config["solver"],solver);
     
-    if (solver=="Mech-Thermal" || solver=="Mech-Thermal-KickDrift" || solver=="Mech-Thermal-Fraser" || solver=="Mech-Thermal-LeapFrog")
+    if (solver=="Thermal" ||solver=="Mech-Thermal" || solver=="Mech-Thermal-KickDrift" || solver=="Mech-Thermal-Fraser" || solver=="Mech-Thermal-LeapFrog")
       dom.thermal_solver = true;
 		
 		readValue(config["integrationMethod"], dom.Scheme); //0:Verlet, 1:LeapFrog, 2: Modified Verlet
@@ -234,6 +242,7 @@ int main(int argc, char **argv) try {
     e_range[1]=er_range[1]=T_range[1]=1.0e10;
     
     string mattype = "Bilinear";
+    bool plastic_heat = false;
     cout << "Reading Material.."<<endl;
     cout << "Type.."<< endl; readValue(material[0]["type"], 		mattype);
     cout << "Density.."<< endl; readValue(material[0]["density0"], 		rho);
@@ -244,6 +253,9 @@ int main(int argc, char **argv) try {
     readArray(material[0]["strRange"],  e_range );
     readArray(material[0]["strdotRange"], er_range);
     readArray(material[0]["tempRange"],   T_range );
+    readValue(material[0]["plasticHeat"], plastic_heat);
+    
+    dom.pl_heating = plastic_heat;
     
     Material_ *mat; //SINCE DAMAGE MATERIAL, MATERIAL ALWAYS HAS TO BE ASSIGNED
     Elastic_ el(E,nu);
@@ -277,6 +289,7 @@ int main(int argc, char **argv) try {
     
     else                              throw new Fatal("Invalid material type.");
     
+    
 		string damage_mod="";
 		readValue(material[0]["damageModel"],damage_mod);
 		DamageModel *damage;
@@ -301,14 +314,24 @@ int main(int argc, char **argv) try {
 			dom.model_damage = true;
 			dom.nonlock_sum = false;
 		}
-		
-		damage->mat = mat;
+    if (damage_mod==""){
+      cout << "NO DAMAGE MODEL SET."<<endl;
+    } else if(damage_mod=="Rankine" || damage_mod=="JohnsonCook"){
+      damage->mat = mat;
+    }
 			
     // THERMAL PROPERTIES
 
-    double k_T, cp_T;
+    double k_T, cp_T, th_ex;
+    th_ex = 0.0;
     readValue(material[0]["thermalCond"], 	  k_T);
     readValue(material[0]["thermalHeatCap"], 	cp_T);    
+    readValue(material[0]["thermalExp"], 	  th_ex); //Expansion
+    
+    cout << "Thermal Parameters: "<<endl;
+    cout << "Expansion: "<<th_ex<<endl;
+    cout << "HeatCap:" <<cp_T<<endl;
+    cout << "thermalCond"<<k_T<<endl;
     
     cout << "Done. "<<endl;
        
@@ -323,7 +346,7 @@ int main(int argc, char **argv) try {
 		int cflMethod;
     double output_time;
     double sim_time;
-    string cont_alg = "Fraser";
+    string cont_alg = "Wang";
     bool auto_ts[] = {true, false, false}; //IN SOME METAL CUTS HAS BEEN FOUND THAT ONLY VELOCITY CRITERIA DIVERGES.
 		readValue(config["cflMethod"], cflMethod);
 
@@ -382,7 +405,6 @@ int main(int argc, char **argv) try {
     cout << "Grid Coordinate System" << endl;  readValue(domblock[0]["gridCoordSys"], 	gridCS); //0: Box
     cout << "Slice Angle " << endl;  readValue(domblock[0]["sliceAngle"], 	slice_ang); //0: Box
     readBoolVector(domblock[0]["sym"], 	sym); //0: Box
-    
     for (int i=0;i<3;i++){ //TODO: Increment by Start Vector
 			dom.DomMax(0) = L[i];
 			dom.DomMin(0) = -L[i];
@@ -407,6 +429,7 @@ int main(int argc, char **argv) try {
       cout << "Adding Box ..."<<endl;  
       if ( gridCS == "AxiSymmetric") {
         dom.dom_bid_type = AxiSymmetric;
+        cout << "PROBLEM TYPE: 2D AXISYMMETRIC"<<endl;
       }
 			dom.AddBoxLength(id ,start, L[0] , L[1],  L[2] , r ,rho, h, 1 , 0 , false, false );		
 			cout << "Solid Part count "<<dom.solid_part_count<<endl;
@@ -420,8 +443,11 @@ int main(int argc, char **argv) try {
       }
       else {
         cout << "..."<<endl;
-        if ( gridCS == "Cartesian")
+        if ( gridCS == "Cartesian"){
+          cout << "PROBLEM TYPE: 3D"<<endl;
+          cout << "DIM: "<<dom.Dimension<<endl;
           dom.AddCylinderLength(0, start, L[0]/2., L[2], r, rho, h, false, sym[2]); 
+        }
         else if (gridCS == "Cylindrical"){
           if (slice_ang==2.0 * M_PI){
             dom.AddCylUniformLength(0, L[0]/2.,L[2], r, rho, h);
@@ -441,6 +467,28 @@ int main(int argc, char **argv) try {
           }          
         }
       }
+    } else if (domtype == "File") {
+        string filename = "";
+        readValue(domblock[0]["fileName"], 	filename); 
+        cout << "Reading Particles Input file " << filename <<endl;  
+        dom.ReadFromLSdyna(filename.c_str());
+        
+        double tot_mass = 0.;
+        //for (int p=0;p<dom.particle_count;p++){
+          double x,y,z;
+          //x =dom_d->x_h[p].x;
+          //y =dom_d->x_h[p].y;
+          //z = dom_d->x_h[p].z;
+          //dom.Particles.push_back(new SPH::Particle(0,Vector(x,y,z),Vector(0,0,0),0.0,rho,h,false));
+          //dom.Particles[p]->Mass = dom_d->m_h[p];
+         
+          //if (dom_d->realloc_ID)dom.Particles[p]->ID = dom_d->ID_h[p];
+          //tot_mass+=dom_d->m_h[p];
+        //}
+        //delete dom_d->x_h,dom_d->m_h;
+        //printf( "Total Mass Readed from LS-Dyna: %fn", tot_mass);      
+      
+      
     }
 
         cout <<"t  			= "<<timestep<<endl;
@@ -521,7 +569,13 @@ int main(int argc, char **argv) try {
           mesh.push_back(new TriMesh);
           mesh[mesh_count]->dimension = 2;
           //if (dim(0)>0.0 && dim(0)>1.0) cout << "ERROR. 
-          mesh[mesh_count]->AxisPlaneMesh(1, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
+          if (dim(0)>0.0)
+            mesh[mesh_count]->AxisPlaneMesh(1, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens);        
+          else if (dim(1)>0.0)
+            mesh[mesh_count]->AxisPlaneMesh(0, flipnormals, start, Vec3_t(start(0)+dim(0),start(1)+dim(1), 0.0),dens); 
+          else 
+            cout << "ERROR. Line has null dimension."<<endl;
+          cout << "Rigid Body start pos: "<<start(0)+dim(0)<<", "<<start(1)+dim(1)<<endl;
         } else if (rigbody_type == "File"){
           string filename = "";
           readValue(rigbodies[rb]["fileName"], 	filename); 
@@ -545,7 +599,7 @@ int main(int argc, char **argv) try {
         readValue(rigbodies[rb]["zoneId"],id);
         cout << "Id: "<<id <<endl;
         dom.AddTrimeshParticles(mesh[mesh_count], hfac, id); //AddTrimeshParticles(const TriMesh &mesh, hfac, const int &id){
-
+        dom.m_contact_force.push_back(Vec3_t(0.0,0.0,0.0));
         double penaltyfac = 0.5;
         std::vector<double> fric_sta(1), fric_dyn(1), heat_cond(1);
         readValue(contact_[0]["fricCoeffStatic"], 	fric_sta[0]); 
@@ -557,21 +611,33 @@ int main(int argc, char **argv) try {
         mesh_count ++;
 
         // readValue(rigbodies[0]["contAlgorithm"],cont_alg);
+        cout << "Contact Algorithm set to ";
         if (cont_alg == "Seo") {
-          cout << "Contact Algorithm set to SEO"<<endl;
+          cout << "SEO"<<endl;
           dom.contact_alg = Seo;
         } else if (cont_alg == "LSDyna") {
           dom.contact_alg = LSDyna;
+          cout << "LS_Dyna"<<endl;
+        } else if (cont_alg == "Fraser") { /////FRASER NOT WORKING
+          // dom.contact_alg = Fraser;
+          cout << "Wang. ATTENTION: Fraser  algorithm does not working"<<endl;
         }else {
-          cout << "Contact Algorithm set to WANG"<<endl;
+          cout << "Wang"<<endl;
         }
         
         //cout << "Contact Algortihm: "<< cont_alg.c_str() <<end;
         
         bool heat_cond_ = false;
-        if (readValue(contact_[0]["heatConductance"], 	heat_cond_)){
+        bool heat_fric_ = false;
+        readValue(contact_[0]["heatConductance"], 	heat_cond_);
+        readValue(contact_[0]["heatFriction"], 	heat_fric_);
+        if (heat_cond_) {
           dom.cont_heat_cond = true;
           dom.contact_hc = heat_cond[0];
+        }
+
+        if (heat_fric_) {
+          dom.cont_heat_fric = true;
         }
         
 
@@ -581,7 +647,8 @@ int main(int argc, char **argv) try {
         
         dom.PFAC = penaltyfac;
         dom.DFAC = 0.0;
-        cout << "Contact Penalty Factor: "<<dom.PFAC<<", Damping Factor: " << dom.DFAC<<endl;      
+        cout << "Contact Penalty Factor: "<<dom.PFAC<<", Damping Factor: " << dom.DFAC<<endl; 
+        cout << "Contact heat conduction set to " << dom.cont_heat_cond << endl;
       } 
       else 
         cout << "false. "<<endl;      
@@ -615,13 +682,14 @@ int main(int argc, char **argv) try {
 			// MaterialData* data = new MaterialData();
 			int zoneid,valuetype,var,ampid;
 
-			double ampfactor;
+			double ampfactor = 1.0;
 			bool free=true;
 			SPH::boundaryCondition bcon;
       bcon.type = 0;        //DEFAULT: VELOCITY
       bcon.valueType = 0;   //DEFAULT: CONSTANT
       bcon.value_ang = 0.0;
 			readValue(bc["zoneId"], 	bcon.zoneId);
+			readValue(bc["type"], 	bcon.type);
       //type 0 means velocity vc
 			readValue(bc["valueType"], 	bcon.valueType);
       readVector(bc["value"], 	      bcon.value);      //Or value linear
@@ -632,8 +700,41 @@ int main(int argc, char **argv) try {
       } else 
         if ( bcon.valueType == 1){ //Amplitude
 				readValue(bc["amplitudeId"], 		bcon.ampId);
-				readValue(bc["amplitudeFactor"], 	bcon.ampFactor);
+				readValue(bc["amplitudeFactor"], 	ampfactor); //DEFAULT NOW IS ZERO
+        bcon.ampFactor = ampfactor;
 			}
+      
+      if (bcon.type == Velocity_BC){//Constant
+        // readVector(bc["value"], 	      bcon.value);      //Or value linear
+        // readVector(bc["valueAng"], 	    bcon.value_ang);  //Or Angular value
+      }else if (bcon.type == Convection_BC){
+        int count =0;
+        double cv_coeff, T_inf;
+        readValue(bc["convCoeff"],  bcon.cv_coeff);
+        readValue(bc["infTemp"],    bcon.T_inf);
+        
+        for (size_t a=0; a<dom.Particles.Size(); a++){
+          if (dom.Particles[a]->ID == bcon.zoneId) {
+            dom.Particles[a]->Thermal_BC	= TH_BC_CONVECTION;
+            dom.Particles[a]->T_inf       = bcon.T_inf;
+            dom.Particles[a]->h_conv      = bcon.cv_coeff;
+            count ++;
+          }
+        }
+        cout << count << " particles have been set with conv coeff: "<<bcon.cv_coeff << "and Tinf "<<bcon.T_inf<<endl;
+      } else if (bcon.type == Temperature_BC){
+        int count =0;
+        readValue(bc["Temp"],    bcon.T);
+        //And also applied at every step
+        for (size_t a=0; a<dom.Particles.Size(); a++){
+          if (dom.Particles[a]->ID == bcon.zoneId) {
+            dom.Particles[a]->T	= bcon.T;
+            count ++;
+          }
+        }
+        cout << count << " particles have been set with conv coeff: "<<bcon.cv_coeff << "and Tinf "<<bcon.T_inf<<endl;
+      }
+				
 				
 			readValue(bc["free"], 	bcon.free);
 			dom.bConds.push_back(bcon);
@@ -645,7 +746,9 @@ int main(int argc, char **argv) try {
     int ics_count = 0;
 		for (auto& ic : ics){
 			double temp;
+      int id;
       readValue(ic["Temp"], IniTemp);
+      readValue(ic["id"], id);
       cout << "Initial Temp: "<<IniTemp<<endl;
 
       cout << "Initial condition "<<ics_count<<endl;
@@ -655,19 +758,38 @@ int main(int argc, char **argv) try {
       
       int zoneid = -1; //if NO ZONE ID IS ALL SOLID PARTICLES
       readValue(ic["zoneId"], 		zoneid);
-      int count = 0;
+      int count = 0, tcount = 0;
       cout << "zone id "<<zoneid<<endl;
 			if (dom.Particles.Size()>0)
       if (zoneid == -1){
-        for (size_t a=0; a<dom.solid_part_count; a++){
+        cout << "solid part count "<<dom.solid_part_count<<endl;
+          cout << "Thermal solver is : "<<dom.thermal_solver<<endl;
+        for (size_t a=0; a < dom.solid_part_count; a++){
           dom.Particles[a]->a		= 0.0;
           dom.Particles[a]->v		= Vec3_t(value[0],value[1],value[2]);  
+
+          if (dom.thermal_solver){
+            dom.Particles[a]->T = IniTemp;
+            tcount ++;
+          }
           count ++;
         }
-      }
-        cout << "Initial condition set for "<<count<<" particles."<<endl;
-        ics_count++;
-		}
+      } else  {
+            
+          for (size_t a=0; a < dom.Particles.Size(); a++){
+            if (dom.Particles[a]->ID == zoneid){
+              if (dom.thermal_solver){
+                dom.Particles[a]->T = IniTemp;
+                count ++;
+              }
+            }
+          }
+        }
+      
+      cout << "Initial condition set wih ID " << id << "applied to "<<count<<" particles."<<endl;
+      cout << "TEMP Initial condition set wih ID " << id << "applied to "<<tcount<<" particles."<<endl;
+      ics_count++;
+		}//ICS
     
     //Add fixed particles, these have priority
     
@@ -702,9 +824,7 @@ int main(int argc, char **argv) try {
       // THERMAL PROPS
       dom.Particles[a]->k_T = k_T;
       dom.Particles[a]->cp_T = cp_T;
-      if (dom.thermal_solver)
-        dom.Particles[a]->T = IniTemp;
-
+      dom.Particles[a]->th_exp = th_ex;
 
 			if (mattype == "Hollomon" || mattype == "JohnsonCook" || mattype == "GMT"){ //Link to material is only necessary when it is not bilinear (TODO: change this to every mattype)
        dom.Particles[a]->Sigmay	= mat->CalcYieldStress(0.0,0.0,dom.Particles[a]->T);    
@@ -724,15 +844,15 @@ int main(int argc, char **argv) try {
       cout << "Locking "<<endl; 
 		//dom.SolveDiffUpdateLeapfrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
     if (solver=="Mech-Fraser" || solver=="Mech-Thermal-Fraser")
-      dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      dom.SolveDiffUpdateFraser(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1e6);
     if (solver=="Mech" || solver=="Mech-Thermal" || solver=="Mech-LeapFrog" || solver=="Mech-Thermal-LeapFrog")
-      dom.SolveDiffUpdateLeapFrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      dom.SolveDiffUpdateLeapFrog(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1e6);
     else if (solver=="Mech-KickDrift" || solver=="Mech-Thermal-KickDrift"){
-      dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      dom.SolveDiffUpdateKickDrift(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1e6);
       cout << "Solver-KickDrift is deprecated"<<endl;
     }
     else if (solver=="Thermal")
-      dom.ThermalSolve(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1000);
+      dom.ThermalSolve(/*tf*/sim_time,/*dt*/timestep,/*dtOut*/output_time,"test06",1e6);
     else 
       throw new Fatal("Invalid solver.");
 		} else {
@@ -743,9 +863,10 @@ int main(int argc, char **argv) try {
 		// dom.BC.InOutFlow = 0;
 
     	//dom.Solve(/*tf*/0.00205,/*dt*/timestep,/*dtOut*/0.00005,"test06",999);
+    dom.out_file.close();   
 	}	//Argc > 0
   else {cout << "No input file found. Please specify input file."<<endl;}
-	
+
     return 0;
 }
 

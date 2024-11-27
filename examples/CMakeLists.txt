@@ -80,6 +80,7 @@ SET(EXES
   #FSW_nastran
 	#Elastic
 	#Heat_2D
+  #Heat_Cyl_3D
 	#Impact_Campos
 	#Impact_Contact
 	#Impact_Zhang2017
@@ -100,6 +101,7 @@ SET(EXES
 	#Plate-Yield_CNS_Hard
 	#Plate-Yield_CNS_v2
 	#Plate-Yield_3d_al
+  #SolidCyl_Heat_3D
 	#Plate-Yield_3d_al_CNS
   #SolidBlock_Heat_T
 	#slice_test

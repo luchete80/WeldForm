@@ -1,0 +1,71 @@
+{
+"Configuration":
+{
+  "Nproc":8,
+	"particleRadius": 0.025, 
+	"hFactor": 1.2,
+  "cflMethod": 0,
+  "timeStepSize": 0.0002,
+  "kernelGradCorr": false,  
+  "simTime": 10.0,
+  "artifViscAlpha": 1.0,
+  "artifViscBeta": 0.0,
+  "outTime": 1.0e-1,
+  "solver": "Thermal"
+}
+,
+"Materials":[ 
+{
+	"id": "Solid",
+	"type": "Bilinear",
+  "const": [0.0],
+	"density0": 1000.0, 
+	"youngsModulus": 68.9E9, 
+	"poissonsRatio": 0.3,
+	"yieldStress0": 300.0E6,
+	"thermalCond": 3000.0,
+	"thermalHeatCap": 1.0
+}],
+
+"DomainBlocks": 
+[{
+	"type": "Box",
+	"zoneId": 0,
+	"denseMode": 0,
+	"start": [ 0.0, 0.0, 0.0],
+	"dim": [1.0, 1.0, 1.0],
+	"translation": [1.0, 0.0, 0.0],
+	"scale": [1, 1, 1]
+}],
+
+"DomainZones": [
+{
+	"id": 5,
+	"start":[-1.0, -1.0,-1.0],
+	"end": 	[ 0.03, 1.0,1.0]
+}
+],
+
+"Amplitudes": [
+{
+	"id": 		1,
+	"valueType": 1,
+	"time": 	[ 0.0, 5.0e-3, 1.0],
+	"value": 	[ 0.0, 10.0, 10.0]
+}
+],
+"BoundaryConditions": [
+{
+	"zoneId": 	5,
+  "type": 3,
+  "convCoeff": 100.0,
+  "infTemp": 500
+}
+],
+"InitialConditions": [
+{
+	"Temp": 20.0
+}
+]
+
+}

@@ -23,7 +23,9 @@
 	"density0": 2700.0,   
 	"youngsModulus": 68.9E9, 
 	"poissonsRatio": 0.3,
-	"yieldStress0": 300.0E6
+	"yieldStress0": 300.0E6,
+	"thermalCond": 150.0,
+	"thermalHeatCap": 960.0  
 }],
 
 "RigidBodies": 
@@ -90,6 +92,11 @@
   "amplitudeId" : 1,
 	"value": 		[ 0.0, -10.0, 0.0],
 	"free": 		true
+}
+],
+"InitialConditions": [
+{
+	"Temp": 20.0
 }
 ]
 

@@ -91,15 +91,23 @@ namespace SPH {
 class NastranVolReader;
 
 
+enum BC_TYPE {Velocity_BC=0, Force_BC, Temperature_BC, Convection_BC};
+
+//HOW ABOUT Scalar value?? 
+//Convert to template
 struct boundaryCondition {
 	int 	zoneId;
-	int 	type;	// ENUM TYPE Velocity, Force, Temperature
+	BC_TYPE 	type;	// ENUM TYPE Velocity, Force, Temperature
 	bool 	free;	//is necessary??
+  bool  is_type[4];  ////ACCORDING TO BC_TYPE {Velocity_BC=0, Force_BC, Temperature_BC, Convection_BC};
 	int 	valueType;		//0: Constant, 1 amplitude table
 	Vec3_t value;       //If constant
   Vec3_t value_ang;       //Angular value
 	int 	ampId;			//if valuetype == 1
 	double 	ampFactor;		//if valuetype == 1
+  double cv_coeff;
+  double T_inf;
+  double T;
 };
 
 class Domain
@@ -291,6 +299,7 @@ public:
   
   //Profiler things
   double m_contact_forces_time;
+  std::vector <Vec3_t> m_contact_force; //per surface
   double m_clock_begin;
   double m_forces_artifvisc_time;
   double m_forces_momentum_time;
@@ -329,6 +338,8 @@ public:
 	
 		bool cont_heat_gen;     //Contact heat generation
     bool cont_heat_cond;    //Contact Heat conduction
+    bool cont_heat_fric;    //Contact heat friction
+    bool pl_heating;    //Contact heat friction
     
     double contact_hc;      //Conductance coeff
     
@@ -486,6 +497,8 @@ public:
   std::vector <SPH::amplitude> amps; ////maybe move to domain
   string filename;
   std::ofstream out_file;
+  
+  void ReadFromLSdyna(const char * fName);
   
   private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);

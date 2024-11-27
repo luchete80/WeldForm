@@ -55,6 +55,8 @@ inline void Domain::CalcTempInc () {
 	
 	std::vector < double> temp(Particles.Size());
 	
+  std::vector < double> axiterm(Particles.Size());
+  
 	#pragma omp parallel for schedule (static) num_threads(Nproc) //LUCIANO: THIS IS DONE SAME AS PrimaryComputeAcceleration
 	for ( int k = 0; k < Nproc ; k++) {
 		Particle *P1,*P2;
@@ -76,10 +78,15 @@ inline void Domain::CalcTempInc () {
 			
 			di = P1->Density; mi = P1->Mass;
 			dj = P2->Density; mj = P2->Mass;
+
+      // if (dom_bid_type == AxiSymmetric){ //CALCULATED DENSITY
+        // di/=(2.0*M_PI*P1->x(0));
+        // dj/=(2.0*M_PI*P2->x(0));
+      // }
 			
 			//Frasier  Eqn 3.99 dTi/dt= 1/(rhoi_CPi) * Sum_j(mj/rho_j * 4*ki kj/ (ki + kj ) (Ti - Tj)  ) 
 			//LUCIANO: TODO EXCLUDE THIS PRODUCT
-			double m, mc[2];
+			double m, mc[2], ma, max[2];
 			if (gradKernelCorr){
 				Mat3_t GKc[2];
 				GKc[0] = P1->gradCorrM;
@@ -100,12 +107,33 @@ inline void Domain::CalcTempInc () {
 					mc[i]=mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , v  )/ (norm(xij)*norm(xij));
 				}				
 			} else {
-				m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
+        //Fraser eqn 
+				if (dom_bid_type != AxiSymmetric){
+          m = mj/dj * 4. * ( P1->k_T * P2->k_T) / (P1->k_T + P2->k_T) * ( P1->T - P2->T) * dot( xij , GK*xij )/ (norm(xij)*norm(xij));
+        } else {
+          //Axisymmetric smoothed particle hydrodynamics with self-gravity
+          //D. Garcı́a-Senz et Al, eqn. 35
+          //Or phD thesis AxisSPH, Antonio Relaño Castillo
+          // Since after this step, conduction is affected by 1/(rho_i * Cp_i), we took the Castillo style
+          //// THIS ASSUMES CONSTANT k!
+          Vec3_t d = GK*xij;
+          double f = mj/dj *( P1->k_T + P2->k_T) * ( P1->T - P2->T);
+          m  = f * dot( xij , d )/ (norm(xij)*norm(xij));
+          ma = -f * d[0]; //Castillo Eqn 2.113 / 2.115
+          max[0]=max[1]= ma;
+        }
+        
+        
 				mc[0]=mc[1]=m;
-			}
+			}//!gradkernel
 			//omp_set_lock(&P1->my_lock);
 			temp [SMPairs[k][a].first]  += mc[0];
 			temp [SMPairs[k][a].second] -= mc[1];
+      
+      if (dom_bid_type == AxiSymmetric){
+        axiterm[SMPairs[k][a].first ] +=max[0];
+        axiterm[SMPairs[k][a].second] -=max[1];
+      }
 		}
 	}//Nproc
 	//Another test
@@ -122,14 +150,14 @@ inline void Domain::CalcTempInc () {
 	int imax;
   
   double f;
-  double frw, fr_temp = 0.;
+  double frw, fr_temp = 0., cond_temp = 0.0;
   double plw, pl_sum = 0.;
   
 	#pragma omp parallel for schedule (static) num_threads(Nproc)	private (f)//LUCIANO//LIKE IN DOMAIN->MOVE
   for (int i=0; i < solid_part_count; i++){
 	//for (int i=0; i<Particles.Size(); i++){
 		//cout << "temp "<<temp[i]<<endl;
-    float d = Particles[i]->Density;
+    double d = Particles[i]->Density;
     if (dom_bid_type == AxiSymmetric) //CALCULATED DENSITY
       d/=(2.0*M_PI*Particles[i]->x(0));
 
@@ -137,12 +165,17 @@ inline void Domain::CalcTempInc () {
 		f = 1./(d * Particles[i]->cp_T ); //[ºC m^3/J]
     Particles[i]->dTdt = f * ( temp[i] + Particles[i]->q_conv + Particles[i]->q_source + Particles[i]->q_plheat * pl_work_heat_frac + Particles[i]->q_cont_conv);	
     
+    if (dom_bid_type == AxiSymmetric)
+      Particles[i]->dTdt += f * 1.0/Particles[i]->x(0) * axiterm[i];
+    
     plw = f * Particles[i]->q_plheat;
     pl_sum += plw;
     // Particles[i]->dTdt += plw;
     
 		if (contact){
+      if (cont_heat_fric) {
         frw = f * Particles[i]->q_fric_work; //[ºC m^3/J] x J/[s m3] = ºC/s
+    
         //omp_set_lock(&dom_lock); 
         // #pragma omp atomic
         // fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density; //TODO: CHECK  -- J/[s m3] x m3
@@ -151,21 +184,34 @@ inline void Domain::CalcTempInc () {
         omp_set_lock(&Particles[i]->my_lock);
         Particles[i]->dTdt += frw; //[J/(kg.s)] / [J/(kg.K)]]
         omp_unset_lock(&Particles[i]->my_lock);
-      
+      }
     }
 		if (Particles[i]->dTdt > max){
 			max= Particles[i]->dTdt;
 			imax=i;
 		}
 	}
-  if (contact)
-    for (int i=0; i < solid_part_count; i++)
-      fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / Particles[i]->Density;
   
+  
+  if (contact){
+
+    //REAL VOLUME IN AXISYMM is 2PI*r
+    for (int i=0; i < solid_part_count; i++){
+      double d = Particles[i]->Density;
+      if (dom_bid_type == AxiSymmetric) //CALCULATED DENSITY
+        d/=(2.0*M_PI*Particles[i]->x(0));
+        
+      fr_temp += Particles[i]->q_fric_work * Particles[i]->Mass / d;
+    if (cont_heat_cond)
+      cond_temp += Particles[i]->q_cont_conv * Particles[i]->Mass / d;
+    }
+  }
   for (int i=solid_part_count; i<Particles.Size(); i++){
     Particles[i]->dTdt = 0.;
   }
   contact_friction_work += fr_temp * deltat;
+  accum_cont_heat_cond  += cond_temp * deltat;
+  
   //plastic_work += pl_sum * deltat;
   
 	//cout << "Max dTdt: " << max <<"in particle: " << imax<<endl;
@@ -257,8 +303,41 @@ inline void Domain::CalcTempIncSOA () {
 	
 }
 
+
+// inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
+
+	// //Fraser Eq 3-121 
+	// double max=0.;
+	// int imax;
+	// #pragma omp parallel for schedule (static) num_threads(Nproc)
+	
+	// #ifdef __GNUC__
+	// for (size_t i=0; i<Particles.Size(); i++){	//Like in Domain::Move
+	// #else
+	// for (int i=0; i<Particles.Size(); i++){//Like in Domain::Move
+	// #endif
+    // double dS2;
+	
+		// if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
+			// dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
+			// //cout << "dS2" <<dS2<<endl;
+			// //cout << Particles[i]->Density<<endl;
+			// //Fraser Eq 3.121
+			// Particles[i]->q_conv = Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+			
+			// if (Particles[i]->q_conv>max){
+				// max= Particles[i]->q_conv;
+				// imax=i;
+			// }
+			// //cout << "Particle  conv"<<Particles[i]->q_conv<<endl;
+		// }
+	// }		
+	// //cout << "Max Convection: " << max <<"in particle " << imax <<endl;
+	// //cout << "Applied convection to "<< i << " Particles"<<endl;
+// }
+
 inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
-	double dS2;
+	
 	//Fraser Eq 3-121 
 	double max=0.;
 	int imax;
@@ -270,19 +349,39 @@ inline void Domain::CalcConvHeat (){ //TODO: Detect Free Surface Elements
 	for (int i=0; i<Particles.Size(); i++){//Like in Domain::Move
 	#endif
 
-	
+   double dS2;
+   double dens = Particles[i]->Density;
+   if (Dimension==3)
+    dS2 = pow(Particles[i]->Mass/dens,2.0/3.0); //Fraser 3-119
+   else {
+     if (dom_bid_type == AxiSymmetric){
+       // m= 2.0*pi*r *(s)*(s) , dens(ax) = 2. pi * r rho --> m/rho = 
+       //BEFORE CONVERTING rho!!
+        dS2 = sqrt(Particles[i]->Mass/dens)*2.0*M_PI*Particles[i]->x[0]; //Before alter
+        //cout << "dS "<<sqrt(Particles[i]->Mass/dens)<<endl;
+        dens /= 2.0*M_PI* Particles[i]->x[0]; //USED AFTER FOR FRICTION AND CONDUCTION (CALLED CONV)1
+        
+
+     } else{
+        dS2 = pow(Particles[i]->Mass/dens,1.0/3.0); //PLANE STRAIN
+     }
+   }       
 		if ( Particles[i]->Thermal_BC==TH_BC_CONVECTION) {
-			dS2 = pow(Particles[i]->Mass/Particles[i]->Density,0.666666666);
+
 			//cout << "dS2" <<dS2<<endl;
 			//cout << Particles[i]->Density<<endl;
 			//Fraser Eq 3.121
-			Particles[i]->q_conv = Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+			//// ORIGINAL [W/m3]
+      //Particles[i]->q_conv = Particles[i]->Density * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
+      
+      //IN AXISYMM CASE: real vol is rho_orig/Mass
+      Particles[i]->q_conv = dens * Particles[i]->h_conv * dS2 * (Particles[i]->T_inf - Particles[i]->T)/Particles[i]->Mass;
 			
 			if (Particles[i]->q_conv>max){
 				max= Particles[i]->q_conv;
 				imax=i;
 			}
-			//cout << "Particle  "<<Particles[i]->Mass<<endl;
+			//cout << "Particle  conv"<<Particles[i]->q_conv<<endl;
 		}
 	}		
 	//cout << "Max Convection: " << max <<"in particle " << imax <<endl;
@@ -320,6 +419,150 @@ inline void Domain::CalcConvHeatSOA (){ //TODO: Detect Free Surface Elements
 	//cout << "Max Convection: " << max <<"in particle " << imax <<endl;
 	//cout << "Applied convection to "<< i << " Particles"<<endl;
 }
+
+//PREVIOUS THERMAL SOLVER
+// inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
+	// std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
+
+	// size_t idx_out = 1;
+	// double tout = Time;
+
+	// //Initializing adaptive time step variables
+	// deltat = deltatint = deltatmin	= dt;
+	
+	// auto start_whole = std::chrono::steady_clock::now();
+
+	// InitialChecks();
+	// CellInitiate();
+	// ListGenerate();
+	// PrintInput(TheFileKey);
+	// TimestepCheck();
+	// WholeVelocity();
+	
+	// std::chrono::duration<double> total_time,neighbour_time;
+	
+	// clock_t clock_beg;
+	// double clock_time_spent,acc_time_spent;
+	
+	// clock_time_spent=acc_time_spent=0.;
+
+
+	// //Initial model output
+	// if (TheFileKey!=NULL) {
+		// String fn;
+		// fn.Printf    ("%s_Initial", TheFileKey);
+		// WriteXDMF    (fn.CStr());
+		// std::cout << "\nInitial Condition has been generated\n" << std::endl;
+	// }
+	
+	// MainNeighbourSearch();
+	// SaveNeighbourData();
+	// cout << "Avg Nb Count: "<<AvgNeighbourCount()<<endl;
+	
+				// String fn;
+				// fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+				// WriteXDMF    (fn.CStr());
+	// if (gradKernelCorr)
+		// CalcGradCorrMatrix();
+	// for ( size_t k = 0; k < Nproc ; k++) 
+		// cout << "Pares: " <<SMPairs[k].Size()<<endl;
+
+	// // ONLY FOR TEST
+  // cout << "Init red arrays"<<endl;
+  // InitReductionArraysOnce();
+  // CalcPairPosList();  
+  // cout << "Done."<<endl;
+  
+	// cout << "Calc conv "<<endl;
+	// //CalcConvHeatSOA();
+	// cout << "Done. "<<endl;
+	// //CalcTempIncSOA();
+  // //CalcTempInc();
+  // CalcTempIncPP();
+  // //CalcConvHeat();
+	// cout << "End."<<endl;	
+	// while (Time<tf && idx_out<=maxidx) {
+
+		// auto start_task = std::chrono::system_clock::now();
+		// clock_beg = clock();
+		// clock_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		// auto end_task = std::chrono::system_clock::now();
+		 // neighbour_time = /*std::chrono::duration_cast<std::chrono::seconds>*/ (end_task- start_task);
+		// //std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
+		// clock_beg = clock();
+
+		// // CalcConvHeat();
+		// // CalcTempInc();
+		// //TODO Add 
+		// double max=0,min=1000.; 
+    
+    // #pragma omp parallel for schedule (static) num_threads(Nproc)
+		// for (int i=0; i<Particles.Size(); i++){
+			// Particles[i]->T+= dt*Particles[i]->dTdt;
+			// //Particles[i]->TempCalcLeapfrog(dt);
+			// //*m_T[i]+= (*m_dTdt[i])*dt;
+			// if (Particles[i]->T > max)
+				// max=Particles[i]->T;
+			// if (Particles[i]->T < min)
+				// min=Particles[i]->T;
+
+			// // if (*m_T[i] > max)
+				// // max = *m_T[i];
+			// // if (*m_T[i] < min)
+				// // min = *m_T[i];
+
+		// }
+		// // std::cout << "Max temp: "<< max << std::endl;
+
+			
+		// acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+		// GeneralAfter(*this);
+		// // output
+		// if (Time>=tout){
+			// if (TheFileKey!=NULL) {
+				// String fn;
+				// fn.Printf    ("%s_%04d", TheFileKey, idx_out);
+				// WriteXDMF    (fn.CStr());
+
+			// }
+			// idx_out++;
+			// tout += dtOut;
+			// total_time = std::chrono::steady_clock::now() - start_whole;
+			// std::cout << "\nOutput No. " << idx_out << " at " << Time << " has been generated" << std::endl;
+			// std::cout << "Current Time Step = " <<deltat<<std::endl;
+			// std::cout << "Total time: "<<total_time.count() << ", Neigbour search time: " << clock_time_spent << ", Accel Calc time: " <<
+			// acc_time_spent <<
+			// std::endl;
+			// std::cout << "Max, Min, Avg temps: "<< max << ", " << min << ", " << (max+min)/2. <<std::endl;
+
+    // cout << "Particle 0 dTdt "<<Particles[0]->dTdt<<endl;
+    
+			// double max_flux = 0.;
+			// for (size_t i=0; i<Particles.Size(); i++){
+				// if (Particles[i]->dTdt > max_flux)
+					// max_flux=Particles[i]->dTdt;
+			// }
+			// std::cout << "Max flux: "<< max_flux << std::endl;
+
+		// }
+
+		// //AdaptiveTimeStep();
+		
+		// //CalcConvHeatSOA();
+		// CalcTempInc();
+    // //CalcConvHeat();
+    // //CalcTempIncSOA();
+
+		// Time += deltat;
+		
+	// }
+	
+
+	// std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
+
+// }
+
+
 
 inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
@@ -396,25 +639,37 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 		//TODO Add 
 		double max=0,min=1000.; 
     
+    // #pragma omp parallel for schedule (static) num_threads(Nproc)
+		// for (int i=0; i<Particles.Size(); i++){
+			// Particles[i]->T+= dt*Particles[i]->dTdt;
+			// //Particles[i]->TempCalcLeapfrog(dt);
+			// //*m_T[i]+= (*m_dTdt[i])*dt;
+			// if (Particles[i]->T > max)
+				// max=Particles[i]->T;
+			// if (Particles[i]->T < min)
+				// min=Particles[i]->T;
+
+			// // if (*m_T[i] > max)
+				// // max = *m_T[i];
+			// // if (*m_T[i] < min)
+				// // min = *m_T[i];
+
+		// }
+		// // std::cout << "Max temp: "<< max << std::endl;
+    ThermalCalcs(dt);
+
     #pragma omp parallel for schedule (static) num_threads(Nproc)
 		for (int i=0; i<Particles.Size(); i++){
-			Particles[i]->T+= dt*Particles[i]->dTdt;
-			//Particles[i]->TempCalcLeapfrog(dt);
-			//*m_T[i]+= (*m_dTdt[i])*dt;
+
 			if (Particles[i]->T > max)
 				max=Particles[i]->T;
 			if (Particles[i]->T < min)
 				min=Particles[i]->T;
 
-			// if (*m_T[i] > max)
-				// max = *m_T[i];
-			// if (*m_T[i] < min)
-				// min = *m_T[i];
 
 		}
 		// std::cout << "Max temp: "<< max << std::endl;
-
-			
+    
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 		GeneralAfter(*this);
 		// output
@@ -439,17 +694,17 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
     
 			double max_flux = 0.;
 			for (size_t i=0; i<Particles.Size(); i++){
-				if (Particles[i]->dTdt > max_flux)
-					max_flux=Particles[i]->dTdt;
+				if (Particles[i]->dTdt * Particles[i]->dTdt > max_flux)
+					max_flux=Particles[i]->dTdt*Particles[i]->dTdt;
 			}
-			std::cout << "Max flux: "<< max_flux << std::endl;
+			std::cout << "Max flux: "<< sqrt(max_flux) << std::endl;
 
 		}
 
 		//AdaptiveTimeStep();
 		
 		//CalcConvHeatSOA();
-		CalcTempInc();
+		//CalcTempInc();
     //CalcConvHeat();
     //CalcTempIncSOA();
 
@@ -461,6 +716,7 @@ inline void Domain::ThermalSolve (double tf, double dt, double dtOut, char const
 	std::cout << "\n--------------Solving is finished---------------------------------------------------" << std::endl;
 
 }
+
 
 inline void Domain::ThermalCalcs(const double &dt){
   if (thermal_solver){

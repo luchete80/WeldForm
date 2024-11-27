@@ -125,8 +125,8 @@ inline double GMT::CalcYieldStress(const double &strain, const double &strain_ra
                                     // << C1 << ", "<<C2 << ", "
                                     // << m1 << ", "<<m2 << ", "
                                     // << I1 << ", "<<I2 << ", "<<endl;
-  // cout << "e, er, T " << e <<", "<<er<<", "<<T<<endl; 
-	// cout << "sy "<< sy<<endl;
+  // // cout << "e, er, T " << e <<", "<<er<<", "<<T<<endl; 
+	// cout << "sy GMT"<< sy<<", e, er, T" << e << ", " <<er << ", " <<T<<endl;
 	return sy;
 }	
 
@@ -141,8 +141,8 @@ inline double GMT::CalcTangentModulus(const double &plstrain, const double &stra
   if      (strain_rate < er_min) er = er_min;
   else if (strain_rate > er_max) er = er_max;
 
-  if      (temp < er_min) T = T_min;
-  else if (temp > er_max) T = T_max;
+  if      (temp < T_min) T = T_min;
+  else if (temp > T_max) T = T_max;
   
   //double sy = (A+B*pow(strain, n))*(1.0 + C * log (strain_rate/ eps_0) ) * (1.0 - pow(T_h,m));
   double Et =0.;

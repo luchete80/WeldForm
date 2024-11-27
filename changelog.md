@@ -5,6 +5,8 @@
  - Added GMT material to inpt
  - Begining to add hot compression example with GMT mat
  - Corrected yield stress calc with correct Initial Temp
+ - Added fnuction reading for contact surfaces
+ 
 
 ## [0.4.2.4] - 20240430 - 2599719a5437b4c33f77fc5487690a9b40f8b7a2
  - Added Axisymmetry working OK (do not put left box at zero, remains corrections at axis).

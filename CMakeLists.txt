@@ -66,7 +66,9 @@ include_directories("D:/Luciano/Numerico/CompactNSearch/include")
 ADD_EXECUTABLE        (WeldForm "Source/WeldForm.cpp" 
 )
 
-TARGET_LINK_LIBRARIES (WeldForm ${LIBS} blitz)
+add_subdirectory ("${PROJECT_SOURCE_DIR}/External/LSDynaReader/src")
+
+TARGET_LINK_LIBRARIES (WeldForm ${LIBS} blitz lsdynareader)
 SET_TARGET_PROPERTIES (WeldForm PROPERTIES COMPILE_FLAGS "${FLAGS}" LINK_FLAGS "${LFLAGS}")
 
 

@@ -29,6 +29,7 @@
 #define DELTA_PL_STRAIN 1.e-3
 #include <set>
 
+#include "LSDynaReader/src/lsdynaReader.h"
 
 //https://stackoverflow.com/questions/19240540/dynamically-allocating-array-explain/19240932#19240932
 template <typename T>
@@ -158,6 +159,9 @@ inline Domain::Domain ()
   nonlock_sum = true;
   cont_heat_gen   = false;
   cont_heat_cond  = false;
+  cont_heat_fric = false;
+  pl_heating = false;
+  
   accum_cont_heat_cond = 0.;
   
   dom_bid_type = PlaneStress;
@@ -1428,7 +1432,7 @@ void Domain::CalculateSurface(const int &id){
 
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 		Particles[i] -> normal = 0.;
-		//Particles[i] -> ID = Particles [i] -> ID_orig;
+		Particles[i] -> ID = Particles [i] -> ID_orig;
 	}
 
 	#pragma omp parallel for schedule (static) private(P1,P2,mi,mj,xij) num_threads(Nproc)
@@ -1471,8 +1475,10 @@ void Domain::CalculateSurface(const int &id){
 		Particles[i]->normal *= 1./totmass;
 		
 		if ( norm(Particles[i]->normal) >= 0.25 * Particles[i]->h && Particles[i]->Nb <= max_nb) {//3-114 Fraser {
-			if (!Particles[i]->not_write_surf_ID)
-      Particles[i]->ID = id;
+			if (!Particles[i]->not_write_surf_ID){
+        Particles[i]->ID = id;
+        //cout << "part " <<i<<", Nb "<< Particles[i]->Nb<<", surf_part"<<endl;
+      }
 			surf_part++;
 		}
 	}
@@ -2776,6 +2782,62 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
 
   
 }
+
+using namespace LS_Dyna;
+
+void Domain::ReadFromLSdyna(const char *fName){
+  
+  lsdynaReader reader(fName);
+  
+  
+  solid_part_count = reader.m_elem_count_type[_SPH_];
+  cout << "Particles readed: "<< reader.m_elem_count_type[_SPH_]<<endl;
+  //SetDimension(particle_count);
+
+  
+  for (int i=0;i<reader.m_elem.size();i++) {
+    if (reader.m_elem[i].m_type == _SPH_){
+      LS_Dyna::ls_node n = reader.getElemNode(i,0);
+      //cout << "Node XYZ"<< n.m_x[0]<< ", "<<n.m_x[1]<< ", "<<n.m_x[2]<< ", "<<endl;
+      //x_h[i] = make_double3(double(n.m_x[0]), double(n.m_x[1]), double(n.m_x[2]));
+      //m_h[i] = reader.m_elem[i].mass;
+      //Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);
+      double h =1.0;
+      double rho = 1.0;
+      double m_0 =1.0;
+      Particles.Push(new Particle(0,Vec3_t(n.m_x[0],n.m_x[1],n.m_x[2]),Vec3_t(0,0,0),m_0,rho,h));
+      
+    }
+  }
+  /*
+  cout << "Reading "<<reader.m_set_nod.size()<< " sets."<<endl;
+  if (reader.m_set_nod.size()>0) {
+    realloc_ID = true;
+    this->ID_h = new int [particle_count];
+    cout << "Assigning "<<reader.m_set_nod.size()<<" IDs"<<endl;
+    for (int p=0;p<particle_count;p++) {ID_h[p] = 0;}
+    for (int s=0;s<reader.m_set_nod.size();s++){
+      cout << "Set "<< s<< ", Reading "<<reader.m_set_nod[s].node.size()<< " nodes."<<endl; 
+      for (int n=0;n<reader.m_set_nod[s].node.size();n++){      
+        //cout << "Node "<<n << ", pos "<<reader.m_set_nod[s].node[n]<<endl;
+		int elpos = reader.m_node[reader.m_set_nod[s].node[n]].id_sph_el;
+		//cout << "elpos: "<<elpos<<endl;
+        // if (reader.m_set_nod[s].node[n]>= particle_count){
+          // cout << "ERROR. Node "<<n << ", pos "<<reader.m_set_nod[s].node[n]<<endl;
+        // } else {
+        ID_h[elpos] = reader.m_set_nod[s].id;          
+        //}
+        //ID_h[n]=0;
+      }
+    }
+  }
+  */
+  //delete ID_h;
+
+  
+  cout << "Done. "<<endl;
+}
+  
 
 
 
