@@ -47,8 +47,8 @@
 }],
 "Contact":[ 
 {
-  "fricCoeffStatic": 0.4,
-  "fricCoeffDynamic": 0.4,
+  "fricCoeffStatic": 0.6,
+  "fricCoeffDynamic": 0.6,
   "penaltyFactor": 0.6,
   "heatConductance": false,
   "heatCondCoeff": 0.01

@@ -138,7 +138,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 
 		double max = 0;
 		int imax;
-		#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
+		//#pragma omp parallel for schedule (static) num_threads(Nproc)	//LUCIANO//LIKE IN DOMAIN->MOVE
 		for (int i=0; i<Particles.Size(); i++){
 			if (Particles[i]->pl_strain > max){
         omp_set_lock(&dom_lock);
