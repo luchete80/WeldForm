@@ -2789,11 +2789,11 @@ void Domain::ReadFromLSdyna(const char *fName){
   
   lsdynaReader reader(fName);
   
-  /*
-  particle_count = reader.m_elem_count_type[_SPH_];
+  
+  solid_part_count = reader.m_elem_count_type[_SPH_];
   cout << "Particles readed: "<< reader.m_elem_count_type[_SPH_]<<endl;
   //SetDimension(particle_count);
-
+/*
   isdim_reserved = true;
   x_h =  new double3 [particle_count];
   m_h =  new double [particle_count];
