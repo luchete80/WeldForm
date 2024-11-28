@@ -2833,7 +2833,7 @@ void Domain::ReadFromLSdyna(const char *fName, double refDensity){
 
       double m_0 =1.0;
       Particles.Push(new Particle(0,Vec3_t(n.m_x[0],n.m_x[1],n.m_x[2]),Vec3_t(0,0,0),m_0,refDensity,h));
-      cout << "Particle pos: "<<Particles[i]->x<<endl;
+      //cout << "Particle pos: "<<Particles[i]->x<<endl;
     }
   }
 

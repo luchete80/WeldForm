@@ -468,22 +468,29 @@ int main(int argc, char **argv) try {
         }
       }
     } else if (domtype == "File") {
-        double avgdist;
+        
         string filename = "";
         readValue(domblock[0]["fileName"], 	filename); 
         cout << "Reading Particles Input file " << filename <<endl;  
         dom.ReadFromLSdyna(filename.c_str(), rho);
         double totmass = 0.0;
         readValue(domblock[0]["totMass"], 	totmass); 
-        if (totmass != 0){
+        
           cout << "calculating avg distance ..."<<endl;
           double avgdist = dom.getAvgMinDist();
-          cout << "Avg particle distance "<<endl;
-        }
+          cout << "Avg particle distance "<<avgdist<<endl;
+        
+        cout <<"Setting smoothing length to "<<avgdist<<endl;
         for (int i=0;i<dom.Particles.Size();i++){
-            dom.Particles[i]->Mass = totmass/dom.Particles.Size();
             dom.Particles[i]->h = avgdist*hfactor;
         }
+        if (totmass != 0){
+        for (int i=0;i<dom.Particles.Size();i++)
+            dom.Particles[i]->Mass = totmass/dom.Particles.Size();
+        } else 
+          cout << "TOT  MASS UNKNOWN"<<endl;
+          
+        
         
           //x =dom_d->x_h[p].x;
           //y =dom_d->x_h[p].y;
