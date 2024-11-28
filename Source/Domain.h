@@ -498,7 +498,9 @@ public:
   string filename;
   std::ofstream out_file;
   
-  void ReadFromLSdyna(const char * fName);
+  void ReadFromLSdyna(const char * fName, double refDensity = 1.0);
+  
+  double Domain::getAvgMinDist();
   
   private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);

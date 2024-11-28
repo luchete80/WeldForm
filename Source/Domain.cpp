@@ -2785,7 +2785,34 @@ void Domain::ApplyAxiSymmBC(int bc_1, int bc_2){ //Apply to all particles or onl
 
 using namespace LS_Dyna;
 
-void Domain::ReadFromLSdyna(const char *fName){
+/*
+// Function to calculate KNN-based radius
+double calculateKNNRadius(const Point3D& center, const std::vector<Point3D>& points, int k) {
+    std::priority_queue<double> maxHeap;
+
+    for (const auto& point : points) {
+        if (&center != &point) { // Avoid self-distance
+            double dist = euclideanDistance(center, point);
+            maxHeap.push(dist);
+
+            if (maxHeap.size() > k) {
+                maxHeap.pop(); // Keep only the k smallest distances
+            }
+        }
+    }
+
+    // Calculate the average of the k smallest distances
+    double total = 0.0;
+    while (!maxHeap.empty()) {
+        total += maxHeap.top();
+        maxHeap.pop();
+    }
+    return total / k;
+}
+
+*/
+
+void Domain::ReadFromLSdyna(const char *fName, double refDensity){
   
   lsdynaReader reader(fName);
   
@@ -2803,23 +2830,15 @@ void Domain::ReadFromLSdyna(const char *fName){
       //m_h[i] = reader.m_elem[i].mass;
       //Particle						(int Tag, Vec3_t const & x0, Vec3_t const & v0, double Mass0, double Density0, double h0, bool Fixed=false);
       double h =1.0;
-      double rho = 1.0;
+
       double m_0 =1.0;
-      Particles.Push(new Particle(0,Vec3_t(n.m_x[0],n.m_x[1],n.m_x[2]),Vec3_t(0,0,0),m_0,rho,h));
+      Particles.Push(new Particle(0,Vec3_t(n.m_x[0],n.m_x[1],n.m_x[2]),Vec3_t(0,0,0),m_0,refDensity,h));
       cout << "Particle pos: "<<Particles[i]->x<<endl;
     }
   }
-  cout << "Reading "<<reader.m_elem_count_type[_SPH_]<<" SPH elements"<<endl;
-  cout << "calculate Avg distance "<<endl;
-  int count =0;
-  double totdist=0.0;
-      for (size_t i = 0; i < Particles.Size(); ++i) {
-        for (size_t j = i + 1; j < Particles.Size(); ++j)
-          totdist +=norm(Particles[i]->x - Particles[j]->x);
-          count++;
-        }
-  double avgdist = totdist/count;
-  cout << "Avg distance: "<<avgdist <<endl;
+
+        
+        
   /*
   cout << "Reading "<<reader.m_set_nod.size()<< " sets."<<endl;
   if (reader.m_set_nod.size()>0) {
@@ -2849,7 +2868,40 @@ void Domain::ReadFromLSdyna(const char *fName){
   cout << "Done. "<<endl;
 }
   
+double Domain::getAvgMinDist(){
 
+  Vec3_t max(0,0,0);
+  Vec3_t min(1000,1000,1000);
+  std::vector<double> mindist;
+  mindist.resize(Particles.Size());
+  
+  double totdist=0.0;
+  
+    for (size_t i = 0; i < Particles.Size(); ++i) {
+      for (int k=0;k<3;k++){
+        if      (Particles[i]->x[k]<min[k]) min[k] = Particles[i]->x[k];
+        else if (Particles[i]->x[k]>max[k]) max[k] = Particles[i]->x[k];
+      }
+    double mindx = 1.0e6;
+    for (size_t j = 0; j < Particles.Size(); ++j){
+      if (i!=j){
+      double d = norm(Particles[i]->x - Particles[j]->x);
+      if (d<mindx) {
+        //cout << "d "<<d << "mindx "<<mindx<<endl;
+        mindx = d;
+      }
+    }
+    }
+    mindist[i] = mindx;
+    //cout << "Particle "<< i << " Min dist "<<mindx<<endl;
+  }
+  
+  totdist = 0.0;
+  for (size_t i = 0; i < Particles.Size(); ++i) totdist+=mindist[i];
+  
+  double avgdist = totdist/Particles.Size();
+  return avgdist;
+}
 
 
 }; // namespace SPH
