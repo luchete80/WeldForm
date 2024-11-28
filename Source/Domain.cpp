@@ -2806,9 +2806,20 @@ void Domain::ReadFromLSdyna(const char *fName){
       double rho = 1.0;
       double m_0 =1.0;
       Particles.Push(new Particle(0,Vec3_t(n.m_x[0],n.m_x[1],n.m_x[2]),Vec3_t(0,0,0),m_0,rho,h));
-      
+      cout << "Particle pos: "<<Particles[i]->x<<endl;
     }
   }
+  cout << "Reading "<<reader.m_elem_count_type[_SPH_]<<" SPH elements"<<endl;
+  cout << "calculate Avg distance "<<endl;
+  int count =0;
+  double totdist=0.0;
+      for (size_t i = 0; i < Particles.Size(); ++i) {
+        for (size_t j = i + 1; j < Particles.Size(); ++j)
+          totdist +=norm(Particles[i]->x - Particles[j]->x);
+          count++;
+        }
+  double avgdist = totdist/count;
+  cout << "Avg distance: "<<avgdist <<endl;
   /*
   cout << "Reading "<<reader.m_set_nod.size()<< " sets."<<endl;
   if (reader.m_set_nod.size()>0) {
