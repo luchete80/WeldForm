@@ -468,7 +468,7 @@ int main(int argc, char **argv) try {
         }
       }
     } else if (domtype == "File") {
-        
+        double scalefactor = 1.0d;
         string filename = "";
         readValue(domblock[0]["fileName"], 	filename); 
         cout << "Reading Particles Input file " << filename <<endl;  
@@ -488,6 +488,7 @@ int main(int argc, char **argv) try {
         if (totmass != 0){
         for (int i=0;i<dom.Particles.Size();i++)
             dom.Particles[i]->Mass = totmass/dom.Particles.Size();
+            dom.Particles[i]->x*=scalefactor;
         } else 
           cout << "TOT  MASS UNKNOWN"<<endl;
           

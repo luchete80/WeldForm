@@ -541,3 +541,4 @@
 20241127 - Adding lsdyna Domain reader
          - FIXED CRASH dueto buggy damage reading
          - ADDED COMMIT TO OUTPUT
+20241202 - Added scalefactor to imported domain.
