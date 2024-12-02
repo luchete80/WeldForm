@@ -2895,6 +2895,8 @@ double Domain::getAvgMinDist(){
     mindist[i] = mindx;
     //cout << "Particle "<< i << " Min dist "<<mindx<<endl;
   }
+  cout << "Min coords "<<min<<", max coords: "<< max<<endl;
+  cout << "Bounding Box Dimensions "<<max - min<<endl; 
   
   totdist = 0.0;
   for (size_t i = 0; i < Particles.Size(); ++i) totdist+=mindist[i];

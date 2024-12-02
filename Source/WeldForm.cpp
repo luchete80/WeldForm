@@ -475,6 +475,7 @@ int main(int argc, char **argv) try {
         dom.ReadFromLSdyna(filename.c_str(), rho);
         double totmass = 0.0;
         readValue(domblock[0]["totMass"], 	totmass); 
+
         
           cout << "calculating avg distance ..."<<endl;
           double avgdist = dom.getAvgMinDist();
