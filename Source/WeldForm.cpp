@@ -501,9 +501,10 @@ int main(int argc, char **argv) try {
         for (int i=0;i<dom.Particles.Size();i++)
             dom.Particles[i]->Mass = totmass/dom.Particles.Size();
 
-        } else 
-          cout << "TOT  MASS UNKNOWN"<<endl;
+        } else {
           
+          cout << "ERROR. TOT  MASS UNKNOWN"<<endl;
+        }
         
         
           //x =dom_d->x_h[p].x;
