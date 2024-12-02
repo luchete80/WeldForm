@@ -299,9 +299,11 @@ inline void TriMesh::Move(const Vec3_t &v){
 	for (int n=0;n<node.Size();n++){
 		*node[n] += v;
 	} 
+
   CalcCentroids();
   CalcNormals();        //From node positions
   UpdatePlaneCoeff();   //pplane
+  
 }
 
 inline void TriMesh::Scale(const double &f){

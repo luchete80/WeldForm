@@ -542,3 +542,4 @@
          - FIXED CRASH dueto buggy damage reading
          - ADDED COMMIT TO OUTPUT
 20241202 - Added scalefactor to imported domain.
+         - Added movement to rigid bodies and particle Domain! 

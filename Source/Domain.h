@@ -91,7 +91,7 @@ namespace SPH {
 class NastranVolReader;
 
 
-enum BC_TYPE {Velocity_BC=0, Force_BC, Temperature_BC, Convection_BC};
+enum BC_TYPE {Velocity_BC=0, Force_BC, Temperature_BC, Convection_BC, Symmetry_BC};
 
 //HOW ABOUT Scalar value?? 
 //Convert to template

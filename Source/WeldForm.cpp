@@ -474,6 +474,17 @@ int main(int argc, char **argv) try {
         readValue(domblock[0]["fileName"], 	filename); 
         cout << "Reading Particles Input file " << filename <<endl;  
         dom.ReadFromLSdyna(filename.c_str(), rho);
+        
+        cout << "Scaling by factor: "<< scalefactor<<endl;
+        for (int i=0;i<dom.Particles.Size();i++)
+            dom.Particles[i]->x *= scalefactor;
+        
+        Vec3_t translation;
+        readVector(domblock[0]["translation"], 	      translation);      //Or value linear
+        cout << "Translation vector: "<<translation<<endl;
+        for (int i=0;i<dom.Particles.Size();i++)
+            dom.Particles[i]->x += translation;        
+            
         double totmass = 0.0;
         readValue(domblock[0]["totMass"], 	totmass); 
 
@@ -489,7 +500,7 @@ int main(int argc, char **argv) try {
         if (totmass != 0){
         for (int i=0;i<dom.Particles.Size();i++)
             dom.Particles[i]->Mass = totmass/dom.Particles.Size();
-            dom.Particles[i]->x*=scalefactor;
+
         } else 
           cout << "TOT  MASS UNKNOWN"<<endl;
           
@@ -551,7 +562,8 @@ int main(int argc, char **argv) try {
       
       if (contact){
         Vec3_t dim;
-        
+      
+                
         readVector(rigbodies[rb]["start"], 	start);       
         readVector(rigbodies[rb]["dim"], 	dim); 
         bool flipnormals = false;
@@ -596,6 +608,7 @@ int main(int argc, char **argv) try {
             cout << "ERROR. Line has null dimension."<<endl;
           cout << "Rigid Body start pos: "<<start(0)+dim(0)<<", "<<start(1)+dim(1)<<endl;
         } else if (rigbody_type == "File"){
+          
           string filename = "";
           readValue(rigbodies[rb]["fileName"], 	filename); 
           cout << "Reading Mesh input file " << filename <<endl;
@@ -609,6 +622,20 @@ int main(int argc, char **argv) try {
           cout << "Scaling mesh..."<<endl;
           mesh[mesh_count]->Scale(scalefactor);
         }
+
+        Vec3_t translation(0,0,0);
+        readVector(rigbodies[rb]["translation"], 	      translation);      //Or value linear
+        cout << "Moving Mesh by vector "<<translation<<endl;
+        if (norm(translation)>1.0e-6){
+        //  mesh[mesh_count]->Move(translation);
+          for (int n=0;n<mesh[mesh_count]->node.Size();n++){
+            *(mesh[mesh_count]->node[n]) += translation;
+          }
+          mesh[mesh_count]->CalcCentroids();
+          mesh[mesh_count]->CalcNormals(); 
+          //NOT UPDATING COEFFS SINCE NFAR IS NOT CALC YET (IS CALC BELOW IN SPHERES) 
+        }
+  
         cout << "Creating Spheres.."<<endl;
         //mesh.v = Vec3_t(0.,0.,);
         mesh[mesh_count]->CalcSpheres(); //DONE ONCE
