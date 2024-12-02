@@ -469,6 +469,7 @@ int main(int argc, char **argv) try {
       }
     } else if (domtype == "File") {
         double scalefactor = 1.0d;
+        readValue(domblock[0]["scaleFactor"],scalefactor);
         string filename = "";
         readValue(domblock[0]["fileName"], 	filename); 
         cout << "Reading Particles Input file " << filename <<endl;  
