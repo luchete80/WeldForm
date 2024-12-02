@@ -498,8 +498,10 @@ int main(int argc, char **argv) try {
             dom.Particles[i]->h = avgdist*hfactor;
         }
         if (totmass != 0){
+        double mass = totmass/dom.Particles.Size();
+        cout << "Appliyng particle mass: "<<endl;
         for (int i=0;i<dom.Particles.Size();i++)
-            dom.Particles[i]->Mass = totmass/dom.Particles.Size();
+            dom.Particles[i]->Mass = mass;
 
         } else {
           
