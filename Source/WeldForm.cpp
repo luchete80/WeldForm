@@ -499,7 +499,7 @@ int main(int argc, char **argv) try {
         }
         if (totmass != 0){
         double mass = totmass/dom.Particles.Size();
-        cout << "Appliyng particle mass: "<<endl;
+        cout << "Appliyng particle mass: "<<mass<<endl;
         for (int i=0;i<dom.Particles.Size();i++)
             dom.Particles[i]->Mass = mass;
 
