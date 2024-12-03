@@ -487,15 +487,25 @@ int main(int argc, char **argv) try {
             
         double totmass = 0.0;
         readValue(domblock[0]["totMass"], 	totmass); 
-
         
+        bool calcParticleRadius = false;
+        readValue(domblock[0]["calcParticleRadius"], 	calcParticleRadius); 
+                
+        if (calcParticleRadius){
           cout << "calculating avg distance ..."<<endl;
           double avgdist = dom.getAvgMinDist();
           cout << "Avg particle distance "<<avgdist<<endl;
         
-        cout <<"Setting smoothing length to "<<avgdist<<endl;
-        for (int i=0;i<dom.Particles.Size();i++){
-            dom.Particles[i]->h = avgdist*hfactor;
+          cout <<"Setting smoothing length to "<<avgdist<<endl;
+          for (int i=0;i<dom.Particles.Size();i++){
+              dom.Particles[i]->h = avgdist*hfactor;
+          }
+        } else {
+          cout << "Using default Smoothing Length of: "<<h<<endl;
+          for (int i=0;i<dom.Particles.Size();i++){
+              dom.Particles[i]->h = h;
+          }          
+          
         }
         if (totmass != 0){
         double mass = totmass/dom.Particles.Size();
@@ -730,6 +740,7 @@ int main(int argc, char **argv) try {
 		for (auto& bc : bcs) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
 			int zoneid,valuetype,var,ampid;
+
 
 			double ampfactor = 1.0;
 			bool free=true;

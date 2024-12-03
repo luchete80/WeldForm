@@ -69,7 +69,7 @@ inline void Domain::ContactNbSearch(){
 		double h,K;
 		// Summing the smoothed pressure, velocity and stress for fixed particles from neighbour particles
 		//IT IS CONVENIENT TO FIX SINCE FSMPairs are significantly smaller
-		//cout << "Rig Pair size"<<RIGPairs[k].Size()<<endl;
+		cout << "Rig Pair size"<<RIGPairs[k].Size()<<endl;
 		for (size_t a=0; a<RIGPairs[k].Size();a++) {
 			
 			P1	= RIGPairs[k][a].first;
