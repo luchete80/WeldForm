@@ -659,7 +659,13 @@ int main(int argc, char **argv) try {
           mesh[mesh_count]->CalcNormals(); 
           //NOT UPDATING COEFFS SINCE NFAR IS NOT CALC YET (IS CALC BELOW IN SPHERES) 
         }
-  
+        //After calc Normals show avg normal pointing:
+        Vec3_t avgn = 0.;
+        for (int e = 0; e < mesh[mesh_count]->element.Size(); e++) 
+          avgn += mesh[mesh_count]->element[e] -> normal;
+        avgn /=mesh[mesh_count]->element.Size();
+        cout << "Surface avg Normal Direction (check to see if flipNormals needs to be set): "<<endl<<avgn<<endl;
+        
         cout << "Creating Spheres.."<<endl;
         //mesh.v = Vec3_t(0.,0.,);
         mesh[mesh_count]->CalcSpheres(); //DONE ONCE

@@ -1429,8 +1429,8 @@ void Domain::CalculateSurface(const int &id){
 		maxid = first_fem_particle_idx[0];
 	else 
 		maxid = Particles.Size();
-  cout << "maxid:" <<maxid<<endl;
-  cout << "Totmass: "<<totmass<<endl;
+  //cout << "maxid:" <<maxid<<endl;
+  //cout << "Totmass: "<<totmass<<endl;
   
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 		Particles[i] -> normal = 0.;
@@ -1473,7 +1473,6 @@ void Domain::CalculateSurface(const int &id){
 
   if (Dimension == 2)max_nb = 12;
 
-  cout << "MAX NB "<<max_nb<<endl;
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 	
 		Particles[i]->normal *= 1./totmass;

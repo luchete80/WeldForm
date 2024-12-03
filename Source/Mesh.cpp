@@ -228,6 +228,7 @@ inline void TriMesh::UpdatePlaneCoeff(){
 // TODO: PARALELIZE
 inline void TriMesh::CalcNormals(){
 	Vec3_t u, v, w;
+  
   if (dimension==3){
     for (int e = 0; e < element.Size(); e++) {
         u = *node [element[e]->node[1]] - *node [element[e]->node[0]];
