@@ -543,3 +543,5 @@
          - ADDED COMMIT TO OUTPUT
 20241202 - Added scalefactor to imported domain.
          - Added movement to rigid bodies and particle Domain! 
+20241203 - Added option to overWrite particle radius friom distance
+         - Added advice of NO SURFACE CALC  

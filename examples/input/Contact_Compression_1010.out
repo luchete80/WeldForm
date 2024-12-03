@@ -1,0 +1,3818 @@
+-----------------------------------------------
+------------------ WELDFORM -------------------
+----------------- v. 0.4.2.4 ------------------
+------------------ 20241127 -------------------
+-- 331c3a8ed9250581180e967fcb8845fa8c8aaa91 ---
+-----------------------------------------------
+
+
+
+---------------------------------------
+ Total CPU time: 0.00651862
+Calculation Times
+Accel: 0.029%,  Density: 0.16%,  Stress: 0.28%,  
+Energy: 0.01%,  Contact: 0.28%,  Nb: 0.042%,  Update: 0.0066%,  
+Output No. 2 at 1.3e-07 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: 0
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0120849
+Calculation Times
+Accel: 0.031%,  Density: 0.092%,  Stress: 0.3%,  
+Energy: 0.011%,  Contact: 0.41%,  Nb: 0.022%,  Update: 0.26%,  
+Output No. 3 at 2.5e-07 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0174955
+Calculation Times
+Accel: 0.028%,  Density: 0.066%,  Stress: 0.43%,  
+Energy: 0.011%,  Contact: 0.28%,  Nb: 0.015%,  Update: 0.18%,  
+Output No. 4 at 3.8e-07 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0229525
+Calculation Times
+Accel: 0.027%,  Density: 0.052%,  Stress: 0.52%,  
+Energy: 0.011%,  Contact: 0.22%,  Nb: 0.012%,  Update: 0.14%,  
+Output No. 5 at 5e-07 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.028033
+Calculation Times
+Accel: 0.027%,  Density: 0.045%,  Stress: 0.56%,  
+Energy: 0.011%,  Contact: 0.18%,  Nb: 0.0097%,  Update: 0.11%,  
+Output No. 6 at 6.3e-07 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0331635
+Calculation Times
+Accel: 0.026%,  Density: 0.04%,  Stress: 0.6%,  
+Energy: 0.011%,  Contact: 0.15%,  Nb: 0.0082%,  Update: 0.097%,  
+Output No. 7 at 7.5e-07 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0381778
+Calculation Times
+Accel: 0.026%,  Density: 0.036%,  Stress: 0.62%,  
+Energy: 0.011%,  Contact: 0.14%,  Nb: 0.0071%,  Update: 0.085%,  
+Output No. 8 at 8.8e-07 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.043323
+Calculation Times
+Accel: 0.026%,  Density: 0.033%,  Stress: 0.64%,  
+Energy: 0.012%,  Contact: 0.12%,  Nb: 0.0063%,  Update: 0.076%,  
+Output No. 9 at 1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0482809
+Calculation Times
+Accel: 0.026%,  Density: 0.03%,  Stress: 0.66%,  
+Energy: 0.012%,  Contact: 0.11%,  Nb: 0.0056%,  Update: 0.069%,  
+Output No. 10 at 1.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0532575
+Calculation Times
+Accel: 0.025%,  Density: 0.028%,  Stress: 0.67%,  
+Energy: 0.012%,  Contact: 0.1%,  Nb: 0.0051%,  Update: 0.063%,  
+Output No. 11 at 1.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0581369
+Calculation Times
+Accel: 0.025%,  Density: 0.027%,  Stress: 0.69%,  
+Energy: 0.012%,  Contact: 0.093%,  Nb: 0.0047%,  Update: 0.058%,  
+Output No. 12 at 1.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0632082
+Calculation Times
+Accel: 0.025%,  Density: 0.025%,  Stress: 0.69%,  
+Energy: 0.012%,  Contact: 0.087%,  Nb: 0.0043%,  Update: 0.054%,  
+Output No. 13 at 1.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0680887
+Calculation Times
+Accel: 0.025%,  Density: 0.024%,  Stress: 0.7%,  
+Energy: 0.012%,  Contact: 0.081%,  Nb: 0.004%,  Update: 0.05%,  
+Output No. 14 at 1.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0731658
+Calculation Times
+Accel: 0.025%,  Density: 0.023%,  Stress: 0.7%,  
+Energy: 0.012%,  Contact: 0.077%,  Nb: 0.0037%,  Update: 0.047%,  
+Output No. 15 at 1.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0780948
+Calculation Times
+Accel: 0.025%,  Density: 0.022%,  Stress: 0.71%,  
+Energy: 0.012%,  Contact: 0.073%,  Nb: 0.0035%,  Update: 0.045%,  
+Output No. 16 at 1.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0830526
+Calculation Times
+Accel: 0.025%,  Density: 0.021%,  Stress: 0.72%,  
+Energy: 0.012%,  Contact: 0.069%,  Nb: 0.0033%,  Update: 0.042%,  
+Output No. 17 at 2e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0881037
+Calculation Times
+Accel: 0.025%,  Density: 0.021%,  Stress: 0.72%,  
+Energy: 0.012%,  Contact: 0.066%,  Nb: 0.0031%,  Update: 0.041%,  
+Output No. 18 at 2.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0930365
+Calculation Times
+Accel: 0.025%,  Density: 0.02%,  Stress: 0.72%,  
+Energy: 0.012%,  Contact: 0.063%,  Nb: 0.0029%,  Update: 0.039%,  
+Output No. 19 at 2.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.0980616
+Calculation Times
+Accel: 0.025%,  Density: 0.019%,  Stress: 0.72%,  
+Energy: 0.012%,  Contact: 0.06%,  Nb: 0.0028%,  Update: 0.037%,  
+Output No. 20 at 2.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.103092
+Calculation Times
+Accel: 0.025%,  Density: 0.019%,  Stress: 0.72%,  
+Energy: 0.012%,  Contact: 0.058%,  Nb: 0.0026%,  Update: 0.036%,  
+Output No. 21 at 2.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.10809
+Calculation Times
+Accel: 0.025%,  Density: 0.018%,  Stress: 0.73%,  
+Energy: 0.012%,  Contact: 0.056%,  Nb: 0.0025%,  Update: 0.034%,  
+Output No. 22 at 2.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.113157
+Calculation Times
+Accel: 0.025%,  Density: 0.018%,  Stress: 0.73%,  
+Energy: 0.012%,  Contact: 0.054%,  Nb: 0.0024%,  Update: 0.033%,  
+Output No. 23 at 2.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.118141
+Calculation Times
+Accel: 0.025%,  Density: 0.018%,  Stress: 0.73%,  
+Energy: 0.012%,  Contact: 0.052%,  Nb: 0.0023%,  Update: 0.032%,  
+Output No. 24 at 2.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.123152
+Calculation Times
+Accel: 0.025%,  Density: 0.017%,  Stress: 0.73%,  
+Energy: 0.012%,  Contact: 0.051%,  Nb: 0.0022%,  Update: 0.031%,  
+Output No. 25 at 3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.128156
+Calculation Times
+Accel: 0.025%,  Density: 0.017%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.049%,  Nb: 0.0021%,  Update: 0.03%,  
+Output No. 26 at 3.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.133114
+Calculation Times
+Accel: 0.025%,  Density: 0.017%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.048%,  Nb: 0.002%,  Update: 0.029%,  
+Output No. 27 at 3.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.138069
+Calculation Times
+Accel: 0.025%,  Density: 0.016%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.046%,  Nb: 0.002%,  Update: 0.028%,  
+Output No. 28 at 3.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.143044
+Calculation Times
+Accel: 0.025%,  Density: 0.016%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.045%,  Nb: 0.0019%,  Update: 0.027%,  
+Output No. 29 at 3.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.148007
+Calculation Times
+Accel: 0.025%,  Density: 0.016%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.044%,  Nb: 0.0018%,  Update: 0.027%,  
+Output No. 30 at 3.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.153043
+Calculation Times
+Accel: 0.025%,  Density: 0.015%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.043%,  Nb: 0.0018%,  Update: 0.026%,  
+Output No. 31 at 3.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.157991
+Calculation Times
+Accel: 0.025%,  Density: 0.015%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.042%,  Nb: 0.0017%,  Update: 0.025%,  
+Output No. 32 at 3.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.162942
+Calculation Times
+Accel: 0.025%,  Density: 0.015%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.041%,  Nb: 0.0017%,  Update: 0.025%,  
+Output No. 33 at 4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.167877
+Calculation Times
+Accel: 0.025%,  Density: 0.015%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.04%,  Nb: 0.0016%,  Update: 0.024%,  
+Output No. 34 at 4.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.172862
+Calculation Times
+Accel: 0.025%,  Density: 0.015%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.039%,  Nb: 0.0016%,  Update: 0.024%,  
+Output No. 35 at 4.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.177833
+Calculation Times
+Accel: 0.025%,  Density: 0.015%,  Stress: 0.74%,  
+Energy: 0.012%,  Contact: 0.039%,  Nb: 0.0015%,  Update: 0.023%,  
+Output No. 36 at 4.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.182781
+Calculation Times
+Accel: 0.025%,  Density: 0.014%,  Stress: 0.73%,  
+Energy: 0.021%,  Contact: 0.038%,  Nb: 0.0015%,  Update: 0.023%,  
+Output No. 37 at 4.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.187706
+Calculation Times
+Accel: 0.025%,  Density: 0.014%,  Stress: 0.73%,  
+Energy: 0.021%,  Contact: 0.037%,  Nb: 0.0014%,  Update: 0.022%,  
+Output No. 38 at 4.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.192654
+Calculation Times
+Accel: 0.04%,  Density: 0.014%,  Stress: 0.72%,  
+Energy: 0.021%,  Contact: 0.037%,  Nb: 0.0014%,  Update: 0.022%,  
+Output No. 39 at 4.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.197759
+Calculation Times
+Accel: 0.055%,  Density: 0.014%,  Stress: 0.71%,  
+Energy: 0.021%,  Contact: 0.036%,  Nb: 0.0014%,  Update: 0.022%,  
+Output No. 40 at 4.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.202713
+Calculation Times
+Accel: 0.069%,  Density: 0.014%,  Stress: 0.7%,  
+Energy: 0.02%,  Contact: 0.035%,  Nb: 0.0013%,  Update: 0.021%,  
+Output No. 41 at 5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.20771
+Calculation Times
+Accel: 0.082%,  Density: 0.014%,  Stress: 0.69%,  
+Energy: 0.02%,  Contact: 0.035%,  Nb: 0.0013%,  Update: 0.021%,  
+Output No. 42 at 5.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.212671
+Calculation Times
+Accel: 0.095%,  Density: 0.014%,  Stress: 0.68%,  
+Energy: 0.02%,  Contact: 0.034%,  Nb: 0.0013%,  Update: 0.021%,  
+Output No. 43 at 5.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.217624
+Calculation Times
+Accel: 0.11%,  Density: 0.013%,  Stress: 0.68%,  
+Energy: 0.02%,  Contact: 0.034%,  Nb: 0.0012%,  Update: 0.02%,  
+Output No. 44 at 5.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.222585
+Calculation Times
+Accel: 0.11%,  Density: 0.013%,  Stress: 0.67%,  
+Energy: 0.02%,  Contact: 0.047%,  Nb: 0.0012%,  Update: 0.033%,  
+Output No. 45 at 5.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.227531
+Calculation Times
+Accel: 0.1%,  Density: 0.026%,  Stress: 0.66%,  
+Energy: 0.02%,  Contact: 0.046%,  Nb: 0.0012%,  Update: 0.033%,  
+Output No. 46 at 5.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.232487
+Calculation Times
+Accel: 0.1%,  Density: 0.026%,  Stress: 0.67%,  
+Energy: 0.019%,  Contact: 0.045%,  Nb: 0.0012%,  Update: 0.032%,  
+Output No. 47 at 5.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.237462
+Calculation Times
+Accel: 0.1%,  Density: 0.026%,  Stress: 0.67%,  
+Energy: 0.019%,  Contact: 0.045%,  Nb: 0.0011%,  Update: 0.032%,  
+Output No. 48 at 5.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.24243
+Calculation Times
+Accel: 0.099%,  Density: 0.025%,  Stress: 0.68%,  
+Energy: 0.019%,  Contact: 0.044%,  Nb: 0.0011%,  Update: 0.031%,  
+Output No. 49 at 6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.247361
+Calculation Times
+Accel: 0.097%,  Density: 0.025%,  Stress: 0.68%,  
+Energy: 0.019%,  Contact: 0.043%,  Nb: 0.0011%,  Update: 0.031%,  
+Output No. 50 at 6.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.252276
+Calculation Times
+Accel: 0.096%,  Density: 0.025%,  Stress: 0.68%,  
+Energy: 0.019%,  Contact: 0.043%,  Nb: 0.0011%,  Update: 0.03%,  
+Output No. 51 at 6.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.257241
+Calculation Times
+Accel: 0.095%,  Density: 0.024%,  Stress: 0.69%,  
+Energy: 0.019%,  Contact: 0.042%,  Nb: 0.0011%,  Update: 0.03%,  
+Output No. 52 at 6.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.262182
+Calculation Times
+Accel: 0.093%,  Density: 0.024%,  Stress: 0.69%,  
+Energy: 0.019%,  Contact: 0.042%,  Nb: 0.001%,  Update: 0.029%,  
+Output No. 53 at 6.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.267125
+Calculation Times
+Accel: 0.092%,  Density: 0.024%,  Stress: 0.69%,  
+Energy: 0.019%,  Contact: 0.041%,  Nb: 0.001%,  Update: 0.029%,  
+Output No. 54 at 6.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.272096
+Calculation Times
+Accel: 0.091%,  Density: 0.024%,  Stress: 0.69%,  
+Energy: 0.019%,  Contact: 0.04%,  Nb: 0.001%,  Update: 0.028%,  
+Output No. 55 at 6.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.277065
+Calculation Times
+Accel: 0.09%,  Density: 0.023%,  Stress: 0.69%,  
+Energy: 0.018%,  Contact: 0.04%,  Nb: 0.00098%,  Update: 0.028%,  
+Output No. 56 at 6.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.282017
+Calculation Times
+Accel: 0.089%,  Density: 0.023%,  Stress: 0.69%,  
+Energy: 0.018%,  Contact: 0.039%,  Nb: 0.00096%,  Update: 0.028%,  
+Output No. 57 at 7e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.286949
+Calculation Times
+Accel: 0.087%,  Density: 0.023%,  Stress: 0.7%,  
+Energy: 0.018%,  Contact: 0.039%,  Nb: 0.00094%,  Update: 0.027%,  
+Output No. 58 at 7.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.291891
+Calculation Times
+Accel: 0.086%,  Density: 0.023%,  Stress: 0.7%,  
+Energy: 0.018%,  Contact: 0.038%,  Nb: 0.00093%,  Update: 0.027%,  
+Output No. 59 at 7.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.296841
+Calculation Times
+Accel: 0.085%,  Density: 0.022%,  Stress: 0.7%,  
+Energy: 0.018%,  Contact: 0.038%,  Nb: 0.00091%,  Update: 0.027%,  
+Output No. 60 at 7.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.30178
+Calculation Times
+Accel: 0.084%,  Density: 0.022%,  Stress: 0.69%,  
+Energy: 0.023%,  Contact: 0.038%,  Nb: 0.0009%,  Update: 0.026%,  
+Output No. 61 at 7.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.306845
+Calculation Times
+Accel: 0.083%,  Density: 0.022%,  Stress: 0.69%,  
+Energy: 0.028%,  Contact: 0.037%,  Nb: 0.00088%,  Update: 0.026%,  
+Output No. 62 at 7.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.31179
+Calculation Times
+Accel: 0.082%,  Density: 0.022%,  Stress: 0.68%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00087%,  Update: 0.026%,  
+Output No. 63 at 7.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.316721
+Calculation Times
+Accel: 0.081%,  Density: 0.022%,  Stress: 0.68%,  
+Energy: 0.033%,  Contact: 0.042%,  Nb: 0.00086%,  Update: 0.025%,  
+Output No. 64 at 7.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.321685
+Calculation Times
+Accel: 0.09%,  Density: 0.021%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.041%,  Nb: 0.00084%,  Update: 0.025%,  
+Output No. 65 at 8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.326634
+Calculation Times
+Accel: 0.098%,  Density: 0.021%,  Stress: 0.67%,  
+Energy: 0.032%,  Contact: 0.041%,  Nb: 0.00083%,  Update: 0.025%,  
+Output No. 66 at 8.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.331651
+Calculation Times
+Accel: 0.097%,  Density: 0.021%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.049%,  Nb: 0.00082%,  Update: 0.034%,  
+Output No. 67 at 8.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.336602
+Calculation Times
+Accel: 0.1%,  Density: 0.021%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.049%,  Nb: 0.00081%,  Update: 0.033%,  
+Output No. 68 at 8.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.341596
+Calculation Times
+Accel: 0.1%,  Density: 0.021%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.048%,  Nb: 0.00079%,  Update: 0.042%,  
+Output No. 69 at 8.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.346576
+Calculation Times
+Accel: 0.1%,  Density: 0.029%,  Stress: 0.65%,  
+Energy: 0.031%,  Contact: 0.048%,  Nb: 0.00078%,  Update: 0.041%,  
+Output No. 70 at 8.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.351511
+Calculation Times
+Accel: 0.1%,  Density: 0.037%,  Stress: 0.65%,  
+Energy: 0.031%,  Contact: 0.047%,  Nb: 0.00077%,  Update: 0.041%,  
+Output No. 71 at 8.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.356484
+Calculation Times
+Accel: 0.1%,  Density: 0.037%,  Stress: 0.65%,  
+Energy: 0.031%,  Contact: 0.047%,  Nb: 0.00076%,  Update: 0.04%,  
+Output No. 72 at 8.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.361426
+Calculation Times
+Accel: 0.099%,  Density: 0.037%,  Stress: 0.65%,  
+Energy: 0.031%,  Contact: 0.046%,  Nb: 0.00075%,  Update: 0.04%,  
+Output No. 73 at 9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.366359
+Calculation Times
+Accel: 0.098%,  Density: 0.036%,  Stress: 0.66%,  
+Energy: 0.03%,  Contact: 0.046%,  Nb: 0.00074%,  Update: 0.039%,  
+Output No. 74 at 9.1e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.371323
+Calculation Times
+Accel: 0.097%,  Density: 0.036%,  Stress: 0.66%,  
+Energy: 0.03%,  Contact: 0.045%,  Nb: 0.00073%,  Update: 0.039%,  
+Output No. 75 at 9.3e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.376301
+Calculation Times
+Accel: 0.096%,  Density: 0.035%,  Stress: 0.66%,  
+Energy: 0.03%,  Contact: 0.045%,  Nb: 0.00072%,  Update: 0.038%,  
+Output No. 76 at 9.4e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.381326
+Calculation Times
+Accel: 0.095%,  Density: 0.035%,  Stress: 0.66%,  
+Energy: 0.03%,  Contact: 0.045%,  Nb: 0.00071%,  Update: 0.038%,  
+Output No. 77 at 9.5e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.386248
+Calculation Times
+Accel: 0.095%,  Density: 0.035%,  Stress: 0.66%,  
+Energy: 0.029%,  Contact: 0.044%,  Nb: 0.0007%,  Update: 0.037%,  
+Output No. 78 at 9.6e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.391221
+Calculation Times
+Accel: 0.094%,  Density: 0.034%,  Stress: 0.67%,  
+Energy: 0.029%,  Contact: 0.044%,  Nb: 0.00069%,  Update: 0.037%,  
+Output No. 79 at 9.8e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.396174
+Calculation Times
+Accel: 0.093%,  Density: 0.034%,  Stress: 0.67%,  
+Energy: 0.029%,  Contact: 0.043%,  Nb: 0.00068%,  Update: 0.037%,  
+Output No. 80 at 9.9e-06 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.401111
+Calculation Times
+Accel: 0.092%,  Density: 0.034%,  Stress: 0.67%,  
+Energy: 0.029%,  Contact: 0.043%,  Nb: 0.00068%,  Update: 0.036%,  
+Output No. 81 at 1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.406109
+Calculation Times
+Accel: 0.091%,  Density: 0.034%,  Stress: 0.67%,  
+Energy: 0.029%,  Contact: 0.043%,  Nb: 0.00067%,  Update: 0.036%,  
+Output No. 82 at 1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.411081
+Calculation Times
+Accel: 0.09%,  Density: 0.033%,  Stress: 0.67%,  
+Energy: 0.028%,  Contact: 0.042%,  Nb: 0.00066%,  Update: 0.036%,  
+Output No. 83 at 1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.415995
+Calculation Times
+Accel: 0.09%,  Density: 0.033%,  Stress: 0.67%,  
+Energy: 0.028%,  Contact: 0.042%,  Nb: 0.00065%,  Update: 0.035%,  
+Output No. 84 at 1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.420928
+Calculation Times
+Accel: 0.089%,  Density: 0.033%,  Stress: 0.67%,  
+Energy: 0.028%,  Contact: 0.042%,  Nb: 0.00064%,  Update: 0.035%,  
+Output No. 85 at 1.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.425853
+Calculation Times
+Accel: 0.088%,  Density: 0.032%,  Stress: 0.68%,  
+Energy: 0.028%,  Contact: 0.041%,  Nb: 0.00064%,  Update: 0.035%,  
+Output No. 86 at 1.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.430806
+Calculation Times
+Accel: 0.087%,  Density: 0.032%,  Stress: 0.67%,  
+Energy: 0.031%,  Contact: 0.041%,  Nb: 0.00063%,  Update: 0.034%,  
+Output No. 87 at 1.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.435719
+Calculation Times
+Accel: 0.087%,  Density: 0.032%,  Stress: 0.67%,  
+Energy: 0.035%,  Contact: 0.04%,  Nb: 0.00062%,  Update: 0.034%,  
+Output No. 88 at 1.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.440724
+Calculation Times
+Accel: 0.093%,  Density: 0.032%,  Stress: 0.67%,  
+Energy: 0.035%,  Contact: 0.04%,  Nb: 0.00061%,  Update: 0.034%,  
+Output No. 89 at 1.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.445653
+Calculation Times
+Accel: 0.099%,  Density: 0.031%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.04%,  Nb: 0.00061%,  Update: 0.033%,  
+Output No. 90 at 1.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.45057
+Calculation Times
+Accel: 0.1%,  Density: 0.031%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.04%,  Nb: 0.0006%,  Update: 0.033%,  
+Output No. 91 at 1.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.455507
+Calculation Times
+Accel: 0.1%,  Density: 0.037%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.039%,  Nb: 0.00059%,  Update: 0.033%,  
+Output No. 92 at 1.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.460417
+Calculation Times
+Accel: 0.1%,  Density: 0.037%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.039%,  Nb: 0.00059%,  Update: 0.032%,  
+Output No. 93 at 1.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.465341
+Calculation Times
+Accel: 0.1%,  Density: 0.037%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.039%,  Nb: 0.00058%,  Update: 0.032%,  
+Output No. 94 at 1.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.470263
+Calculation Times
+Accel: 0.1%,  Density: 0.037%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.038%,  Nb: 0.00058%,  Update: 0.032%,  
+Output No. 95 at 1.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.475203
+Calculation Times
+Accel: 0.1%,  Density: 0.036%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.038%,  Nb: 0.00057%,  Update: 0.032%,  
+Output No. 96 at 1.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.480211
+Calculation Times
+Accel: 0.1%,  Density: 0.036%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.038%,  Nb: 0.00056%,  Update: 0.031%,  
+Output No. 97 at 1.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.485131
+Calculation Times
+Accel: 0.099%,  Density: 0.036%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.038%,  Nb: 0.00056%,  Update: 0.031%,  
+Output No. 98 at 1.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.490062
+Calculation Times
+Accel: 0.098%,  Density: 0.035%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00055%,  Update: 0.031%,  
+Output No. 99 at 1.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.494966
+Calculation Times
+Accel: 0.097%,  Density: 0.035%,  Stress: 0.67%,  
+Energy: 0.032%,  Contact: 0.037%,  Nb: 0.00055%,  Update: 0.031%,  
+Output No. 100 at 1.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.499877
+Calculation Times
+Accel: 0.097%,  Density: 0.035%,  Stress: 0.67%,  
+Energy: 0.032%,  Contact: 0.037%,  Nb: 0.00054%,  Update: 0.03%,  
+Output No. 101 at 1.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.50481
+Calculation Times
+Accel: 0.096%,  Density: 0.035%,  Stress: 0.67%,  
+Energy: 0.032%,  Contact: 0.037%,  Nb: 0.00054%,  Update: 0.03%,  
+Output No. 102 at 1.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.509747
+Calculation Times
+Accel: 0.095%,  Density: 0.034%,  Stress: 0.67%,  
+Energy: 0.035%,  Contact: 0.036%,  Nb: 0.00053%,  Update: 0.03%,  
+Output No. 103 at 1.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.514681
+Calculation Times
+Accel: 0.1%,  Density: 0.034%,  Stress: 0.67%,  
+Energy: 0.035%,  Contact: 0.036%,  Nb: 0.00053%,  Update: 0.03%,  
+Output No. 104 at 1.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.519597
+Calculation Times
+Accel: 0.11%,  Density: 0.034%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.036%,  Nb: 0.00052%,  Update: 0.029%,  
+Output No. 105 at 1.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.52451
+Calculation Times
+Accel: 0.1%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00052%,  Update: 0.029%,  
+Output No. 106 at 1.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.529425
+Calculation Times
+Accel: 0.1%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00051%,  Update: 0.029%,  
+Output No. 107 at 1.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.534344
+Calculation Times
+Accel: 0.1%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00051%,  Update: 0.029%,  
+Output No. 108 at 1.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.539302
+Calculation Times
+Accel: 0.1%,  Density: 0.039%,  Stress: 0.67%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.0005%,  Update: 0.029%,  
+Output No. 109 at 1.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.544256
+Calculation Times
+Accel: 0.1%,  Density: 0.038%,  Stress: 0.67%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.0005%,  Update: 0.028%,  
+Output No. 110 at 1.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.54917
+Calculation Times
+Accel: 0.1%,  Density: 0.038%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.035%,  Nb: 0.00049%,  Update: 0.028%,  
+Output No. 111 at 1.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.554069
+Calculation Times
+Accel: 0.1%,  Density: 0.038%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.034%,  Nb: 0.00049%,  Update: 0.028%,  
+Output No. 112 at 1.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.558972
+Calculation Times
+Accel: 0.1%,  Density: 0.038%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.034%,  Nb: 0.00048%,  Update: 0.028%,  
+Output No. 113 at 1.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.563873
+Calculation Times
+Accel: 0.099%,  Density: 0.037%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.034%,  Nb: 0.00048%,  Update: 0.028%,  
+Output No. 114 at 1.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.568755
+Calculation Times
+Accel: 0.098%,  Density: 0.037%,  Stress: 0.67%,  
+Energy: 0.035%,  Contact: 0.034%,  Nb: 0.00048%,  Update: 0.027%,  
+Output No. 115 at 1.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.573733
+Calculation Times
+Accel: 0.1%,  Density: 0.037%,  Stress: 0.67%,  
+Energy: 0.035%,  Contact: 0.037%,  Nb: 0.00047%,  Update: 0.027%,  
+Output No. 116 at 1.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.578682
+Calculation Times
+Accel: 0.11%,  Density: 0.037%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.036%,  Nb: 0.00047%,  Update: 0.027%,  
+Output No. 117 at 1.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.583587
+Calculation Times
+Accel: 0.11%,  Density: 0.036%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.036%,  Nb: 0.00046%,  Update: 0.027%,  
+Output No. 118 at 1.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.588509
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.036%,  Nb: 0.00046%,  Update: 0.027%,  
+Output No. 119 at 1.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.593416
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.036%,  Nb: 0.00046%,  Update: 0.027%,  
+Output No. 120 at 1.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.598334
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00045%,  Update: 0.026%,  
+Output No. 121 at 1.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.603249
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00045%,  Update: 0.026%,  
+Output No. 122 at 1.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.608203
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00045%,  Update: 0.026%,  
+Output No. 123 at 1.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.613158
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.67%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00044%,  Update: 0.026%,  
+Output No. 124 at 1.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.618073
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.67%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00044%,  Update: 0.026%,  
+Output No. 125 at 1.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.622984
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.67%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00044%,  Update: 0.026%,  
+Output No. 126 at 1.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.627899
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.035%,  Nb: 0.00043%,  Update: 0.025%,  
+Output No. 127 at 1.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.632801
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.67%,  
+Energy: 0.033%,  Contact: 0.034%,  Nb: 0.00043%,  Update: 0.025%,  
+Output No. 128 at 1.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.63772
+Calculation Times
+Accel: 0.1%,  Density: 0.039%,  Stress: 0.67%,  
+Energy: 0.036%,  Contact: 0.034%,  Nb: 0.00042%,  Update: 0.025%,  
+Output No. 129 at 1.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.642691
+Calculation Times
+Accel: 0.11%,  Density: 0.038%,  Stress: 0.67%,  
+Energy: 0.035%,  Contact: 0.034%,  Nb: 0.00042%,  Update: 0.025%,  
+Output No. 130 at 1.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.647646
+Calculation Times
+Accel: 0.11%,  Density: 0.038%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.034%,  Nb: 0.00042%,  Update: 0.025%,  
+Output No. 131 at 1.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.652583
+Calculation Times
+Accel: 0.12%,  Density: 0.038%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.034%,  Nb: 0.00042%,  Update: 0.025%,  
+Output No. 132 at 1.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.657603
+Calculation Times
+Accel: 0.12%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.034%,  Nb: 0.00041%,  Update: 0.025%,  
+Output No. 133 at 1.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.662552
+Calculation Times
+Accel: 0.12%,  Density: 0.047%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.033%,  Nb: 0.00041%,  Update: 0.024%,  
+Output No. 134 at 1.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.667561
+Calculation Times
+Accel: 0.11%,  Density: 0.046%,  Stress: 0.65%,  
+Energy: 0.035%,  Contact: 0.038%,  Nb: 0.00041%,  Update: 0.029%,  
+Output No. 135 at 1.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.67253
+Calculation Times
+Accel: 0.11%,  Density: 0.051%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.0004%,  Update: 0.029%,  
+Output No. 136 at 1.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.677516
+Calculation Times
+Accel: 0.11%,  Density: 0.05%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.0004%,  Update: 0.028%,  
+Output No. 137 at 1.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.682439
+Calculation Times
+Accel: 0.11%,  Density: 0.05%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.0004%,  Update: 0.028%,  
+Output No. 138 at 1.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.687351
+Calculation Times
+Accel: 0.11%,  Density: 0.05%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00039%,  Update: 0.028%,  
+Output No. 139 at 1.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.69227
+Calculation Times
+Accel: 0.11%,  Density: 0.049%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00039%,  Update: 0.028%,  
+Output No. 140 at 1.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.697188
+Calculation Times
+Accel: 0.11%,  Density: 0.049%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00039%,  Update: 0.028%,  
+Output No. 141 at 1.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.702103
+Calculation Times
+Accel: 0.11%,  Density: 0.049%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00039%,  Update: 0.028%,  
+Output No. 142 at 1.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.707074
+Calculation Times
+Accel: 0.11%,  Density: 0.049%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00038%,  Update: 0.028%,  
+Output No. 143 at 1.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.712005
+Calculation Times
+Accel: 0.11%,  Density: 0.048%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00038%,  Update: 0.027%,  
+Output No. 144 at 1.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.716913
+Calculation Times
+Accel: 0.11%,  Density: 0.048%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00038%,  Update: 0.027%,  
+Output No. 145 at 1.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.721814
+Calculation Times
+Accel: 0.11%,  Density: 0.048%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00038%,  Update: 0.027%,  
+Output No. 146 at 1.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.726733
+Calculation Times
+Accel: 0.11%,  Density: 0.047%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.036%,  Nb: 0.00037%,  Update: 0.027%,  
+Output No. 147 at 1.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.731669
+Calculation Times
+Accel: 0.11%,  Density: 0.047%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.035%,  Nb: 0.00037%,  Update: 0.027%,  
+Output No. 148 at 1.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.736599
+Calculation Times
+Accel: 0.11%,  Density: 0.047%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.035%,  Nb: 0.00037%,  Update: 0.027%,  
+Output No. 149 at 1.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.741567
+Calculation Times
+Accel: 0.11%,  Density: 0.051%,  Stress: 0.65%,  
+Energy: 0.035%,  Contact: 0.035%,  Nb: 0.00037%,  Update: 0.027%,  
+Output No. 150 at 1.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.74652
+Calculation Times
+Accel: 0.11%,  Density: 0.054%,  Stress: 0.65%,  
+Energy: 0.035%,  Contact: 0.035%,  Nb: 0.00036%,  Update: 0.026%,  
+Output No. 151 at 1.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.751461
+Calculation Times
+Accel: 0.11%,  Density: 0.054%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00036%,  Update: 0.026%,  
+Output No. 152 at 1.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.756467
+Calculation Times
+Accel: 0.11%,  Density: 0.054%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00036%,  Update: 0.026%,  
+Output No. 153 at 1.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.761422
+Calculation Times
+Accel: 0.11%,  Density: 0.054%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.035%,  Nb: 0.00036%,  Update: 0.026%,  
+Output No. 154 at 1.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.766342
+Calculation Times
+Accel: 0.11%,  Density: 0.053%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.034%,  Nb: 0.00035%,  Update: 0.026%,  
+Output No. 155 at 1.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.771257
+Calculation Times
+Accel: 0.11%,  Density: 0.053%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.034%,  Nb: 0.00035%,  Update: 0.026%,  
+Output No. 156 at 1.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.776211
+Calculation Times
+Accel: 0.11%,  Density: 0.053%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.034%,  Nb: 0.00035%,  Update: 0.026%,  
+Output No. 157 at 2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.78113
+Calculation Times
+Accel: 0.11%,  Density: 0.052%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.034%,  Nb: 0.00035%,  Update: 0.026%,  
+Output No. 158 at 2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.786038
+Calculation Times
+Accel: 0.11%,  Density: 0.052%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.034%,  Nb: 0.00034%,  Update: 0.025%,  
+Output No. 159 at 2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.790965
+Calculation Times
+Accel: 0.11%,  Density: 0.052%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.034%,  Nb: 0.00034%,  Update: 0.025%,  
+Output No. 160 at 2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.795896
+Calculation Times
+Accel: 0.11%,  Density: 0.052%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.034%,  Nb: 0.00034%,  Update: 0.025%,  
+Output No. 161 at 2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.800795
+Calculation Times
+Accel: 0.11%,  Density: 0.051%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.033%,  Nb: 0.00034%,  Update: 0.025%,  
+Output No. 162 at 2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.805715
+Calculation Times
+Accel: 0.11%,  Density: 0.051%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.035%,  Nb: 0.00034%,  Update: 0.025%,  
+Output No. 163 at 2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.810762
+Calculation Times
+Accel: 0.11%,  Density: 0.051%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.035%,  Nb: 0.00033%,  Update: 0.025%,  
+Output No. 164 at 2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.815739
+Calculation Times
+Accel: 0.11%,  Density: 0.051%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00033%,  Update: 0.025%,  
+Output No. 165 at 2.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.820732
+Calculation Times
+Accel: 0.11%,  Density: 0.05%,  Stress: 0.66%,  
+Energy: 0.035%,  Contact: 0.037%,  Nb: 0.00033%,  Update: 0.025%,  
+Output No. 166 at 2.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.825667
+Calculation Times
+Accel: 0.11%,  Density: 0.05%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00033%,  Update: 0.024%,  
+Output No. 167 at 2.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.83061
+Calculation Times
+Accel: 0.11%,  Density: 0.05%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00033%,  Update: 0.024%,  
+Output No. 168 at 2.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.835529
+Calculation Times
+Accel: 0.11%,  Density: 0.05%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00032%,  Update: 0.028%,  
+Output No. 169 at 2.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.840506
+Calculation Times
+Accel: 0.11%,  Density: 0.049%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00032%,  Update: 0.028%,  
+Output No. 170 at 2.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.845452
+Calculation Times
+Accel: 0.11%,  Density: 0.049%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00032%,  Update: 0.028%,  
+Output No. 171 at 2.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.850396
+Calculation Times
+Accel: 0.11%,  Density: 0.049%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00032%,  Update: 0.027%,  
+Output No. 172 at 2.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.855333
+Calculation Times
+Accel: 0.11%,  Density: 0.049%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00032%,  Update: 0.027%,  
+Output No. 173 at 2.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.860262
+Calculation Times
+Accel: 0.11%,  Density: 0.048%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00032%,  Update: 0.027%,  
+Output No. 174 at 2.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.865182
+Calculation Times
+Accel: 0.11%,  Density: 0.048%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00031%,  Update: 0.027%,  
+Output No. 175 at 2.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.870292
+Calculation Times
+Accel: 0.11%,  Density: 0.048%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00031%,  Update: 0.027%,  
+Output No. 176 at 2.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.875663
+Calculation Times
+Accel: 0.11%,  Density: 0.048%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.035%,  Nb: 0.00031%,  Update: 0.027%,  
+Output No. 177 at 2.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.880677
+Calculation Times
+Accel: 0.11%,  Density: 0.047%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.035%,  Nb: 0.00031%,  Update: 0.027%,  
+Output No. 178 at 2.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.885617
+Calculation Times
+Accel: 0.12%,  Density: 0.047%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.035%,  Nb: 0.00031%,  Update: 0.027%,  
+Output No. 179 at 2.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.890849
+Calculation Times
+Accel: 0.12%,  Density: 0.047%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.038%,  Nb: 0.0003%,  Update: 0.03%,  
+Output No. 180 at 2.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.895767
+Calculation Times
+Accel: 0.12%,  Density: 0.047%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.0003%,  Update: 0.03%,  
+Output No. 181 at 2.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.900676
+Calculation Times
+Accel: 0.11%,  Density: 0.047%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.0003%,  Update: 0.03%,  
+Output No. 182 at 2.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.905692
+Calculation Times
+Accel: 0.12%,  Density: 0.046%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.0003%,  Update: 0.029%,  
+Output No. 183 at 2.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.910999
+Calculation Times
+Accel: 0.12%,  Density: 0.046%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.0003%,  Update: 0.029%,  
+Output No. 184 at 2.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.915952
+Calculation Times
+Accel: 0.12%,  Density: 0.046%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.0003%,  Update: 0.029%,  
+Output No. 185 at 2.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.920868
+Calculation Times
+Accel: 0.12%,  Density: 0.046%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00029%,  Update: 0.029%,  
+Output No. 186 at 2.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.926127
+Calculation Times
+Accel: 0.12%,  Density: 0.046%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00029%,  Update: 0.029%,  
+Output No. 187 at 2.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.931103
+Calculation Times
+Accel: 0.12%,  Density: 0.045%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00029%,  Update: 0.029%,  
+Output No. 188 at 2.3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.936086
+Calculation Times
+Accel: 0.12%,  Density: 0.045%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00029%,  Update: 0.029%,  
+Output No. 189 at 2.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.941084
+Calculation Times
+Accel: 0.12%,  Density: 0.045%,  Stress: 0.65%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00029%,  Update: 0.029%,  
+Output No. 190 at 2.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.946102
+Calculation Times
+Accel: 0.12%,  Density: 0.045%,  Stress: 0.65%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00029%,  Update: 0.028%,  
+Output No. 191 at 2.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.951019
+Calculation Times
+Accel: 0.12%,  Density: 0.045%,  Stress: 0.65%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00028%,  Update: 0.028%,  
+Output No. 192 at 2.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.956002
+Calculation Times
+Accel: 0.12%,  Density: 0.044%,  Stress: 0.65%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00028%,  Update: 0.028%,  
+Output No. 193 at 2.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.961026
+Calculation Times
+Accel: 0.12%,  Density: 0.044%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00028%,  Update: 0.028%,  
+Output No. 194 at 2.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.96593
+Calculation Times
+Accel: 0.11%,  Density: 0.044%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00028%,  Update: 0.028%,  
+Output No. 195 at 2.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.970891
+Calculation Times
+Accel: 0.11%,  Density: 0.044%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00028%,  Update: 0.028%,  
+Output No. 196 at 2.4e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.976197
+Calculation Times
+Accel: 0.11%,  Density: 0.044%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00028%,  Update: 0.028%,  
+Output No. 197 at 2.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.981126
+Calculation Times
+Accel: 0.11%,  Density: 0.044%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00028%,  Update: 0.028%,  
+Output No. 198 at 2.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.98604
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.036%,  Nb: 0.00027%,  Update: 0.028%,  
+Output No. 199 at 2.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.991264
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.036%,  Nb: 0.00027%,  Update: 0.027%,  
+Output No. 200 at 2.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 0.996183
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.036%,  Nb: 0.00027%,  Update: 0.027%,  
+Output No. 201 at 2.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.00109
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.035%,  Nb: 0.00027%,  Update: 0.027%,  
+Output No. 202 at 2.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.0063
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.035%,  Nb: 0.00027%,  Update: 0.027%,  
+Output No. 203 at 2.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.01135
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.035%,  Nb: 0.00027%,  Update: 0.027%,  
+Output No. 204 at 2.5e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.01625
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.035%,  Nb: 0.00027%,  Update: 0.027%,  
+Output No. 205 at 2.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.02116
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.035%,  Nb: 0.00027%,  Update: 0.027%,  
+Output No. 206 at 2.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.02642
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.035%,  Nb: 0.00026%,  Update: 0.027%,  
+Output No. 207 at 2.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.03135
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.035%,  Nb: 0.00026%,  Update: 0.027%,  
+Output No. 208 at 2.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.03637
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.035%,  Nb: 0.00026%,  Update: 0.027%,  
+Output No. 209 at 2.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.04169
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.67%,  
+Energy: 0.031%,  Contact: 0.035%,  Nb: 0.00026%,  Update: 0.026%,  
+Output No. 210 at 2.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.04663
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.031%,  Contact: 0.034%,  Nb: 0.00026%,  Update: 0.026%,  
+Output No. 211 at 2.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.05153
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.031%,  Contact: 0.037%,  Nb: 0.00026%,  Update: 0.029%,  
+Output No. 212 at 2.6e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.0566
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.031%,  Contact: 0.037%,  Nb: 0.00026%,  Update: 0.029%,  
+Output No. 213 at 2.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.06161
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.031%,  Contact: 0.037%,  Nb: 0.00026%,  Update: 0.029%,  
+Output No. 214 at 2.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.06659
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.031%,  Contact: 0.04%,  Nb: 0.00025%,  Update: 0.032%,  
+Output No. 215 at 2.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.07165
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.031%,  Contact: 0.04%,  Nb: 0.00025%,  Update: 0.031%,  
+Output No. 216 at 2.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.07694
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.031%,  Contact: 0.039%,  Nb: 0.00025%,  Update: 0.031%,  
+Output No. 217 at 2.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.08185
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.031%,  Contact: 0.039%,  Nb: 0.00025%,  Update: 0.031%,  
+Output No. 218 at 2.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.08677
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.039%,  Nb: 0.00025%,  Update: 0.031%,  
+Output No. 219 at 2.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.09198
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.039%,  Nb: 0.00025%,  Update: 0.031%,  
+Output No. 220 at 2.7e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.09688
+Calculation Times
+Accel: 0.11%,  Density: 0.043%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.039%,  Nb: 0.00025%,  Update: 0.031%,  
+Output No. 221 at 2.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.10181
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.032%,  Contact: 0.039%,  Nb: 0.00025%,  Update: 0.031%,  
+Output No. 222 at 2.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.10695
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.039%,  Nb: 0.00024%,  Update: 0.031%,  
+Output No. 223 at 2.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.11195
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.039%,  Nb: 0.00024%,  Update: 0.031%,  
+Output No. 224 at 2.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.11685
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.038%,  Nb: 0.00024%,  Update: 0.03%,  
+Output No. 225 at 2.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.12174
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00024%,  Update: 0.03%,  
+Output No. 226 at 2.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.12692
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00024%,  Update: 0.03%,  
+Output No. 227 at 2.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.13192
+Calculation Times
+Accel: 0.11%,  Density: 0.042%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00024%,  Update: 0.03%,  
+Output No. 228 at 2.8e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.1369
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00024%,  Update: 0.03%,  
+Output No. 229 at 2.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.14221
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00024%,  Update: 0.03%,  
+Output No. 230 at 2.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.14713
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00024%,  Update: 0.03%,  
+Output No. 231 at 2.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.15211
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00024%,  Update: 0.03%,  
+Output No. 232 at 2.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.1573
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.03%,  
+Output No. 233 at 2.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.16229
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.03%,  
+Output No. 234 at 2.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.16721
+Calculation Times
+Accel: 0.11%,  Density: 0.041%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.029%,  
+Output No. 235 at 2.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.17219
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.029%,  
+Output No. 236 at 2.9e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.17729
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.029%,  
+Output No. 237 at 3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.18232
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.029%,  
+Output No. 238 at 3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.18725
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.029%,  
+Output No. 239 at 3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.19248
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.029%,  
+Output No. 240 at 3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.19744
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00023%,  Update: 0.029%,  
+Output No. 241 at 3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.20242
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00023%,  Update: 0.029%,  
+Output No. 242 at 3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.20783
+Calculation Times
+Accel: 0.11%,  Density: 0.04%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.036%,  Nb: 0.00022%,  Update: 0.029%,  
+Output No. 243 at 3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.2128
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.036%,  Nb: 0.00022%,  Update: 0.029%,  
+Output No. 244 at 3e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.21774
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.038%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 245 at 3.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.2227
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 246 at 3.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.22773
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 247 at 3.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.23266
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 248 at 3.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.23763
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 249 at 3.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.24294
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.65%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 250 at 3.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.24788
+Calculation Times
+Accel: 0.11%,  Density: 0.039%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 251 at 3.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.25286
+Calculation Times
+Accel: 0.11%,  Density: 0.038%,  Stress: 0.66%,  
+Energy: 0.033%,  Contact: 0.037%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 252 at 3.1e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.25807
+Calculation Times
+Accel: 0.11%,  Density: 0.038%,  Stress: 0.65%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00022%,  Update: 0.028%,  
+Output No. 253 at 3.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.26309
+Calculation Times
+Accel: 0.11%,  Density: 0.038%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00021%,  Update: 0.028%,  
+Output No. 254 at 3.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 1.26804
+Calculation Times
+Accel: 0.11%,  Density: 0.038%,  Stress: 0.66%,  
+Energy: 0.034%,  Contact: 0.037%,  Nb: 0.00021%,  Update: 0.028%,  
+Output No. 255 at 3.2e-05 has been generated
+Current Time Step = 1.3e-07
+Max plastic strain: 0in particle28986
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Contact Force Sum 0, Reaction Sum 0
+Contact Friction Work 0
+External Forces Work 0
+Int Energy: -nan, Kin Energy: -nan
+-----------------------------------------------------------------------------

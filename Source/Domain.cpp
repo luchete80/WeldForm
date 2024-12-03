@@ -1429,7 +1429,9 @@ void Domain::CalculateSurface(const int &id){
 		maxid = first_fem_particle_idx[0];
 	else 
 		maxid = Particles.Size();
-
+  cout << "maxid:" <<maxid<<endl;
+  cout << "Totmass: "<<totmass<<endl;
+  
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 		Particles[i] -> normal = 0.;
 		Particles[i] -> ID = Particles [i] -> ID_orig;
@@ -1483,6 +1485,8 @@ void Domain::CalculateSurface(const int &id){
 		}
 	}
 	//cout << "Surface particles: " << surf_part<<endl;
+  if (surf_part == 0)
+    throw new Fatal("ERROR: No external particles found. Please check particle masses");
 }
 
 
@@ -2476,7 +2480,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 void ContactNbUpdate(SPH::Domain *dom){
   dom->CalculateSurface(1);				//After Nb search			
   dom->ContactNbSearch();
+  //cout << "Saving nb data"<<endl;
   dom->SaveContNeighbourData();	//Again Save Nb data
+  //cout << "done "<<endl;
 }
 
 /////////////////////////////////////////////////
@@ -2836,6 +2842,8 @@ void Domain::ReadFromLSdyna(const char *fName, double refDensity){
       //cout << "Particle pos: "<<Particles[i]->x<<endl;
     }
   }
+  
+  solid_part_count = Particles.Size(); //FOR NEW REDUCTION
 
         
         

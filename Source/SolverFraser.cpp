@@ -231,10 +231,11 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 				
 			}		
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
-
+    
+    //cout << "Primary comp "<<endl;
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
-    
+    //cout << "done "<<endl;
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
     CalcDensInc(); //TODO: USE SAME KERNEL?
@@ -253,7 +254,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     }
     dens_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
-
+    //cout << "rate tensor"<<endl;
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
 
