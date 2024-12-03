@@ -1470,8 +1470,10 @@ void Domain::CalculateSurface(const int &id){
 
 	int surf_part =0;
   int max_nb = 46;
-  
+
   if (Dimension == 2)max_nb = 12;
+
+  cout << "MAX NB "<<max_nb<<endl;
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 	
 		Particles[i]->normal *= 1./totmass;
@@ -2912,6 +2914,32 @@ double Domain::getAvgMinDist(){
   double avgdist = totdist/Particles.Size();
   return avgdist;
 }
+
+Vec3_t Domain::getBboxDims(){
+
+  Vec3_t max(0,0,0);
+  Vec3_t min(1000,1000,1000);
+  std::vector<double> mindist;
+  mindist.resize(Particles.Size());
+  
+  double totdist=0.0;
+  
+    for (size_t i = 0; i < Particles.Size(); ++i) {
+      for (int k=0;k<3;k++){
+        if      (Particles[i]->x[k]<min[k]) min[k] = Particles[i]->x[k];
+        else if (Particles[i]->x[k]>max[k]) max[k] = Particles[i]->x[k];
+      }
+
+
+    //cout << "Particle "<< i << " Min dist "<<mindx<<endl;
+  }
+  Vec3_t dims = max - min;
+  cout << "Min coords "<<min<<", max coords: "<< max<<endl;
+  cout << "Bounding Box Dimensions "<<dims<<endl; 
+  
+  return dims;
+}
+
 
 
 }; // namespace SPH

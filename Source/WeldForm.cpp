@@ -490,7 +490,18 @@ int main(int argc, char **argv) try {
         
         bool calcParticleRadius = false;
         readValue(domblock[0]["calcParticleRadius"], 	calcParticleRadius); 
-                
+        
+        Vec3_t dims = dom.getBboxDims();
+        
+        cout << "--------DOMAIN DIMENSION SET TO: ";
+        if (dims[2]>0.0){
+          dom.Dimension = 3;
+        } else {
+          dom.Dimension = 2;          
+        }
+        cout << dom.Dimension<<endl;
+        
+        
         if (calcParticleRadius){
           cout << "calculating avg distance ..."<<endl;
           double avgdist = dom.getAvgMinDist();

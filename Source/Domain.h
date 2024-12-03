@@ -501,6 +501,7 @@ public:
   void ReadFromLSdyna(const char * fName, double refDensity = 1.0);
   
   double Domain::getAvgMinDist();
+  Vec3_t Domain::getBboxDims();
   
   private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);
