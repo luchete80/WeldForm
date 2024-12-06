@@ -64,7 +64,9 @@ def write_nastran_file(nodes, triangles, file_path):
         # Write nodes
         for node_id, (x, y, z) in nodes.items():
             f.write(f"{'GRID'.ljust(8)}{str(node_id).rjust(8)}{'0'.rjust(8)}"
-                    f"{f'{x:3.4f}'.rjust(8)}{f'{y:3.4f}'.rjust(8)}{f'{z:3.4f}'.rjust(8)}\n")
+                    f"{f'{x:3.3f}'.ljust(8)}{f'{y:3.3f}'.ljust(8)}{f'{z:3.3f}'.ljust(8)}\n")
+            #SHOUL BE LEFT JUST DUE TO BUG
+              
             #f.write(f"{'GRID'.ljust(8)}{str(node_id).rjust(8)}{'0'.rjust(8)}")
             #f.write(writeFloatField(x,8,4)+writeFloatField(y,8,4)+writeFloatField(z,8,4)+"\n")
         # Write triangles
