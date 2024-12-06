@@ -663,7 +663,7 @@ int main(int argc, char **argv) try {
         Vec3_t avgn = 0.;
         for (int e = 0; e < mesh[mesh_count]->element.Size(); e++) {
           avgn += mesh[mesh_count]->element[e] -> normal;
-          cout << "Elem "<<e<<" normal "<<mesh[mesh_count]->element[e] -> normal<<endl;
+          //cout << "Elem "<<e<<" normal "<<mesh[mesh_count]->element[e] -> normal<<endl;
         }
         avgn /=mesh[mesh_count]->element.Size();
         cout << "Surface avg Normal Direction (check to see if flipNormals needs to be set): "<<endl<<avgn<<endl;
