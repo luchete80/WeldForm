@@ -188,9 +188,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
         
 				if (m_isNbDataCleared){
           clock_beg = clock();
-          cout << "Nb Search..."<<endl;
+          //cout << "Nb Search..."<<endl;
 					MainNeighbourSearch/*_Ext*/();
-          cout << "Done "<<endl;
+          //cout << "Done "<<endl;
           //
           CalcPairPosList(); //For min TS Vel
           if (h_update){                
@@ -302,7 +302,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     
     ///// 8. CONTACT FORCES
-    cout << "Calc CONTACT"<<endl; 
+    //cout << "Calc CONTACT"<<endl; 
     clock_beg = clock(); 
     if (contact) {
       if      (contact_alg==Fraser)   CalcContactForces();
@@ -311,7 +311,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
      // else if (contact_alg==LSDyna )  CalcContactForcesLS();
     }
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
-    cout << "done "<<endl;
+    //cout << "done "<<endl;
     //if (contact) CalcContactForces2();
 
     // if (contact && !isfirst)
