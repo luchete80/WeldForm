@@ -188,7 +188,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
         
 				if (m_isNbDataCleared){
           clock_beg = clock();
+          cout << "Nb Search..."<<endl;
 					MainNeighbourSearch/*_Ext*/();
+          cout << "Done "<<endl;
           //
           CalcPairPosList(); //For min TS Vel
           if (h_update){                

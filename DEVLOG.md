@@ -546,4 +546,4 @@
 20241203 - Added option to overWrite particle radius friom distance
          - Added advice of NO SURFACE CALC 
          - FIXED DOMAIN DIMENSION SET ASSIGNENT ACCORDING TO READING LS-DYNA
-        - 
+20241206 - Added a converter from ls-dyna to nastran
