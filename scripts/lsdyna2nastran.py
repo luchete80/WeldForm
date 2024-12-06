@@ -1,5 +1,17 @@
 import re
 
+def writeFloatField(number, length, decimals):
+  fmt ='%.' + str(decimals) + 'e'
+  # print ('format ' + fmt)
+  s = fmt % number
+  spaces = ''
+  for i in range ((int)(length - len(s))):
+    spaces = spaces + ' '
+  output = spaces + s
+  # print (spaces + s)
+  return output
+
+
 def read_ls_dyna_file(file_path):
     """Reads LS-DYNA keyword file and extracts nodes and triangle elements."""
     nodes = {}
@@ -28,7 +40,6 @@ def read_ls_dyna_file(file_path):
             in_element_section = False
 
         if in_node_section:
-            print ("Reading line ", line)
             parts = re.split(r'\s+', line)
             if len(parts) >= 4:
                 node_id = int(parts[0])
@@ -37,9 +48,9 @@ def read_ls_dyna_file(file_path):
 
         if in_element_section:
             parts = re.split(r'\s+', line)
-            if len(parts) >= 5:  # LS-DYNA shell elements typically have 4 nodes
+            if len(parts) >= 6:  # LS-DYNA shell elements typically have 4 nodes
                 element_id = int(parts[0])
-                node_ids = list(map(int, parts[1:5]))
+                node_ids = list(map(int, parts[2:6]))
                 triangles.append((element_id, node_ids))
 
     return nodes, triangles
@@ -52,11 +63,14 @@ def write_nastran_file(nodes, triangles, file_path):
 
         # Write nodes
         for node_id, (x, y, z) in nodes.items():
-            f.write(f"GRID    {node_id:<8}{0:<8}{x:<16.8f}{y:<16.8f}{z:<16.8f}\n")
-
+            f.write(f"{'GRID'.ljust(8)}{str(node_id).rjust(8)}{'0'.rjust(8)}"
+                    f"{f'{x:3.4f}'.rjust(8)}{f'{y:3.4f}'.rjust(8)}{f'{z:3.4f}'.rjust(8)}\n")
+            #f.write(f"{'GRID'.ljust(8)}{str(node_id).rjust(8)}{'0'.rjust(8)}")
+            #f.write(writeFloatField(x,8,4)+writeFloatField(y,8,4)+writeFloatField(z,8,4)+"\n")
         # Write triangles
         for element_id, node_ids in triangles:
-            f.write(f"CTRIA3  {element_id:<8}{1:<8}{node_ids[0]:<8}{node_ids[1]:<8}{node_ids[2]:<8}\n")
+            f.write(f"{'CTRIA3'.ljust(8)}{str(element_id).rjust(8)}{'0'.rjust(8)}"
+                    f"{str(node_ids[0]).rjust(8)}{str(node_ids[1]).rjust(8)}{str(node_ids[2]).rjust(8)}\n")
 
         f.write("ENDDATA\n")
 
