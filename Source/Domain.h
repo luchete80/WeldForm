@@ -501,6 +501,8 @@ public:
   void ReadFromLSdyna(const char * fName, double refDensity = 1.0);
   
   double Domain::getAvgMinDist();
+  
+  void setSmoothingLengthFromPartDistances();
   Vec3_t Domain::getBboxDims();
   
   private:

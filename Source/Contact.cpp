@@ -209,7 +209,7 @@ inline void Domain::CalcContactInitialGap(){
             maxdist = dist;
           omp_unset_lock(&dom_lock);        
         }
-      }
+      }//dist < h 
     }
   }
     cout << "Min contact gap is " << mindist<<endl;

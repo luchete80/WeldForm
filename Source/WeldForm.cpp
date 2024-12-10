@@ -503,6 +503,8 @@ int main(int argc, char **argv) try {
         
         
         if (calcParticleRadius){
+
+
           cout << "calculating avg distance ..."<<endl;
           double avgdist = dom.getAvgMinDist();
           cout << "Avg particle distance "<<avgdist<<endl;
@@ -511,6 +513,8 @@ int main(int argc, char **argv) try {
           for (int i=0;i<dom.Particles.Size();i++){
               dom.Particles[i]->h = avgdist*hfactor;
           }
+
+          //dom.setSmoothingLengthFromPartDistances();
         } else {
           cout << "Using default Smoothing Length of: "<<h<<endl;
           for (int i=0;i<dom.Particles.Size();i++){
