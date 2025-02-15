@@ -91,7 +91,7 @@ namespace SPH {
 class NastranVolReader;
 
 
-enum BC_TYPE {Velocity_BC=0, Force_BC, Temperature_BC, Convection_BC};
+enum BC_TYPE {Velocity_BC=0, Force_BC, Temperature_BC, Convection_BC, Symmetry_BC};
 
 //HOW ABOUT Scalar value?? 
 //Convert to template
@@ -501,6 +501,9 @@ public:
   void ReadFromLSdyna(const char * fName, double refDensity = 1.0);
   
   double Domain::getAvgMinDist();
+  
+  void setSmoothingLengthFromPartDistances();
+  Vec3_t Domain::getBboxDims();
   
   private:
 		bool  Domain::CheckRadius(Particle* P1, Particle *P2);

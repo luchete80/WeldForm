@@ -468,28 +468,70 @@ int main(int argc, char **argv) try {
         }
       }
     } else if (domtype == "File") {
-        
+        double scalefactor = 1.0d;
+        readValue(domblock[0]["scaleFactor"],scalefactor);
         string filename = "";
         readValue(domblock[0]["fileName"], 	filename); 
         cout << "Reading Particles Input file " << filename <<endl;  
         dom.ReadFromLSdyna(filename.c_str(), rho);
+        
+        cout << "Scaling by factor: "<< scalefactor<<endl;
+        for (int i=0;i<dom.Particles.Size();i++)
+            dom.Particles[i]->x *= scalefactor;
+        
+        Vec3_t translation;
+        readVector(domblock[0]["translation"], 	      translation);      //Or value linear
+        cout << "Translation vector: "<<translation<<endl;
+        for (int i=0;i<dom.Particles.Size();i++)
+            dom.Particles[i]->x += translation;        
+            
         double totmass = 0.0;
         readValue(domblock[0]["totMass"], 	totmass); 
         
+        bool calcParticleRadius = false;
+        readValue(domblock[0]["calcParticleRadius"], 	calcParticleRadius); 
+        
+        Vec3_t dims = dom.getBboxDims();
+        
+        cout << "--------DOMAIN DIMENSION SET TO: ";
+        if (dims[2]>0.0){
+          dom.Dimension = 3;
+        } else {
+          dom.Dimension = 2;          
+        }
+        cout << dom.Dimension<<endl;
+        
+        
+        if (calcParticleRadius){
+
+
           cout << "calculating avg distance ..."<<endl;
           double avgdist = dom.getAvgMinDist();
           cout << "Avg particle distance "<<avgdist<<endl;
         
-        cout <<"Setting smoothing length to "<<avgdist<<endl;
-        for (int i=0;i<dom.Particles.Size();i++){
-            dom.Particles[i]->h = avgdist*hfactor;
+          cout <<"Setting smoothing length to "<<avgdist<<endl;
+          for (int i=0;i<dom.Particles.Size();i++){
+              dom.Particles[i]->h = avgdist*hfactor;
+          }
+
+          //dom.setSmoothingLengthFromPartDistances();
+        } else {
+          cout << "Using default Smoothing Length of: "<<h<<endl;
+          for (int i=0;i<dom.Particles.Size();i++){
+              dom.Particles[i]->h = h;
+          }          
+          
         }
         if (totmass != 0){
+        double mass = totmass/dom.Particles.Size();
+        cout << "Appliyng particle mass: "<<mass<<endl;
         for (int i=0;i<dom.Particles.Size();i++)
-            dom.Particles[i]->Mass = totmass/dom.Particles.Size();
-        } else 
-          cout << "TOT  MASS UNKNOWN"<<endl;
+            dom.Particles[i]->Mass = mass;
+
+        } else {
           
+          cout << "ERROR. TOT  MASS UNKNOWN"<<endl;
+        }
         
         
           //x =dom_d->x_h[p].x;
@@ -548,7 +590,8 @@ int main(int argc, char **argv) try {
       
       if (contact){
         Vec3_t dim;
-        
+      
+                
         readVector(rigbodies[rb]["start"], 	start);       
         readVector(rigbodies[rb]["dim"], 	dim); 
         bool flipnormals = false;
@@ -593,6 +636,7 @@ int main(int argc, char **argv) try {
             cout << "ERROR. Line has null dimension."<<endl;
           cout << "Rigid Body start pos: "<<start(0)+dim(0)<<", "<<start(1)+dim(1)<<endl;
         } else if (rigbody_type == "File"){
+          
           string filename = "";
           readValue(rigbodies[rb]["fileName"], 	filename); 
           cout << "Reading Mesh input file " << filename <<endl;
@@ -606,6 +650,28 @@ int main(int argc, char **argv) try {
           cout << "Scaling mesh..."<<endl;
           mesh[mesh_count]->Scale(scalefactor);
         }
+
+        Vec3_t translation(0,0,0);
+        readVector(rigbodies[rb]["translation"], 	      translation);      //Or value linear
+        cout << "Moving Mesh by vector "<<translation<<endl;
+        if (norm(translation)>1.0e-6){
+        //  mesh[mesh_count]->Move(translation);
+          for (int n=0;n<mesh[mesh_count]->node.Size();n++){
+            *(mesh[mesh_count]->node[n]) += translation;
+          }
+          mesh[mesh_count]->CalcCentroids();
+          mesh[mesh_count]->CalcNormals(); 
+          //NOT UPDATING COEFFS SINCE NFAR IS NOT CALC YET (IS CALC BELOW IN SPHERES) 
+        }
+        //After calc Normals show avg normal pointing:
+        Vec3_t avgn = 0.;
+        for (int e = 0; e < mesh[mesh_count]->element.Size(); e++) {
+          avgn += mesh[mesh_count]->element[e] -> normal;
+          //cout << "Elem "<<e<<" normal "<<mesh[mesh_count]->element[e] -> normal<<endl;
+        }
+        avgn /=mesh[mesh_count]->element.Size();
+        cout << "Surface avg Normal Direction (check to see if flipNormals needs to be set): "<<endl<<avgn<<endl;
+        
         cout << "Creating Spheres.."<<endl;
         //mesh.v = Vec3_t(0.,0.,);
         mesh[mesh_count]->CalcSpheres(); //DONE ONCE
@@ -697,6 +763,7 @@ int main(int argc, char **argv) try {
 		for (auto& bc : bcs) { //TODO: CHECK IF DIFFERENTS ZONES OVERLAP
 			// MaterialData* data = new MaterialData();
 			int zoneid,valuetype,var,ampid;
+
 
 			double ampfactor = 1.0;
 			bool free=true;

@@ -188,7 +188,9 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
         
 				if (m_isNbDataCleared){
           clock_beg = clock();
+          //cout << "Nb Search..."<<endl;
 					MainNeighbourSearch/*_Ext*/();
+          //cout << "Done "<<endl;
           //
           CalcPairPosList(); //For min TS Vel
           if (h_update){                
@@ -231,10 +233,11 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 				
 			}		
 		//std::cout << "neighbour_time (chrono, clock): " << clock_time_spent << ", " << neighbour_time.count()<<std::endl;
-
+    
+    //cout << "Primary comp "<<endl;
 		GeneralBefore(*this);
 		PrimaryComputeAcceleration();
-    
+    //cout << "done "<<endl;
     clock_beg = clock();
     //If density is calculated AFTER displacements, it fails
     CalcDensInc(); //TODO: USE SAME KERNEL?
@@ -253,7 +256,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     }
     dens_time_spent+=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
 
-
+    //cout << "rate tensor"<<endl;
 		clock_beg = clock();
     CalcRateTensors();  //With v and xn+1
 
@@ -299,6 +302,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
 		acc_time_spent += (double)(clock() - clock_beg) / CLOCKS_PER_SEC;
     
     ///// 8. CONTACT FORCES
+    //cout << "Calc CONTACT"<<endl; 
     clock_beg = clock(); 
     if (contact) {
       if      (contact_alg==Fraser)   CalcContactForces();
@@ -307,6 +311,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
      // else if (contact_alg==LSDyna )  CalcContactForcesLS();
     }
     contact_time_spent +=(double)(clock() - clock_beg) / CLOCKS_PER_SEC;
+    //cout << "done "<<endl;
     //if (contact) CalcContactForces2();
 
     // if (contact && !isfirst)
@@ -409,7 +414,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //auto last_output_time = start_whole;
     
     
-    
+    cout << "time "<< (double)((clock() - last_output_time) / CLOCKS_PER_SEC)<<endl;
 		//if (Time>=tout || std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - last_output_time).count() > 60.0){
     //cout << "elapsed "<<(double)((clock() - last_output_time) / CLOCKS_PER_SEC)<<endl;
     if (Time>=tout || (double)((clock() - last_output_time) / CLOCKS_PER_SEC) > 60.0) {

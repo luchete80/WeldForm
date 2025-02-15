@@ -541,3 +541,9 @@
 20241127 - Adding lsdyna Domain reader
          - FIXED CRASH dueto buggy damage reading
          - ADDED COMMIT TO OUTPUT
+20241202 - Added scalefactor to imported domain.
+         - Added movement to rigid bodies and particle Domain! 
+20241203 - Added option to overWrite particle radius friom distance
+         - Added advice of NO SURFACE CALC 
+         - FIXED DOMAIN DIMENSION SET ASSIGNENT ACCORDING TO READING LS-DYNA
+20241206 - Added a converter from ls-dyna to nastran

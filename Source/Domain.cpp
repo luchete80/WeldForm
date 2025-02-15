@@ -1429,7 +1429,9 @@ void Domain::CalculateSurface(const int &id){
 		maxid = first_fem_particle_idx[0];
 	else 
 		maxid = Particles.Size();
-
+  //cout << "maxid:" <<maxid<<endl;
+  //cout << "Totmass: "<<totmass<<endl;
+  
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 		Particles[i] -> normal = 0.;
 		Particles[i] -> ID = Particles [i] -> ID_orig;
@@ -1468,8 +1470,9 @@ void Domain::CalculateSurface(const int &id){
 
 	int surf_part =0;
   int max_nb = 46;
-  
+
   if (Dimension == 2)max_nb = 12;
+
 	for (size_t i=0; i < maxid; i++)	{//Like in Domain::Move
 	
 		Particles[i]->normal *= 1./totmass;
@@ -1483,6 +1486,8 @@ void Domain::CalculateSurface(const int &id){
 		}
 	}
 	//cout << "Surface particles: " << surf_part<<endl;
+  if (surf_part == 0)
+    throw new Fatal("ERROR: No external particles found. Please check particle masses");
 }
 
 
@@ -2476,7 +2481,9 @@ inline void Domain::Solve (double tf, double dt, double dtOut, char const * TheF
 void ContactNbUpdate(SPH::Domain *dom){
   dom->CalculateSurface(1);				//After Nb search			
   dom->ContactNbSearch();
+  //cout << "Saving nb data"<<endl;
   dom->SaveContNeighbourData();	//Again Save Nb data
+  //cout << "done "<<endl;
 }
 
 /////////////////////////////////////////////////
@@ -2836,6 +2843,8 @@ void Domain::ReadFromLSdyna(const char *fName, double refDensity){
       //cout << "Particle pos: "<<Particles[i]->x<<endl;
     }
   }
+  
+  solid_part_count = Particles.Size(); //FOR NEW REDUCTION
 
         
         
@@ -2867,6 +2876,45 @@ void Domain::ReadFromLSdyna(const char *fName, double refDensity){
   
   cout << "Done. "<<endl;
 }
+
+void Domain::setSmoothingLengthFromPartDistances(){
+
+  Vec3_t max(0,0,0);
+  Vec3_t min(1000,1000,1000);
+  std::vector<double> mindist;
+  mindist.resize(Particles.Size());
+  
+  double totdist=0.0;
+  
+    for (size_t i = 0; i < Particles.Size(); ++i) {
+      for (int k=0;k<3;k++){
+        if      (Particles[i]->x[k]<min[k]) min[k] = Particles[i]->x[k];
+        else if (Particles[i]->x[k]>max[k]) max[k] = Particles[i]->x[k];
+      }
+    double mindx = 1.0e6;
+    for (size_t j = 0; j < Particles.Size(); ++j){
+      if (i!=j){
+      double d = norm(Particles[i]->x - Particles[j]->x);
+      if (d<mindx) {
+        //cout << "d "<<d << "mindx "<<mindx<<endl;
+        mindx = d;
+      }
+
+    }
+    }
+    Particles[i]->h = 1.2 * mindx;    
+    mindist[i] = mindx;
+    //cout << "Particle "<< i << " Min dist "<<mindx<<endl;
+  }
+  cout << "Min coords "<<min<<", max coords: "<< max<<endl;
+  cout << "Bounding Box Dimensions "<<max - min<<endl; 
+  
+  totdist = 0.0;
+  for (size_t i = 0; i < Particles.Size(); ++i) totdist+=mindist[i];
+  
+  double avgdist = totdist/Particles.Size();
+ 
+}
   
 double Domain::getAvgMinDist(){
 
@@ -2895,6 +2943,8 @@ double Domain::getAvgMinDist(){
     mindist[i] = mindx;
     //cout << "Particle "<< i << " Min dist "<<mindx<<endl;
   }
+  cout << "Min coords "<<min<<", max coords: "<< max<<endl;
+  cout << "Bounding Box Dimensions "<<max - min<<endl; 
   
   totdist = 0.0;
   for (size_t i = 0; i < Particles.Size(); ++i) totdist+=mindist[i];
@@ -2902,6 +2952,32 @@ double Domain::getAvgMinDist(){
   double avgdist = totdist/Particles.Size();
   return avgdist;
 }
+
+Vec3_t Domain::getBboxDims(){
+
+  Vec3_t max(0,0,0);
+  Vec3_t min(1000,1000,1000);
+  std::vector<double> mindist;
+  mindist.resize(Particles.Size());
+  
+  double totdist=0.0;
+  
+    for (size_t i = 0; i < Particles.Size(); ++i) {
+      for (int k=0;k<3;k++){
+        if      (Particles[i]->x[k]<min[k]) min[k] = Particles[i]->x[k];
+        else if (Particles[i]->x[k]>max[k]) max[k] = Particles[i]->x[k];
+      }
+
+
+    //cout << "Particle "<< i << " Min dist "<<mindx<<endl;
+  }
+  Vec3_t dims = max - min;
+  cout << "Min coords "<<min<<", max coords: "<< max<<endl;
+  cout << "Bounding Box Dimensions "<<dims<<endl; 
+  
+  return dims;
+}
+
 
 
 }; // namespace SPH

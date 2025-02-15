@@ -228,6 +228,7 @@ inline void TriMesh::UpdatePlaneCoeff(){
 // TODO: PARALELIZE
 inline void TriMesh::CalcNormals(){
 	Vec3_t u, v, w;
+  
   if (dimension==3){
     for (int e = 0; e < element.Size(); e++) {
         u = *node [element[e]->node[1]] - *node [element[e]->node[0]];
@@ -299,9 +300,11 @@ inline void TriMesh::Move(const Vec3_t &v){
 	for (int n=0;n<node.Size();n++){
 		*node[n] += v;
 	} 
+
   CalcCentroids();
   CalcNormals();        //From node positions
   UpdatePlaneCoeff();   //pplane
+  
 }
 
 inline void TriMesh::Scale(const double &f){
