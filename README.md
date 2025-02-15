@@ -1,13 +1,15 @@
 # WeldForm
 
 WeldForm SPH is a CPU based Smooth Particle Hydrodynamics solver applied to high deformation model metal forming and processes.
-[WeldFormFEM] (https://github.com/luchete80/WeldFormFEM) Explicit FEM CPU/GPU Solver with Adaptive Mesh Refinement / ALE 
+Similar Projects
+[GPU Version](https://github.com/luchete80/WeldFormGPU)
+[WeldFormFEM](https://github.com/luchete80/WeldFormFEM) Explicit FEM all-in-one CPU/GPU Solver with Adaptive Mesh Refinement / ALE 
 
 Tutorials:
 [My channel](https://www.youtube.com/@opensourcemechanics)
 
 Windows Binaries: https://sourceforge.net/projects/weldform/files/
-GPU Version is under development [here](https://github.com/luchete80/WeldFormGPU)
+
 
 Has been adapted to work on both Linux and Windows system (both on MinGW and MSVC compilers).
 
