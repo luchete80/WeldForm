@@ -2495,7 +2495,7 @@ inline void Domain::UpdateSmoothingLength(){
   double max;
   double sum;
   double d, htent;
-  double wf = 0.35;
+  double wf = 0.2;
   double wfp = 0.4;
   #pragma omp parallel for schedule (static) private (min, d, max, htent, sum) num_threads(Nproc)
   for (int i=0; i<solid_part_count; i++){
