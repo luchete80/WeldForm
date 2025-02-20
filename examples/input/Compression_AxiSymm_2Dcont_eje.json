@@ -12,6 +12,7 @@
   "artifViscAlpha": 1.0,
   "artifViscBeta": 0.0,
   "outTime": 1.0e-4,
+  "smoothlenUpdate": true,
   "solver": "Mech-Fraser"
 }
 ,

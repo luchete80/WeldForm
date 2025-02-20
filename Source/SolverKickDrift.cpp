@@ -160,15 +160,17 @@ inline void Domain::SolveDiffUpdateKickDrift (double tf, double dt, double dtOut
 		}
 		if ( max > MIN_PS_FOR_NBSEARCH || isfirst || check_nb_every_time){	//TO MODIFY: CHANGE
 			if ( ts_i == 0 ){
-
+        
+        //BEFORE NB SEARCH!!!!
+        if (h_update){                
+          UpdateSmoothingLength();          
+        }
 				if (m_isNbDataCleared){
           clock_beg = clock();
 					MainNeighbourSearch/*_Ext*/();
           //
           CalcPairPosList(); //For min TS Vel
-          if (h_update){                
-            UpdateSmoothingLength();          
-          }
+
           //#ifdef NONLOCK_TEST 
           //CheckParticlePairs(0);
           //#endif

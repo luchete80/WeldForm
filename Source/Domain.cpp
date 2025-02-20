@@ -2495,6 +2495,33 @@ inline void Domain::UpdateSmoothingLength(){
   double max;
   double sum;
   double d, htent;
+  double wf = 0.35;
+  double wfp = 0.60;
+  #pragma omp parallel for schedule (static) private (min, d, max, htent, sum) num_threads(Nproc)
+  for (int i=0; i<solid_part_count; i++){
+      //Mass conservation: 
+      //drhodt = - rho divU
+      //Div Ui  = - drhodt / rho_i
+      double hold = Particles[i]->h;
+      //htent = Particles[i]->h*(1.0-wf) + wf * Particles[i]->hini *pow(Particles[i]->RefDensity/Particles[i]->Density,0.33333);
+      htent = Particles[i]->h*(1.0-wf)  + wf * Particles[i]->h*(1.0-wfp*Particles[i]->pl_strain);
+      //cout << "htent " <<htent<<", h "<<Particles[i]->h<<endl;
+      if (htent > Particles[i]->hmin && htent<Particles[i]->hmax){
+        Particles[i]->h = htent;  
+        cout << "CHANGED H from " <<hold << "to "<<Particles[i]->h<<endl;
+      } else {
+      }
+
+  }
+}
+
+/*
+inline void Domain::UpdateSmoothingLength(){
+  double min;
+  double max;
+  double sum;
+  double d, htent;
+  double wf = 0.25;
   #pragma omp parallel for schedule (static) private (min, d, max, htent, sum) num_threads(Nproc)
   for (int i=0; i<solid_part_count; i++){
       //Mass conservation: 
@@ -2503,12 +2530,14 @@ inline void Domain::UpdateSmoothingLength(){
 
       htent = Particles[i]->h - Particles[i]->h * 0.33333333 * Particles[i]->dDensity/Particles[i]->Density * deltat;
       //cout << "htent " <<htent<<endl;
-      if (htent > Particles[i]->hmin && htent<Particles[i]->hmax)
-        Particles[i]->h = htent;  
+      if (htent > Particles[i]->hmin && htent<Particles[i]->hmax){
+        double hold = Particles[i]->h;
+        Particles[i]->h = hold*(1.0-wf)+ wf*htent;  
+      }
 
   }
 }
-
+*/
 
 // // /////////////////////// WITH MIN 
 // inline void Domain::UpdateSmoothingLength(){
