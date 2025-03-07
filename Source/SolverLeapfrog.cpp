@@ -20,6 +20,8 @@
 
 #include "Contact_LS.cpp"
 
+#include <chrono>
+
 namespace SPH {
 inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
@@ -121,6 +123,9 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
 	auto start_whole = std::chrono::steady_clock::now();  
   prev_deltat = deltat;
   cout << "Solver Leapfrog Randles & Libersky Update Style" <<endl;
+  
+  auto start_time = std::chrono::steady_clock::now(); // Start time
+  
 	while (Time<=tf && idx_out<=maxidx) {
   
 		StartAcceleration(0.);
@@ -376,10 +381,20 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
         idx_out++;
         tout += dtOut;
       }
+
+// Compute elapsed time
+      auto now = std::chrono::steady_clock::now();
+      std::chrono::duration<double> elapsed = now - start_time;
       
+      int total_iterations = tf/dt;
+      // Estimate remaining time
+      double avg_time_per_iter = elapsed.count() / (steps + 1);
+      double estimated_remaining = avg_time_per_iter * (total_iterations - steps - 1);
+              
 			total_time = std::chrono::steady_clock::now() - start_whole;		
       oss_out.str("");
 			oss_out << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
+      oss_out << "Step: "<<steps<<", Estimated Remaining Time"<<estimated_remaining<<endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
 
       oss_out << std::setprecision(2);

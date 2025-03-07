@@ -1,0 +1,1728 @@
+-----------------------------------------------
+------------------ WELDFORM -------------------
+----------------- v. 0.4.2.4 ------------------
+------------------ 20241127 -------------------
+-- 331c3a8ed9250581180e967fcb8845fa8c8aaa91 ---
+-----------------------------------------------
+
+
+
+---------------------------------------
+ Total CPU time: 0.376981
+Step: 1, Estimated Remaining Time1034.24
+Calculation Times
+Accel: 0.63%,  Density: 0.34%,  Stress: 2%,  
+Energy: 0.17%,  Contact: 2.7e-06%,  Nb: 1.4%,  Update: 0.023%,  
+Output No. 2 at 1.8e-06 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle32612
+Max Displacements (No Cont Surf): 3 [          0         0         0 ]
+Int Energy: 0, Kin Energy: 0
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 8.08426
+Step: 52, Estimated Remaining Time829.171
+Calculation Times
+Accel: 1.5%,  Density: 0.8%,  Stress: 4.4%,  
+Energy: 0.45%,  Contact: 8.8e-06%,  Nb: 0.064%,  Update: 0.038%,  
+Output No. 2 at 9.5e-05 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 1.13236e-061.13236e-068.46106e-06 ]
+Int Energy: 0.463865, Kin Energy: 0.0735618
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 15.7739
+Step: 102, Estimated Remaining Time824.837
+Calculation Times
+Accel: 1.5%,  Density: 0.8%,  Stress: 4.5%,  
+Energy: 0.45%,  Contact: 9.2e-06%,  Nb: 0.033%,  Update: 0.042%,  
+Output No. 2 at 0.00019 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 2.55689e-062.55689e-063.35124e-05 ]
+Int Energy: 4.7097, Kin Energy: 0.912505
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 23.6221
+Step: 153, Estimated Remaining Time818.335
+Calculation Times
+Accel: 1.5%,  Density: 0.8%,  Stress: 4.5%,  
+Energy: 0.45%,  Contact: 9.6e-06%,  Nb: 0.022%,  Update: 0.045%,  
+Output No. 2 at 0.00028 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 5.93159e-065.93159e-067.61561e-05 ]
+Int Energy: 23.9594, Kin Energy: 4.38497
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 31.3136
+Step: 204, Estimated Remaining Time807.127
+Calculation Times
+Accel: 1.6%,  Density: 0.81%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.7e-06%,  Nb: 0.017%,  Update: 0.045%,  
+Output No. 2 at 0.00037 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 1.03736e-051.03736e-050.00013606 ]
+Int Energy: 75.8162, Kin Energy: 12.1035
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 39.1394
+Step: 256, Estimated Remaining Time796.799
+Calculation Times
+Accel: 1.6%,  Density: 0.81%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.5e-06%,  Nb: 0.013%,  Update: 0.044%,  
+Output No. 2 at 0.00047 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 1.61126e-051.61126e-050.000214911 ]
+Int Energy: 188.246, Kin Energy: 27.1633
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 46.8785
+Step: 307, Estimated Remaining Time788.563
+Calculation Times
+Accel: 1.6%,  Density: 0.8%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.4e-06%,  Nb: 0.011%,  Update: 0.044%,  
+Output No. 2 at 0.00056 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 2.34841e-052.34841e-050.000309675 ]
+Int Energy: 389.596, Kin Energy: 55.3885
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 54.6225
+Step: 358, Estimated Remaining Time780.539
+Calculation Times
+Accel: 1.6%,  Density: 0.81%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.4e-06%,  Nb: 0.0095%,  Update: 0.044%,  
+Output No. 2 at 0.00065 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 3.15282e-053.15282e-050.000421699 ]
+Int Energy: 720.495, Kin Energy: 89.8645
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 62.3217
+Step: 408, Estimated Remaining Time774.07
+Calculation Times
+Accel: 1.6%,  Density: 0.81%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.3e-06%,  Nb: 0.0083%,  Update: 0.044%,  
+Output No. 2 at 0.00074 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 4.13402e-054.13402e-050.000548283 ]
+Int Energy: 1215.98, Kin Energy: 124.801
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 70.0239
+Step: 459, Estimated Remaining Time765.544
+Calculation Times
+Accel: 1.6%,  Density: 0.81%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.4e-06%,  Nb: 0.0074%,  Update: 0.044%,  
+Output No. 2 at 0.00084 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 5.19857e-055.19857e-050.00069449 ]
+Int Energy: 1948.66, Kin Energy: 189.874
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 77.8573
+Step: 510, Estimated Remaining Time758.462
+Calculation Times
+Accel: 1.6%,  Density: 0.81%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.5e-06%,  Nb: 0.0067%,  Update: 0.044%,  
+Output No. 2 at 0.00093 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 6.44893e-056.44893e-050.000857958 ]
+Int Energy: 2971.83, Kin Energy: 279.644
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 84.0286
+Step: 549, Estimated Remaining Time754.577
+Calculation Times
+Accel: 1.6%,  Density: 0.81%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.5e-06%,  Nb: 0.0062%,  Update: 0.044%,  
+Output No. 3 at 0.001 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 7.48097e-057.48097e-050.000994609 ]
+Int Energy: 3991.98, Kin Energy: 389.841
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 91.8177
+Step: 600, Estimated Remaining Time746.763
+Calculation Times
+Accel: 1.6%,  Density: 0.81%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.5e-06%,  Nb: 0.0057%,  Update: 0.044%,  
+Output No. 3 at 0.0011 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 8.91148e-058.91148e-050.00118854 ]
+Int Energy: 5697.32, Kin Energy: 572.931
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 99.5822
+Step: 653, Estimated Remaining Time736.208
+Calculation Times
+Accel: 1.6%,  Density: 0.8%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 9.7e-06%,  Nb: 0.0052%,  Update: 0.045%,  
+Output No. 3 at 0.0012 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 0.0001059770.0001059770.00140836 ]
+Int Energy: 7997.1, Kin Energy: 771.073
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 107.378
+Step: 707, Estimated Remaining Time725.108
+Calculation Times
+Accel: 1.6%,  Density: 0.8%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 4.7e-05%,  Nb: 0.0048%,  Update: 0.045%,  
+Output No. 3 at 0.0013 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 0.0001239980.000123998 0.0016515 ]
+Int Energy: 10994.5, Kin Energy: 1071.9
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 115.061
+Step: 761, Estimated Remaining Time713.772
+Calculation Times
+Accel: 1.6%,  Density: 0.8%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 4.4e-05%,  Nb: 0.0045%,  Update: 0.045%,  
+Output No. 3 at 0.0014 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0in particle38232
+Max Displacements (No Cont Surf): 3 [ 0.0001441030.0001441030.00191399 ]
+Int Energy: 14766.6, Kin Energy: 1408.04
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 122.79
+Step: 814, Estimated Remaining Time704.198
+Calculation Times
+Accel: 1.6%,  Density: 0.79%,  Stress: 4.5%,  
+Energy: 0.46%,  Contact: 4.2e-05%,  Nb: 0.0086%,  Update: 0.046%,  
+Output No. 3 at 0.0015 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 8.1e-05in particle38232
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0001647520.0001647520.00219044 ]
+Int Energy: 19340.8, Kin Energy: 1779.56
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 130.552
+Step: 863, Estimated Remaining Time698.847
+Calculation Times
+Accel: 1.6%,  Density: 0.79%,  Stress: 4.5%,  
+Energy: 0.45%,  Contact: 4e-05%,  Nb: 0.048%,  Update: 0.046%,  
+Output No. 3 at 0.0016 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.0012in particle38232
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0002139230.0002139230.00246261 ]
+Int Energy: 25002.2, Kin Energy: 1878.27
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 138.307
+Step: 910, Estimated Remaining Time695.025
+Calculation Times
+Accel: 1.6%,  Density: 0.78%,  Stress: 4.5%,  
+Energy: 0.45%,  Contact: 3.8e-05%,  Nb: 0.08%,  Update: 0.046%,  
+Output No. 3 at 0.0017 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.0018in particle38232
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0002542630.0002542630.00273863 ]
+Int Energy: 30997.1, Kin Energy: 1853.09
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 146.16
+Step: 956, Estimated Remaining Time692.16
+Calculation Times
+Accel: 1.5%,  Density: 0.78%,  Stress: 4.5%,  
+Energy: 0.45%,  Contact: 3.7e-05%,  Nb: 0.11%,  Update: 0.045%,  
+Output No. 3 at 0.0017 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.003in particle38232
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0003329740.0003329740.00302299 ]
+Int Energy: 37413.6, Kin Energy: 1707.85
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 154.146
+Step: 999, Estimated Remaining Time691.963
+Calculation Times
+Accel: 1.5%,  Density: 0.77%,  Stress: 4.5%,  
+Energy: 0.44%,  Contact: 3.5e-05%,  Nb: 0.14%,  Update: 0.045%,  
+Output No. 3 at 0.0018 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.0042in particle38232
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0004016760.0004016760.00330149 ]
+Int Energy: 43627.3, Kin Energy: 1548.55
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 161.943
+Step: 1041, Estimated Remaining Time691.134
+Calculation Times
+Accel: 1.5%,  Density: 0.77%,  Stress: 4.4%,  
+Energy: 0.44%,  Contact: 3.4e-05%,  Nb: 0.16%,  Update: 0.045%,  
+Output No. 3 at 0.0019 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.0051in particle38232
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0004587420.0004587420.00358536 ]
+Int Energy: 50019.6, Kin Energy: 1407.37
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 169.83
+Step: 1085, Estimated Remaining Time688.547
+Calculation Times
+Accel: 1.5%,  Density: 0.77%,  Stress: 4.4%,  
+Energy: 0.44%,  Contact: 3.3e-05%,  Nb: 0.18%,  Update: 0.045%,  
+Output No. 3 at 0.002 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.0064in particle38232
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0005309660.0005309660.00389531 ]
+Int Energy: 56997.5, Kin Energy: 1257.77
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 172.359
+Step: 1098, Estimated Remaining Time688.495
+Calculation Times
+Accel: 1.5%,  Density: 0.77%,  Stress: 4.4%,  
+Energy: 0.44%,  Contact: 3.3e-05%,  Nb: 0.19%,  Update: 0.045%,  
+Output No. 4 at 0.002 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.0068in particle38232
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0005524730.0005524730.00398934 ]
+Int Energy: 59118.1, Kin Energy: 1218.81
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 180.306
+Step: 1142, Estimated Remaining Time685.575
+Calculation Times
+Accel: 1.5%,  Density: 0.76%,  Stress: 4.4%,  
+Energy: 0.44%,  Contact: 3.2e-05%,  Nb: 0.21%,  Update: 0.045%,  
+Output No. 4 at 0.0021 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.0083in particle37672
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0006370620.0006370620.00431966 ]
+Int Energy: 66502.3, Kin Energy: 1048.21
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 188.152
+Step: 1188, Estimated Remaining Time680.448
+Calculation Times
+Accel: 1.5%,  Density: 0.76%,  Stress: 4.4%,  
+Energy: 0.44%,  Contact: 3.1e-05%,  Nb: 0.23%,  Update: 0.045%,  
+Output No. 4 at 0.0022 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.0098in particle37672
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0007247890.0007247890.00468117 ]
+Int Energy: 74563.9, Kin Energy: 905.378
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 195.854
+Step: 1236, Estimated Remaining Time673.218
+Calculation Times
+Accel: 1.5%,  Density: 0.76%,  Stress: 4.4%,  
+Energy: 0.44%,  Contact: 3e-05%,  Nb: 0.24%,  Update: 0.045%,  
+Output No. 4 at 0.0023 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.011in particle37672
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0008141190.0008141190.00507337 ]
+Int Energy: 83297.4, Kin Energy: 849.935
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 203.663
+Step: 1284, Estimated Remaining Time666.305
+Calculation Times
+Accel: 1.5%,  Density: 0.76%,  Stress: 4.4%,  
+Energy: 0.44%,  Contact: 2.9e-05%,  Nb: 0.26%,  Update: 0.045%,  
+Output No. 4 at 0.0023 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.013in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0008993520.0008993520.00548254 ]
+Int Energy: 92401.9, Kin Energy: 685.983
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 211.486
+Step: 1332, Estimated Remaining Time659.367
+Calculation Times
+Accel: 1.5%,  Density: 0.75%,  Stress: 4.4%,  
+Energy: 0.43%,  Contact: 2.8e-05%,  Nb: 0.27%,  Update: 0.045%,  
+Output No. 4 at 0.0024 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.015in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.0009920750.0009920750.00590792 ]
+Int Energy: 101854, Kin Energy: 603.84
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 219.267
+Step: 1380, Estimated Remaining Time652.244
+Calculation Times
+Accel: 1.5%,  Density: 0.75%,  Stress: 4.4%,  
+Energy: 0.43%,  Contact: 2.8e-05%,  Nb: 0.28%,  Update: 0.044%,  
+Output No. 4 at 0.0025 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.016in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.001090580.001090580.00634932 ]
+Int Energy: 111678, Kin Energy: 535.847
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 227.173
+Step: 1428, Estimated Remaining Time645.433
+Calculation Times
+Accel: 1.5%,  Density: 0.75%,  Stress: 4.4%,  
+Energy: 0.43%,  Contact: 2.7e-05%,  Nb: 0.3%,  Update: 0.044%,  
+Output No. 4 at 0.0026 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.018in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.001194050.001194050.00680668 ]
+Int Energy: 121857, Kin Energy: 286.522
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 235.006
+Step: 1476, Estimated Remaining Time638.35
+Calculation Times
+Accel: 1.5%,  Density: 0.74%,  Stress: 4.3%,  
+Energy: 0.43%,  Contact: 3.1e-05%,  Nb: 0.31%,  Update: 0.044%,  
+Output No. 4 at 0.0027 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.02in particle37712
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.001297480.001297480.00728029 ]
+Int Energy: 132397, Kin Energy: 105.225
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 242.914
+Step: 1524, Estimated Remaining Time631.417
+Calculation Times
+Accel: 1.5%,  Density: 0.74%,  Stress: 4.3%,  
+Energy: 0.43%,  Contact: 3e-05%,  Nb: 0.32%,  Update: 0.044%,  
+Output No. 4 at 0.0028 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.022in particle37712
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.001401230.001401230.00777026 ]
+Int Energy: 143296, Kin Energy: -175.357
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 250.893
+Step: 1572, Estimated Remaining Time624.6
+Calculation Times
+Accel: 1.5%,  Density: 0.74%,  Stress: 4.3%,  
+Energy: 0.43%,  Contact: 3.7e-05%,  Nb: 0.33%,  Update: 0.044%,  
+Output No. 4 at 0.0029 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.024in particle37712
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.001507820.001507820.00827691 ]
+Int Energy: 154558, Kin Energy: -413.828
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 258.838
+Step: 1620, Estimated Remaining Time617.635
+Calculation Times
+Accel: 1.5%,  Density: 0.74%,  Stress: 4.3%,  
+Energy: 0.43%,  Contact: 3.6e-05%,  Nb: 0.33%,  Update: 0.043%,  
+Output No. 4 at 0.003 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.025in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.001619370.001619370.00880022 ]
+Int Energy: 166188, Kin Energy: -569.516
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 263.586
+Step: 1647, Estimated Remaining Time614.341
+Calculation Times
+Accel: 1.5%,  Density: 0.73%,  Stress: 4.3%,  
+Energy: 0.43%,  Contact: 3.6e-05%,  Nb: 0.34%,  Update: 0.043%,  
+Output No. 5 at 0.003 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.027in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.001684330.001684330.00910177 ]
+Int Energy: 172891, Kin Energy: -760.247
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 271.376
+Step: 1694, Estimated Remaining Time607.434
+Calculation Times
+Accel: 1.5%,  Density: 0.73%,  Stress: 4.3%,  
+Energy: 0.43%,  Contact: 3.5e-05%,  Nb: 0.35%,  Update: 0.043%,  
+Output No. 5 at 0.0031 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.029in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0018002 0.00180020.00963893 ]
+Int Energy: 184836, Kin Energy: -978.782
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 279.226
+Step: 1741, Estimated Remaining Time600.608
+Calculation Times
+Accel: 1.5%,  Density: 0.73%,  Stress: 4.3%,  
+Energy: 0.43%,  Contact: 3.4e-05%,  Nb: 0.35%,  Update: 0.043%,  
+Output No. 5 at 0.0032 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.031in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.001917910.00191791 0.0101917 ]
+Int Energy: 197132, Kin Energy: -1072.06
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 287.108
+Step: 1787, Estimated Remaining Time594.289
+Calculation Times
+Accel: 1.5%,  Density: 0.73%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 3.4e-05%,  Nb: 0.36%,  Update: 0.043%,  
+Output No. 5 at 0.0033 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.033in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.002034670.00203467 0.0107476 ]
+Int Energy: 209507, Kin Energy: -1202.28
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 295.079
+Step: 1834, Estimated Remaining Time587.585
+Calculation Times
+Accel: 1.5%,  Density: 0.72%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 3.3e-05%,  Nb: 0.37%,  Update: 0.043%,  
+Output No. 5 at 0.0033 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.035in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.002156260.00215626 0.0113309 ]
+Int Energy: 222503, Kin Energy: -1298.25
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 303.069
+Step: 1880, Estimated Remaining Time581.326
+Calculation Times
+Accel: 1.5%,  Density: 0.72%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 3.2e-05%,  Nb: 0.37%,  Update: 0.043%,  
+Output No. 5 at 0.0034 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.037in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.002278620.00227862  0.011917 ]
+Int Energy: 235568, Kin Energy: -1538.5
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 311.064
+Step: 1926, Estimated Remaining Time574.993
+Calculation Times
+Accel: 1.5%,  Density: 0.72%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 3.2e-05%,  Nb: 0.38%,  Update: 0.043%,  
+Output No. 5 at 0.0035 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.039in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.002404470.00240447 0.0125181 ]
+Int Energy: 248976, Kin Energy: -1824.25
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 319.042
+Step: 1971, Estimated Remaining Time569.001
+Calculation Times
+Accel: 1.5%,  Density: 0.72%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 3.1e-05%,  Nb: 0.38%,  Update: 0.043%,  
+Output No. 5 at 0.0036 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.041in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.002530460.00253046 0.0131207 ]
+Int Energy: 262425, Kin Energy: -1898.74
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 326.976
+Step: 2016, Estimated Remaining Time562.846
+Calculation Times
+Accel: 1.5%,  Density: 0.72%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 3e-05%,  Nb: 0.39%,  Update: 0.043%,  
+Output No. 5 at 0.0037 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.043in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.002658620.00265862  0.013738 ]
+Int Energy: 276204, Kin Energy: -2151.46
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 334.902
+Step: 2061, Estimated Remaining Time556.6
+Calculation Times
+Accel: 1.5%,  Density: 0.72%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 3e-05%,  Nb: 0.39%,  Update: 0.043%,  
+Output No. 5 at 0.0038 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.046in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.002788760.00278876   0.01437 ]
+Int Energy: 290313, Kin Energy: -2225.4
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 342.91
+Step: 2107, Estimated Remaining Time549.991
+Calculation Times
+Accel: 1.5%,  Density: 0.71%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 2.9e-05%,  Nb: 0.4%,  Update: 0.043%,  
+Output No. 5 at 0.0038 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.048in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.002924170.00292417 0.0150314 ]
+Int Energy: 305081, Kin Energy: -2607.05
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 350.943
+Step: 2154, Estimated Remaining Time542.944
+Calculation Times
+Accel: 1.5%,  Density: 0.71%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 2.9e-05%,  Nb: 0.4%,  Update: 0.043%,  
+Output No. 5 at 0.0039 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.05in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.003065430.00306543 0.0157232 ]
+Int Energy: 320530, Kin Energy: -2787.91
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 358.465
+Step: 2196, Estimated Remaining Time537.127
+Calculation Times
+Accel: 1.5%,  Density: 0.71%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 2.9e-05%,  Nb: 0.41%,  Update: 0.043%,  
+Output No. 6 at 0.004 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.053in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.003194230.00319423  0.016355 ]
+Int Energy: 334645, Kin Energy: -3129.93
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 366.444
+Step: 2242, Estimated Remaining Time530.306
+Calculation Times
+Accel: 1.5%,  Density: 0.71%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 2.8e-05%,  Nb: 0.41%,  Update: 0.043%,  
+Output No. 6 at 0.0041 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.055in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0033379 0.0033379 0.0170618 ]
+Int Energy: 350442, Kin Energy: -3501.84
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 374.44
+Step: 2288, Estimated Remaining Time523.464
+Calculation Times
+Accel: 1.5%,  Density: 0.71%,  Stress: 4.3%,  
+Energy: 0.42%,  Contact: 2.8e-05%,  Nb: 0.42%,  Update: 0.043%,  
+Output No. 6 at 0.0042 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.057in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.003484030.00348403 0.0177839 ]
+Int Energy: 366592, Kin Energy: -3638.92
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 382.494
+Step: 2334, Estimated Remaining Time516.653
+Calculation Times
+Accel: 1.5%,  Density: 0.71%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.7e-05%,  Nb: 0.42%,  Update: 0.043%,  
+Output No. 6 at 0.0043 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.06in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.003632460.00363246 0.0185211 ]
+Int Energy: 383097, Kin Energy: -3979.04
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 390.433
+Step: 2379, Estimated Remaining Time510.023
+Calculation Times
+Accel: 1.5%,  Density: 0.7%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.7e-05%,  Nb: 0.42%,  Update: 0.043%,  
+Output No. 6 at 0.0043 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.062in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.003779950.00377995 0.0192567 ]
+Int Energy: 399588, Kin Energy: -4115.56
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 398.516
+Step: 2425, Estimated Remaining Time503.155
+Calculation Times
+Accel: 1.5%,  Density: 0.7%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.6e-05%,  Nb: 0.42%,  Update: 0.043%,  
+Output No. 6 at 0.0044 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.065in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.003933190.00393319 0.0200234 ]
+Int Energy: 416800, Kin Energy: -4334.52
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 406.489
+Step: 2470, Estimated Remaining Time496.472
+Calculation Times
+Accel: 1.5%,  Density: 0.7%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.6e-05%,  Nb: 0.43%,  Update: 0.043%,  
+Output No. 6 at 0.0045 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.068in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.004085550.00408555 0.0207876 ]
+Int Energy: 433986, Kin Energy: -4473.23
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 414.556
+Step: 2516, Estimated Remaining Time489.496
+Calculation Times
+Accel: 1.5%,  Density: 0.7%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.6e-05%,  Nb: 0.43%,  Update: 0.043%,  
+Output No. 6 at 0.0046 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.07in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.004243740.00424374 0.0215831 ]
+Int Energy: 451912, Kin Energy: -4614.73
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 422.592
+Step: 2561, Estimated Remaining Time482.797
+Calculation Times
+Accel: 1.5%,  Density: 0.7%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.5e-05%,  Nb: 0.43%,  Update: 0.043%,  
+Output No. 6 at 0.0047 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.073in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.004400780.00440078 0.0223752 ]
+Int Energy: 469800, Kin Energy: -4619.79
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 430.585
+Step: 2605, Estimated Remaining Time476.353
+Calculation Times
+Accel: 1.5%,  Density: 0.7%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.5e-05%,  Nb: 0.44%,  Update: 0.043%,  
+Output No. 6 at 0.0047 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.076in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.004556440.00455644 0.0231629 ]
+Int Energy: 487628, Kin Energy: -5005.5
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 438.657
+Step: 2649, Estimated Remaining Time469.942
+Calculation Times
+Accel: 1.4%,  Density: 0.7%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.5e-05%,  Nb: 0.44%,  Update: 0.043%,  
+Output No. 6 at 0.0048 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.078in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.004714190.00471419 0.0239634 ]
+Int Energy: 505792, Kin Energy: -5396.58
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 446.768
+Step: 2694, Estimated Remaining Time463.18
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.5e-05%,  Nb: 0.44%,  Update: 0.043%,  
+Output No. 6 at 0.0049 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.081in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.004877730.00487773 0.0247951 ]
+Int Energy: 524718, Kin Energy: -5598.74
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 454.777
+Step: 2738, Estimated Remaining Time456.603
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.3%,  
+Energy: 0.41%,  Contact: 2.4e-05%,  Nb: 0.45%,  Update: 0.043%,  
+Output No. 6 at 0.005 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.084in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.005039780.00503978 0.0256211 ]
+Int Energy: 543566, Kin Energy: -5911.39
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 456.243
+Step: 2745, Estimated Remaining Time455.744
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.4e-05%,  Nb: 0.44%,  Update: 0.043%,  
+Output No. 7 at 0.005 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.084in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.005065750.00506575 0.0257536 ]
+Int Energy: 546596, Kin Energy: -5938.8
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 464.29
+Step: 2788, Estimated Remaining Time449.474
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.4e-05%,  Nb: 0.45%,  Update: 0.043%,  
+Output No. 7 at 0.0051 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.087in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0052264 0.0052264 0.0265692 ]
+Int Energy: 565260, Kin Energy: -6200.85
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 472.377
+Step: 2832, Estimated Remaining Time442.864
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.4e-05%,  Nb: 0.45%,  Update: 0.043%,  
+Output No. 7 at 0.0052 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.09in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.005392410.00539241  0.027403 ]
+Int Energy: 584390, Kin Energy: -6161.56
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 480.387
+Step: 2876, Estimated Remaining Time436.138
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.3e-05%,  Nb: 0.45%,  Update: 0.043%,  
+Output No. 7 at 0.0052 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.093in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.005556310.00555631 0.0282362 ]
+Int Energy: 603556, Kin Energy: -6409.52
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 488.436
+Step: 2920, Estimated Remaining Time429.409
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.3e-05%,  Nb: 0.45%,  Update: 0.042%,  
+Output No. 7 at 0.0053 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.095in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.005717960.00571796 0.0290688 ]
+Int Energy: 622753, Kin Energy: -6761.38
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 496.493
+Step: 2964, Estimated Remaining Time422.647
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.3e-05%,  Nb: 0.46%,  Update: 0.042%,  
+Output No. 7 at 0.0054 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.098in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.005877570.00587757 0.0299009 ]
+Int Energy: 641986, Kin Energy: -6880.05
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 504.538
+Step: 3006, Estimated Remaining Time416.45
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.3e-05%,  Nb: 0.46%,  Update: 0.042%,  
+Output No. 7 at 0.0055 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.1in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.006029890.00602989 0.0306946 ]
+Int Energy: 660377, Kin Energy: -7572.93
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 512.46
+Step: 3047, Estimated Remaining Time410.405
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.2e-05%,  Nb: 0.46%,  Update: 0.042%,  
+Output No. 7 at 0.0056 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.1in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.006179030.00617903 0.0314688 ]
+Int Energy: 678363, Kin Energy: -8069.96
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 520.383
+Step: 3089, Estimated Remaining Time404.013
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.2e-05%,  Nb: 0.46%,  Update: 0.042%,  
+Output No. 7 at 0.0056 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.11in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.006332270.00633227 0.0322615 ]
+Int Energy: 696821, Kin Energy: -8684.67
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 528.309
+Step: 3131, Estimated Remaining Time397.581
+Calculation Times
+Accel: 1.4%,  Density: 0.69%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.2e-05%,  Nb: 0.46%,  Update: 0.042%,  
+Output No. 7 at 0.0057 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.11in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.006485060.00648506 0.0330539 ]
+Int Energy: 715311, Kin Energy: -8888.25
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 536.345
+Step: 3174, Estimated Remaining Time390.898
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.2e-05%,  Nb: 0.47%,  Update: 0.042%,  
+Output No. 7 at 0.0058 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.11in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.006640730.00664073 0.0338649 ]
+Int Energy: 734274, Kin Energy: -9249.91
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 544.501
+Step: 3217, Estimated Remaining Time384.264
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.41%,  Contact: 2.2e-05%,  Nb: 0.47%,  Update: 0.042%,  
+Output No. 7 at 0.0059 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.11in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.006795690.00679569 0.0346757 ]
+Int Energy: 753270, Kin Energy: -9852.04
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 552.422
+Step: 3260, Estimated Remaining Time377.429
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.1e-05%,  Nb: 0.47%,  Update: 0.042%,  
+Output No. 7 at 0.0059 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.12in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.006950460.00695046 0.0354863 ]
+Int Energy: 772300, Kin Energy: -10152.2
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 558.939
+Step: 3294, Estimated Remaining Time372.174
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.1e-05%,  Nb: 0.47%,  Update: 0.042%,  
+Output No. 8 at 0.006 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.12in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.007072920.00707292 0.0361272 ]
+Int Energy: 787372, Kin Energy: -10306.2
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 566.879
+Step: 3338, Estimated Remaining Time365.016
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.1e-05%,  Nb: 0.47%,  Update: 0.042%,  
+Output No. 8 at 0.0061 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.12in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.007231560.00723156 0.0369564 ]
+Int Energy: 806908, Kin Energy: -10396.9
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 574.696
+Step: 3382, Estimated Remaining Time357.762
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.1e-05%,  Nb: 0.48%,  Update: 0.042%,  
+Output No. 8 at 0.0062 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.12in particle37695
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.007390070.00739007 0.0377853 ]
+Int Energy: 826480, Kin Energy: -10502.1
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 582.652
+Step: 3427, Estimated Remaining Time350.305
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.1e-05%,  Nb: 0.48%,  Update: 0.042%,  
+Output No. 8 at 0.0062 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.13in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.007551810.00755181 0.0386326 ]
+Int Energy: 846533, Kin Energy: -10799.2
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 590.543
+Step: 3469, Estimated Remaining Time343.604
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.1e-05%,  Nb: 0.48%,  Update: 0.042%,  
+Output No. 8 at 0.0063 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.13in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.007702390.00770239 0.0394231 ]
+Int Energy: 865283, Kin Energy: -11184
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 598.552
+Step: 3512, Estimated Remaining Time336.675
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2e-05%,  Nb: 0.48%,  Update: 0.042%,  
+Output No. 8 at 0.0064 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.13in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.007856360.00785636  0.040232 ]
+Int Energy: 884514, Kin Energy: -11451.4
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 606.583
+Step: 3557, Estimated Remaining Time329.205
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2e-05%,  Nb: 0.48%,  Update: 0.042%,  
+Output No. 8 at 0.0065 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.13in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.008017430.00801743  0.041078 ]
+Int Energy: 904675, Kin Energy: -11614.3
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 614.431
+Step: 3601, Estimated Remaining Time321.886
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2e-05%,  Nb: 0.48%,  Update: 0.042%,  
+Output No. 8 at 0.0066 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.14in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.008174890.00817489 0.0419046 ]
+Int Energy: 924426, Kin Energy: -11627.6
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 622.236
+Step: 3645, Estimated Remaining Time314.531
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2e-05%,  Nb: 0.49%,  Update: 0.042%,  
+Output No. 8 at 0.0066 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.14in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0083322 0.0083322 0.0427305 ]
+Int Energy: 944212, Kin Energy: -11574.9
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 630.041
+Step: 3689, Estimated Remaining Time307.166
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3.1e-05%,  Nb: 0.49%,  Update: 0.042%,  
+Output No. 8 at 0.0067 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.14in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.008489310.00848931 0.0435559 ]
+Int Energy: 964035, Kin Energy: -11633.9
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 637.917
+Step: 3734, Estimated Remaining Time299.574
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3.1e-05%,  Nb: 0.49%,  Update: 0.042%,  
+Output No. 8 at 0.0068 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.14in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.008649770.00864977 0.0443993 ]
+Int Energy: 984345, Kin Energy: -11472.4
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 645.777
+Step: 3779, Estimated Remaining Time291.966
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3e-05%,  Nb: 0.49%,  Update: 0.042%,  
+Output No. 8 at 0.0069 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.15in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0088101 0.0088101 0.0452421 ]
+Int Energy: 1.00469e+06, Kin Energy: -11406.6
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 653.615
+Step: 3824, Estimated Remaining Time284.344
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3e-05%,  Nb: 0.49%,  Update: 0.042%,  
+Output No. 8 at 0.007 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.15in particle38120
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.008970320.00897032 0.0460842 ]
+Int Energy: 1.02508e+06, Kin Energy: -11488
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 657.165
+Step: 3843, Estimated Remaining Time281.227
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3e-05%,  Nb: 0.49%,  Update: 0.042%,  
+Output No. 9 at 0.007 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.15in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.009037940.00903794 0.0464395 ]
+Int Energy: 1.0337e+06, Kin Energy: -11415.2
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 664.987
+Step: 3888, Estimated Remaining Time273.587
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3e-05%,  Nb: 0.5%,  Update: 0.042%,  
+Output No. 9 at 0.0071 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.15in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.009198020.00919802 0.0472807 ]
+Int Energy: 1.05414e+06, Kin Energy: -11548.7
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 672.79
+Step: 3933, Estimated Remaining Time265.935
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3e-05%,  Nb: 0.5%,  Update: 0.042%,  
+Output No. 9 at 0.0072 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.16in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [   0.009358  0.009358 0.0481232 ]
+Int Energy: 1.07462e+06, Kin Energy: -11608.6
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 680.615
+Step: 3978, Estimated Remaining Time258.288
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.9e-05%,  Nb: 0.5%,  Update: 0.042%,  
+Output No. 9 at 0.0072 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.16in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0095179 0.0095179 0.0489648 ]
+Int Energy: 1.09514e+06, Kin Energy: -11746
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 688.392
+Step: 4023, Estimated Remaining Time250.62
+Calculation Times
+Accel: 1.4%,  Density: 0.68%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.9e-05%,  Nb: 0.5%,  Update: 0.042%,  
+Output No. 9 at 0.0073 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.16in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.009677720.00967772 0.0498054 ]
+Int Energy: 1.1157e+06, Kin Energy: -11913.4
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 696.17
+Step: 4068, Estimated Remaining Time242.949
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.9e-05%,  Nb: 0.5%,  Update: 0.042%,  
+Output No. 9 at 0.0074 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.16in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0098375 0.0098375  0.050645 ]
+Int Energy: 1.13629e+06, Kin Energy: -11956.2
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 703.924
+Step: 4113, Estimated Remaining Time235.269
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.9e-05%,  Nb: 0.5%,  Update: 0.042%,  
+Output No. 9 at 0.0075 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.17in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [ 0.009997220.00999722 0.0514836 ]
+Int Energy: 1.15693e+06, Kin Energy: -11927.8
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 711.698
+Step: 4158, Estimated Remaining Time227.593
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.8e-05%,  Nb: 0.5%,  Update: 0.042%,  
+Output No. 9 at 0.0076 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.17in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0101569 0.0101569 0.0523213 ]
+Int Energy: 1.1776e+06, Kin Energy: -12028.5
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 719.448
+Step: 4203, Estimated Remaining Time219.907
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.8e-05%,  Nb: 0.5%,  Update: 0.042%,  
+Output No. 9 at 0.0077 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.17in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0103165 0.0103165  0.053158 ]
+Int Energy: 1.19831e+06, Kin Energy: -11995.1
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 727.298
+Step: 4249, Estimated Remaining Time212.029
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 2.8e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 9 at 0.0077 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.17in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0104797 0.0104797 0.0540124 ]
+Int Energy: 1.21953e+06, Kin Energy: -12079.1
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 735.139
+Step: 4295, Estimated Remaining Time204.148
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3.7e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 9 at 0.0078 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.18in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0106428 0.0106428 0.0548659 ]
+Int Energy: 1.24078e+06, Kin Energy: -12195.6
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 742.964
+Step: 4341, Estimated Remaining Time196.264
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3.7e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 9 at 0.0079 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.18in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [   0.010806  0.010806 0.0557185 ]
+Int Energy: 1.26208e+06, Kin Energy: -12259.2
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 750.858
+Step: 4387, Estimated Remaining Time188.399
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.7e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 9 at 0.008 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.18in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0109691 0.0109691 0.0565703 ]
+Int Energy: 1.28341e+06, Kin Energy: -12526
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 751.908
+Step: 4392, Estimated Remaining Time187.592
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.2%,  
+Energy: 0.4%,  Contact: 3.7e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 10 at 0.008 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.18in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0109868 0.0109868 0.0566628 ]
+Int Energy: 1.28573e+06, Kin Energy: -12544.8
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 759.639
+Step: 4437, Estimated Remaining Time179.896
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.6e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 10 at 0.0081 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.19in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0111464 0.0111464 0.0574952 ]
+Int Energy: 1.30665e+06, Kin Energy: -12682.6
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 767.392
+Step: 4482, Estimated Remaining Time172.205
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.6e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 10 at 0.0082 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.19in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [   0.011306  0.011306 0.0583269 ]
+Int Energy: 1.3276e+06, Kin Energy: -12786.1
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 775.145
+Step: 4528, Estimated Remaining Time164.305
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.6e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 10 at 0.0082 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.19in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0114693 0.0114693 0.0591762 ]
+Int Energy: 1.34907e+06, Kin Energy: -12821.9
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 782.958
+Step: 4574, Estimated Remaining Time156.42
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.5e-05%,  Nb: 0.51%,  Update: 0.042%,  
+Output No. 10 at 0.0083 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.19in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0116326 0.0116326 0.0600248 ]
+Int Energy: 1.37057e+06, Kin Energy: -12964.7
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 790.699
+Step: 4620, Estimated Remaining Time148.523
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.5e-05%,  Nb: 0.52%,  Update: 0.042%,  
+Output No. 10 at 0.0084 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.2in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0117959 0.0117959 0.0608728 ]
+Int Energy: 1.39211e+06, Kin Energy: -13147.6
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 798.48
+Step: 4666, Estimated Remaining Time140.637
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.5e-05%,  Nb: 0.52%,  Update: 0.042%,  
+Output No. 10 at 0.0085 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.2in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0119593 0.0119593 0.0617201 ]
+Int Energy: 1.4137e+06, Kin Energy: -13166.1
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 806.29
+Step: 4712, Estimated Remaining Time132.756
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.5e-05%,  Nb: 0.52%,  Update: 0.042%,  
+Output No. 10 at 0.0086 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.2in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0121228 0.0121228 0.0625667 ]
+Int Energy: 1.43533e+06, Kin Energy: -13443.7
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 814.041
+Step: 4758, Estimated Remaining Time124.869
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.4e-05%,  Nb: 0.52%,  Update: 0.042%,  
+Output No. 10 at 0.0087 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.2in particle38094
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0122864 0.0122864 0.0634127 ]
+Int Energy: 1.45699e+06, Kin Energy: -13689.9
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 821.807
+Step: 4804, Estimated Remaining Time116.986
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.4e-05%,  Nb: 0.52%,  Update: 0.042%,  
+Output No. 10 at 0.0088 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.21in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [    0.01245   0.01245 0.0642598 ]
+Int Energy: 1.47871e+06, Kin Energy: -13825.8
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 829.516
+Step: 4850, Estimated Remaining Time109.097
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.4e-05%,  Nb: 0.52%,  Update: 0.042%,  
+Output No. 10 at 0.0088 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.21in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0126139 0.0126139 0.0651073 ]
+Int Energy: 1.50046e+06, Kin Energy: -13958.8
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 837.228
+Step: 4896, Estimated Remaining Time101.213
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.4e-05%,  Nb: 0.52%,  Update: 0.042%,  
+Output No. 10 at 0.0089 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.21in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0127779 0.0127779 0.0659545 ]
+Int Energy: 1.52225e+06, Kin Energy: -13971
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 844.959
+Step: 4941, Estimated Remaining Time93.5234
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.4e-05%,  Nb: 0.52%,  Update: 0.042%,  
+Output No. 11 at 0.009 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.22in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0129388 0.0129388  0.066783 ]
+Int Energy: 1.54362e+06, Kin Energy: -14101.7
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 852.727
+Step: 4987, Estimated Remaining Time85.6488
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.3e-05%,  Nb: 0.52%,  Update: 0.041%,  
+Output No. 11 at 0.0091 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.22in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0131034 0.0131034 0.0676295 ]
+Int Energy: 1.56549e+06, Kin Energy: -14236.8
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 860.43
+Step: 5033, Estimated Remaining Time77.7703
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.3e-05%,  Nb: 0.52%,  Update: 0.041%,  
+Output No. 11 at 0.0092 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.22in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0132682 0.0132682 0.0684757 ]
+Int Energy: 1.58742e+06, Kin Energy: -14601.9
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 868.139
+Step: 5079, Estimated Remaining Time69.8955
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.3e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0093 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.22in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0134331 0.0134331 0.0693216 ]
+Int Energy: 1.60938e+06, Kin Energy: -14784.8
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 875.959
+Step: 5126, Estimated Remaining Time61.8485
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.3e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0093 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.23in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0136018 0.0136018 0.0701857 ]
+Int Energy: 1.63187e+06, Kin Energy: -14918.9
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 883.69
+Step: 5172, Estimated Remaining Time53.9815
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.2e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0094 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.23in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0137671 0.0137671 0.0710313 ]
+Int Energy: 1.65392e+06, Kin Energy: -15139.1
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 891.399
+Step: 5218, Estimated Remaining Time46.1157
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 4e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0095 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.23in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0139325 0.0139325 0.0718767 ]
+Int Energy: 1.67601e+06, Kin Energy: -15343
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 899.171
+Step: 5265, Estimated Remaining Time38.0773
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 4e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0096 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.23in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0141022 0.0141022 0.0727402 ]
+Int Energy: 1.69863e+06, Kin Energy: -15502.1
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 907.046
+Step: 5312, Estimated Remaining Time30.0471
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 4e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0097 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.24in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0142722 0.0142722 0.0736037 ]
+Int Energy: 1.72129e+06, Kin Energy: -15591.8
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 914.784
+Step: 5359, Estimated Remaining Time22.0162
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.9e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0098 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.24in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0144426 0.0144426 0.0744671 ]
+Int Energy: 1.744e+06, Kin Energy: -16029.3
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 922.559
+Step: 5406, Estimated Remaining Time13.9911
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.9e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0098 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.24in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0146135 0.0146135 0.0753305 ]
+Int Energy: 1.76676e+06, Kin Energy: -16327.4
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 930.405
+Step: 5453, Estimated Remaining Time5.9707
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.9e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 11 at 0.0099 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.25in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [  0.0147848 0.0147848 0.0761938 ]
+Int Energy: 1.78956e+06, Kin Energy: -16766.3
+-----------------------------------------------------------------------------
+
+---------------------------------------
+ Total CPU time: 936.825
+Step: 5490, Estimated Remaining Time3.14722e+18
+Calculation Times
+Accel: 1.4%,  Density: 0.67%,  Stress: 4.3%,  
+Energy: 0.4%,  Contact: 3.9e-05%,  Nb: 0.53%,  Update: 0.041%,  
+Output No. 12 at 0.01 has been generated
+Current Time Step = 1.8e-06
+Max plastic strain: 0.25in particle38128
+Plastic Work 0
+Max Displacements (No Cont Surf): 3 [    0.01492   0.01492 0.0768733 ]
+Int Energy: 1.80754e+06, Kin Energy: -17134
+-----------------------------------------------------------------------------

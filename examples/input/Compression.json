@@ -1,14 +1,15 @@
 {
 "Configuration":
 {
-	"particleRadius": 0.0075, 
+  "Nproc": 8,
+	"particleRadius": 0.005, 
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.7,
   "autoTS": [false,false,false],
-  "kernelGradCorr": true,  
+  "kernelGradCorr": false,  
   "simTime": 0.01,
-  "outTime": 1.0e-4,
+  "outTime": 1.0e-3,
   "solver": "Mech-LeapFrog"
 }
 ,
