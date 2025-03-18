@@ -390,11 +390,12 @@ inline void Domain::SolveDiffUpdateLeapFrog (double tf, double dt, double dtOut,
       // Estimate remaining time
       double avg_time_per_iter = elapsed.count() / (steps + 1);
       double estimated_remaining = avg_time_per_iter * (total_iterations - steps - 1);
-              
+      double estimated_total = avg_time_per_iter * (total_iterations - 1);
+                    
 			total_time = std::chrono::steady_clock::now() - start_whole;		
       oss_out.str("");
 			oss_out << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
-      oss_out << "Step: "<<steps<<", Estimated Remaining Time"<<estimated_remaining<<endl;
+      oss_out << "Step: "<<steps<<", Estimated Total Time:" << estimated_total<<", Estimated Remaining Time"<<estimated_remaining<<endl;
       double acc_time_spent_perc = acc_time_spent/total_time.count();
 
       oss_out << std::setprecision(2);

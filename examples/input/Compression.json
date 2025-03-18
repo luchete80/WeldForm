@@ -1,8 +1,8 @@
 {
 "Configuration":
 {
-  "Nproc": 8,
-	"particleRadius": 0.005, 
+  "Nproc": 15,
+	"particleRadius": 0.0035, 
 	"hFactor": 1.2,
   "cflMethod": 1,
   "cflFactor": 0.7,
@@ -10,7 +10,7 @@
   "kernelGradCorr": false,  
   "simTime": 0.01,
   "outTime": 1.0e-3,
-  "solver": "Mech-LeapFrog"
+  "solver": "Mech-Fraser"
 }
 ,
 "Materials":[ 

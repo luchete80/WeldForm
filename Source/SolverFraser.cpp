@@ -17,6 +17,7 @@ namespace SPH {
   // // // x+= (Particles[i]->v + Particles[i]->VXSPH)*deltat + 0.5 * Particles[i]->a *deltat*deltat;
   // // // Particles[i]->v += Particles[i]->a * deltat;
 
+#include <chrono>
 
 inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, char const * TheFileKey, size_t maxidx) {
 	std::cout << "\n--------------Solving---------------------------------------------------------------" << std::endl;
@@ -129,7 +130,8 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
   // if (gradKernelCorr){
     // CalcGradCorrMatrix();	}
   last_output_time = clock();   
-
+  auto start_time = std::chrono::steady_clock::now(); // Start time
+  
   while (Time<=tf && idx_out<=maxidx) {
     
     clock_beg = clock();
@@ -414,7 +416,7 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
     //auto last_output_time = start_whole;
     
     
-    cout << "time "<< (double)((clock() - last_output_time) / CLOCKS_PER_SEC)<<endl;
+    //cout << "time "<< (double)((clock() - last_output_time) / CLOCKS_PER_SEC)<<endl;
 		//if (Time>=tout || std::chrono::duration_cast<std::chrono::seconds>(std::chrono::steady_clock::now() - last_output_time).count() > 60.0){
     //cout << "elapsed "<<(double)((clock() - last_output_time) / CLOCKS_PER_SEC)<<endl;
     if (Time>=tout || (double)((clock() - last_output_time) / CLOCKS_PER_SEC) > 60.0) {
@@ -432,9 +434,21 @@ inline void Domain::SolveDiffUpdateFraser (double tf, double dt, double dtOut, c
         tout += dtOut;
       }
       
+// Compute elapsed time
+      auto now = std::chrono::steady_clock::now();
+      std::chrono::duration<double> elapsed = now - start_time;
+      
+      int total_iterations = tf/dt;
+      // Estimate remaining time
+      double avg_time_per_iter = elapsed.count() / (steps + 1);
+      double estimated_remaining = avg_time_per_iter * (total_iterations - steps - 1);
+      double estimated_total = avg_time_per_iter * (total_iterations - 1);
+                    
 			total_time = std::chrono::steady_clock::now() - start_whole;		
       oss_out.str("");
 			oss_out << "\n---------------------------------------\n Total CPU time: "<<total_time.count() << endl;
+      oss_out << "Step: "<<steps<<", Estimated Total Time:" << estimated_total<<", Estimated Remaining Time"<<estimated_remaining<<endl;
+      
       double acc_time_spent_perc = acc_time_spent/total_time.count();
 
       oss_out << std::setprecision(2);
